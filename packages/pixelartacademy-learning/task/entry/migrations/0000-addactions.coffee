@@ -7,8 +7,8 @@ class Migration extends Document.MajorMigration
   forward: (document, collection, currentSchema, newSchema) =>
     count = 0
 
-    actionsCollection = new DirectCollection 'LandsOfIllusions.Memory.Actions'
-    charactersCollection = new DirectCollection 'LandsOfIllusions.Characters'
+    actionsCollection = if Meteor.isClient then LOI.Memory.Action.documents else new DirectCollection 'LandsOfIllusions.Memory.Actions'
+    charactersCollection =  if Meteor.isClient then LOI.Character.documents else new DirectCollection 'LandsOfIllusions.Characters'
 
     collection.findEach
       _schema: currentSchema

@@ -8,6 +8,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
   @displayName: -> "Snake game"
 
   @chapter: -> LM.Intro.Tutorial
+  
+  reset: ->
+    PAA.Pico8.Cartridges.state 'Snake', null
+    super arguments...
 
   Goal = @
   
@@ -19,19 +23,21 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @instructions: -> """
       In the PICO-8 app, try out the game Snake. Notice the art assets included (green snake and brown food).
-      Score at least 5 points to continue.
+      Score some points to continue.
     """
 
-    @interests: -> ['pico-8', 'gaming']
+    @interests: -> ['pico-8', 'video game']
 
     @requiredInterests: -> ['pixel art software']
 
+    @studyPlanBuilding: -> 'SimCityIndustrial1'
+  
     @initialize()
 
     @completedConditions: ->
-      # Require score of 5 or higher. Since we reset the high score when the
+      # Require score of 1 or higher. Since we reset the high score when the
       # snake project is created, we also keep this task completed based on that.
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 1 or PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
 
   class @Draw extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.Snake.Draw'
@@ -46,10 +52,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
 
-    @interests: -> ['snake', 'food']
-
     @predecessors: -> [Goal.Play]
 
+    @studyPlanBuilding: -> 'SimCityCommercial4'
+    
     @initialize()
     
     @completedConditions: ->
@@ -63,6 +69,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
         return unless bitmap.historyPosition
 
       true
+      
+    onActiveDisplayed: ->
+      # Reset high score again to force replay, in case the player continued to play the game after the first time.
+      PAA.Pico8.Cartridges.Snake.state 'highScore', 0
 
   class @PlayAgain extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.Snake.PlayAgain'
@@ -72,17 +82,19 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @instructions: -> """
       With the game sprites replaced, run PICO-8 again and see how your art looks in the game. Do any updates until
-      you're happy. Score at least 10 points to complete the project.
+      you're happy. Score some more points to complete the project.
     """
 
-    @interests: -> ['learn mode tutorial project']
+    @interests: -> ['Learn Mode tutorial project']
 
     @predecessors: -> [Goal.Draw]
+    
+    @studyPlanBuilding: -> 'TransportTycoonCinema'
 
     @initialize()
 
     @completedConditions: ->
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 10
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 1
       
     @onCompletedDisplayed: ->
       LOI.adventure.showActivatableModalDialog

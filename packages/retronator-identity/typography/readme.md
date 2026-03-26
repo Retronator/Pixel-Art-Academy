@@ -40,6 +40,18 @@ The project is using these fonts:
 
   Custom, 2px tall, abstractly represents lines of text
 
+- **Serif 23** by Matej Jan (www.retronator.com)
+
+  Custom, large title font inspired by the Marion typeface
+
+- **Study Plan** by Matej Jan (www.retronator.com)
+
+  Custom, diagonal font used in the Study Plan app
+
+- **Quaternary** by Matej Jan (www.retronator.com)
+
+  Custom, 4x3 fixed-width font with a digital style
+
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
   Acme 9, Acme 7 Wide, Acme 5 Wide, Kyrou 9, Kyrou 7 Wide, Kyrou 5 Wide variants.
@@ -61,6 +73,23 @@ The project is using these fonts:
 - **Typecast** by Font End Dev (https://fontenddev.com)
 
   Attribution 4.0 International License
+
+- **Pixel Georgia** by Vasily 'Daymarius' Draigo (https://www.dafont.com/daymarius.d7345)
+
+  100% free
+
+- **Talk-to-three-headed-monkey** by Marco Milone (https://gitlab.com/gromish/talk-to-three-headed-monkey-font)
+
+  100% free
+
+- **Pixolde** by Font End Dev (https://fontenddev.com)
+
+  Attribution 4.0 International License
+
+- **Schoenecker**, **Italic**, **Header 8**, and **Header 17** by Craig Kroeger (www.miniml.com)
+
+  Permission granted by the authors for use in this specific repository.
+  Any forks of this repository and other derivative works must obtain their own license to use this font.
 
 Fonts are served in the WOFF cross-browser format as base64 encoded data URIs directly inside the CSS.
 

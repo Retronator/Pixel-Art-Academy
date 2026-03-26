@@ -10,12 +10,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
   
   @contents: -> [
     @PixelArtLineArt
-    @AntiAliasing
-    @DitheredValues
-    @DitheredColors
+    @PixelArtReadability
+    @DrawQuickly
   ]
-  
-  @tags: -> [LM.Content.Tags.WIP]
   
   @initialize()
   
@@ -40,8 +37,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       @SmoothCurves
       @ConsistentLineWidth
     ]
-    
-    @tags: -> [LM.Content.Tags.WIP]
 
     @initialize()
 
@@ -57,8 +52,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
     @unlockInstructions: -> "Complete the Pixel art lines tutorial to unlock the Pixel art line art challenge."
     
     class @CompletedCriteria extends LM.Content
-      @prefixFilter = null # Override with the class name prefix that defines this group.
-
       constructor: ->
         super arguments...
 
@@ -121,17 +114,243 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
       
-  class @AntiAliasing extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.AntiAliasing'
-    @displayName: -> "Anti-aliasing"
+  class @DrawQuickly extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly'
+    @displayName: -> "Draw quickly"
+    
+    @unlockInstructions: -> "Complete the Simplification tutorial to unlock the Draw Quickly game on the Pixeltosh."
+    
+    @contents: -> [
+      @SymbolicDrawing
+      @RealisticDrawing
+    ]
+    
     @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.drawQuicklyEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+    
+    constructor: ->
+      super arguments...
+      
+      @progress = new LM.Content.Progress.ContentProgress
+        content: @
+        units: "modes"
+        
+    class @SymbolicDrawing extends LM.Content
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.SymbolicDrawing'
+      @displayName: -> "Symbolic drawing"
+      
+      @contents: -> [
+        @Easy
+        @Medium
+        @Hard
+      ]
+
+      @initialize()
+
+      status: -> LM.Content.Status.Unlocked
+
+      constructor: ->
+        super arguments...
+      
+        @progress = new LM.Content.Progress.ManualProgress
+          content: @
+          units: "combined score"
+          
+          completed: => @progress.completedUnitsCount() >= 1
+          
+          unitsCount: => 90
+          
+          completedUnitsCount: => _.sum (content.progress.completedUnitsCount() for content in @availableContents())
+          
+          requiredUnitsCount: => 1
+          
+      class @DifficultyLevel extends LM.Content
+        constructor: ->
+          super arguments...
+          
+          @progress = new LM.Content.Progress.ManualProgress
+            content: @
+            units: "combined score"
+            
+            completed: => @progress.completedUnitsCount() >= 1
+            
+            unitsCount: => 30
+            
+            completedUnitsCount: =>
+              DrawQuickly = PAA.Pixeltosh.Programs.DrawQuickly
+              SpeedProperties = DrawQuickly.SymbolicDrawing.SpeedProperties
+              
+              slowScore = DrawQuickly.SymbolicDrawing.getBestScoreForDifficultyAndSpeed @constructor.difficulty, SpeedProperties.Slow
+              mediumScore = DrawQuickly.SymbolicDrawing.getBestScoreForDifficultyAndSpeed @constructor.difficulty, SpeedProperties.Medium
+              fastScore = DrawQuickly.SymbolicDrawing.getBestScoreForDifficultyAndSpeed @constructor.difficulty, SpeedProperties.Fast
+              
+              # Faster times ripple back to slower times.
+              mediumScore = Math.max mediumScore, fastScore
+              slowScore = Math.max slowScore, mediumScore
+              
+              slowScore + mediumScore + fastScore
+            
+            requiredUnitsCount: => 1
+
+        status: -> LM.Content.Status.Unlocked
   
-  class @DitheredValues extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DitheredValues'
-    @displayName: -> "Dithered values"
-    @initialize()
+      class @Easy extends @DifficultyLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.SymbolicDrawing.Easy'
+        @displayName: -> "Easy"
+        
+        @difficulty = 'easy'
+        
+        @initialize()
+        
+      class @Medium extends @DifficultyLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.SymbolicDrawing.Medium'
+        @displayName: -> "Medium"
+        
+        @difficulty = 'medium'
+        
+        @initialize()
+      
+      class @Hard extends @DifficultyLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.SymbolicDrawing.Hard'
+        @displayName: -> "Hard"
+
+        @difficulty = 'hard'
+
+        @initialize()
+    
+    class @RealisticDrawing extends LM.Content
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.RealisticDrawing'
+      @displayName: -> "Realistic drawing"
+      
+      @contents: -> [
+        @Simple
+        @Medium
+        @Complex
+      ]
+      
+      @initialize()
+      
+      status: -> LM.Content.Status.Unlocked
+      
+      constructor: ->
+        super arguments...
+        
+        @progress = new LM.Content.Progress.ManualProgress
+          content: @
+          units: "subjects"
+          
+          completed: => @progress.completedUnitsCount() >= 1
+          
+          unitsCount: => _.sum (content.progress.unitsCount() for content in @availableContents())
+          
+          completedUnitsCount: => _.sum (content.progress.completedUnitsCount() for content in @availableContents())
+          
+          requiredUnitsCount: => 1
+      
+      class @ComplexityLevel extends LM.Content
+        constructor: ->
+          super arguments...
+          
+          @progress = new LM.Content.Progress.ManualProgress
+            content: @
+            units: "subjects"
+            
+            completed: => @progress.completedUnitsCount() >= 1
+            
+            unitsCount: => PAA.Pixeltosh.Programs.DrawQuickly.RealisticDrawing.thingsByComplexity[@constructor.complexity].length
+            
+            completedUnitsCount: => PAA.Pixeltosh.Programs.DrawQuickly.RealisticDrawing.getDrawnThingsForComplexity(@constructor.complexity).length
+            
+            requiredUnitsCount: => 1
+        
+        status: -> LM.Content.Status.Unlocked
+      
+      class @Simple extends @ComplexityLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.RealisticDrawing.Simple'
+        @displayName: -> "Simple"
+
+        @complexity = 'simple'
+
+        @initialize()
+      
+      class @Medium extends @ComplexityLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.RealisticDrawing.Medium'
+        @displayName: -> "Medium"
+        
+        @complexity = 'medium'
+
+        @initialize()
+      
+      class @Complex extends @ComplexityLevel
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly.RealisticDrawing.Complex'
+        @displayName: -> "Complex"
+        
+        @complexity = 'complex'
+        
+        @initialize()
+
+  class @PixelArtReadability extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability'
+    @displayName: -> "Pixel art readability"
+    
+    @unlockInstructions: -> "Complete the Pixel art size tutorial to unlock the Pixel art readability challenge."
   
-  class @DitheredColors extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DitheredColors'
-    @displayName: -> "Dithered colors"
+    @contents: -> [
+      @Icon8
+      @Icon16
+      @Icon32
+    ]
+
     @initialize()
+    
+    status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+    constructor: ->
+      super arguments...
+    
+      @progress = new LM.Content.Progress.ContentProgress
+        content: @
+        units: "sizes"
+        
+    class @Icon extends LM.Content
+      @size: -> throw new AE.NotImplementedException "Icon content must define the size of the icon."
+      @sizeString: ->
+        size = @size()
+        "#{size}×#{size}"
+        
+      @displayName: -> "#{@sizeString()} icon"
+      
+      constructor: ->
+        super arguments...
+
+        @progress = new LM.Content.Progress.ManualProgress
+          content: @
+
+          requiredUnits: "completed icons"
+          totalUnits: "started icons"
+      
+          completedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.state('startedCounts')?[@constructor.size()] or 0
+          unitsCount: => 94
+          
+          requiredCompletedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.state('completedCounts')?[@constructor.size()] or 0
+          requiredUnitsCount: => 1
+
+          completed: => @progress.requiredCompletedUnitsCount() >= 1
+          
+      status: -> LM.Content.Status.Unlocked
+
+    class @Icon8 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon8'
+      @size: -> 8
+      @initialize()
+    
+    class @Icon16 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon16'
+      @size: -> 16
+      @initialize()
+    
+    class @Icon32 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon32'
+      @size: -> 32
+      @initialize()

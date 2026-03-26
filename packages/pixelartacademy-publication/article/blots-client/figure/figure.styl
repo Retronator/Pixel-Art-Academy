@@ -1,0 +1,65 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-publication-article-figure
+  white-space normal
+  margin 0
+  padding 7rem 0
+  width 100%
+  break-inside avoid
+
+  &:has(.float-left)
+    float left
+
+  &:has(.float-right)
+    float right
+
+  &:has(.quarter-width)
+    width 25%
+
+  &:has(.third-width)
+    width 33%
+
+  &:has(.half-width)
+    width 50%
+
+  &:has(.two-thirds-width)
+    width 66%
+
+  .elements
+    width 100%
+
+    .elements-row
+      display flex
+      width 100%
+      margin 0
+
+      &:first-child
+        padding-top 0
+
+      .element
+        position relative
+        flex-basis 0
+
+        &:first-child
+          padding-left 0
+
+        &:only-child
+          flex-grow 1 !important
+
+        .actions
+          position absolute
+          z-index 1
+          top 0
+          right 0
+
+  .caption
+    padding 5rem 3rem 3rem
+    text-align center
+    line-height 8rem
+
+    textarea
+      width 100%
+      font inherit
+
+  .style
+    width 50%

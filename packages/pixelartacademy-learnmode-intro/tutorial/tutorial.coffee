@@ -27,6 +27,28 @@ class LM.Intro.Tutorial extends LM.Chapter
         
       PAA.PixelPad.Apps.Drawing.state 'editorId', PAA.PixelPad.Apps.Drawing.Editor.Desktop.id()
 
+    # Add intro goals to the Study Plan app.
+    @_initializeStudyPlanAutorun = Tracker.autorun (computation) =>
+      return unless LOI.adventure.gameState()
+      return if PAA.PixelPad.Apps.StudyPlan.state 'goals'
+      
+      toDoTasksId = LM.Intro.Tutorial.Goals.ToDoTasks.id()
+      pixelArtSoftwareId = LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
+      
+      PAA.PixelPad.Apps.StudyPlan.state.set
+        goals:
+          "#{toDoTasksId}":
+            connections: [
+              goalId: pixelArtSoftwareId
+              direction: PAA.PixelPad.Apps.StudyPlan.GoalConnectionDirections.Forward
+            ]
+          "#{pixelArtSoftwareId}": {}
+        camera:
+          scale: 1
+          origin:
+            x: 100
+            y: 0
+    
     # Create the snake project when the play task has been completed.
     @snakePlayTask = @getTask LM.Intro.Tutorial.Goals.Snake.Play
     @snakeDrawTask = @getTask LM.Intro.Tutorial.Goals.Snake.Draw
@@ -43,6 +65,7 @@ class LM.Intro.Tutorial extends LM.Chapter
   destroy: ->
     super arguments...
 
+    @_initializeStudyPlanAutorun.stop()
     @_createSnakeProjectAutorun.stop()
     
   finished: ->

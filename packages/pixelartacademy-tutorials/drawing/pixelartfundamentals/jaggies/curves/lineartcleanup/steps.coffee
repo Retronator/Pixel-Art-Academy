@@ -22,12 +22,32 @@ class LineArtCleanup.Steps
       
       # There needs to be a line that goes through all goal pixels.
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
+      return unless pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
       
-      # Pixel art evaluation paper needs to be open.
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluationView.active()
+      # The lines must not have any doubles or corners.
+      for line in pixelArtEvaluation.layers[0].lines
+        lineEvaluation = line.evaluate LineArtCleanup._pixelPerfectLinesEvaluationProperty
+        return if lineEvaluation.doubles.count or lineEvaluation.corners.count
+        
+      true
+  
+  class @OpenEvaluationPaper extends PAA.Tutorials.Drawing.PixelArtFundamentals.OpenEvaluationPaper
+    activate: ->
+      super arguments...
+      
+      bitmap = @tutorialBitmap.bitmap()
+      
+      pixelArtEvaluation =
+        allowedCriteria: [PAE.Criteria.SmoothCurves]
+        smoothCurves:
+          ignoreMostlyStraightLines: false
+          abruptSegmentLengthChanges: {}
+          straightParts: {}
+          inflectionPoints: {}
+      
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
+      
+      bitmap.executeAction updatePropertyAction
   
   class @OpenSmoothCurves extends TutorialBitmap.EphemeralStep
     completed: ->
@@ -87,7 +107,8 @@ class LineArtCleanup.Steps
       return unless line = pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
       
       # All smooth curves criteria need to be at 0.9 or more (A level).
-      lineEvaluation = line.evaluate()
+      bitmap = @tutorialBitmap.bitmap()
+      lineEvaluation = line.evaluate bitmap.properties.pixelArtEvaluation
       for categoryName, categoryEvaluation of lineEvaluation.curveSmoothness
         return unless categoryEvaluation.score >= 0.9
         

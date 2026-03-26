@@ -10,7 +10,7 @@ class LM.Notifications
     @message: -> """
         I'm planning to add more elements of art during Early Access.
 
-        Until then, focus just on the lines.
+        Until then, focus just on the lines and shapes.
         This will build your foundation before tackling harder elements such as values and colors.
       """
     
@@ -24,13 +24,58 @@ class LM.Notifications
     
     LM.ConditionalNotificationsProvider.registerNotificationClass @
 
+  class @ArtworksSection extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "PixelArtAcademy.LearnMode.Notifications.ArtworksSection"
+    
+    @message: -> """
+      You can now create your own artworks in the drawing app.
+
+      This feature is very barebones and isn't meant to replace dedicated drawing software.
+      You can use it to further explore pixel art evaluation, but note that the evaluation itself is very experimental
+      and only works on lines for now.
+    """
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @condition: ->
+      # Show when the player can create artworks.
+      PAA.PixelPad.Apps.Drawing.canCreateArtworks()
+    
+    @initialize()
+    
+    LM.ConditionalNotificationsProvider.registerNotificationClass @
+
+  class @NoTasks extends LM.ConditionalNotificationsProvider.ConditionalNotification
+    @id: -> "PixelArtAcademy.LearnMode.Notifications.NoTasks"
+    
+    @message: -> """
+      Your to-do list is empty!
+
+      Use the Study Plan app when you're ready to achieve new goals.
+    """
+    
+    @priority: -> 3
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @condition: ->
+      # Show when no tasks are active, but some are available.
+      tasks = LOI.adventure.currentTasks()
+      activeTasks = _.filter tasks, (task) => task.active()
+      availableTasks = _.filter tasks, (task) => task.available()
+      not activeTasks.length and availableTasks.length
+      
+    @initialize()
+    
+    LM.ConditionalNotificationsProvider.registerNotificationClass @
+    
   class @TheEnd extends LM.ConditionalNotificationsProvider.ConditionalNotification
     @id: -> "PixelArtAcademy.LearnMode.Notifications.TheEnd"
     
     @message: -> """
       You completed all the tasks there are in the demo, thank you for playing!
       
-      I hope you liked the experience. If you did, wishlist the game to be notified when the game launches into Early Access on August 5.
+      I hope you liked the experience. If you did, you can continue playing in the Early Access version on Steam, or wishlist the game to be notified when it goes on sale.
     """
     
     @priority: -> 2
@@ -38,10 +83,10 @@ class LM.Notifications
     @displayStyle: -> @DisplayStyles.Always
     
     @condition: ->
-      # Show when no tasks are active.
+      # Show when all the courses are completed.
       for chapter in LOI.adventure.currentChapters()
-        for task in chapter.tasks
-          return if task.active()
+        for course in chapter.courses
+          return unless course.completed()
           
       true
       

@@ -8,9 +8,10 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
   @contents: -> [
     @Music
     @Pixeltosh
+    @Pixelvision
+    @PixelKid
+    @PixelFriend
     @StudyPlan
-    @Arcade
-    @ZXSpectrum
   ]
   @initialize()
   
@@ -27,25 +28,30 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.StudyPlan'
     @displayName: -> "Study Plan"
     @initialize()
-    
-  class @Arcade extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Arcade'
-    @displayName: -> "Arcade"
-    @initialize()
   
   class @Pixeltosh extends LM.Content.AppContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Pixeltosh'
     @appClass = PAA.PixelPad.Apps.Pixeltosh
     
-    @unlockInstructions: -> "Complete the Smooth curves challenge to unlock the Pixeltosh app."
+    @unlockInstructions: -> "Complete the Element of art: line tutorial to unlock the Pixeltosh app."
     
     @initialize()
     
-    status: -> if LM.PixelArtFundamentals.pinballEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+    status: -> if LM.PixelArtFundamentals.pixeltoshEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
   
-  class @ZXSpectrum extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.ZXSpectrum'
-    @displayName: -> "ZX Spectrum"
+  class @Pixelvision extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelVision'
+    @displayName: -> "Pixelvision"
+    @initialize()
+  
+  class @PixelKid extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelKid'
+    @displayName: -> "Pixel Kid"
+    @initialize()
+  
+  class @PixelFriend extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelFriend'
+    @displayName: -> "Pixel Friend"
     @initialize()
     
   class @Music extends LM.Content.AppContent

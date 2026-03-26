@@ -52,6 +52,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       resources.goalPixels = new @Resource.ImagePixels goalImageUrl if goalImageUrl = _.propertyValue resourcesProvider, 'goalImageUrl'
       
       resources.svgPaths = new @Resource.SvgPaths svgUrl if svgUrl = _.propertyValue resourcesProvider, 'svgUrl'
+      
+      resources.information = information if information = _.propertyValue resourcesProvider, 'information'
     
     else
       extension = resourcesProvider[resourcesProvider.lastIndexOf('.') + 1..]

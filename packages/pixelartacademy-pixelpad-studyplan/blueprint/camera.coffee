@@ -2,7 +2,9 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
+StudyPlan = PAA.PixelPad.Apps.StudyPlan
+
+class StudyPlan.Blueprint.Camera
   constructor: (@blueprint) ->
     @state = new LOI.StateObject address: @blueprint.studyPlan.stateAddress.child 'camera'
     
@@ -29,12 +31,14 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
 
     @_preciseOrigin = @origin()
 
+    @boundOrigin = new ComputedField => @_bindPosition @origin()
+    
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
 
     @blueprint.autorun =>
       effectiveScale = @effectiveScale()
-      origin = @origin()
+      origin = @boundOrigin()
 
       # Calculate which part of the canvas is visible. Canvas bounds is in window pixels.
       width = @blueprint.bounds.width() / effectiveScale
@@ -68,8 +72,12 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
 
         @offsetOrigin canvasDelta
 
+  _bindPosition: (position) ->
+    x: _.clamp position.x, @blueprint.mapBoundingRectangle.left(), @blueprint.mapBoundingRectangle.right()
+    y: _.clamp position.y, @blueprint.mapBoundingRectangle.top(), @blueprint.mapBoundingRectangle.bottom()
+  
   setOrigin: (origin) ->
-    @_preciseOrigin = origin
+    @_preciseOrigin = @_bindPosition origin
 
     @origin
       x: Math.floor @_preciseOrigin.x
@@ -83,7 +91,7 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
   applyTransformToCanvas: ->
     context = @blueprint.context()
     effectiveScale = @effectiveScale()
-    origin = @origin()
+    origin = @boundOrigin()
 
     # Start from the identity.
     context.setTransform 1, 0, 0, 1, 0, 0
@@ -101,7 +109,7 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
 
   transformCanvasToWindow: (canvasCoordinate) ->
     effectiveScale = @effectiveScale()
-    origin = @origin()
+    origin = @boundOrigin()
 
     x = canvasCoordinate.x
     y = canvasCoordinate.y
@@ -120,7 +128,7 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
 
   transformWindowToCanvas: (windowCoordinate) ->
     effectiveScale = @effectiveScale()
-    origin = @origin()
+    origin = @boundOrigin()
 
     x = windowCoordinate.x
     y = windowCoordinate.y

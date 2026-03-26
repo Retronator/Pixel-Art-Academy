@@ -1,0 +1,17 @@
+<template name="Artificial.Pyramid.Pages.PolygonalChain.Decimate">
+  <div class="artificial-pyramid-pages-polygonalchain-decimate page">
+    <h1>Artificial Pyramid</h1>
+    <h2>Polygonal chain decimation test</h2>
+    <p>
+      {{> Artificial.Pyramid.Pages.Decimate.Epsilon}}
+    </p>
+    {{#if $is decimateType "PiecewisePolynomial"}}
+      <p>
+        Degree {{> Artificial.Pyramid.Pages.Decimate.Degree}} {{degree}}<br/>
+        <label>Extrapolate {{> Artificial.Pyramid.Pages.Decimate.Extrapolate}}</label>
+      </p>
+    {{/if}}
+    <p>Click on the graph to add points.</p>
+    <canvas class="graph" width="800" height="600"></canvas>
+  </div>
+</template>

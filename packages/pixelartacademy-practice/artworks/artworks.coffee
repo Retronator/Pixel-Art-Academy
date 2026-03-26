@@ -63,3 +63,11 @@ class PAA.Practice.Artworks
   
     # Create the artwork and return the artwork.
     PADB.Artwork.create artworkData
+    
+  @remove: (artwork) ->
+    # Remove the bitmap.
+    bitmapId = artwork.image.url.split('id=')[1]
+    LOI.Assets.Bitmap.documents.remove bitmapId
+    
+    # Remove the artwork.
+    PADB.Artwork.documents.remove artwork._id

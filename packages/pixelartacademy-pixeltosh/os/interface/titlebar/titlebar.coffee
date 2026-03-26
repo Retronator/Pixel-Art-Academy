@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.OS.Interface.TitleBar extends FM.View
-  # caption: string to display in the title bar
+  # text: string to display in the title bar
   @id: -> 'PixelArtAcademy.Pixeltosh.OS.Interface.TitleBar'
   @register @id()
   

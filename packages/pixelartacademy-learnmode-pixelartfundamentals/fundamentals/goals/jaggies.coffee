@@ -27,6 +27,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @interests: -> ['jaggy']
     
+    @studyPlanBuilding: -> 'SimCityCommercial2'
+    
     @initialize()
     
     @completedConditions: ->
@@ -47,6 +49,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @predecessors: -> [Goal.Lines]
     
     @groupNumber: -> 1
+    
+    @studyPlanBuilding: -> 'SimCityResidential1'
     
     @initialize()
     
@@ -69,6 +73,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @groupNumber: -> 2
     
+    @studyPlanBuilding: -> 'SimCityResidential2'
+    
     @initialize()
     
     @completedConditions: ->
@@ -89,6 +95,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @predecessors: -> [Goal.Lines]
     
     @groupNumber: -> 3
+    
+    @studyPlanBuilding: -> 'SimCityResidential3'
     
     @initialize()
     
@@ -111,6 +119,10 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @interests: -> ['pixel-perfect line']
     
     @predecessors: -> [Goal.Lines]
+    
+    @level: -> 2
+    
+    @studyPlanBuilding: -> 'SimCityChurch'
     
     @initialize()
     
@@ -138,6 +150,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @groupNumber: -> 1
     
+    @studyPlanBuilding: -> 'SimCityResidential4'
+    
     @initialize()
     
     @completedConditions: ->
@@ -164,6 +178,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @groupNumber: -> 2
     
+    @studyPlanBuilding: -> 'SimCityPark'
+    
     @initialize()
     
     @completedConditions: ->
@@ -189,6 +205,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @predecessors: -> [Goal.LineWidth]
     
     @groupNumber: -> 3
+    
+    @studyPlanBuilding: -> 'SimCityResidential1'
     
     @initialize()
     

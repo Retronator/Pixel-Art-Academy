@@ -1,0 +1,68 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormTypecastLabel()
+  typecast()
+  line-height 8rem
+  font-style italic
+  letter-spacing -2rem
+
+pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormFreehandValue()
+  freehand()
+
+pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormErrorTransform()
+  transform rotate(-3deg)
+
+pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormErrorUnderline()
+  content ''
+  display block
+  position absolute
+  left 0
+  width 100%
+  border-bottom 1rem solid
+  pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormErrorTransform()
+
+pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormColors(printColor, paperColor, inputColor, errorColor)
+  background paperColor
+  color printColor
+
+  .option
+    .label
+      color printColor
+
+  .properties
+    .property
+      .value
+        color inputColor
+
+  .extras-title
+    .text
+      background paperColor
+
+  .extras
+    border-color printColor
+
+    &::before
+      border-color printColor
+
+    .extra
+      .name
+      .value
+        color inputColor
+
+        &::before
+          border-color printColor
+
+      .name
+        border-right-color printColor
+
+  .submit-area
+    .button-area
+      &::before
+        border-bottom-color printColor
+
+      .submit-button
+        &:hover
+          color inputColor
+
+  .error-message
+    color errorColor

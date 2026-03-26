@@ -26,4 +26,4 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.BriefComponent extend
     @parent.editAsset()
 
   onClickResetButton: (event) ->
-    @tutorialBitmap.constructor.reset @tutorialBitmap.tutorial, @tutorialBitmap.id(), @tutorialBitmap.bitmapId()
+    @tutorialBitmap.constructor.reset @tutorialBitmap.tutorial, @tutorialBitmap.bitmapId()

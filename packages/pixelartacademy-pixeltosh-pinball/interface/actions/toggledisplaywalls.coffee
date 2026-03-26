@@ -10,7 +10,7 @@ class Pinball.Interface.Actions.ToggleDisplayWalls extends Pinball.Interface.Act
 
   @initialize()
   
-  enabled: -> true
+  enabled: -> not @pinball.gameManager()?.inPlay()
   
   active: -> @pinball.displayWalls()
   

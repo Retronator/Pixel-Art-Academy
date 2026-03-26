@@ -12,7 +12,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
   
     @document = new ComputedField =>
       return unless artwork = @artwork()
-      return unless documentRepresentation = _.find artwork.representations, (representation) => representation.type is PADB.Artwork.RepresentationTypes.Document
+      return unless documentRepresentation = artwork.firstDocumentRepresentation()
 
       # Extract the type and ID.
       url = new URL Meteor.absoluteUrl documentRepresentation.url
@@ -22,9 +22,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
         return LOI.Assets[documentClassName].getDocumentForId id
         
       null
+      
+    @_palettesAutorun = Tracker.autorun (computation) =>
+      return unless document = @document()
+      return unless paletteIds = document.getAllPaletteIds()
+      LOI.Assets.Palette.forIds.subscribeContent paletteIds
   
     @portfolioComponent = new @constructor.PortfolioComponent @
     @clipboardComponent = new @constructor.ClipboardComponent @
+    @changeArtworkComponent = new @constructor.ChangeArtwork @
+    @exportArtworkComponent = new @constructor.ExportArtwork @
+    
+  destroy: ->
+    @_palettesAutorun.stop()
 
   displayName: -> @artwork()?.title or 'Untitled'
   
@@ -37,13 +47,20 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
       parts.push "Size: #{bounds.width}x#{bounds.height}"
       
     if palette = document.palette
+      palette.refresh()
       parts.push "Palette: #{palette.name}"
       
     parts.join ', '
   
   width: -> @document()?.bounds?.width or 1
   height: -> @document()?.bounds?.height or 1
+  portfolioBorderWidth: -> if @document()?.properties?.canvasBorder then 6 else 0
+  pixelArtScaling: -> @document()?.properties?.pixelArtScaling
   
+  previewInfo: ->
+    return unless @clipboardComponent.isCreated()
+    @clipboardComponent.callFirstWith null, 'previewInfo'
+    
   urlParameter: -> @artworkId
   
   ready: ->

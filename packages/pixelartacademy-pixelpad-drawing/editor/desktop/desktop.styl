@@ -20,6 +20,12 @@
       &.move-canvas
         cursor grab
 
+      &.active-tool-engaged
+        .fatamorgana-toolbox
+        .table-item
+        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references
+          pointer-events none
+
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
       &:not(.focused-mode)
         .fatamorgana-toolbox
@@ -97,6 +103,10 @@
       .fatamorgana-toolbox .tools .tool
         transition-duration 0.2s
 
+    &:not(.drawing-active)
+      .fatamorgana-toolbox
+        pointer-events none
+
     .fatamorgana-interface
       .fatamorgana-area.application
         position initial
@@ -126,7 +136,6 @@
 
         .tool
           position absolute
-          cursor pointer
 
           &::before
           &::after
@@ -144,6 +153,7 @@
             absolute-cover-size()
             opacity 0
             z-index 14
+            cursor pointer
 
         .eraser
         .pencil
@@ -200,6 +210,27 @@
           right -86rem
           width 72rem
           height 72rem
+
+        .line
+          position absolute
+          top 0
+          left 62rem
+          width 11rem
+          height 37rem
+
+        .rectangle
+          position absolute
+          top 12rem
+          left 78rem
+          width 31rem
+          height 19rem
+
+        .ellipse
+          position absolute
+          top 12rem
+          left 112rem
+          width 31rem
+          height 19rem
 
         .arrow
         .move-canvas

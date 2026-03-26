@@ -1,9 +1,13 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 AM = Artificial.Mummification
 
 LOI.Assets.Palette.allLospec.publish ->
   LOI.Assets.Palette.getPublishingDocuments().find lospecSlug: $exists: true
   
+LOI.Assets.Palette.allCategorized.publish ->
+  LOI.Assets.Palette.getPublishingDocuments().find category: $exists: true
+
 LOI.Assets.Palette.forId.publish (id) ->
   check id, Match.DocumentId
 

@@ -59,28 +59,10 @@ class LOI.Adventure extends LOI.Adventure
     if storedProfileId = @_loadStoredProfileId()
       console.log "Loading stored profile ID", storedProfileId if LOI.debug or LOI.Adventure.debugState
       @loadingStoredProfile true
-      
-      # Wait until the profile becomes available (or another profile gets loaded).
-      @autorun (computation) =>
-        if profileId = @profileId()
-          console.log "Another profile was loaded", profileId if LOI.debug or LOI.Adventure.debugState
-          @loadingStoredProfile false
-          computation.stop()
-          return
-          
-        return unless Persistence.ready()
-        computation.stop()
-
-        if Persistence.Profile.documents.findOne storedProfileId
-          console.log "Stored profile was found! Loading it …" if LOI.debug or LOI.Adventure.debugState
-          
-          # The profile has been added from synced storage(s), so we can now load it.
-          @loadGame(storedProfileId).finally =>
-            @loadingStoredProfile false
-            
-        else
-          console.log "Stored profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
-          @loadingStoredProfile false
+      @menu.loadGame.show(storedProfileId).catch((error) =>
+        console.error "The stored profile ID was not able to be loaded.", error
+        @_clearStoredProfileId()
+      ).finally => @loadingStoredProfile false
 
   startNewGame: ->
     await @_unloadProfileIfLoaded()
@@ -95,17 +77,30 @@ class LOI.Adventure extends LOI.Adventure
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
+    console.log "Loading profile", profileId if LOI.debug or LOI.Adventure.debugState
+    
     await @_unloadProfileIfLoaded()
 
     # Load the game profile from persistence and activate it if it loaded OK.
     Persistence.loadProfile(profileId).then =>
+      console.log "Persistence profile was loaded. Checking for game state …" if LOI.debug or LOI.Adventure.debugState
+      
       # Ensure we received a valid game state.
       unless LOI.GameState.documents.findOne {profileId}
         return Persistence.unloadProfile().then => throw new AE.InvalidOperationException "Game state for profile #{profileId} was not found."
       
-      @_changeProfileId profileId
+      console.log "Game state was found." if LOI.debug or LOI.Adventure.debugState
       
-    , (conflictResolution) => # TODO
+      @_changeProfileId profileId
+      @_storeProfileId()
+    
+    , (errorOrConflictResolution) =>
+      if errorOrConflictResolution instanceof Error
+        console.error "Persistence profile loading encountered an error.", errorOrConflictResolution
+        # This was not a planned rejection of profile loading. Throw it as an error.
+        throw errorOrConflictResolution
+        
+      # TODO: Implement conflict resolution.
     
   _unloadProfileIfLoaded: ->
     if Persistence.activeProfile()
@@ -135,7 +130,8 @@ class LOI.Adventure extends LOI.Adventure
 
     # Activate the new profile.
     @profileId profileId
-    @_storeProfileId()
+    
+    console.log "Changed profile to", profileId if LOI.debug or LOI.Adventure.debugState
 
   saveGame: (options) ->
     # Start syncing the profile to desired storages.
@@ -149,6 +145,8 @@ class LOI.Adventure extends LOI.Adventure
     @_storeProfileId()
 
   quitGame: (options = {}) ->
+    console.log "Quitting game." if LOI.debug or LOI.Adventure.debugState
+    
     # Update any lazy fields.
     @gameState.updated()
     
@@ -156,11 +154,15 @@ class LOI.Adventure extends LOI.Adventure
     @_clearStoredProfileId()
   
     Persistence.unloadProfile().then =>
+      console.log "Quit game unload profile succeeded." if LOI.debug or LOI.Adventure.debugState
       # Execute the callback if present and end if it has handled the redirect.
       return if options.callback?()
   
       # Do a hard reload of the root URL.
       window.location = @constructor.rootUrl()
+      
+    , (error) =>
+      console.error "Quit game failed to unload the profile.", error
       
   _loadStoredProfileId: ->
     localStorage.getItem @constructor.profileIdLocalStorageKey

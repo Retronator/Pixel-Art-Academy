@@ -10,8 +10,9 @@ class PAA.Pixeltosh.OS.FileSystem extends LOI.Adventure.Location
   #     path: a string specifying the custom full path (path + filename) of this file
   # folders: object with user-defined properties of folders.
   #   {folderPath}:
-  #     window: dimensions of the folder window
-  #       left, top, width, height
+  #     window: information about the folder representation in Finder
+  #       left, top, width, height: dimensions of the window
+  #       scrollLeft, scrollTop: how far the content is scrolled
   @id: -> 'PixelArtAcademy.Pixeltosh.OS.FileSystem'
   
   @initialize()

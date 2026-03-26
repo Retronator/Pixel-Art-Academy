@@ -1,0 +1,216 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent">
+  <style>
+    /* We don't need the clipboard. */
+    .pixelartacademy-pixelpad-apps-drawing-clipboard {
+      visibility: hidden;
+    }
+  </style>
+  <div class="pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent {{activeClass}} {{onCoverClass}} {{editorActiveClass}}">
+    {{#if bookVisible}}
+      <div class="book-area {{bookDisplayedClass}} {{bookOpenClass}} volume-{{volumeNumber}}">
+        <div class="book-closed">
+          <div class="titles">
+            <div class="academy">Retropolis Academy of Art</div>
+            <div class="series">Computer Art Series</div>
+            <div class="main-title">
+              <div class="line-1">The</div>
+              <div class="line-2">
+                <div class="outline">Graphics Book</div>
+                <div class="gradient">Graphics Book</div>
+              </div>
+              <div class="line-3">of Icons</div>
+            </div>
+            {{#if $is volumeNumber 1}}
+              <div class="pixeltosh emphasized">Pixeltosh &amp; more</div>
+            {{/if}}
+            {{#if $is volumeNumber 2}}
+              <div class="nature-area">
+                <div class="nature">Nature</div>
+              </div>
+              <div class="special-edition emphasized">Special edition</div>
+            {{/if}}
+            <div class="tagline">Ready-to-use icons for home computers</div>
+          </div>
+          {{#if $is volumeNumber 1}}
+            <div class="pixeltosh"></div>
+          {{/if}}
+          <div class="icons-examples">
+            <div class="size-section size-8">
+              <div class="size-label">8X8</div>
+              <ul class="icons">
+                {{#each icons8}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+            <div class="size-section size-16">
+              <div class="size-label">16X16</div>
+              <ul class="icons">
+                {{#each icons16}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+            <div class="size-section size-32">
+              <div class="size-label">32X32</div>
+              <ul class="icons">
+                {{#each icons32}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+          {{#if $is volumeNumber 2}}
+            <div class="corner">
+              <div class="animals-area">
+                <div class="number">40</div>
+                <div class="animals">animals</div>
+              </div>
+              <div class="extra">+ 5 fruits</div>
+              <div class="extra">+ 3 plants</div>
+            </div>
+          {{/if}}
+        </div>
+        <div class="book-open">
+          <div class="page left">
+            {{#if onTableOfContents}}
+              <div class="table-of-contents">
+                <div class="pages" {{style tableOfContentsPagesStyle}}>
+                  <hgroup class="title">
+                    <h1>Contents</h1>
+                    <h2>The Graphics Book of Icons</h2>
+                  </hgroup>
+                  {{#each tableOfContentsParts}}
+                    <div class="contents-part">
+                      <div class="title">Part {{number}} - {{title}}</div>
+                      <ol class="icon-entries">
+                        {{#each iconEntries}}
+                          <li class="icon-entry">
+                            <div class="name">{{name}}</div>
+                            <ul class="sizes">
+                              {{#each iconEntrySizes}}
+                                <li class="size {{iconStatusClass}}">✔</li>
+                              {{/each}}
+                            </ul>
+                            <div class="page-number">{{pageNumber}}</div>
+                          </li>
+                        {{/each}}
+                      </ol>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            {{/if}}
+            {{#with pageDataLeft}}
+              {{#if onIconEntry}}
+                {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconPage}}
+              {{/if}}
+            {{/with}}
+          </div>
+          <div class="page right">
+            {{#with pageDataRight}}
+              {{#if onPartTitle}}
+                <div class="part-title">
+                  <div class="number">Part {{number}}</div>
+                  <div class="title">{{title}}</div>
+                  <ol class="icon-entries">
+                    {{#each iconEntries}}
+                      <li class="icon-entry">{{name}}</li>
+                    {{/each}}
+                  </ol>
+                </div>
+              {{/if}}
+              {{#if onIconEntry}}
+                {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconPage}}
+              {{/if}}
+            {{/with}}
+          </div>
+          <div class="footer">
+            <div class="page-number left">{{pageNumberLeft}}</div>
+            <div class="page-number right">{{pageNumberRight}}</div>
+          </div>
+        </div>
+      </div>
+      {{#if canMoveBack}}
+        <button class="navigation-button previous-page"></button>
+      {{/if}}
+      {{#if canMoveForward}}
+        <button class="navigation-button next-page"></button>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon">
+  <li class="icon icon-{{number}}">
+    <img class="placeholder" src="{{imageUrl}}" />
+  </li>
+</template>
+
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconPage">
+  <div class="icon-page">
+    <div class="title">
+      <div class="number">{{iconNumber}}</div>
+      <div class="name">{{name}}</div>
+    </div>
+    {{#with iconSection8}}
+      <div class="icon-section size-8 {{iconStatusClass}}">
+        <div class="title">
+          <div class="size">8X8</div>
+          <div class="bytes">1 byte per row</div>
+        </div>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 8}}
+          </div>
+          <div class="binary data-area">
+            <div class="title">Bin</div>
+            <div class="data">{{{binaryData true}}}</div>
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Dec</div>
+            <div class="data">{{{decimalData true}}}</div>
+          </div>
+          <div class="hexadecimal data-area">
+            <div class="title">Hex</div>
+            <div class="data">{{{hexadecimalData true}}}</div>
+          </div>
+        </div>
+      </div>
+    {{/with}}
+    {{#with iconSection16}}
+      <div class="icon-section size-16 {{iconStatusClass}}">
+        <div class="title">
+          <div class="size">16X16</div>
+          <div class="bytes">2 bytes per row</div>
+        </div>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 16}}
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Data</div>
+            <div class="data">{{{decimalData}}}</div>
+          </div>
+        </div>
+      </div>
+    {{/with}}
+    {{#with iconSection32}}
+      <div class="icon-section size-32 {{iconStatusClass}}">
+        <div class="title">
+          <div class="size">32X32</div>
+          <div class="bytes">4 bytes per row</div>
+        </div>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 32}}
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Data</div>
+            <div class="data">{{{decimalData}}}</div>
+          </div>
+        </div>
+      </div>
+    {{/with}}
+  </div>
+</template>

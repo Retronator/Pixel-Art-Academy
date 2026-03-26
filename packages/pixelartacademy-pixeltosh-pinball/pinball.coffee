@@ -25,7 +25,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   @fullName: -> "Pinball Creation Kit"
   @description: ->
     "
-      A do-it-yourself Pinball game.
+      A do-it-yourself pinball game.
     "
   
   @slug: -> 'pinball'
@@ -53,6 +53,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @inputManager = new ReactiveField null
     @gameManager = new ReactiveField null
     @editorManager = new ReactiveField null
+    @audioManager = new ReactiveField null
     @mouse = new ReactiveField null
     
     @openedFile = new ReactiveField null
@@ -79,6 +80,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @debugPhysics = @state.field 'debugPhysics', default: false
     @slowMotion = @state.field 'slowMotion', default: false
     @displayWalls = @state.field 'displayWalls', default: true
+    @showGrid = @state.field 'showGrid', default: false
   
     @sceneImage = new ReactiveField null
     
@@ -123,6 +125,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @inputManager new @constructor.InputManager @
     @gameManager new @constructor.GameManager @
     @editorManager new @constructor.EditorManager @
+    @audioManager new @constructor.AudioManager @
     @mouse new @constructor.Mouse @
     
     @sceneImage new AM.PixelImage
@@ -154,6 +157,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager()?.destroy()
     @inputManager()?.destroy()
     @gameManager()?.destroy()
+    @editorManager()?.destroy()
     
     @sceneManager null
     @cameraManager null
@@ -182,7 +186,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Pressing escape returns to edit mode if edit is unlocked.
     gameManager = @gameManager()
 
-    if gameManager.mode() isnt @constructor.GameManager.Modes.Edit and @editModeUnlocked()
+    if not gameManager.inEdit() and @editModeUnlocked()
       gameManager.edit()
       
       # Inform that we've handled the back button.
@@ -246,6 +250,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   fixedUpdate: (elapsed) ->
     sceneManager = @sceneManager()
     entity.fixedUpdate? elapsed for entity in sceneManager.entities()
+    
+    audioManager = @audioManager()
+    audioManager.fixedUpdate elapsed
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime

@@ -2,9 +2,9 @@
   <div class="landsofillusions-components-dialog">
     <div class="dialog-overlay">
       <div class="dialog">
-        <div class="message">{{options.message}}</div>
+        <div class="message">{{#Markdown}}{{options.message}}{{/Markdown}}</div>
         {{#if options.moreInfo}}
-          <div class="more-info">{{options.moreInfo}}</div>
+          <div class="more-info">{{#Markdown}}{{options.moreInfo}}{{/Markdown}}</div>
         {{/if}}
         <ul class="buttons">
           {{#each options.buttons}}

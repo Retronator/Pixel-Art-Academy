@@ -10,6 +10,10 @@ class Pinball.Assets
     
     @backgroundColor: -> new THREE.Color '#edddb5'
     
+    @availablePublications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+    
   class @Ball extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Ball'
     
@@ -55,6 +59,14 @@ class Pinball.Assets
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
     
+    @unlockedPublications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+    
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.PrewarMachines'
+    ]
+
     @initialize()
 
   class @GobbleHole extends @Asset
@@ -72,12 +84,16 @@ class Pinball.Assets
   
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
     
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.GobbleHoles'
+    ]
+  
     @initialize()
 
   class @BallTrough extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.BallTrough'
 
-    @displayName: -> "Ball trough"
+    @displayName: -> "Drain"
 
     @description: -> """
       A hole that ends the ball without gaining points.
@@ -105,6 +121,10 @@ class Pinball.Assets
     
     @pixelArtEvaluation: -> true
     
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Bumpers'
+    ]
+    
     @initialize()
     
     @properties: ->
@@ -124,6 +144,10 @@ class Pinball.Assets
     @fixedDimensions: -> width: 20, height: 20
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
+    
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Gates'
+    ]
     
     @initialize()
 

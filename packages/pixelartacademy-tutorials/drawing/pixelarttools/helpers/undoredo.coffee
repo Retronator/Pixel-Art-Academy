@@ -10,7 +10,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       One of the biggest advantages of digital art is the ability to undo our actions.
       
       Shortcuts:
-
       - Cmd/ctrl + Z: undo
       - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
@@ -18,8 +17,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
 
   @fixedDimensions: -> width: 59, height: 59
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
-  @minClipboardScale: -> 1
-  @maxClipboardScale: -> 1
 
   @imageUrl: ->
     "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/codemasters.png"

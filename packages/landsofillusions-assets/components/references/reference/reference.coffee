@@ -120,8 +120,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       position = @currentPosition()
 
-    left: "#{position.x}rem"
-    top: "#{position.y}rem"
+    left: "#{position.x - displaySize.width / 2}rem"
+    top: "#{position.y - displaySize.height / 2}rem"
     width: "#{displaySize.width}rem"
     height: "#{displaySize.height}rem"
 
@@ -193,6 +193,19 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       reference[name] value
 
+  changeDisplayOptions: (value, appendToLastAction) ->
+    return unless reference = @data()
+    
+    assetData = Tracker.nonreactive => @references.options.assetData()
+    action = new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+      displayOptions: value
+    
+    if @_updateAction
+      @_updateAction.append action
+    
+    else
+      assetData.executeAction action, appendToLastAction
+    
   reorderToTop: ->
     return unless reference = @data()
 

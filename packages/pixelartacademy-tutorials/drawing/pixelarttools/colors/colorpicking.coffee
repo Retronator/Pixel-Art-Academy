@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPickingWithUndo
   @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking'
 
   @displayName: -> "Color picking"
@@ -58,7 +58,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
       PAA.Practice.Software.Tools.ToolKeys.ColorPicker
       PAA.Practice.Software.Tools.ToolKeys.Zoom if Helpers.isAssetCompleted Helpers.Zoom
       PAA.Practice.Software.Tools.ToolKeys.MoveCanvas if Helpers.isAssetCompleted Helpers.MoveCanvas
-      PAA.Practice.Software.Tools.ToolKeys.Undo if Helpers.isAssetCompleted Helpers.UndoRedo
+      PAA.Practice.Software.Tools.ToolKeys.Undo if @unlockUndo() or Helpers.isAssetCompleted Helpers.UndoRedo
       PAA.Practice.Software.Tools.ToolKeys.Redo if Helpers.isAssetCompleted Helpers.UndoRedo
     ]
 
@@ -128,3 +128,9 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
       paintHelper = editor.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.Paint
     
       @_initialColorRamp isnt paintHelper.paletteColor().ramp
+  
+  class @Error extends PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPickingWithUndo.Error
+    @id: -> "#{Asset.id()}.Error"
+    @assetClass: -> Asset
+    
+    @initialize()

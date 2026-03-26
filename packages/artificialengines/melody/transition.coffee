@@ -4,4 +4,7 @@ class AMe.Transition
   constructor: (@section, options) ->
     _.defaults @, options,
       nextSection: null
-      trigger: null
+      condition: null
+      priority: 0
+    
+    @transitionCount = 0

@@ -1,0 +1,719 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+grid-background()
+  background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-grid.png') 0 0 / 5rem 5rem
+
+.pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent
+  absolute-cover()
+  background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem !important
+  opacity 0
+  visibility hidden
+  transition all 0.4s
+
+  &.active
+    opacity 1
+    visibility visible
+    transition all 0.6s 0.2s
+
+  &.on-cover
+    .navigation-button.next-page
+      left calc(50% + 80rem)
+
+  &.editor-active
+    .book-area
+      .book-open
+        left -277rem
+        top -196rem
+
+    .navigation-button
+      display none
+
+  &:not(.editor-active)
+    .book-area
+      .book-open
+        .page
+          .icon-page
+            .icon-section
+              cursor pointer
+
+              &:hover
+                border-color atariGray(3)
+
+                > .title
+                  border-bottom-color atariGray(3)
+
+                  .size
+                    color atariGray(1)
+
+  .book-area
+    absolute-cover-size()
+    left -82rem
+    transition left 0.2s
+
+    &.displayed
+      .book-closed
+        top calc(50% - 122rem)
+        transition-delay 0.5s
+        transition-timing-function ease-out
+
+    &.open
+      left 0
+
+      .book-closed
+        visibility hidden
+
+      .book-open
+        visibility visible
+
+    &.volume-1
+      .book-closed
+        .titles
+          .tagline
+            padding-left 68rem
+
+        .icons-examples
+          .size-section
+            &.size-8
+            &.size-16
+              width 60rem
+              right 0
+
+            &.size-16
+            &.size-32
+              bottom 0
+
+            &.size-16
+              .icons
+                flex-wrap wrap
+                gap 5rem
+
+            &.size-32
+              width 70rem
+              left 0
+
+            .size-label
+              margin-bottom 2rem
+              background-color atariBlue(2)
+
+    &.volume-2
+      .book-closed
+        &::after
+          background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-closed-grid-nature.png')
+
+        .titles
+          .academy
+            border-color atariAqua(0)
+
+          .nature-area
+            position relative
+            height 50rem
+            margin-top -1rem
+            padding-top 14rem
+
+            &::before
+            &::after
+              content ''
+              position absolute
+              left -9rem
+              width 154rem
+
+            &::before
+              z-index 0
+              top -28rem
+              height 76rem
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-nature-background.png')
+
+            &::after
+              z-index 2
+              top 22rem
+              height 26rem
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-nature-foreground.png')
+
+            .nature
+              position relative
+              left -9rem
+              width 154rem
+              z-index 1
+              serif-23()
+              color atariYellow(7)
+              text-shadow atariAqua(1) 0 2rem
+              text-transform uppercase
+
+          .tagline
+            padding-right 40rem
+
+        .icons-examples
+          .size-section
+            bottom 0
+
+            &.size-8
+              left 0
+              width 22rem
+
+            &.size-16
+              left 26rem
+              width 28rem
+
+            &.size-32
+              left 58rem
+              width 34rem
+
+              .icons
+                justify-content space-around
+
+            .size-label
+              background-color atariAqua(2)
+              margin-bottom 5rem
+
+            .icons
+              flex-direction column
+              height 36rem
+              align-items center
+
+        .corner
+          display flex
+          position absolute
+          padding 0 4rem 3rem 0
+          right 0
+          bottom 3rem
+          width 76rem
+          height 87rem
+          flex-direction column
+          justify-content end
+          text-align right
+          text-transform uppercase
+          background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-nature-corner.png')
+
+          .animals-area
+            color atariYellow(7)
+            text-shadow atariBrown(0) 0 1rem
+
+            .number
+              position relative
+              left 1rem
+              header-17()
+              line-height 20rem
+
+            .animals
+              header-8()
+              line-height 12rem
+
+          .extra
+            small-print()
+            text-shadow atariAqua(0) 0 1rem
+
+    .book-closed
+    .book-open
+      position absolute
+      z-index 14
+
+    .book-closed
+      left calc(50% - 12rem)
+      top 100%
+      width 178rem
+      height 246rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-closed.png')
+      transition top 1s ease-in
+      padding 3rem 0 0 12rem
+      cursor pointer
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        left 17rem
+        top 8rem
+        width 156rem
+        height 231rem
+        background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-closed-grid.png') 0 0 / 5rem 5rem
+
+      .titles
+        > *
+          margin 0 auto
+          text-align center
+          width 138rem
+          border 1rem solid atariGray(6)
+          background atariGray(0)
+
+        .academy
+          position relative
+          z-index 1
+          margin-top 2rem
+          width 98rem
+          padding 2rem
+          border-color atariCyan(0)
+          color atariOrange(5)
+          academy()
+          line-height 10rem
+
+        .series
+          margin-top -14rem
+          padding 15rem 0 2rem
+          color atariGray(4)
+          small-print()
+          text-transform uppercase
+
+        .main-title
+          margin-top -1rem
+          text-transform uppercase
+
+          .line-1
+          .line-3
+            background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-titles-shine.png') 0 0 / 1rem 8rem
+            text-fill-color transparent
+            background-clip text
+
+          .line-1
+            margin-top 1rem
+            height 9rem
+            daily()
+            background-position-y 1rem
+
+          .line-2
+            position relative
+            margin-top -5rem
+            height 28rem
+            header-17()
+            letter-spacing -1rem
+
+            .outline
+              pixel-text-outline atariGray(6) false
+
+            .gradient
+              absolute-cover()
+              background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-titles-spectrum.png') 0 8rem / 1rem 18rem
+              text-fill-color transparent
+              background-clip text
+
+          .line-3
+            margin-top -2rem
+            height 14rem
+            header-8()
+            background-position-y 3rem
+
+        .emphasized
+          margin-top -1rem
+          padding-bottom 1rem
+          italic()
+          color atariYellow(6)
+          text-transform uppercase
+          letter-spacing -1rem
+
+        .tagline
+          margin-top -1rem
+          small-print()
+          line-height 6rem
+          padding 3rem
+          color atariGray(6)
+
+      > .pixeltosh
+        margin -22rem 0 0 10rem
+        width 73rem
+        height 94rem
+        background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-pixeltosh.png')
+
+      .icons-examples
+        position absolute
+        left 27rem
+        bottom 16rem
+        width 136rem
+        height 94rem
+
+        .size-section
+          position absolute
+
+          &.size-8
+            .icons
+              .icon
+                width 8rem
+                height 8rem
+
+          &.size-16
+            .icons
+              .icon
+                width 16rem
+                height 16rem
+
+          &.size-32
+            .icons
+              .icon
+                width 32rem
+                height 32rem
+
+          .size-label
+            display inline-block
+            padding 0 1rem 0 2rem
+            color atariYellow(6)
+            uni()
+            text-transform uppercase
+
+          .icons
+            display flex
+            list-style none
+            padding 0
+            margin 0
+            justify-content space-between
+
+            .icon
+              background atariGray(1)
+
+              .placeholder
+                width 100%
+
+    .book-open
+      left calc(50% - 168rem)
+      top calc(50% - 122rem)
+      width 332rem
+      height 245rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-open.png')
+      visibility hidden
+      transition left 1s, top 1s
+
+      .page
+        position absolute
+        top 8rem
+        height 230rem
+        width 147rem
+        border 1rem solid atariGray(3)
+        padding 4rem 0
+
+        &.left
+          left 13rem
+
+        &.right
+          right 9rem
+
+        &::before
+        &::after
+          content ""
+          position absolute
+          left -1rem
+          right -1rem
+          background-color atariGray(4)
+          height 5rem
+          border 1rem solid atariGray(3)
+
+        &::before
+          top -1rem
+
+        &::after
+          bottom -1rem
+
+        .table-of-contents
+          position relative
+          z-index 1
+          width 308rem
+          height 220rem
+          overflow hidden
+          counter-reset icon-counter
+
+          .pages
+            position relative
+            width 634rem
+            height 220rem
+            column-width 145rem
+            column-gap 18rem
+            column-fill auto
+
+            > .title
+              text-align center
+              text-transform uppercase
+
+              h1
+                height 19rem
+                header-8()
+                color atariGray(1)
+                margin 0
+                padding-top 3rem
+                grid-background()
+
+              h2
+                small-print()
+                color atariGray(2)
+                margin 0
+                padding 1rem
+                border-block 1rem solid atariGray(3)
+
+            .contents-part
+              small-print()
+              break-inside avoid
+              margin 0 5rem 5rem
+              padding-top 5rem
+
+              .title
+                border 1rem solid atariGray(3)
+                padding 1rem
+                background-color atariGray(5)
+                color atariGray(2)
+                text-transform uppercase
+                text-align center
+                cursor pointer
+
+                &:hover
+                  color atariGray(1)
+
+              .icon-entries
+                counter-reset none
+                list-style none
+                padding 0 1rem
+                margin 3rem 0
+
+                .icon-entry
+                  display flex
+                  color atariGray(2)
+                  line-height 6rem
+                  cursor pointer
+
+                  &:hover
+                    color atariGray(1)
+
+                  &::before
+                    counter-increment icon-counter
+                    content counter(icon-counter) "."
+                    margin-right 2rem
+
+                  .name
+                  .page-number
+                    white-space nowrap
+
+                  .sizes
+                    list-style none
+                    display flex
+                    position relative
+                    z-index 1
+                    left 2rem
+                    width 0
+                    padding 0
+                    margin 0
+
+                    .size
+                      display none
+                      padding-right 1rem
+
+                      &.started
+                      &.completed
+                        display block
+
+                      &.started
+                        color atariGray(3)
+
+                      &.completed
+                        color atariGreen(3)
+
+                  .page-number
+                    display flex
+                    color atariGray(3)
+                    flex 1
+                    align-items baseline
+
+                    &::before
+                      content ""
+                      flex 1
+                      height 1rem
+                      margin 0 2rem 0 1rem
+                      background-color atariGray(5)
+
+        .part-title
+          text-align center
+          text-transform uppercase
+
+          .number
+            header-17()
+            margin-top 56rem
+            color atariGray(6)
+
+            outlineColor = atariGray(1)
+            depthColor = atariGray(2)
+            textShadowValue = (("-1rem 0 0 %s" % outlineColor) ("0 -1rem 0 %s" % outlineColor) ("1rem 0 0 %s" % outlineColor) ("0 1rem 0 %s" % outlineColor) ("1rem 1rem 0 %s" % outlineColor))
+
+            depth = 3
+            push(textShadowValue, "%srem %srem 0 %s" % (depth depth depthColor))
+
+            for i in (2..depth)
+              push(textShadowValue, "%srem %srem 0 %s" % ((i - 1) i depthColor))
+              push(textShadowValue, "%srem %srem 0 %s" % (i (i - 1) depthColor))
+
+            text-shadow unquote(join(',', textShadowValue))
+
+          .title
+            width 131rem
+            height 21rem
+            border 1rem solid atariGray(3)
+            padding 3rem 0
+            margin 13rem auto 15rem
+            background atariGray(1)
+            background-clip content-box
+            header-8()
+            color atariGray(1)
+            grid-background()
+
+          .icon-entries
+            list-style none
+            margin 0 18rem
+            padding 0
+            small-print()
+            text-transform uppercase
+            color atariGray(3)
+            text-wrap balance
+
+            .icon-entry
+              display inline-block
+              margin 1rem 2rem
+              cursor pointer
+
+              &:hover
+                color atariGray(2)
+                
+        .icon-page
+          > .title
+            display flex
+            color atariGray(1)
+            height 24rem
+            border-bottom 1rem solid atariGray(3)
+
+            .number
+              header-17()
+              line-height 22rem
+              width 26rem
+              border-right 1rem solid atariGray(3)
+              text-align center
+
+            .name
+              padding 10rem 3rem 0
+              flex-grow 1
+              header-8()
+              grid-background()
+              text-transform uppercase
+
+          .icon-section
+            position relative
+            width 137rem
+            margin 5rem auto
+            border 1rem solid atariGray(4)
+
+            &.started
+            &.completed
+              &::after
+                content ''
+                position absolute
+                top 1rem
+                right 1rem
+                width 9rem
+                height 7rem
+
+            &.started::after
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-checkmark-started.png')
+
+            &.completed::after
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-checkmark-completed.png')
+
+            &.size-16
+            &.size-32
+              .icon-area
+                .data-area
+                  .data
+                    height 30rem
+                    overflow hidden
+
+            &.size-8
+              .icon-area
+                padding-bottom 3rem
+
+                .icon
+                  width 42rem
+                  height 42rem
+                  margin-right 8rem
+
+            &.size-32
+              .icon-area
+                .data-area
+                  illegible()
+
+            > .title
+              display flex
+              border-bottom 1rem solid atariGray(4)
+              background-color atariGray(5)
+              height 10rem
+
+              .size
+                width 41rem
+                padding 0 4rem
+                color atariGray(2)
+                uni()
+
+              .bytes
+                padding 1rem 0
+                color atariGray(3)
+                small-print()
+
+            .icon-area
+              display flex
+              padding 4rem
+
+              .icon
+                flex-shrink 0
+                width 34rem
+                height 34rem
+                margin-right 5rem
+                border 1rem solid atariGray(4)
+                box-shadow 1rem 1rem atariGray(3), 2rem 2rem atariGray(3)
+
+              .data-area
+                margin-right 8rem
+                color atariGray(3)
+                quaternary()
+
+                &.hexadecimal
+                  text-transform uppercase
+
+                &:last-child
+                  margin-right 0
+
+                .title
+                  text-transform uppercase
+
+      .footer
+        position absolute
+        left 13rem
+        right 9rem
+        bottom 8rem
+
+        .page-number
+          position absolute
+          z-index 1
+          bottom -2rem
+          width 13rem
+          height 9rem
+          border 1rem solid atariGray(3)
+          background atariGray(6)
+          small-print()
+          color atariGray(3)
+          text-align center
+
+          &.left
+            left 67rem
+
+          &.right
+            right 67rem
+
+  .navigation-button
+    position absolute
+    z-index 15
+    top 0
+    bottom 0
+    background none
+    border none
+    transition background 0.2s
+
+    &:hover
+      background rgba(atariGray(2), 0.3)
+
+    &.previous-page
+      left 0
+      right calc(50% + 155rem)
+      cursor w-resize
+
+    &.next-page
+      left calc(50% + 155rem)
+      right 0
+      cursor e-resize

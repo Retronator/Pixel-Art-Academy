@@ -28,6 +28,8 @@ class Pinball.Parts.Hole extends Pinball.Part
       
       triggerShape = Pinball.Part.Avatar.Silhouette.detectShape shape.pixelArtEvaluation,
         yOffset: shape.height * @constructor.triggerPositionYRatio()
+      
+      return unless triggerShape
         
       triggerCollider = new Ammo.btGhostObject
       triggerCollider.setCollisionShape triggerShape.createCollisionShape()

@@ -128,7 +128,7 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
         
         # This is a full pixel. If we have a palette, find the closest palette color.
         if palette
-          paletteColor = palette.closestPaletteColor r, g, b, backgroundColor
+          paletteColor = palette.closestPaletteColorFromRGB r, g, b, backgroundColor
       
           # If we found a palette color, add the pixel.
           if paletteColor
@@ -143,6 +143,3 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
         pixels.push pixel if pixel
         
     pixels
-    
-  _colorDistance: (color, r, g, b) ->
-    Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)

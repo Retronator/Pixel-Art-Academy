@@ -1,0 +1,3 @@
+In the Year 2000
+
+{"_id":"YfJDueYsPwCGk888D","lastEditTime":{"$date":1754904980798},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.Design.Fundamentals.Publications.Chronoscope.ScienceFiction.InTheYear2000","title":"In the Year 2000","design":{"class":""}}

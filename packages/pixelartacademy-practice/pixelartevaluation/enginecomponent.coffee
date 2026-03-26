@@ -6,20 +6,23 @@ PAE = PAA.Practice.PixelArtEvaluation
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-abruptSegmentLengthChangesFilterValues = [PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges, _.keys(PAE.Line.Part.Curve.AbruptSegmentLengthChanges)...]
-straightPartsFilters = [PAE.Subcriteria.SmoothCurves.StraightParts, _.keys(PAE.Line.Part.Curve.StraightParts)...]
-inflectionPointsFilterValues = [PAE.Subcriteria.SmoothCurves.InflectionPoints, _.keys(PAE.Line.Part.Curve.InflectionPoints)...]
+abruptSegmentLengthChangesSubcriteria = _.keys(PAE.Line.Part.Curve.AbruptSegmentLengthChanges)
+abruptSegmentLengthChangesFilterValues = [PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges, abruptSegmentLengthChangesSubcriteria...]
+
+straightPartsSubcriteria = _.keys(PAE.Line.Part.Curve.StraightParts)
+straightPartsFilterValues = [PAE.Subcriteria.SmoothCurves.StraightParts, straightPartsSubcriteria...]
+
+inflectionPointsSubcriteria = _.keys(PAE.Line.Part.Curve.InflectionPoints)
+inflectionPointsFilterValues = [PAE.Subcriteria.SmoothCurves.InflectionPoints, inflectionPointsSubcriteria...]
 
 class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
-  @debug = true
-  
   @LineWidths:
     Thin: 1
     Thick: 2
     Wide: 3
     Varying: 2
   
-  constructor: ->
+  constructor: (@options) ->
     super arguments...
     
     @ready = new ComputedField =>
@@ -81,13 +84,14 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         continue if filterValue and linePart.evaluate()[filterValue.property].type isnt filterValue.value
         
         if linePart in focusedLineParts
-          markup.push Markup.PixelArt.straightLineBreakdown(linePart)...
+          markup.push Markup.PixelArt.straightLineBreakdown(linePart, pixelArtEvaluationProperty)...
           
         else
-          markup.push Markup.PixelArt.evaluatedPerceivedStraightLine(linePart)...
+          markup.push Markup.PixelArt.evaluatedPerceivedStraightLine(linePart, pixelArtEvaluationProperty)...
       
-      # If we're not going to be drawing curves, draw a faint unevaluated outline to indicate they were detected.
-      unless PAE.Criteria.SmoothCurves in displayedCriteria
+      # If we're not going to be drawing curves, draw a faint unevaluated
+      # outline to indicate they were detected (when not focused).
+      unless PAE.Criteria.SmoothCurves in displayedCriteria or filterValue
         for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
           curveMarkup = Markup.PixelArt.perceivedCurve linePart
           curveMarkup.line.width = 0
@@ -100,7 +104,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         # When focusing on inflection points, we draw just the curvature curve parts.
         for line in lines
           # Ignore lines without curves.
-          {curveSmoothness} = line.evaluate()
+          {curveSmoothness} = line.evaluate pixelArtEvaluationProperty
           continue unless curveSmoothness?.inflectionPoints.points.length
           
           for curve in line.curvatureCurveParts
@@ -147,7 +151,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       # When focusing on abrupt changes, we don't draw curve lines, to focus better on the actual pixel lines.
       else unless filterValue in abruptSegmentLengthChangesFilterValues
         # Draw curved parts unless we're focusing on straight parts.
-        unless filterValue in straightPartsFilters
+        unless filterValue in straightPartsFilterValues
           betterStyle = Markup.betterStyle()
           
           for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
@@ -164,33 +168,35 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             # If we're focusing on a line, skip drawing others.
             continue if focusedLines.length and linePart.line not in focusedLines
             
-            # Draw lines without curves with minimal lines.
-            {curveSmoothness} = linePart.line.evaluate()
-            unless curveSmoothness
+            # Draw lines without curves with minimal lines (when unfocused).
+            {curveSmoothness} = linePart.line.evaluate pixelArtEvaluationProperty
+            unless curveSmoothness or filterValue
               straightLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
               straightLineMarkup.line.width = 0
               markup.push straightLineMarkup
               continue
               
             perceivedLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
+            perceivedLineMarkup.line.style = betterStyle
             
-            # Straight lines are less problematic when between corners.
-            if linePart.isBetweenStraightParts()
-              perceivedLineMarkup.line.style = betterStyle
-              continue if filterValue in straightPartsFilters
-            
-            if linePart.isAtTheEndOfCurvedPart()
-              perceivedLineMarkup.line.style = mediocreStyle
-              continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
+            # Change the style of straight lines if they are being evaluated.
+            if pixelArtEvaluationProperty.smoothCurves?.straightParts?
+              # Straight lines are less problematic when between corners.
+              if linePart.isBetweenStraightParts()
+                continue if filterValue in straightPartsFilterValues
               
-            else if linePart.isInTheMiddleOfACurvedPart()
-              perceivedLineMarkup.line.style = worseStyle
-              continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
+              if linePart.isAtTheEndOfCurvedPart()
+                perceivedLineMarkup.line.style = mediocreStyle
+                continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
+                
+              else if linePart.isInTheMiddleOfACurvedPart()
+                perceivedLineMarkup.line.style = worseStyle
+                continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
             
             markup.push perceivedLineMarkup
       
       # Write point segment lengths.
-      unless filterValue and filterValue not in abruptSegmentLengthChangesFilterValues
+      unless filterValue and filterValue not in abruptSegmentLengthChangesFilterValues or not pixelArtEvaluationProperty.smoothCurves?.abruptSegmentLengthChanges?
         pointSegmentLengthTextsOptions = abruptEvaluation: true
         
         for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
@@ -208,12 +214,12 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           markup.push Markup.PixelArt.pointSegmentLengthTexts(linePart, pointSegmentLengthTextsOptions)...
           
       # Draw inflection points.
-      unless filterValue and filterValue not in inflectionPointsFilterValues
+      unless filterValue and filterValue not in inflectionPointsFilterValues or not pixelArtEvaluationProperty.smoothCurves?.inflectionPoints?
         for line in lines
           # If we're focusing on a line, skip drawing others.
           continue if focusedLines.length and line not in focusedLines
           
-          {curveSmoothness} = line.evaluate()
+          {curveSmoothness} = line.evaluate pixelArtEvaluationProperty
           
           # Ignore lines without curves.
           continue unless curveSmoothness
@@ -242,12 +248,61 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               radius: 2
               
             markup.push {point}
+            
+      # Write percentages when analyzing smooth curves.
+      if PAE.Criteria.SmoothCurves in displayedCriteria and (focusedLines.length or filterValue)
+        evaluatedSmoothCurvesSubcriterions = []
+        evaluatedSmoothCurvesSubcriterions.push PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges if (if filterValue then filterValue in abruptSegmentLengthChangesFilterValues else pixelArtEvaluationProperty.smoothCurves?.abruptSegmentLengthChanges?)
+        evaluatedSmoothCurvesSubcriterions.push PAE.Subcriteria.SmoothCurves.StraightParts if (if filterValue then filterValue in straightPartsFilterValues else pixelArtEvaluationProperty.smoothCurves?.straightParts?)
+        evaluatedSmoothCurvesSubcriterions.push PAE.Subcriteria.SmoothCurves.InflectionPoints if (if filterValue then filterValue in inflectionPointsFilterValues else pixelArtEvaluationProperty.smoothCurves?.inflectionPoints?)
+        
+        for line in lines
+          # Skip lines that we're not focused on.
+          continue if focusedLines.length and line not in focusedLines
+          
+          # If we're focusing on specific abrupt segment length changes, skip lines that don't have those changes.
+          if filterValue in abruptSegmentLengthChangesSubcriteria
+            continue unless counts = line.evaluate()?.curveSmoothness?.abruptSegmentLengthChanges.counts
+            
+            switch filterValue
+              when PAE.Line.Part.Curve.AbruptSegmentLengthChanges.Major
+                continue unless counts.major
+            
+              when PAE.Line.Part.Curve.AbruptSegmentLengthChanges.Minor
+                continue unless counts.minor
+          
+          # If we're focusing on specific straight parts, skip lines that don't have those parts.
+          if filterValue in straightPartsSubcriteria
+            continue unless counts = line.evaluate()?.curveSmoothness?.straightParts.counts
+            
+            switch filterValue
+              when PAE.Line.Part.Curve.StraightParts.End
+                continue unless counts.end
+              
+              when PAE.Line.Part.Curve.StraightParts.Middle
+                continue unless counts.middle
+          
+          # If we're focusing on specific inflection points, skip lines that don't have those points.
+          if filterValue in inflectionPointsSubcriteria
+            continue unless counts = line.evaluate()?.curveSmoothness?.inflectionPoints.counts
+            
+            switch filterValue
+              when PAE.Line.Part.Curve.InflectionPoints.Isolated
+                continue unless counts.isolated
+              
+              when PAE.Line.Part.Curve.InflectionPoints.Sparse
+                continue unless counts.sparse
+              
+              when PAE.Line.Part.Curve.InflectionPoints.Dense
+                continue unless counts.dense
+
+          markup.push Markup.PixelArt.curveSmoothnessEvaluationPercentageTexts(line, evaluatedSmoothCurvesSubcriterions, pixelArtEvaluationProperty)...
           
     if PAE.Criteria.ConsistentLineWidth in displayedCriteria
       for line in lines
         continue if focusedLines.length and line not in focusedLines
         
-        lineEvaluation = line.evaluate()
+        lineEvaluation = line.evaluate pixelArtEvaluationProperty
         widthType = lineEvaluation.width.type
         
         # Apply filtering.
@@ -271,24 +326,6 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
         markup.push lineMarkup...
         
-    @drawMarkup markup, context, renderOptions
-
-  _addPixelToPath: (context, pixel) ->
-    context.rect pixel.x - 0.5, pixel.y - 0.5, 1, 1
-
-  _diagonalDash: (context, bounds, color) ->
-    context.save()
-    context.clip()
-    context.strokeStyle = color
-    context.lineWidth = @_pixelSize
-    context.beginPath()
-    
-    for x in [-bounds.height...bounds.width] by 5 * @_pixelSize
-      context.moveTo x, 0
-      context.lineTo x + bounds.height, bounds.height
-      
-    context.stroke()
-    context.restore()
-  
-  _bezierCurve: (context, controlPoint1, controlPoint2, end) ->
-    context.bezierCurveTo controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, end.x, end.y
+    @drawMarkup markup, context,
+      pixelSize: 1 / renderOptions.camera.effectiveScale() * devicePixelRatio
+      displayPixelSize: 1 / renderOptions.camera.effectiveScale() * renderOptions.editor.display.scale()

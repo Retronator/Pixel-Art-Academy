@@ -1,0 +1,10 @@
+<template name="PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice">
+  {{#if editing}}
+    …
+    <ul class="choice" data-cursor="default">
+      {{#each options}}
+        <li class="option-area"><button class="option">{{text}}</button></li>
+      {{/each}}
+    </ul>
+  {{else}}<span class="chosen-choice" data-cursor="{{chosenChoiceCursor}}">{{chosenChoiceText}}</span>{{/if}}
+</template>

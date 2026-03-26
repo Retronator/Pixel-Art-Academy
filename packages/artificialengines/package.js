@@ -5,16 +5,19 @@ Package.describe({
 
 Npm.depends({
   'path-to-regexp': '2.1.0',
-  'three': '0.126.1',
-  'canvas': '2.11.2',
+  'three': '0.180.0',
+  'abort-controller': '3.0.0',
+  'canvas': '3.2.0',
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
-  'quill': '1.3.7',
+  'quill': '2.0.2',
   "velocity-animate": "1.5.2",
   'showdown': '1.9.1',
   'lodash': '4.17.21',
-  'poly-decomp': '0.3.0'
+  'poly-decomp': '0.3.0',
+  'path-data-polyfill': '1.0.10',
+  'onnxruntime-web': '1.16.3'
 });
 
 Package.onUse(function(api) {
@@ -72,6 +75,7 @@ Package.onUse(function(api) {
   // Global initialization
 
   api.addFile('everywhere/lodash/lodash');
+  api.addFile('everywhere/abortcontroller');
 
   // Define all namespaces so that we can use shortcuts.
 
@@ -90,6 +94,7 @@ Package.onUse(function(api) {
   api.addFile('melody..');
   api.addFile('everything..');
   api.addFile('workforce..');
+  api.addFile('mind..');
 
   // Artificial Everywhere
 
@@ -119,6 +124,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/transform');
   api.addFile('everywhere/lodash/cartesianproduct');
   api.addFile('everywhere/lodash/time');
+  api.addFile('everywhere/lodash/values');
 
   api.addFile('everywhere/tracker/delayedautorun');
   api.addFile('everywhere/tracker/triggerondefinedchange');
@@ -158,6 +164,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/shortcuthelper');
   api.addClientFile('mirage/velocity-client');
   api.addClientFile('mirage/window-client');
+  api.addClientFile('mirage/svghelper');
 
   api.addUnstyledComponent('mirage/datainput..');
 
@@ -177,6 +184,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('mirage/quill-client/quill');
   api.addClientFile('mirage/quill-client/blotcomponent');
+  api.addClientFile('mirage/quill-client/small');
 
   api.addUnstyledComponent('mirage/render..');
 
@@ -189,6 +197,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/spacebars/debughelpers');
 
   api.addFile('mirage/mixins/autoresizetextarea');
+  api.addFile('mirage/mixins/autoresizeinput');
   api.addFile('mirage/mixins/autoselectinput');
   api.addFile('mirage/mixins/persistentinput');
 
@@ -243,6 +252,7 @@ Package.onUse(function(api) {
   api.addClientFile('mummification/document/versioning/versioneddocumentloader-client');
   api.addFile('mummification/document/versioning/operation');
   api.addFile('mummification/document/versioning/action');
+  api.addFile('mummification/document/versioning/actionarchive');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
@@ -293,7 +303,7 @@ Package.onUse(function(api) {
   api.addServerFile('babel/translation/translation-server-databasecontent');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
-  api.addServerFile('babel/translation/migrations/0000-renamecollection');
+  api.addFile('babel/translation/migrations/0000-renamecollection');
 
   api.addFile('babel/language/language');
   api.addServerFile('babel/language/subscriptions');
@@ -318,6 +328,7 @@ Package.onUse(function(api) {
   api.addFile('program/hashfunctions');
 
   api.addFile('program/search..');
+  api.addFile('program/search/breadthfirstsearch');
 
   // Artificial Pyramid
   api.addGlsl('pyramid/trigonometry');
@@ -346,7 +357,12 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygonboundary');
   api.addFile('pyramid/polygonwithholes');
 
+  api.addFile('pyramid/polygonalchain');
+
   api.addFile('pyramid/beziercurve');
+
+  api.addFile('pyramid/triangulatedsurface..');
+  api.addFile('pyramid/triangulatedsurface/triangulatedsurface-getsilhouette');
 
   // Artificial Reality
 
@@ -472,6 +488,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum/pixelart..');
   api.addFile('spectrum/pixelart/pixelart-detectpixelscale');
   api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
+  api.addFile('spectrum/pixelart/circle');
 
   api.addFile('spectrum/color..');
   api.addGlsl('spectrum/color/hsltorgb');
@@ -481,6 +498,8 @@ Package.onUse(function(api) {
   api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
   api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
 
+  api.addFile('spectrum/color/cielab..');
+
   api.addFile('spectrum/color/srgb..');
 
   // Artificial Echo
@@ -488,6 +507,7 @@ Package.onUse(function(api) {
   api.addFile('echo/audio');
   api.addFile('echo/variable');
   api.addFile('echo/node');
+  api.addFile('echo/sound');
 
   api.addFile('echo/nodes/output');
   api.addFile('echo/nodes/sound');
@@ -541,4 +561,15 @@ Package.onUse(function(api) {
   // Artificial Workforce
 
   api.addFile('workforce/work');
+});
+
+Package.onTest(function(api) {
+  api.use([
+    'coffeescript',
+    'tinytest',
+    'ejson',
+    'retronator:artificialengines'
+  ]);
+
+  api.addFile('everywhere/lodash/objects-tests');
 });

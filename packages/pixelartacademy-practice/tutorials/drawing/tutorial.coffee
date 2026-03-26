@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
+class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   # assets: array of assets that are part of this tutorial
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -14,7 +14,11 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
   @assetsCount: -> @assets().length
 
   @completedAssetsCount: ->
-    assets = @state('assets') or []
+    # Due to changes in the curriculum, we have to filter assets to the ones that are currently enabled.
+    @_assetIds ?= (asset.id() for asset in @assets())
+  
+    assets = _.filter @state('assets') or [], (asset) => asset.id in @_assetIds
+    
     _.sum ((if asset.completed then 1 else 0) for asset in assets)
 
   @completedRatio: -> @completedAssetsCount() / @assetsCount()

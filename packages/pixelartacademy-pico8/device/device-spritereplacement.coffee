@@ -16,10 +16,12 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
     @autorun (computation) =>
       return unless game = @game()
       return unless project = @project()
+      
+      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandlers @
 
       for asset in game.assets
         do (asset) =>
-          projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
+          return unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
           assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
           backgroundIndex = assetClass.backgroundColor().paletteColor.ramp

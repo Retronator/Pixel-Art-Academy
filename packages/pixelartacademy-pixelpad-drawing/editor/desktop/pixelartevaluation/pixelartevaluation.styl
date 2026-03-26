@@ -50,6 +50,39 @@
       border-spacing 1rem
       margin-bottom 3rem
 
+      &.detailed
+        .criterion
+        .category
+          .name-area
+            small-print()
+
+        .criterion
+          .required
+            .checkmark-area
+              padding-top 1rem
+
+          td
+            padding-top 4rem !important
+            line-height 6rem !important
+
+          .name-area
+            text-transform uppercase
+
+        .category
+          td
+            line-height 5rem !important
+
+            &.required
+              &::after
+                display none
+
+          .name-area
+            .name
+              top 1.5rem
+
+              &::before
+                content '— '
+
       .header-row
         th
           position relative
@@ -75,14 +108,13 @@
       .category
         td
           position relative
-          padding 1rem 0 0
           vertical-align bottom
 
           &::after
             content ''
             position absolute
             bottom -1rem
-            left 0
+            left 1rem
             right 0
             height 1rem
             background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pixelartevaluation/dottedline.png') 0 0 / 4rem 1rem
@@ -101,17 +133,16 @@
 
         .required
           width 17rem
-          daily()
-          color penColor
-          text-align center
-          line-height 10rem
 
           .checkmark-area
             display block
             absolute-cover()
-            bottom -1rem
             z-index 1
             padding-top 2rem
+            daily()
+            color penColor
+            text-align center
+            line-height 10rem
             cursor text
 
             input[type='checkbox']
@@ -134,8 +165,14 @@
             padding-right 2rem
             background-color paperColor
 
-        .score
-          width 27rem
+      .score
+      .count
+        width 25rem
+        adventure()
+        line-height 7rem
+        color penColor
+        text-align center
+        padding-left 3rem
 
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     transform translate(calc(100% - 26rem), calc(100% - 18rem))

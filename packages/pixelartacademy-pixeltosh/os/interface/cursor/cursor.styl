@@ -93,3 +93,21 @@
         width 14rem
         height 5rem
         background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-south.png')
+
+    &.text
+      mix-blend-mode difference
+
+      &::after
+        left -2rem
+        top -7rem
+        width 5rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/text.png')
+
+    &.pointer
+      &::after
+        left -4rem
+        top -1rem
+        width 11rem
+        height 12rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/pointer.png')

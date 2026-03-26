@@ -32,6 +32,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   scale: data for how big to display the reference
   #   order: integer value for sorting references
   #   displayMode: where to display the reference (inside the image, over the interface …)
+  #   displayOptions: any extra information specifying how to display the reference
   # environments: array of HDR images used to light the scene
   #   image: image document
   #     _id

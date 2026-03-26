@@ -3,8 +3,15 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+  @CanvasExtensionDirection =
+    Horizontal: 'Horizontal'
+    Vertical: 'Vertical'
+
   # Override to provide reference images that need to be added to the bitmap.
   @references: -> null
+  
+  # Override to specify how using multiple references should resize the canvas.
+  @canvasExtensionDirection: -> @CanvasExtensionDirection.Horizontal
   
   @initializeReferences: ->
     return unless references = @references()
@@ -18,6 +25,15 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
           LOI.Assets.Image.documents.insert url: imageUrl unless LOI.Assets.Image.documents.findOne url: imageUrl
           
+  getReferenceDataForUrl: (url) ->
+    return unless bitmapReferences = @bitmap()?.references
+    defaultReferencesData = @constructor.references()
+    
+    return unless data = _.find bitmapReferences, (reference) => reference.image.url is url
+    return unless defaultData = _.find defaultReferencesData, (reference) => reference.image.url is url
+    
+    _.defaultsDeep {}, data, defaultData
+    
   _initialize: ->
     super arguments...
     
@@ -44,15 +60,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmapId = @bitmapId()
         return unless bitmap = @bitmap()
         
-        assets = @tutorial.assetsData()
-        asset = _.find assets, (asset) => asset.id is @id()
+        assetData = @getAssetData()
         
         # Note: create a clone of step areas since the object gets compared for equality.
-        stepAreas = if asset.stepAreas then EJSON.clone asset.stepAreas else []
+        stepAreas = if assetData.stepAreas then EJSON.clone assetData.stepAreas else []
         
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
         singleWidth = fixedDimensions.width
+        singleHeight = fixedDimensions.height
+        horizontalExtension = @constructor.canvasExtensionDirection() is @constructor.CanvasExtensionDirection.Horizontal
         
         removeNeeded = false
         
@@ -62,12 +79,19 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         if removeNeeded
           for stepArea, index in stepAreas by -1
-            startX = index * singleWidth
+            startX = 0
+            startY = 0
+            
+            if horizontalExtension
+              startX = index * singleWidth
+              
+            else
+              startY = index * singleHeight
             
             found = false
             for x in [0...singleWidth]
-              for y in [0...fixedDimensions.height]
-                if bitmap.findPixelAtAbsoluteCoordinates startX + x, y
+              for y in [0...singleHeight]
+                if bitmap.findPixelAtAbsoluteCoordinates startX + x, startY + y
                   found = true
                   break
                   
@@ -84,16 +108,24 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         for referenceUrl in displayedReferenceUrlChoices
           stepAreas.push {referenceUrl} unless _.find stepAreas, (stepArea) => stepArea.referenceUrl is referenceUrl
         
-        asset.stepAreas = stepAreas
-        @tutorial.state 'assets', assets
+        assetData.stepAreas = stepAreas
+        @setAssetData assetData
 
         # If necessary, resize the bitmap to make space for all the chosen references.
-        desiredWidth = singleWidth * Math.max 1, stepAreas.length
+        desiredWidth = singleWidth
+        desiredHeight = singleHeight
         
+        if horizontalExtension
+          desiredWidth = singleWidth * Math.max 1, stepAreas.length
+          
+        else
+          desiredHeight = singleHeight * Math.max 1, stepAreas.length
+          
         bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.documents.findOne bitmapId, fields: bounds: 1
         width = bitmap.bounds.right - bitmap.bounds.left + 1
+        height = bitmap.bounds.bottom - bitmap.bounds.top + 1
         
-        unless desiredWidth is width
+        unless desiredWidth is width and desiredHeight is height
           bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
 
           # Create a change bounds action.
@@ -101,7 +133,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             left: 0
             top: 0
             right: desiredWidth - 1
-            bottom: fixedDimensions.height - 1
+            bottom: desiredHeight - 1
             fixed: true
             
           bitmap.executeAction changeBounds, true
@@ -113,15 +145,21 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         for stepArea, index in stepAreas
           stepAreaBounds =
-            x: index * fixedDimensions.width
+            x: 0
             y: 0
-            width: fixedDimensions.width
-            height: fixedDimensions.height
+            width: singleWidth
+            height: singleHeight
+            
+          if horizontalExtension
+            stepAreaBounds.x = index * singleWidth
+            
+          else
+            stepAreaBounds.y = index * singleHeight
           
           stepAreaInstance = new @constructor.StepArea @, stepAreaBounds
   
-          goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
-          @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
+          if goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
+            @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
         
   destroy: ->
     super arguments...
@@ -130,3 +168,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     @assetStepAreas?.stop()
     @_chosenReferencesAutorun?.stop()
     @_referenceStepsAutorun?.stop()
+
+  referenceDefaults: ->
+    return {} unless references = @constructor.references()
+    
+    defaults = {}
+    
+    # Add reference data to defaults (make sure an object and not just an URL is given).
+    for reference in references when _.isObject reference
+      defaults[reference.image.url] = reference
+      
+    defaults

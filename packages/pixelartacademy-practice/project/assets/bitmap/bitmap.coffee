@@ -6,8 +6,6 @@ LOI = LandsOfIllusions
 class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   # bitmapId: reference to a bitmap
   
-  @portfolioBorderWidth = 6
-  
   # Type of this asset.
   @type: -> @Types.Bitmap
 
@@ -31,6 +29,9 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
   # Override to provide a string with more information related to the bitmap (e.g. author info in challenges).
   @bitmapInfo: -> null
+  
+  # Override to add a style class to bitmap info.
+  @bitmapInfoClass: -> ''
 
   @portfolioComponentClass: ->
     @PortfolioComponent
@@ -45,6 +46,9 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   # Override if the asset requires a pixel art evaluation analysis.
   # You can return an object to be sent as options to the constructor.
   @pixelArtEvaluation: -> false
+
+  # Override if the asset requires a readability analysis.
+  @readabilityAnalysis: -> false
   
   @initialize: ->
     super arguments...
@@ -80,17 +84,21 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     # Alias for the drawing app.
     @document = @bitmap
 
+    # Allow palette access.
+    # Note: We need this immediately so that background color can be calculated in the portfolio.
+    @palette = new AE.LiveComputedField => @customPalette() or @restrictedPalette()
+    
     briefComponentClass = @constructor.briefComponentClass()
     @briefComponent = new briefComponentClass @
     
     # Subscribe to the palette.
     if restrictedPaletteName = @constructor.restrictedPaletteName()
-      LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
+      @_restrictedPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
 
     # Prepare lazy initialization.
     @initialized = new ReactiveField false
 
-    # Allow dereived classes to finish constructing.
+    # Allow derived classes to finish constructing.
     Meteor.setTimeout =>
       @_initializingAutorun = Tracker.autorun (computation) =>
         return unless @initializingConditions()
@@ -103,12 +111,15 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @bitmapId.stop()
     @bitmap.stop()
     @versionedBitmap.stop()
+    @palette.stop()
     
-    @_initializingAutorun.stop()
+    @_restrictedPaletteSubscription?.stop()
+    @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
+    @_readabilityAnalysis?.destroy()
     
   initializingConditions: ->
-    # Wait with initalizing until we've selected the asset as the active one in the editor.
+    # Wait with initializing until we've selected the asset as the active one in the editor.
     @_isActiveInEditor false
   
   _isActiveInEditor: (requiresDrawingActive) ->
@@ -128,7 +139,13 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   _initialize: ->
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
-      pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
+      # Pixel art evaluation options can either come from the constructor or from the instance.
+      # We check if the instance provides this options method, otherwise we take the static one.
+      if @pixelArtEvalutionOptions
+        pixelArtEvaluationOptions = @pixelArtEvaluationOptions()
+        
+      else
+        pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
       
       @pixelArtEvaluationInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
@@ -140,6 +157,25 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
         pixelArtEvaluationInstance.depend()
         pixelArtEvaluationInstance
         
+    if readabilityAnalysis = @constructor.readabilityAnalysis()
+      # Readability analysis options can either come from the constructor or from the instance.
+      # We check if the instance provides this options method, otherwise we take the static one.
+      if @readabilityAnalysisOptions
+        readabilityAnalysisOptions = @readabilityAnalysisOptions()
+        
+      else
+        readabilityAnalysisOptions = if _.isObject readabilityAnalysis then readabilityAnalysis else {}
+      
+      @readabilityAnalysisInstance = new ComputedField =>
+        return unless bitmap = @versionedBitmap()
+        @_readabilityAnalysis?.destroy()
+        @_readabilityAnalysis = new PAA.Practice.ReadabilityAnalysis bitmap, readabilityAnalysisOptions
+      
+      @readabilityAnalysis = new ComputedField =>
+        return unless readabilityAnalysisInstance = @readabilityAnalysisInstance()
+        readabilityAnalysisInstance.depend()
+        readabilityAnalysisInstance
+    
     Meteor.setTimeout => @initialized true
   
   _afterInitialization: (action) ->
@@ -158,7 +194,17 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   
   width: -> @bitmap()?.bounds.width
   height: -> @bitmap()?.bounds.height
+  pixelArtScaling: -> true
   portfolioBorderWidth: -> 6
+  
+  # Returns information about presenting the asset in the drawing app.
+  # borderWidth: how thick the border should be
+  # scale: what magnification the preview is using
+  # position: where the top-left corner of the preview is
+  #   top, left: CSS string for positioning the preview
+  previewInfo: ->
+    return unless @clipboardComponent.isCreated()
+    @clipboardComponent.callFirstWith null, 'previewInfo'
 
   fixedDimensions: -> @constructor.fixedDimensions()
 
@@ -175,7 +221,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     return unless backgroundColor = @constructor.backgroundColor()
 
     if paletteColor = backgroundColor.paletteColor
-      return unless palette = @restrictedPalette()
+      return unless palette = @palette()
       palette.color paletteColor.ramp, paletteColor.shade
 
     else
@@ -188,9 +234,15 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
   bitmapInfoTranslation: -> AB.translation @_translationSubscription, 'bitmapInfo'
   
+  bitmapInfoClass: -> @constructor.bitmapInfoClass()
+  
   imageUrl: ->
     return unless bitmapId = @bitmapId()
     "/assets/bitmap.png?id=#{bitmapId}"
+    
+  # Override if you want to send options based on the bitmap instance (instead of the static options).
+  pixelArtEvaluationOptions: ->
+  readabilityAnalysisOptions: ->
 
 # We want a generic state for bitmap assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the bitmaps with built-in editors

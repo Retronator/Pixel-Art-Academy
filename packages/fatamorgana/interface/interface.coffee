@@ -107,6 +107,7 @@ class FM.Interface extends AM.Component
     super arguments...
 
     @data.destroy()
+    @files.stop()
 
   getComponentData: (componentClassOrId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
@@ -257,6 +258,13 @@ class FM.Interface extends AM.Component
   # gets assigned to Interface in Tool classes for what must be an incredibly obscure reason.
   activeToolClasses: ->
     @activeTool()?.toolClasses()
+  
+  activeToolEngaged: ->
+    return unless activeTool = @activeTool()
+    activeTool.isEngaged()
+  
+  activeToolEngagedClass: ->
+    'active-tool-engaged' if @activeToolEngaged()
 
   events: ->
     super(arguments...).concat

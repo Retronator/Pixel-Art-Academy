@@ -3,7 +3,7 @@
     <div class="title">
       Consistent line width
     </div>
-    <table class="evaluation-breakdown">
+    <table class="evaluation-breakdown detailed">
       <tr class="header-row">
         {{#if editable}}
           <th>Req.</th>
@@ -12,7 +12,7 @@
         <th>Score</th>
       </tr>
       {{#each criteria}}
-        <tr class="criterion">
+        <tr class="criterion {{kebabCase this.id}}">
           {{#if editable}}
             <td class="required">
               <label class="checkmark-area">
@@ -29,7 +29,7 @@
         </tr>
         {{#if enabled}}
           {{#each categories}}
-            <tr class="category">
+            <tr class="category {{kebabCase this.id}}">
               {{#if editable}}
                 <td class="required"></td>
               {{/if}}

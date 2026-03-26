@@ -121,3 +121,13 @@ class AP.PolygonBoundary
     _.reverse insetVertices unless @getOrientation() is AP.PolygonBoundary.Orientations.Clockwise
     
     new AP.PolygonBoundary insetVertices
+    
+  getSVGPathDString: ->
+    pathString = "M #{@vertices[0].x} #{@vertices[0].y}"
+    
+    for vertex, vertexIndex in @vertices[1..]
+      pathString += " L #{vertex.x} #{vertex.y}"
+
+    pathString += "Z"
+    
+    pathString

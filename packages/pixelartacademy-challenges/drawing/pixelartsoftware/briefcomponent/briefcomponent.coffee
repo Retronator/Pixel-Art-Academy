@@ -21,7 +21,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     bitmapData = _.cloneDeep @bitmap.bitmap()
     editor.manualBitmapData bitmapData
     @bitmap.manualUserBitmapData bitmapData
-    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
+    @bitmap.hintsEngineComponents.overlaid.displayColorHelpUpToPixelCoordinates x: -1, y: -1
 
     # Open the editor and zoom in the bitmap as much as possible.
     editor.manuallyActivated true
@@ -87,7 +87,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
       editor.manualBitmapData bitmapData
       @bitmap.manualUserBitmapData bitmapData
       
-      @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo {x, y}
+      @bitmap.hintsEngineComponents.overlaid.displayColorHelpUpToPixelCoordinates {x, y}
 
       # Move to next pixel.
       x++
@@ -145,6 +145,6 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     @bitmap.uploadMode false
 
     # Show hints for all pixels.
-    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo null
+    @bitmap.hintsEngineComponents.overlaid.displayColorHelpUpToPixelCoordinates null
 
     super arguments...

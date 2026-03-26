@@ -17,6 +17,9 @@ class AE.ArithmeticException extends Meteor.Error
 
 class AE.InvalidOperationException extends Meteor.Error
   constructor: (reason, details) -> super 'invalid-operation-exception', reason, details
+  
+class AE.IOException extends Meteor.Error
+  constructor: (reason, details) -> super 'io-exception', reason, details
 
 class AE.NotImplementedException extends Meteor.Error
   constructor: (reason, details) -> super 'not-implemented-exception', reason, details

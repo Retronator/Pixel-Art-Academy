@@ -42,7 +42,7 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
           flagIndex = flags.getPixelIndex layerX, layerY
           
           # See if the pixel exists at these coordinates.
-          continue unless flags.pixelExistsAtIndex flagIndex
+          continue unless flags.pixelExistsAtIndex(flagIndex) or renderOptions.backgroundColor
           
           absoluteX = layer.bounds.x + layerX
           absoluteY = layer.bounds.y + layerY
@@ -81,6 +81,11 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
             
           else
             materialIndex = null
+            
+          if renderOptions.backgroundColor
+            paletteColor ?= renderOptions.backgroundColor.paletteColor
+            directColor ?= renderOptions.backgroundColor.directColor
+            materialIndex ?= renderOptions.backgroundColor.materialIndex
           
           if alphaArray
             alpha = alphaArray[flagIndex]
@@ -96,9 +101,22 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
           else
             normal = null
           
-          if renderOptions.shaded
-            @_renderPixelShaded assetX, assetY, 0, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, bitmapData, renderOptions
+          scale = renderOptions.scale or 1
+          
+          if renderOptions.shaded or renderOptions.targetPalette
+            @_renderPixelShaded assetX, assetY, 0, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, bitmapData, renderOptions if alpha
             
+          else if scale > 1
+            for canvasOffsetX in [0...scale]
+              for canvasOffsetY in [0...scale]
+                pixelIndex = ((assetX * scale + canvasOffsetX) + (assetY * scale + canvasOffsetY) * bitmapData.bounds.width * scale) * 4
+            
+                if paletteColor
+                  @_renderPixelPaletteColor pixelIndex, paletteColor.ramp, paletteColor.shade, alpha
+                
+                else
+                  @_renderPixelDirectColor pixelIndex, directColorR, directColorG, directColorB, alpha
+                
           else
             pixelIndex = flagIndex * 4
             

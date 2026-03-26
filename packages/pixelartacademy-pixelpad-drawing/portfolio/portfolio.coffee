@@ -42,12 +42,31 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     super arguments...
 
     @sectionHeight = 25
-    @initialGroupHeight = 19
-    @inactiveGroupHeight = 5
+    @maxInitialGroupHeight = 19
+    @maxInactiveGroupHeight = 5
     @activeGroupHeight = 150
+    @groupsMaxTotalHeight = 180
     @settingsHeight = 118
     @sectionsMargin = 13
     @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
+    
+  getInitialGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor @groupsMaxTotalHeight / groupCount
+    Math.min heightPerGroup, @maxInitialGroupHeight
+    
+  getInactiveGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor (@groupsMaxTotalHeight - @activeGroupHeight) / (groupCount - 1)
+    Math.min heightPerGroup, @maxInactiveGroupHeight
+  
+  defaultGroupHeightInActiveSection: ->
+    return @maxInitialGroupHeight unless activeSection = @activeSection()
+
+    @getInitialGroupHeight activeSection.groups().length
+  
+  defaultInactiveGroupHeightInActiveSection: ->
+    return @maxInactiveGroupHeight unless activeSection = @activeSection()
+    
+    @getInactiveGroupHeight activeSection.groups().length
 
   sectionActiveClass: ->
     section = @currentData()
@@ -70,10 +89,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     if section is activeSection
       if activeGroup
-        activeSectionHeight = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        activeSectionHeight = @sectionHeight + (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
       
       else
-        activeSectionHeight = @sectionHeight + groups.length * @initialGroupHeight
+        activeSectionHeight = @sectionHeight + groups.length * @getInitialGroupHeight groups.length
         
       height = activeSectionHeight
       
@@ -120,17 +139,24 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     width: "#{assetData.asset.width() * assetData.scale() + assetData.asset.portfolioBorderWidth() * 2}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible (up to 6) while remaining under 70px.
+    maxSize = 70
     size = Math.max asset.width(), asset.height()
+    displayScale = LOI.adventure.interface.display.scale()
+
+    unless asset.pixelArtScaling()
+      # Without pixel art scaling, make the image fit into the 70px.
+      maxWindowPixelSize = 70 * displayScale
+      displaySize = Math.min size, maxWindowPixelSize
+      return displaySize / size / displayScale
+    
+    # with pixel art scaling, scale the image as much as possible (up to 6) while remaining under 70px.
     return 1 if _.isNaN size
     
     scale = 1
-    maxSize = 70
 
     if size > maxSize
       # The asset is bigger than our maximum size, so we will need to scale downwards. We start
       # operating in effective scale to still have integer magnification compared to window pixels.
-      displayScale = LOI.adventure.interface.display.scale()
       maxEffectiveSize = maxSize * displayScale
       
       effectiveScale = displayScale
@@ -162,10 +188,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   
       if groups = section.groups?()
         if @activeGroup()
-          top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+          top += (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
 
         else
-          top += groups.length * @initialGroupHeight
+          top += groups.length * @getInitialGroupHeight groups.length
 
       else
         top += @settingsHeight
@@ -317,8 +343,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
   _goToClickedAsset: ->
     assetData = @currentData()
+    
+    # Check if there is a custom click handler.
+    if assetData.asset.onClick
+      assetData.asset.onClick()
+      return
 
-    # Set active sprite ID.
+    # Set active asset URL.
     AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelPadEditor: (event) ->
@@ -330,22 +361,27 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @drawing.state 'externalSoftware', program.value
   
   onKeyDown: (event) ->
-    if event.which is AC.Keys.f2
+    # To get into cheating mode, you have to have shift pressed (and alt released),
+    # to prevent accidental cheating when quitting on windows with alf-F4.
+    if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f2, shift: true}
       return unless asset = @activeAsset()?.asset
       
-      return unless stepArea = asset.stepAreas?()[0]
-      activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+      return unless stepAreas = asset.stepAreas?()
       
-      activeStep.solve()
-      event.preventDefault()
+      for stepArea in stepAreas when not stepArea.completed()
+        activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+        
+        activeStep.solve()
+        event.preventDefault()
+        break
       
-    else if event.which is AC.Keys.f3
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f3, shift: true}
       return unless asset = @activeAsset()?.asset
       
       asset.solveAndComplete?()
       event.preventDefault()
     
-    else if event.which is AC.Keys.f4
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f4, shift: true}
       console.log "Cheating commences …"
       
       return unless activeGroup = @activeGroup()
@@ -357,10 +393,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
         
         cheatMore = false
         
-        while uncompletedAssetData = _.find assetsData, (assetData) -> not assetData.completed
+        while uncompletedAssetData = _.find assetsData, (assetData) => not assetData.completed and _.find assets, (asset) => asset.id() is assetData.id
           console.log "Completing", uncompletedAssetData.id
           
-          uncompletedAsset = _.find assets, (asset) -> asset.id() is uncompletedAssetData.id
+          uncompletedAsset = _.find assets, (asset) => asset.id() is uncompletedAssetData.id
           uncompletedAsset.solve()
           uncompletedAssetData.completed = true
           

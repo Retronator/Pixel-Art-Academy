@@ -278,7 +278,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends 
     @maxSizeNumber: -> 16
     
     @message: -> """
-      Bigger circles are easier to draw with an ellipse tool, but for smaller sizes, manual drawing often gives more aesthetic results than the shapes produced with algorithms.
+      Bigger circles are easier to draw with the ellipse tool, but for smaller sizes, manual drawing often gives more aesthetic results than the shapes produced with algorithms.
     """
     
     @activeConditions: ->

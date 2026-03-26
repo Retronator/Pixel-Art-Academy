@@ -14,19 +14,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
   
   Asset = @
   
-  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
-    @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-  class @FirstWay extends @StepInstruction
+  class @FirstWay extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.FirstWay"
+    @assetClass: -> Asset
     @stepNumber: -> 1
     
     @message: -> """
@@ -36,8 +26,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @SecondWay extends @StepInstruction
+  class @SecondWay extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.SecondWay"
+    @assetClass: -> Asset
     @stepNumber: -> 2
     
     @message: -> """
@@ -47,8 +38,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @ThirdWay extends @StepInstruction
+  class @ThirdWay extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.ThirdWay"
+    @assetClass: -> Asset
     @stepNumber: -> 3
     
     @message: -> """
@@ -58,8 +50,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @AnyWay extends @StepInstruction
+  class @AnyWay extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.AnyWay"
+    @assetClass: -> Asset
     @stepNumber: -> 4
     
     @message: -> """

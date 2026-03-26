@@ -7,6 +7,11 @@ PAA = PixelArtAcademy
 FM = FataMorgana
 
 class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
+  @ReferenceDisplayTypes =
+    Default: 'Default'
+    SceneObject: 'SceneObject'
+    Model: 'Model'
+  
   @styleClass: -> throw new AE.NotImplementedException "Editor must provide a style class name."
   
   @getEditor: ->
@@ -22,6 +27,10 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
     # Drawing becomes active when theme transition completes.
     # The theme should set this to true or false based on its needs.
     @drawingActive = new ReactiveField false
+  
+    # Editor is visible as soon as entry theme transition starts and continues until the exit
+    # theme transition ends. The theme should set this to true or false based on its needs.
+    @visible = new ReactiveField false
 
     # Allow to manually provide sprite data.
     @manualSpriteData = new ReactiveField null
@@ -32,9 +41,9 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
   onCreated: ->
     super arguments...
   
-    # We can only deal with assets that can return pixels.
+    # We can only deal with bitmap assets.
     filterAsset = (asset) =>
-      if asset instanceof PAA.Practice.Project.Asset.Bitmap or asset instanceof PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset then asset else null
+      if asset?.document?() instanceof LOI.Assets.Bitmap then asset else null
   
     @activeAsset = new ComputedField => filterAsset @drawing.portfolio().activeAsset()?.asset
     @displayedAsset = new ComputedField => filterAsset @drawing.portfolio().displayedAsset()?.asset
@@ -121,13 +130,12 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       else
         zoomLevels = [50, zoomLevels...]
 
-      # Extend zoom levels down to clipboard scale if necessary.
+      # Extend zoom levels down to preview scale if necessary.
       if displayedAsset = @displayedAsset()
-        if displayedAsset.clipboardComponent.isCreated()
-          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-            minimumScale = clipboardAssetSize.scale * 100
-            while Math.round(minimumScale) < Math.round(zoomLevels[0])
-              zoomLevels.unshift zoomLevels[0] / 2
+        if previewInfo = displayedAsset.previewInfo()
+          minimumScale = previewInfo.scale * 100
+          while Math.round(minimumScale) < Math.round(zoomLevels[0])
+            zoomLevels.unshift zoomLevels[0] / 2
         
       zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
       Tracker.nonreactive => zoomLevelsHelper zoomLevels
@@ -147,7 +155,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         paletteColor = asset.materials?[materialIndex]
         setColor = not paletteColor
 
-      if paletteColor
+      if hasRestrictedPalette
         if paletteId = paintHelper.paletteId()
           # We have a specified palette. Wait until information about the palette is available.
           return unless palette = LOI.Assets.Palette.documents.findOne paletteId
@@ -156,8 +164,9 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           # We have a restricted palette color. Wait until information about the palette is available.
           return unless palette = asset.getRestrictedPalette()
 
+      if paletteColor
         # Only reset the color if the palette does not contain the current one.
-        setColor = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
+        setColor = not (palette?.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
 
       else
         # We need to set the color if we're in restricted palette or we have no direct color.
@@ -165,9 +174,20 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
       if setColor
         Tracker.nonreactive =>
-          # For assets with restricted colors, set the first palette color.
+          # For assets with restricted colors, set the first available palette color.
           if hasRestrictedPalette
-            paintHelper.setPaletteColor ramp: 0, shade: 0
+            if palette
+              foundColor = false
+
+              for ramp, rampIndex in palette.ramps when ramp.shades.length > 0
+                paintHelper.setPaletteColor ramp: rampIndex, shade: 0
+                foundColor = true
+                break
+                
+              paintHelper.setClearColor() unless foundColor
+                
+            else
+              paintHelper.setClearColor()
             
           # Set a black direct color.
           else
@@ -203,11 +223,35 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       mapping:
         "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
         "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
+        "#{LOI.Assets.SpriteEditor.Tools.Line.id()}": key: AC.Keys.l
+        "#{LOI.Assets.SpriteEditor.Tools.Rectangle.id()}": key: AC.Keys.u
+        "#{LOI.Assets.SpriteEditor.Tools.Ellipse.id()}": shift: true, key: AC.Keys.u
+
         "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space, holdButton: AC.Buttons.auxiliary
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-        "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z}]
-      
+        "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, shift: true, key: AC.Keys.z}]
+        
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": [
+          {commandOrControl: true, key: AC.Keys.equalSign}
+          {shift: true, commandOrControl: true, key: AC.Keys.equalSign}
+          {commandOrControl: true, key: AC.Keys.numPlus}
+        ]
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": [
+          {commandOrControl: true, key: AC.Keys.dash}
+          {commandOrControl: true, key: AC.Keys.numMinus}
+        ]
+        
+        "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [
+          {key: AC.Keys.equalSign}
+          {shift: true, key: AC.Keys.equalSign}
+          {key: AC.Keys.numPlus}
+        ]
+        "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [
+          {key: AC.Keys.dash}
+          {key: AC.Keys.numMinus}
+        ]
+        
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'
 

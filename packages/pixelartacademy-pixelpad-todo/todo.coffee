@@ -72,12 +72,14 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @selectedTask null
   
     # Handle displayed tasks.
-    @tasks = new ComputedField =>
-      _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
+    @tasks = new ComputedField => LOI.adventure.currentTasks()
   
     @activeTasks = new ComputedField =>
       _.filter @tasks(), (task) => task.active()
 
+    @availableTasks = new ComputedField =>
+      _.filter @tasks(), (task) => task.available()
+      
     @activeTasksToBeDisplayed = new ReactiveField []
     @displayedActiveTasks = new ReactiveField []
     @completedTasks = new ReactiveField []
@@ -92,7 +94,21 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         
         activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
         
+        # Remove deactivated tasks.
+        deactivatedActiveTasksToBeDisplayed = _.filter activeTasksToBeDisplayed, (task) => not task.active()
+        
+        for task in deactivatedActiveTasksToBeDisplayed
+          _.pull activeTasksToBeDisplayed, task
+        
+        deactivatedActiveTasks = _.filter displayedActiveTasks, (task) => not task.active() and not task.completed()
+
+        for task in deactivatedActiveTasks
+          _.pull displayedActiveTasks, task
+          @$("[data-task-id='#{task.id()}']").remove()
+
+        # Update active tasks.
         @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        @displayedActiveTasks displayedActiveTasks if deactivatedActiveTasks.length
         
         # Remove completed tasks so that the total shown tasks is not above 9 if possible.
         tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
@@ -109,12 +125,12 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.page .content')
+    @$content = @$('.page .content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentHeight @contentHeight()
-      @contentHeight @content$.outerHeight()
+      @contentHeight @$content.outerHeight()
     
-    @_resizeObserver.observe @content$[0]
+    @_resizeObserver.observe @$content[0]
   
     @animating = new ReactiveField false
     
@@ -139,6 +155,16 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in @activeTasksToBeDisplayed()
         @_animateTaskAdded task
         return
+        
+      # If there are no more active tasks, remove all completed ones.
+      unless @activeTasks().length
+        Tracker.nonreactive =>
+          completedTasks = @completedTasks()
+          @completedTasks []
+          
+          # Also remove them from the displayed list.
+          for task in completedTasks
+            @$("[data-task-id='#{task.id()}']").remove()
     
     Tracker.triggerOnDefinedChange @displayState, (displayState, previousDisplayState) =>
       # Make sure we're still being rendered.
@@ -154,6 +180,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         
   onDestroyed: ->
     super arguments...
+    
+    @_resizeObserver?.disconnect()
     
     # Disable any ongoing audio.
     @audio.strikethrough false
@@ -250,7 +278,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       # Make sure we're still on the home screen (no app has been opened while we were waiting).
       if @os.currentAppUrl()
-        @animating false
+        @_animateEnd()
         return false
       
       @manualDisplayState @constructor.DisplayState.Open
@@ -259,15 +287,28 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
     # Make sure we're still being rendered.
     unless @isRendered()
-      @animating false
+      @_animateEnd()
       return false
     
     true
   
   _animateClose: ->
-    @animating false
+    @_animateEnd()
     
     Meteor.clearTimeout @_animateCloseTimeout
+    
+    # Determine how long to wait before closing the notebook.
+    unless @activeTasks().length or LM.Notifications.TheEnd.condition()
+      # We don't have any more active tasks and the final "all done" message is not active yet either.
+      # Delay closing for longer so that the player can see the instructions for adding new tasks.
+      closeDelay = 4000
+      
+    else if @notifications().displayAlwaysNotifications().length
+      # There are notifications waiting to be displayed that will always be shown, so close quickly.
+      closeDelay = 500
+      
+    else
+      closeDelay = 2000
     
     # Close after a second if no further animations are happening.
     @_animateCloseTimeout = Meteor.setTimeout =>
@@ -277,7 +318,10 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       @manualDisplayState null
     ,
-      2000
+      closeDelay
+    
+  _animateEnd: ->
+    @animating false
       
   allowsShortcutsTable: -> false
   
@@ -287,6 +331,18 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     return unless @_animationAvailable()
     
     parameter1 = AB.Router.getParameter 'parameter1'
+    
+    # If any of the goals were completed that haven't been revealed in the Study Plan yet, go there first.
+    if PAA.PixelPad.Apps.StudyPlan.used()
+      studyPlanData = PAA.PixelPad.Apps.StudyPlan.state()
+      
+      if studyPlanData.revealed.goalIds
+        for goalId, goal of studyPlanData.goals when PAA.Learning.Goal.getClassForId(goalId).completed() and goalId not in studyPlanData.revealed.goalIds
+          AB.Router.setParameters {parameter1, parameter2: PAA.PixelPad.Apps.StudyPlan.url()}
+          
+          # Inform that we've handled the back button.
+          return true
+        
     AB.Router.setParameters {parameter1}
   
     # Inform that we've handled the back button.
@@ -336,6 +392,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   
   showToDo: ->
     @activeTasks().length or @completedTasks().length or @displayedActiveTasks().length
+  
+  hasAvailableTasks: ->
+    @availableTasks().length
 
   taskSelectedClass: ->
     'task-selected' if @selectedTask()

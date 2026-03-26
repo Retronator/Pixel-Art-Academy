@@ -53,7 +53,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks = new ReactiveField null
     @pixelGrid = new ReactiveField null
     @operationPreview = new ReactiveField null
-    @toolInfo = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @windowSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
@@ -135,7 +134,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks new @constructor.Landmarks @
     @pixelGrid new @constructor.PixelGrid @
     @operationPreview new @constructor.OperationPreview @
-    @toolInfo new @constructor.ToolInfo @
 
     # Prepare helpers.
     @fileIdForHelpers = new ComputedField =>
@@ -152,6 +150,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       landmarksHelperClass = @options?.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
       @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
+    @invertUIColorsData = new ComputedField =>
+      @interface.getActiveFileData()?.child 'invertUIColors'
+    
+    @invertUIColors = new ComputedField =>
+      @invertUIColorsData()?.value()
+      
     @shadingEnabled = new ComputedField =>
       @editorFileData()?.get('shadingEnabled') ? true
 
@@ -160,7 +164,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         drawComponents = _.clone @options.drawComponents()
 
       else
-        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
+        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks()]
         
       if componentIds = @components()
         for componentId in componentIds
@@ -215,17 +219,22 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @_redraw()
   
     @_resizeObserver.observe $pixelCanvas[0]
-
-    # React to keys and global pointer events.
-    $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
-    $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
-    $(document).on 'pointerup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerUp? event if @interface.active()
-    $(document).on 'pointerleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerLeaveWindow? event if @interface.active()
     
     # Register with the app to support updates.
     @app = @ancestorComponentWith 'addComponent'
     @app.addComponent @
     
+    # Change brush size with the wheel event.
+    new AC.DiscreteWheelEventListener
+      timeout: 0.2
+      element: $pixelCanvas[0]
+      callback: (sign) =>
+        keyboardState = AC.Keyboard.getState()
+        return unless keyboardState.isKeyDown AC.Keys.ctrl
+    
+        brushSizeHelper = @interface.getOperator if sign < 0 then LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease else LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease
+        brushSizeHelper?.execute()
+  
   onDestroyed: ->
     super arguments...
   
@@ -260,7 +269,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
     camera = @camera()
     
-    context.setTransform 1, 0, 0, 1, 0, 0
+    context.resetTransform()
     context.clearRect 0, 0, canvas.width, canvas.height
     
     camera.applyTransformToCanvas()
@@ -296,6 +305,22 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
     
     canvasWindowBounds
+    
+  toolInfoInvertColorsClass: ->
+    'invert-colors' if @invertUIColors()
+  
+  toolInfoStyle: ->
+    return unless @toolInfoText()
+    
+    unless pointerPosition = @pointer().windowCoordinate()
+      return display: 'none'
+    
+    left: "calc(#{pointerPosition.x}px + 16rem)"
+    top: "#{pointerPosition.y}px"
+  
+  toolInfoText: ->
+    return unless @interface.active()
+    @interface.activeTool()?.infoText?()
 
   draw: (appTime) ->
     # Render the canvas each frame when the tool requests realtime updating.
@@ -311,6 +336,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       'pointerenter .canvas': @onPointerEnterCanvas
       'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
+      'contextmenu .canvas': @onContextMenu
 
   onPointerMoveCanvas: (event) ->
     @interface.activeTool()?.onPointerMove? event if @interface.active()
@@ -323,3 +349,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
   onDragStartCanvas: (event) ->
     @interface.activeTool()?.onDragStart? event if @interface.active()
+  
+  onContextMenu: (event) ->
+    # Prevent context menu opening.
+    event.preventDefault()

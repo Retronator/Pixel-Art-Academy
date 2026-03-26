@@ -18,9 +18,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   @minClipboardScale: -> null
   @maxClipboardScale: -> null
 
-  # Override to define a background color.
-  @backgroundColor: -> null
-
   # Override to define a palette.
   @restrictedPaletteName: -> null
   @customPaletteImageUrl: -> null
@@ -39,6 +36,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     super arguments...
     
     @initializeReferences()
+    
+  @_isPixelEmpty: (pixel, backgroundColor, palette) ->
+    # We're empty if we don't have a pixel.
+    return true unless pixel
+    
+    # We do have a pixel, so if there is no background color, it can't be empty.
+    return false unless backgroundColor
+    
+    # We have a pixel and a background color, the pixel is empty if it matches it.
+    LOI.Assets.ColorHelper.areAssetColorsEqual pixel, backgroundColor, palette
 
   constructor: ->
     super arguments...
@@ -57,7 +64,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return if _.find assets, (asset) => asset.id is @id() and asset.bitmapId
 
       # We need to create the asset with the bitmap.
-      Tracker.nonreactive => @constructor.create LOI.adventure.profileId(), @tutorial, @id()
+      Tracker.nonreactive => @constructor.create @tutorial
     
     @completed = new AE.LiveComputedField =>
       # Read completed state from the stored assets field unless we're in the editor.
@@ -106,7 +113,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     super arguments...
     
     # Fetch palette.
-    @palette = new ComputedField => @customPalette() or @restrictedPalette()
     @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
     
     # Prepare steps.
@@ -199,29 +205,21 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       # Resources are loaded, create tutorial steps.
       Tracker.nonreactive => @initializeSteps()
-      
-  reset: ->
-    # Nothing to reset if we haven't initialized yet (resetting will be called when first creating the bitmap).
-    return unless @initialized()
     
-    # Prevent recomputation of completed states while resetting.
-    @resetting true
-    
-    # Reset all steps.
-    stepArea.reset() for stepArea in @stepAreas()
-    
-    # Remove any asset data.
+  getAssetData: ->
     assetsData = @tutorial.assetsData()
     assetId = @id()
     
-    if assetData = _.find assetsData, (assetData) => assetData.id is assetId
-      assetData.stepAreas = []
-      assetData.completed = false
-      
-      @tutorial.state 'assets', assetsData
+    _.find assetsData, (assetData) => assetData.id is assetId
     
-    # Unlock recomputation after changes have been applied.
-    Tracker.afterFlush => @resetting false
+  setAssetData: (assetData) ->
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    assetDataIndex = _.findIndex assetsData, (assetData) => assetData.id is assetId
+    assetsData[assetDataIndex] = assetData
+    
+    @tutorial.state 'assets', assetsData
   
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()
@@ -230,15 +228,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     # Return the step area index.
     stepAreas.length - 1
-    
-  getBackgroundColor: ->
-    return unless backgroundColor = @constructor.backgroundColor()
-    return unless @initialized()
-
-    if backgroundColor.paletteColor
-      backgroundColor = @palette().color backgroundColor.paletteColor.ramp, backgroundColor.paletteColor.shade
-    
-    backgroundColor
   
   editorDrawComponents: ->
     return [] unless @initialized()

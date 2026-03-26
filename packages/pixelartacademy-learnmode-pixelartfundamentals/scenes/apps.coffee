@@ -11,5 +11,5 @@ class LM.PixelArtFundamentals.Apps extends LOI.Adventure.Scene
   
   things: -> [
     # Music is not available in the demo.
-    # PAA.PixelPad.Apps.Music if LM.PixelArtFundamentals.Start.finished()
+    # PAA.PixelPad.Apps.Music if LOI.adventure.currentTapeSelectors().length
   ]

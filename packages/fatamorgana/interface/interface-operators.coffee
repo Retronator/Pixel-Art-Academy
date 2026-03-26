@@ -60,9 +60,12 @@ class FM.Interface extends FM.Interface
     $(document).on 'keyup.fatamorgana-interface', (event) => @onKeyUp event
     $(document).on 'pointerdown.fatamorgana-interface', (event) => @onPointerDown event
     $(document).on 'pointerup.fatamorgana-interface', (event) => @onPointerUp event
+    $(document).on 'pointerleave.fatamorgana-interface', (event) => @onPointerLeaveWindow event
 
   onDestroyed: ->
     super arguments...
+    
+    operator.destroy() for operatorId, operator of @_operatorInstances
 
     $(document).off '.fatamorgana-interface'
 
@@ -74,9 +77,12 @@ class FM.Interface extends FM.Interface
     operatorId = operatorClassOrId.id?() or operatorClassOrId
     @currentShortcutsMapping()[operatorId]
 
-  activateTool: (tool, storePreviousTool) ->
+  activateTool: (tool, storePreviousTool, toolWasRestored) ->
     previousActiveTool = @activeTool?()
-    return if tool is previousActiveTool
+    
+    if tool is previousActiveTool
+      tool.onReactivated?()
+      return
 
     @storedTool previousActiveTool if storePreviousTool
 
@@ -85,7 +91,7 @@ class FM.Interface extends FM.Interface
 
     # Inform the tools that they (de)activated.
     previousActiveTool?.onDeactivated?()
-    tool.onActivated?()
+    tool.onActivated? toolWasRestored
 
   deactivateTool: ->
     return unless activeTool = @activeTool()
@@ -94,7 +100,7 @@ class FM.Interface extends FM.Interface
     
   restoreStoredTool: ->
     if storedTool = @storedTool()
-      @activateTool storedTool
+      @activateTool storedTool, false, true
       @storedTool null
       return true
       
@@ -102,7 +108,12 @@ class FM.Interface extends FM.Interface
 
   shortcutsActive: ->
     # Make sure we're not currently typing into an input.
-    not @inputFocused()
+    return false if @inputFocused()
+    
+    # Don't process shortcuts when the active tool is engaged.
+    return false if @activeToolEngaged()
+    
+    true
 
   onKeyDown: (event) ->
     return unless @active()
@@ -113,6 +124,9 @@ class FM.Interface extends FM.Interface
   
   onPointerDown: (event) ->
     return unless @active()
+    
+    # Ignore touch events.
+    return if event.pointerType is 'touch'
     
     @activeTool()?.onPointerDown? event
     
@@ -168,6 +182,9 @@ class FM.Interface extends FM.Interface
   onPointerUp: (event) ->
     return unless @active()
     
+    # Ignore touch events.
+    return if event.pointerType is 'touch'
+    
     @activeTool()?.onPointerUp? event
     
     @onInputUp event
@@ -180,3 +197,8 @@ class FM.Interface extends FM.Interface
 
     @_holdKey = null
     @_holdButton = null
+  
+  onPointerLeaveWindow: (event) ->
+    return unless @active()
+    
+    @activeTool()?.onPointerLeaveWindow? event

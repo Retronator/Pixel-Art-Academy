@@ -1,0 +1,30 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-clipboardsecondpagecomponent
+  .template-area
+    .template
+      .image
+        background atariGray(6)
+        border 4rem solid atariGray(6)
+        box-shadow -1rem 1rem 0 transparentify(atariGray(6), atariGray(7))
+
+      &::after
+        top 10rem
+        right -5rem
+        height 9rem
+        background-image image('/pixelartacademy/pixelpad/apps/drawing/clipboard/paperclip-right.png')
+
+  .reference-area
+    clear right
+
+    .reference
+      width 75rem
+
+      .image
+        filter drop-shadow(-1rem 1rem 0 transparentify(atariGray(5), atariGray(7)))
+
+      &::after
+        top 55rem
+        right -5rem
+        height 7rem
+        background-image image('/pixelartacademy/pixelpad/apps/drawing/clipboard/paperclip-right-2.png')

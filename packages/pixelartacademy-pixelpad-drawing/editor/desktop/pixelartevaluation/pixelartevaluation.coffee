@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -48,9 +49,24 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     ,
       (a, b) => a is b
       
+    @asset = new ComputedField =>
+      @interface.parent.activeAsset()
+    ,
+      (a, b) => a is b
+    
     @pixelArtEvaluation = new ComputedField =>
-      return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation?.destroy()
+      return unless asset = @asset()
+      
+      # Try to reuse the pixel art evaluation instance from the asset.
+      if asset.initialized
+        return unless asset.initialized()
+        
+        if asset.pixelArtEvaluationInstance
+          @_pixelArtEvaluation = null
+          return asset.pixelArtEvaluationInstance()
+      
+      return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation = new PAE bitmap
       
     @hoveredFilterValue = new ReactiveField null
@@ -142,7 +158,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # Only update evaluation when we're at the end of history to prevent recalculation when undoing/redoing
         # (in case we change evaluation and this would cause new values—history is more important).
         asset = @interface.getLoaderForActiveFile()?.asset()
-        return unless asset.historyPosition is asset.history.length
+        historyLength = asset.history?.length or AMu.Document.Versioning.ActionArchive.getHistoryLengthForDocument asset._id
+        return unless asset.historyPosition is historyLength
 
         # See if there was any change from the current data.
         return if _.objectContains asset.properties.pixelArtEvaluation, evaluation
@@ -161,11 +178,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
 
       await _.waitForFlush()
     
-      @content$ = @$('.content')
+      @$content = @$('.content')
       @_resizeObserver = new ResizeObserver =>
-        @contentHeight @content$.outerHeight()
+        @contentHeight @$content.outerHeight()
       
-      @_resizeObserver.observe @content$[0]
+      @_resizeObserver.observe @$content[0]
     
   onDestroyed: ->
     super arguments...
@@ -234,7 +251,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     'active' if @active()
     
   paperDisplayed: ->
-    # Display the paper if the property is defined and we're not explicitely told to not display it.
+    # Display the paper if the property is defined and we're not explicitly told to not display it.
     property = @pixelArtEvaluationProperty()
     property and property.displayed isnt false
   

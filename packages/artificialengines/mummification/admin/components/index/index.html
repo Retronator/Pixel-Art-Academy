@@ -2,6 +2,9 @@
   <div class="pixelartacademy-pages-admin-components-index">
     <div class="actions">
       <button class="add-document borderless">Add {{documentTypeName}}</button>
+      {{#if showRemoveButton}}
+        <button class="remove-document borderless">Remove {{documentTypeName}}</button>
+      {{/if}}
     </div>
     <ul class="documents-list">
       {{#each documents}}

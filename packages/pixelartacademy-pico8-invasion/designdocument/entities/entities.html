@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Entities">
+  <div class="pixelartacademy-pico8-cartridges-invasion-designdocument-entities">
+    {{#if addingEntity}}
+      <ul class="entities" data-cursor="default">
+        {{#each availableEntities}}
+          <li class="entity"><button class="entity-button">{{displayName}}</button></li>
+        {{/each}}
+      </ul>
+    {{else}}
+      {{#if canAddEntity}}
+        <p data-unit="entities-add">
+          <button class="add-entity-button" data-cursor="pointer">Add entity</button>
+        </p>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

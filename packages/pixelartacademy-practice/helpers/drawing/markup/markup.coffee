@@ -59,7 +59,7 @@ class PAA.Practice.Helpers.Drawing.Markup
     "##{backgroundColor.getHexString()}"
     
   @textBase: ->
-    size: 6
+    size: 5
     lineHeight: 7
     font: 'Small Print Retronator'
     style: @defaultStyle()
@@ -67,6 +67,11 @@ class PAA.Practice.Helpers.Drawing.Markup
       style: @backgroundStyle()
     align: @TextAlign.Center
   
+  @arrowBase: ->
+    arrow:
+      end: true
+    style: @defaultStyle()
+
   @percentage: (value) ->
     return "N/A" unless value?
     

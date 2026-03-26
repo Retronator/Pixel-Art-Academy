@@ -67,7 +67,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     
     height: sceneManager.ballPositionY() * 2
 
-  onAddedToDynamicsWorld: (@dynamicsWorld) ->
+  onAddedToDynamicsWorld: (physicsManager) ->
     # Flipper is a player-controlled kinematic object.
     physicsObject = @avatar.getPhysicsObject()
     @origin = physicsObject.getPosition()
@@ -91,9 +91,13 @@ class Pinball.Parts.Flipper extends Pinball.Part
     rotationQuaternion = THREE.Quaternion.fromObject physicsObject.getRotationQuaternion()
     rotationAngles = new THREE.Euler().setFromQuaternion rotationQuaternion
     @displacementAngle = rotationAngles.y
+    
+    @pinball.audioManager().flipperActivate()
   
   deactivate: ->
     @active = false
+    
+    @pinball.audioManager().flipperDeactivate()
     
   fixedUpdate: (elapsed) ->
     return unless @moving

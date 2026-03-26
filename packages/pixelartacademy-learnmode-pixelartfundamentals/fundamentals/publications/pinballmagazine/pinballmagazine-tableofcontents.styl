@@ -1,0 +1,94 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "pinballmagazine.import"
+
+.publication.pinball-magazine.table-of-contents
+  &::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents.png')
+
+  .contents-area
+    text-shadow atariRed(0) -1rem 1rem
+
+    &.read-only
+      .contents
+        .pixelartacademy-publication-article.ql-container
+          header
+            position absolute
+            left 0
+            bottom 193rem
+
+          .pixelartacademy-publication-article-tableofcontents
+            position absolute
+            left 10rem
+            top 210rem
+            // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+            width 1445rem
+            height 160rem
+            column-width 140rem
+            column-gap 5rem
+            column-fill auto
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-customclass-container:has(.pinballmagazine-lead-image-credit)
+          leadImageCreditRight()
+          top 3rem
+          left 477rem
+
+        header
+          background atariRed(1)
+
+          h1
+            serif-23()
+            text-transform uppercase
+            margin 10rem 10rem 2rem
+            color atariYellow(6)
+
+        .pixelartacademy-publication-article-tableofcontents
+          pixel-georgia()
+          line-height 13rem
+          text-transform uppercase
+          color atariBrown(6)
+
+          .table-of-contents
+            list-style none
+            padding 0 20rem
+            counter-reset content-item-counter
+
+            .content-item
+              position relative
+              margin-bottom 20rem
+              counter-increment content-item-counter
+              break-inside avoid
+
+              &:hover
+                color atariBrown(7)
+
+              &::before
+                content counter(content-item-counter) ". "
+                position absolute
+                top 0
+                left -20rem
+                font-weight bold
+                text-align left
+
+              &.unlocked
+                cursor pointer
+
+                &.unread
+                  &::after
+                    content ''
+                    display inline-block
+                    width 7rem
+                    height 10rem
+                    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/content-unlocked.png')
+
+              &:not(.unlocked)
+                color atariGray(3)
+
+                &::after
+                  content ''
+                  display inline-block
+                  width 7rem
+                  height 9rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/content-locked.png')

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
+class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.Project.Thing
   # assets: array of assets that the player has chosen to complete for the Copy reference challenge
   #   id: unique asset identifier
   #   type: what kind of asset this is

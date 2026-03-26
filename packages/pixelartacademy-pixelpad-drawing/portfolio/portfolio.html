@@ -1,5 +1,14 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio">
   <div class="pixelartacademy-pixelpad-apps-drawing-portfolio">
+    <style>
+      .pixelartacademy-pixelpad-apps-drawing-portfolio .sections-area .sections .section.active .groups .group {
+        height: {{defaultGroupHeightInActiveSection}}rem;
+      }
+
+      .pixelartacademy-pixelpad-apps-drawing-portfolio .sections-area .sections .section.active.group-in-section-active .groups .group {
+        height: {{defaultInactiveGroupHeightInActiveSection}}rem;
+      }
+    </style>
     <div class="cover" {{style coverStyle}}>
       <div class="handle"></div>
       <div class="handle-shadow"></div>

@@ -1,42 +1,9 @@
 AC = Artificial.Control
+AS = Artificial.Spectrum
 FM = FataMorgana
 LOI = LandsOfIllusions
 
 class BrushSize extends FM.Action
-  @roundBrushSizes = [
-    1
-    2
-    2.82
-    4
-    5
-    5.84
-    6.33
-    7.62
-    8.95
-    9.48
-    10.77
-    12
-    12.64
-    13.92
-    15
-    15.55
-    16.97
-    18
-    19
-    19.84
-    20.59
-    21.95
-    23
-    23.53
-    24.74
-    25.97
-    26.69
-    27.9
-    28.85
-    29.69
-    30.6
-  ]
-
   enabled: -> true
 
   constructor: ->
@@ -46,9 +13,12 @@ class BrushSize extends FM.Action
     @sign = 1
 
   execute: ->
+    # Only change brush size if the active tool is an aliased stroke or a line.
+    return unless @interface.activeTool() instanceof LOI.Assets.SpriteEditor.Tools.AliasedStroke or @interface.activeTool().id() is LOI.Assets.SpriteEditor.Tools.Line.id()
+
     keyboardState = AC.Keyboard.getState()
 
-    if @brushHelper.round() and keyboardState.isCommandOrControlDown()
+    if @brushHelper.round() and keyboardState.isKeyDown AC.Keys[0]
       currentAliasedShape = @brushHelper.aliasedShape()
       diameter = @brushHelper.diameter()
 
@@ -68,7 +38,7 @@ class BrushSize extends FM.Action
       # We prefer diameter slightly smaller than the integer to pick less filled shape variants.
       currentSize = Math.ceil @brushHelper.diameter()
       newSize = Math.max 1, currentSize + @sign
-      perfectNewSize = @constructor.roundBrushSizes[newSize - 1]
+      perfectNewSize = AS.PixelArt.Circle.perfectDiameters[newSize - 1]
       @brushHelper.setDiameter perfectNewSize or newSize
 
 class LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease extends BrushSize

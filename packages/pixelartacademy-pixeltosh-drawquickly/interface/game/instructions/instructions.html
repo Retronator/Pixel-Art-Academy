@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Instructions">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-instructions">
+    <div class="text">
+      <img class="pixeltosh" src="{{image '/pixelartacademy/pixeltosh/programs/drawquickly/pixeltosh-gotit.png'}}" />
+      {{#if $is drawQuickly.gameMode 'SymbolicDrawing'}}
+        <h1>Symbolic Drawing</h1>
+        <p>You will be given a list of 10 things.</p>
+        <p>You can draw them in any order you want.</p>
+        <p>Draw as many of them as possible before the time runs out!</p>
+      {{/if}}
+      {{#if $is drawQuickly.gameMode 'RealisticDrawing'}}
+        <h1>Realistic Drawing</h1>
+        <p>You will be given a reference to draw.</p>
+        <p>The time for drawing will get shorter each round.</p>
+        <p>Simplify the subject to get done in time!</p>
+      {{/if}}
+      <p class="button-area"><button class="start-button pixelartacademy-pixeltosh-os-interface-button">Start</button></p>
+    </div>
+  </div>
+</template>

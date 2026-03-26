@@ -1,0 +1,36 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.TaskInfo">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-taskinfo {{visibleClass}} {{wideClass}} {{completedClass}} {{selectedClass}}" {{style taskInfoStyle}}>
+    {{#with task}}
+      <div class="directive">
+        {{> t10e studyPlanDirectiveTranslation}}
+      </div>
+      <div class="instructions">
+        {{> t10e studyPlanInstructionsTranslation}}
+      </div>
+      {{#if requiredInterests.length}}
+        <div class="interests">
+          <div class="label">Requires:</div>
+          <ul class="list">
+            {{#each requiredInterests}}
+              {{#with interestDocument}}
+                <li class="required interest {{acquiredInterestClass}}">{{> t10e name}}</li>
+              {{/with}}
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+      {{#if interests.length}}
+        <div class="interests">
+          <div class="label">Gain:</div>
+          <ul class="list">
+            {{#each interests}}
+              {{#with interestDocument}}
+                <li class="interest {{acquiredInterestClass}}">{{> t10e name}}</li>
+              {{/with}}
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    {{/with}}
+  </div>
+</template>

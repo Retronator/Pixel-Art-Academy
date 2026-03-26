@@ -13,7 +13,65 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     variables:
       open: AEc.ValueTypes.Trigger
       close: AEc.ValueTypes.Trigger
+      secondPageOpen: AEc.ValueTypes.Trigger
+      secondPageClose: AEc.ValueTypes.Trigger
+    
+  @calculateAssetSize: (portfolioScale, bounds, options) ->
+    borderWidth = if options.border then 7 else 0
+    totalBorderWidth = borderWidth * 2
+  
+    width = bounds?.width or 1
+    height = bounds?.height or 1
+    displayScale = LOI.adventure.interface.display.scale()
+    
+    fitScale = (174 - totalBorderWidth) / width
+    fitScale = Math.min fitScale, (options.fitToHeight - totalBorderWidth) / height if options.fitToHeight
+
+    # Apply minimum and maximum scale if provided (it could be a non-integer).
+    fitScale = Math.max fitScale, options.scaleLimits.min if options?.scaleLimits?.min
+    fitScale = Math.min fitScale, options.scaleLimits.max if options?.scaleLimits?.max
+    
+    if options?.pixelArtScaling
+      if portfolioScale < 1 or fitScale < 1
+        # The asset was scaled down in the portfolio, so we will need to scale downwards. We start
+        # operating in effective scale to still have integer magnification compared to window pixels.
+        effectiveScale = displayScale
+        effectiveScale-- while effectiveScale / displayScale > fitScale
       
+        if effectiveScale > 0
+          scale = effectiveScale / displayScale
+        
+        else
+          # We need to reduce scale below 1 effective pixel so we start dividing by integer amounts below 1.
+          divisor = 1
+          divisor++ while 1 / divisor / displayScale > fitScale
+          
+          effectiveScale = 1 / divisor
+    
+          scale = Math.max portfolioScale, effectiveScale / displayScale
+  
+      else
+        # Asset in the clipboard should be bigger than in the portfolio.
+        # 1 -> 2
+        # 2 -> 3
+        # 3 -> 4
+        # 4 -> 5
+        # 5 -> 6
+        # 6 -> 8
+        scale = Math.min Math.floor(fitScale), Math.ceil portfolioScale * 1.2
+      
+    else
+      # Make the asset fit in the clipboard.
+      scale = Math.min 1 / displayScale, fitScale
+
+    contentWidth = width * scale
+    contentHeight = height * scale
+
+    {contentWidth, contentHeight, borderWidth, scale}
+  
+  constructor: (@drawing) ->
+    super arguments...
+
   onCreated: ->
     super arguments...
     
@@ -29,51 +87,12 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
         @audio.close()
       
       @_wasDisplayingAsset = displayingAsset
-    
-  @calculateAssetSize: (portfolioScale, bounds, options) ->
-    width = bounds?.width or 1
-    height = bounds?.height or 1
-    displayScale = LOI.adventure.interface.display.scale()
-
-    if options?.pixelArtScaling
-      # Asset in the clipboard should be bigger than in the portfolio.
-      if portfolioScale < 1
-        # The asset was scaled down in the portfolio, but we should remain at least pixel perfect in the clipboard.
-        minimumScale = 1 / displayScale / window.devicePixelRatio
-        scale = Math.max portfolioScale, minimumScale
-  
-      else
-        # 1 -> 2
-        # 2 -> 3
-        # 3 -> 4
-        # 4 -> 5
-        # 5 -> 6
-        # 6 -> 8
-        scale = Math.ceil portfolioScale * 1.2
       
-    else
-      # Make the asset fit in the clipboard (200px).
-      scale = _.min [1 / displayScale, 174 / width, 160 / height]
-
-    # Apply minimum and maximum scale if provided (it could be a non-integer).
-    scale = Math.max scale, options.scaleLimits.min if options?.scaleLimits?.min
-    scale = Math.min scale, options.scaleLimits.max if options?.scaleLimits?.max
-
-    contentWidth = width * scale
-    contentHeight = height * scale
-
-    borderWidth = if options.border then 7 else 0
-
-    {contentWidth, contentHeight, borderWidth, scale}
-  
-  constructor: (@drawing) ->
-    super arguments...
-
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
     
   activeClass: ->
-    'active' if @drawing.activeAssetClass() and not @drawing.displayedAssetCustomComponent()
+    'active' if @drawing.activeAsset() and not @drawing.displayedAssetCustomComponent()
 
   onBackButton: ->
     # Relay to asset clipboard component.

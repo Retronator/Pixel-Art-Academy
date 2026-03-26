@@ -62,15 +62,25 @@ class LOI.Assets.Components.References extends LOI.Component
           enabled: false # TODO: Enable upload of references in learn mode.
         storage:
           enabled: false # TODO: Enable access to reference storage.
+    
+    @defaults = new ComputedField =>
+      @options.defaults() or {}
           
     @uploadingReferences = new ReactiveField []
     
     @references = new ComputedField =>
       return [] unless assetData = @assetData()
+      defaults = @defaults()
 
-      # Reuse image ID on asset to minimize reactivity.
       assetReferences = _.cloneDeep(assetData.references) or []
-      assetReference._id = assetReference.image._id for assetReference in assetReferences
+      
+      for assetReference in assetReferences
+        # Reuse image ID on asset to minimize reactivity.
+        assetReference._id = assetReference.image._id
+        
+        # Apply defaults if provided.
+        if referenceDefaults = defaults[assetReference.image.url]
+          _.defaultsDeep assetReference, referenceDefaults
 
       uploadingReferences = @uploadingReferences()
 
@@ -92,6 +102,10 @@ class LOI.Assets.Components.References extends LOI.Component
         assetOptions.upload.enabled
         assetOptions.storage.enabled
       ]
+      
+  getReferenceComponentForUrl: (url) ->
+    referenceComponents = @allChildComponentsOfType LOI.Assets.Components.References.Reference
+    _.find referenceComponents, (referenceComponent) => referenceComponent.data().image.url is url
 
   removeUploadingReference: (referenceId, imageId) ->
     # Wait until references have updated and we have the new one with created image ID.

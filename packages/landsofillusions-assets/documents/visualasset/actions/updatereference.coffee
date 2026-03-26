@@ -12,14 +12,12 @@ class LOI.Assets.VisualAsset.Actions.UpdateReference extends AM.Document.Version
     forwardOperation = new LOI.Assets.VisualAsset.Operations.UpdateReference {index, changes}
     
     # Backward operation resets the fields.
-    reverseChanges = {}
-    
-    for key of changes
-      reverseChanges[key] = asset.references[index][key] or null
+    currentReference = EJSON.clone asset.references[index]
+    changedReference = _.applyObjectDifference EJSON.clone(currentReference), changes
     
     backwardOperation = new LOI.Assets.VisualAsset.Operations.UpdateReference
       index: index
-      changes: reverseChanges
+      changes: _.objectDifference changedReference, currentReference
     
     # Update operation arrays and the hash code of the action.
     @forward.push forwardOperation

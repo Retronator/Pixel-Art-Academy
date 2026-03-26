@@ -49,7 +49,15 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
       paintHelper.setPaletteColor topPixel.paletteColor
 
     else if topPixel.directColor
-      paintHelper.setDirectColor topPixel.directColor
+      # Try to match the color to a palette color first.
+      if palette = assetData.getRestrictedPalette()
+        paletteColor = LOI.Assets.ColorHelper.exactPaletteColor palette, topPixel.directColor
+    
+      if paletteColor
+        paintHelper.setPaletteColor paletteColor
+        
+      else
+        paintHelper.setDirectColor topPixel.directColor
 
     else if topPixel.materialIndex?
       paintHelper.setMaterialIndex topPixel.materialIndex

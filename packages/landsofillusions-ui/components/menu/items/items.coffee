@@ -14,6 +14,8 @@ class LOI.Components.Menu.Items extends LOI.Component
     Settings: 'Settings'
     Display: 'Display'
     Audio: 'Audio'
+    MusicEffectsSettings: 'MusicEffectsSettings'
+    Controls: 'Controls'
     Permissions: 'Permissions'
     Extras: 'Extras'
     
@@ -29,6 +31,21 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
 
+  onRendered: ->
+    super arguments...
+    
+    @autorun (computation) =>
+      if LOI.settings.controls.rightClick.value() is LOI.Settings.Controls.RightClick.BackButton
+        $(document).on 'contextmenu.landsofillusions-components-menu-items', null, (event) => @onContextMenu event
+      
+      else
+        $(document).off '.landsofillusions-components-menu-items'
+  
+  onDestroyed: ->
+    super arguments...
+    
+    $(document).off '.landsofillusions-components-menu-items'
+  
   aboutVisible: ->
     # About is visible on the landing page.
     @options.landingPage
@@ -78,7 +95,16 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   inAudio: ->
     @currentScreen() is @constructor.Screens.Audio
+    
+  inMusicEffectsSettings: ->
+    @currentScreen() is @constructor.Screens.MusicEffectsSettings
   
+  inAudioSubmenus: ->
+    @inAudio() or @inMusicEffectsSettings()
+  
+  inControls: ->
+    @currentScreen() is @constructor.Screens.Controls
+
   inPermissions: ->
     @currentScreen() is @constructor.Screens.Permissions
     
@@ -117,7 +143,16 @@ class LOI.Components.Menu.Items extends LOI.Component
 
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
+    
+  graphicsScale: ->
+    Math.min @graphicsMaximumScale() or 2, LOI.adventure.interface.highestAvailableScale()
+  
+  canIncreaseGraphicsScale: ->
+    @graphicsScale() < LOI.adventure.interface.highestAvailableScale()
 
+  rightClick: ->
+    LOI.settings.controls.rightClick.value()
+    
   permissionsPersistSettings: ->
     @_permissionsValue LOI.settings.persistSettings
 
@@ -152,6 +187,7 @@ class LOI.Components.Menu.Items extends LOI.Component
       # Settings
       'click .settings .display': @onClickSettingsDisplay
       'click .settings .audio': @onClickSettingsAudio
+      'click .settings .controls': @onClickSettingsControls
       'click .settings .permissions': @onClickSettingsPermissions
       'click .settings .back-to-menu': @onClickSettingsBackToMenu
       
@@ -168,12 +204,47 @@ class LOI.Components.Menu.Items extends LOI.Component
       'input .audio .sound-volume': @onInputAudioSoundVolume
       'input .audio .ambient-volume': @onInputAudioAmbientVolume
       'input .audio .music-volume': @onInputAudioMusicVolume
+      
+      # Controls
+      'click .controls .right-click': @onClickControlsRightClick
 
       # Permissions
       'click .permissions .persist-settings': @onClickPermissionsPersistSettings
       'click .permissions .persist-game-state': @onClickPermissionsPersistGameState
       'click .permissions .persist-command-history': @onClickPermissionsPersistCommandHistory
       'click .permissions .persist-login': @onClickPermissionsPersistLogin
+  
+  onContextMenu: (event) ->
+    # We want to handle right click only if there are no other modal dialogs present.
+    topModalDialog = LOI.adventure.topModalDialog()
+    return if topModalDialog and topModalDialog not instanceof LOI.Components.Menu
+    
+    event.preventDefault()
+    
+    switch @currentScreen()
+      when @constructor.Screens.MainMenu
+        @onClickMainMenuContinue() unless @options.landingPage
+        
+      when @constructor.Screens.Settings
+        @onClickSettingsBackToMenu()
+        
+      when @constructor.Screens.Display
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Audio
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.MusicEffectsSettings
+        @onClickMusicEffectsSettingsBackToAudio?()
+        
+      when @constructor.Screens.Controls
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Permissions
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Extras
+        @onClickExtrasBackToMenu?()
   
   onMouseEnterActionable: (event) ->
     @audio.hover() unless @_justClicked
@@ -187,6 +258,9 @@ class LOI.Components.Menu.Items extends LOI.Component
       @_justClicked = false
     ,
       100
+  
+  onClickBackToSettings: (event) ->
+    @currentScreen @constructor.Screens.Settings
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -228,9 +302,11 @@ class LOI.Components.Menu.Items extends LOI.Component
   onClickMainMenuFullscreen: (event) ->
     if AM.Window.isFullscreen()
       AM.Window.exitFullscreen()
+      LOI.settings.graphics.preferFullscreen.value false
 
     else
-      super arguments...
+      AM.Window.enterFullscreen()
+      LOI.settings.graphics.preferFullscreen.value true
 
   onClickMainMenuSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
@@ -263,6 +339,9 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   onClickSettingsAudio: (event) ->
     @currentScreen @constructor.Screens.Audio
+  
+  onClickSettingsControls: (event) ->
+    @currentScreen @constructor.Screens.Controls
 
   onClickAudioEnabled: (event) ->
     switch LOI.settings.audio.enabled.value()
@@ -302,18 +381,16 @@ class LOI.Components.Menu.Items extends LOI.Component
     LOI.settings.audio["#{property}Volume"].value value
   
   onClickDisplayGraphicsScalePreviousButton: (event) ->
-    currentValue = LOI.settings.graphics.maximumScale.value()
+    currentValue = @graphicsScale()
     currentValue--
     currentValue = null if currentValue < 2
 
-    LOI.settings.graphics.minimumScale.value currentValue or 2
     LOI.settings.graphics.maximumScale.value currentValue
 
   onClickDisplayGraphicsScaleNextButton: (event) ->
-    currentValue = LOI.settings.graphics.maximumScale.value() or 1
+    currentValue = if LOI.settings.graphics.maximumScale.value() then @graphicsScale() else 1
     currentValue++
 
-    LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
 
   onClickDisplayCRTEmulation: (event) ->
@@ -328,6 +405,19 @@ class LOI.Components.Menu.Items extends LOI.Component
     smoothShadingValue = LOI.settings.graphics.smoothShading.value
     smoothShadingValue not smoothShadingValue()
 
+  onClickControlsRightClick: (event) ->
+    switch LOI.settings.controls.rightClick.value()
+      when LOI.Settings.Controls.RightClick.None
+        value = LOI.Settings.Controls.RightClick.Eraser
+        
+      when LOI.Settings.Controls.RightClick.Eraser
+        value = LOI.Settings.Controls.RightClick.BackButton
+      
+      when LOI.Settings.Controls.RightClick.BackButton
+        value = LOI.Settings.Controls.RightClick.None
+
+    LOI.settings.controls.rightClick.value value
+    
   onClickSettingsPermissions: (event) ->
     @currentScreen @constructor.Screens.Permissions
 
@@ -378,6 +468,3 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     else
       consentField.showDialog()
-
-  onClickBackToSettings: (event) ->
-    @currentScreen @constructor.Screens.Settings

@@ -16,7 +16,12 @@ LOI.Assets.Palette.addIfNeeded = (palette) ->
         
     return unless changed
   
-  LOI.Assets.Palette.documents.upsert {name: palette.name}, {$set: palette}
+  update =
+    $set: _.clone palette
+    
+  update.$set.lastEditTime = new Date()
+  
+  LOI.Assets.Palette.documents.upsert {name: palette.name}, update
 
 # Export all palette documents.
 AM.DatabaseContent.addToExport ->

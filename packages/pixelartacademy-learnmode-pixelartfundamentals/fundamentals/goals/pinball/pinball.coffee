@@ -62,11 +62,13 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
 
   class @RedrawPlayfieldTask extends @Task
     onActive: ->
-      activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
-      project = PAA.Practice.Project.documents.findOne activeProjectId
+      # Note: 'return unless' should not be necessary at this point, but since of legacy bugs some assets
+      # might be missing and won't be fixed until the pinball machine is opened on the Pixeltosh.
+      return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+      return unless project = PAA.Practice.Project.documents.findOne activeProjectId
       
-      asset = _.find project.assets, (asset) => asset.id is PAA.Pixeltosh.Programs.Pinball.Assets.Playfield.id()
-      bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
+      return unless asset = _.find project.assets, (asset) => asset.id is PAA.Pixeltosh.Programs.Pinball.Assets.Playfield.id()
+      return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
       
       @_historyPositionOnActive = bitmap.historyPosition
       

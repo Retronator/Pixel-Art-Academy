@@ -27,7 +27,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.AssetLoader extends FM.Loader
     ,
       true
   
-    @_palettesSubscription = Tracker.autorun (computation) =>
+    @autorun (computation) =>
       return unless paletteIds = @paletteIds()
       LOI.Assets.Palette.forIds.subscribeContent paletteIds
 
@@ -57,8 +57,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.AssetLoader extends FM.Loader
       true
       
   destroy: ->
+    super arguments...
+    
     @asset.stop()
     @paletteIds.stop()
-    @_palettesSubscription.stop()
     @palettes.stop()
     @palette.stop()

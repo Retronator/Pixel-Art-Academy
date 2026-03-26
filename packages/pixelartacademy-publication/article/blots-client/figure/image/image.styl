@@ -1,0 +1,67 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-publication-article-figure-image
+  position relative
+  white-space normal
+
+  &:hover
+    z-index 1
+
+    .cutout
+      visibility visible
+
+  &.added-to-references
+    .added-to-references-info
+      visibility visible
+
+  .image
+    position relative
+    z-index 1
+    display block
+    width 100%
+    cursor zoom-in
+
+  .cutout
+    position absolute
+    inset -10rem
+    cursor cut
+    visibility hidden
+
+    &::before
+      content ''
+      position absolute
+      inset 6rem
+
+    .cut-icon
+      position absolute
+      z-index 2
+      top 0
+      right 20rem
+      width 16rem
+      height 13rem
+      cursor cut
+
+  .added-to-references-info
+    display flex
+    absolute-cover()
+    justify-content center
+    align-items center
+    z-index 2
+    padding 5rem
+    text-align center
+    visibility hidden
+    cursor paste
+
+  input
+    width 100%
+
+  .missing-image
+    padding 10rem
+    text-align center
+
+  .upload-info
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    background atariGray(7)

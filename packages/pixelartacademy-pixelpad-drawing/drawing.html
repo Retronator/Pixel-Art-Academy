@@ -1,8 +1,9 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing">
-  <div class="pixelartacademy-pixelpad-apps-drawing app {{activeAssetClass}} {{editorActiveClass}} {{editorFocusedModeClass}} {{editorClass}}">
+  <div class="pixelartacademy-pixelpad-apps-drawing app {{activeAssetClass}} {{editorVisibleClass}} {{editorActiveClass}} {{editorFocusedModeClass}} {{editorClass}}">
     {{> Render portfolio}}
     {{> Render clipboard}}
     {{> Render displayedAssetCustomComponent}}
     {{> Render editor}}
+    {{> Render paletteSelection}}
   </div>
 </template>

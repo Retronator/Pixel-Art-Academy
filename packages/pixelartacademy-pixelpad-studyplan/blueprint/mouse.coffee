@@ -1,7 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.StudyPlan.Blueprint.Mouse
+StudyPlan = PAA.PixelPad.Apps.StudyPlan
+
+class StudyPlan.Blueprint.Mouse
   constructor: (@blueprint) ->
     # The mouse coordinate relative to sprite canvas in native window (browser) pixels.
     @windowCoordinate = new ReactiveField null, EJSON.equals

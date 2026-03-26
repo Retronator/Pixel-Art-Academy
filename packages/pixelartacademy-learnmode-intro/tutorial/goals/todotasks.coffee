@@ -24,7 +24,16 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       Click on the arrow to get back to the tasks.
     """
     
+    @studyPlanDirective: -> "Learn about to-do tasks"
+    
+    @instructions: -> """
+      The notepad on the main screen keeps track of your current tasks.
+      You can always click on a task to learn how to complete it.
+    """
+    
     @interests: -> ['to-do tasks']
+    
+    @studyPlanBuilding: -> 'SimCityResidential1'
   
     @initialize()
     
@@ -34,6 +43,9 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       @_instructionsWereOpened = false
       @_instructionsWereOpenedAndClosed = new ReactiveField false
       
+      @startInstructionsAutorun()
+      
+    startInstructionsAutorun: ->
       @_instructionsAutorun = Tracker.autorun (computation) =>
         return unless LOI.adventure.ready()
         return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
@@ -59,6 +71,14 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       @_instructionsWereOpenedAndClosed()
     
     activeNotificationId: -> @constructor.ActiveNotification.id()
+    
+    reset: ->
+      super arguments...
+      
+      @_instructionsWereOpened = false
+      @_instructionsWereOpenedAndClosed false
+      
+      @startInstructionsAutorun()
     
     Task = @
     

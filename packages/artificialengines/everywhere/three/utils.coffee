@@ -1,1 +1,1 @@
-require 'three/examples/js/utils/BufferGeometryUtils'
+THREE.BufferGeometryUtils = require 'three/examples/jsm/utils/BufferGeometryUtils'

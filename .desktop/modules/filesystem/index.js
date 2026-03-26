@@ -1,6 +1,6 @@
 import moduleJson from './module.json';
 import {app} from 'electron';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 /**
@@ -27,7 +27,7 @@ export default class FileSystem {
       this.module.respond('getApplicationPaths', fetchId, this.getApplicationPaths());
     });
 
-    this.writeOperationsByFilePath = {}
+    this.operations = []
 
     this.module.on('writeFile', (event, fetchId, filePath, fileData) => {
       this.log.verbose('writeFile received', filePath, fileData.length, fetchId);
@@ -38,19 +38,12 @@ export default class FileSystem {
         this.module.respond('writeFile', fetchId, new Error('Invalid JSON content'));
         return;
       }
-      this.writeOperationsByFilePath[filePath] ??= []
-      this.writeOperationsByFilePath[filePath].push({fetchId, fileData});
-      // If we have just this file waiting to be written, start the write chain of operations.
-      if (this.writeOperationsByFilePath[filePath].length === 1) {
-        this.writeFirstFile(filePath);
-      }
+      this.addOperation({write: {filePath, fetchId, fileData}});
     });
 
     this.module.on('deleteFile', (event, fetchId, filePath) => {
       this.log.verbose('deleteFile received', filePath, fetchId);
-      fs.unlink(filePath, (error) => {
-        this.module.respond('deleteFile', fetchId, error);
-      })
+      this.addOperation({delete: {filePath, fetchId}});
     });
 
     this.module.on('getProfiles', async (event, fetchId, directoryPath) => {
@@ -58,7 +51,7 @@ export default class FileSystem {
       const profileJsons = [];
 
       // Scan the directory for subdirectories, whose names correspond to profile IDs.
-      const directory = await fs.promises.opendir(directoryPath);
+      const directory = await fs.opendir(directoryPath);
       for await (const directoryEntry of directory) {
         if (!directoryEntry.isDirectory()) continue;
 
@@ -68,11 +61,10 @@ export default class FileSystem {
         const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
 
         try {
-          const profileJson = await fs.promises.readFile(profileDocumentPath, {encoding: 'utf8'})
+          const profileJson = await fs.readFile(profileDocumentPath, {encoding: 'utf8'})
           profileJsons.push(profileJson);
           this.log.verbose("Found profile directory", profileId);
-        }
-        catch (e) {
+        } catch (e) {
           this.log.error("Invalid profile directory", profileId);
         }
       }
@@ -81,77 +73,209 @@ export default class FileSystem {
     });
 
     this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
-      this.log.verbose('getProfileDocuments received', rootDirectoryPath);
-      const documentJsons = {};
+      try {
+        this.log.verbose('getProfileDocuments received', rootDirectoryPath);
+        const documentJsons = {};
 
-      const backupTimestamp = new Date().toISOString().replaceAll(':','-');
-      const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
+        const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
+        const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
 
-      // Scan the root directory for subdirectories, whose names correspond to class names.
-      const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
-      for await (const rootDirectoryEntry of rootDirectory) {
-        if (!rootDirectoryEntry.isDirectory()) continue;
+        // Count number of documents that need to be loaded.
+        this.log.verbose('Counting number of documents to be loaded …');
+        let totalDocumentsCount = 0;
+        let loadedDocumentsCount = 0;
 
-        const className = rootDirectoryEntry.name;
-        documentJsons[className] = []
+        let rootDirectory = await fs.opendir(rootDirectoryPath);
+        for await (const rootDirectoryEntry of rootDirectory) {
+          if (!rootDirectoryEntry.isDirectory()) continue;
 
-        // Scan the directory for files, whose names correspond to document IDs.
-        const classDirectoryPath = path.join(rootDirectoryPath, className);
-        const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+          const className = rootDirectoryEntry.name;
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classDirectory = await fs.opendir(classDirectoryPath);
 
-        const classDirectory = await fs.promises.opendir(classDirectoryPath);
-        for await (const classDirectoryEntry of classDirectory) {
-          if (!classDirectoryEntry.isFile()) continue;
-
-          // Only parse json files (ignore backups).
-          if (!classDirectoryEntry.name.endsWith('json')) continue;
-
-          const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
-          const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
-          documentJsons[className].push(fileJson);
-
-          // Create a backup of the file.
-          const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
-          await fs.promises.cp(filePath, backupFilePath);
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+            totalDocumentsCount++;
+          }
         }
-      }
+        this.log.verbose('Documents count:', totalDocumentsCount);
 
-      this.module.respond('getProfileDocuments', fetchId, documentJsons);
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        rootDirectory = await fs.opendir(rootDirectoryPath);
+        this.log.verbose('Root directory opened.');
+
+        for await (const rootDirectoryEntry of rootDirectory) {
+          this.log.verbose('Processing directory entry', rootDirectoryEntry.name);
+          if (!rootDirectoryEntry.isDirectory()) continue;
+
+          const className = rootDirectoryEntry.name;
+          documentJsons[className] = {}
+
+          // Scan the directory for files, whose names correspond to document IDs.
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+
+          // Create backup directory.
+          await fs.mkdir(classBackupDirectoryPath, { recursive: true });
+
+          this.log.verbose('Opening class directory', className);
+          const classDirectory = await fs.opendir(classDirectoryPath);
+          this.log.verbose('Class directory opened.');
+
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
+
+            // Only parse json files (ignore backups).
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+
+            const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+            const fileJson = await fs.readFile(filePath, {encoding: 'utf8'})
+            documentJsons[className][classDirectoryEntry.name] = fileJson;
+
+            // Create a backup of the file.
+            const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
+            await fs.copyFile(filePath, backupFilePath);
+
+            loadedDocumentsCount++;
+            this.module.send('getProfileDocumentsProgress', loadedDocumentsCount / totalDocumentsCount);
+          }
+        }
+
+        this.log.verbose('getProfileDocuments processed');
+        this.module.respond('getProfileDocuments', fetchId, documentJsons);
+
+      } catch (error) {
+        this.log.error('getProfileDocuments encountered an error', error);
+        this.module.respond('getProfileDocuments', fetchId, null);
+      }
+    });
+
+    this.module.on('backupProfile', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
+      try {
+        this.log.verbose('backupProfile received', rootDirectoryPath);
+
+        const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
+        const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
+
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        let rootDirectory = await fs.opendir(rootDirectoryPath);
+        this.log.verbose('Root directory opened.');
+
+        for await (const rootDirectoryEntry of rootDirectory) {
+          this.log.verbose('Processing directory entry', rootDirectoryEntry.name);
+          if (!rootDirectoryEntry.isDirectory()) continue;
+
+          const className = rootDirectoryEntry.name;
+
+          // Scan the directory for files, whose names correspond to document IDs.
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+
+          // Create backup directory.
+          await fs.mkdir(classBackupDirectoryPath, { recursive: true });
+
+          this.log.verbose('Opening class directory', className);
+          const classDirectory = await fs.opendir(classDirectoryPath);
+          this.log.verbose('Class directory opened.');
+
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
+
+            // Only copy json files (ignore backups).
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+
+            // Create a backup of the file.
+            const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+            const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
+            await fs.copyFile(filePath, backupFilePath);
+          }
+        }
+
+        this.log.verbose('backupProfile processed');
+        this.module.respond('backupProfile', fetchId, true);
+
+      } catch (error) {
+        this.log.error('backupProfile encountered an error', error);
+        this.module.respond('backupProfile', fetchId, false);
+      }
+    });
+
+    this.module.on('removeProfile', async (event, fetchId, rootDirectoryPath) => {
+      try {
+        this.log.verbose('removeProfile received', rootDirectoryPath);
+
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        await fs.rm(rootDirectoryPath, {recursive: true});
+        this.log.verbose('Profile directory removed.');
+
+        this.module.respond('removeProfile', fetchId, true);
+
+      } catch (error) {
+        this.log.error('removeProfile encountered an error', error);
+        this.module.respond('removeProfile', fetchId, false);
+      }
     });
   }
 
-  writeFirstFile(filePath) {
-    let firstWriteOperation = this.writeOperationsByFilePath[filePath][0]
-    let fetchId = firstWriteOperation.fetchId
-    let fileData = firstWriteOperation.fileData
+  addOperation(operation) {
+    this.operations.push(operation);
+    // If we have just this operation waiting to be executed, start the chain of execution.
+    if (this.operations.length === 1) {
+      this.executeFirstOperation();
+    }
+  }
+
+  executeFirstOperation() {
+    const operation = this.operations[0];
+    // We kick off the asynchronous operations, but we don't have to await
+    // for them since the handler doesn't do anything with the result.
+    if (operation.write) {
+      this.writeFile(operation.write);
+    } else if (operation.delete) {
+      this.deleteFile(operation.delete);
+    }
+  }
+
+  async writeFile(writeOperation) {
+    const { filePath, fetchId, fileData } = writeOperation;
 
     this.log.verbose("writeFile processing for", filePath, fetchId);
 
-    fs.cp(filePath, `${filePath}.backup`, error => {
-      if (error) {
+    const directoryPath = path.dirname(filePath);
+    const temporaryPath = `${filePath}.tmp`;
+    const backupPath = `${filePath}.backup`;
+
+    try {
+      // Create directory if needed.
+      await fs.mkdir(directoryPath, { recursive: true });
+
+      // Backup the file if it exists.
+      try {
+        await fs.copyFile(filePath, backupPath);
+      } catch {
         this.log.verbose("File does not exist yet, backup copy not made.", filePath, fetchId);
       }
 
-      fs.writeFile(filePath, fileData, error => {
-        if (error?.code === 'ENOENT') {
-          this.log.verbose("Directory path does not exist, creating directories for", filePath);
-          const directoryPath = path.dirname(filePath);
-          fs.mkdir(directoryPath, {recursive: true}, error => {
-            if (error) {
-              this.log.error('mkdir error', directoryPath, error);
-              this.endWriteFile(filePath, fetchId, error);
-            } else {
-              this.log.verbose("Directories made, retrying write", filePath);
-              fs.writeFile(filePath, fileData, error => {
-                this.endWriteFile(filePath, fetchId, error);
-              });
-            }
-          });
-        } else {
-          this.endWriteFile(filePath, fetchId, error);
-        }
-      });
-    });
+      // Write to temporary file and rename it.
+      const handle = await fs.open(temporaryPath, "w");
+      await handle.writeFile(fileData);
+      await handle.sync();
+      await handle.close();
+      await fs.rename(temporaryPath, filePath);
+
+      // We are done.
+      this.endWriteFile(filePath, fetchId, null);
+
+    } catch (error) {
+      // Clean temporary file, if it exists.
+      try {
+        await fs.unlink(temporaryPath);
+      } catch {}
+
+      // Report error.
+      this.endWriteFile(filePath, fetchId, error);
+    }
   }
 
   endWriteFile(filePath, fetchId, error) {
@@ -161,18 +285,39 @@ export default class FileSystem {
       this.log.verbose("writeFile succeeded.", filePath, fetchId);
     }
     this.module.respond('writeFile', fetchId, error);
-    this.moveToNextFile(filePath);
+    this.moveToNextOperation();
   }
 
-  moveToNextFile(filePath) {
-    // The first file has been written to, so we can remove it.
-    this.writeOperationsByFilePath[filePath].shift();
+  async deleteFile(deleteOperation) {
+    const { filePath, fetchId } = deleteOperation;
 
-    // Nothing left to do if we've cleared all operations for this file.
-    if (this.writeOperationsByFilePath[filePath].length === 0) return;
+    try {
+      await fs.unlink(filePath);
+      this.log.verbose("deleteFile succeeded.", filePath, fetchId);
+      this.module.respond("deleteFile", fetchId, null);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        // Already gone = success
+        this.log.verbose("deleteFile skipped (already missing).", filePath, fetchId);
+        this.module.respond("deleteFile", fetchId, null);
+      } else {
+        this.log.error("deleteFile error.", filePath, error, fetchId);
+        this.module.respond("deleteFile", fetchId, error);
+      }
+    } finally {
+      this.moveToNextOperation();
+    }
+  }
 
-    // Chain to the next operation on this file.
-    this.writeFirstFile(filePath);
+  moveToNextOperation() {
+    // The first operation has been executed, so we can remove it.
+    this.operations.shift();
+
+    // Nothing left to do if we've cleared all operations.
+    if (this.operations.length === 0) return;
+
+    // Chain to the next operation.
+    this.executeFirstOperation();
   }
 
   getApplicationPaths() {

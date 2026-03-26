@@ -9,6 +9,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @ElementsOfArt
     @Jaggies
     @Pinball
+    @Simplification
   ]
   @initialize()
   
@@ -22,9 +23,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
       totalUnits: "tasks"
       totalRecursive: true
   
-  status: ->
-    # Goals unlock after the episode's start scene is finished.
-    if LM.PixelArtFundamentals.Start.finished() then @constructor.Status.Unlocked else @constructor.Status.Locked
+  status: -> @constructor.Status.Unlocked
 
   class @ElementsOfArt extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.ElementsOfArt'
@@ -35,8 +34,12 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
   class @Jaggies extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Jaggies'
     @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies
-    @tags: -> [LM.Content.Tags.WIP]
+    
+    @unlockInstructions: -> "Complete the Elements of art: line tutorial to learn about pixel art lines."
+    
     @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Line.getAdventureInstance()?.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
   
   class @Pinball extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Pinball'
@@ -48,3 +51,13 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @initialize()
     
     status: -> if LM.PixelArtFundamentals.pinballEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+  class @Simplification extends LM.Content.GoalContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Simplification'
+    @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Simplification
+    
+    @unlockInstructions: -> "Complete the Elements of art: shape tutorial to unlock the Simplification study goal."
+    
+    @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Shape.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

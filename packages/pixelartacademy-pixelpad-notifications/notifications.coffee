@@ -63,6 +63,9 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     @displayedNotification = new ReactiveField null
     @readNotifications = new ReactiveField []
     
+    @displayAlwaysNotifications = new ComputedField =>
+      _.filter @unreadNotifications(), (notification) => notification.displayStyle() is @constructor.Notification.DisplayStyles.Always
+    
     @retroClasses = new ReactiveField
       head: null
       face: null
@@ -161,7 +164,13 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
       # Prevent immediate closing.
       return if Date.now() - @_displayTimeMilliseconds < 1000
       
+      # Note: even though @closeDisplayedNotification checks for the notification to be displayed,
+      # we need to check here as well so that we don't immediately display the next message.
+      return unless @displayedNotification()
       @closeDisplayedNotification()
+      
+      # Continue displaying any notifications that need to be shown immediately.
+      @_displayUnreadNotificationWithDisplayStyle @constructor.Notification.DisplayStyles.Always
       
     # Track eyes when active.
     $faceOrigin = @$('.face-origin')
@@ -222,14 +231,15 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     @retroClasses retroClasses unless EJSON.equals retroClasses, newRetroClasses
   
   displayNewNotification: ->
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    return if toDo.animating()
+    
     notificationWasDisplayed = @displayedNotification()
     
     # Close existing notifications.
     @closeDisplayedNotification()
     
     # Close to-do if active.
-    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
-    
     if toDo.isActive()
       toDo.close()
       await toDo.waitUntilInactive()
@@ -266,6 +276,12 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
   retroMainClass: ->
     # Main class changes to lifted when a task's details are displayed.
     'lifted' if @_tasksDisplayed()
+  
+  retroCanTalkClass: ->
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    return unless toDo.isRendered()
+    
+    'can-talk' if not toDo.animating()
   
   retroHeadClass: ->
     return requestedHeadClass if requestedHeadClass = @_getRetroClass 'head'

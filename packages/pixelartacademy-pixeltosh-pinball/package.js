@@ -33,6 +33,7 @@ Package.onUse(function(api) {
   api.addFile('editormanager');
   api.addFile('editormanager-startdrag');
   api.addFile('editormanager-startrotate');
+  api.addFile('audiomanager');
   api.addFile('mouse');
   api.addFile('ball');
 
@@ -72,12 +73,14 @@ Package.onUse(function(api) {
   api.addStyledFile('interface..');
   api.addComponent('interface/playfield..');
   api.addFile('interface/playfield/playfield-polygondebug');
+  api.addComponent('interface/playfield/grid..');
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
   api.addComponent('interface/parts..');
   api.addComponent('interface/settings..');
   api.addComponent('interface/settings/number..');
   api.addComponent('interface/settings/boolean..');
+  api.addComponent('interface/about..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
@@ -85,9 +88,11 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/toggledebugphysics');
   api.addFile('interface/actions/toggleslowmotion');
   api.addFile('interface/actions/toggledisplaywalls');
+  api.addFile('interface/actions/togglegrid');
   api.addFile('interface/actions/modes');
   api.addFile('interface/actions/reset');
   api.addFile('interface/actions/flip');
   api.addFile('interface/actions/rotate');
   api.addFile('interface/actions/delete');
+  api.addFile('interface/actions/about');
 });

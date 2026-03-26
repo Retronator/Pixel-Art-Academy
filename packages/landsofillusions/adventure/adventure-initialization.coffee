@@ -26,6 +26,9 @@ class LOI.Adventure extends LOI.Adventure
 
     # Adventure's end run should happen last.
     @endRunOrder = 1000
+    
+    # In the browser, connect to the server automatically.
+    Meteor.reconnect() if AB.ApplicationEnvironment.isBrowser
 
   onCreated: ->
     super arguments...

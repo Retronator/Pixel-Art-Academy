@@ -151,7 +151,7 @@ class AB.Router extends AB.Router
         headHtml += "<link rel='apple-touch-icon' href='#{head.touchIcon}' />\n"
         
       if head.webApp
-        headHtml += "<meta name='apple-mobile-web-app-capable' content='yes' />\n"
+        headHtml += "<meta name='mobile-web-app-capable' content='yes' />\n"
 
       # Build a canonical URL by replacing parameters in the url.
       canonicalUrl = route.path

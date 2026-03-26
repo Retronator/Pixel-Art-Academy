@@ -49,15 +49,30 @@ class LOI.Components.BackButton extends AM.Component
     # back button, so we need to selectively add/remove our event handler.
     @_onKeyDownHandler = (event) =>
       return unless event.which is AC.Keys.escape
+      
+      PixelArtAcademy?.Tutorials.Drawing.PixelArtTools.Basics.state 'backButtonShortcutUsed', true
   
       @onClose event
+    
+    @_onContextMenu = (event) =>
+      @onClose event
+      
+      event.preventDefault()
   
     $(document).on 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
+    
+    @autorun (computation) =>
+      if LOI.settings.controls.rightClick.value() is LOI.Settings.Controls.RightClick.BackButton
+        $(document).on 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
+        
+      else
+        $(document).off 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
 
   onDestroyed: ->
     super arguments...
   
     $(document).off 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
+    $(document).off 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
 
   closingClass: ->
     'closing' if @closing()

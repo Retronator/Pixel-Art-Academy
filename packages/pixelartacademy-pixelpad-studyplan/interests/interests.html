@@ -1,0 +1,23 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Interests">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-interests pixelartacademy-pixelpad-apps-studyplan-bottompanel" {{style panelStyle}}>
+    <div class="title">
+      Gained interests ({{currentInterests.length}})
+    </div>
+    <div class="container" {{style containerStyle}}>
+      <div class="content">
+        <p class="explanation">
+          Interests are subjects and skills you gain on your learning journey.
+        </p>
+        <ul class="current-interests">
+          {{#each currentInterests}}
+            <li class="interest">
+              <span class="name">
+                {{> t10e name}}
+              </span>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>

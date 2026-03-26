@@ -36,6 +36,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.ThickLines ex
     
     steps[0].options.canCompleteWithExtraPixels = true
     steps[1].options.hasPixelsWhenInactive = false
+    
+    # Once you complete the first step, don't return to it if you accidentally recolor some of its pixels later.
+    steps[0].options.preserveCompleted = true
   
   Asset = @
   

@@ -4,7 +4,7 @@ AC = Artificial.Control
 class AC.DiscreteWheelEventListener
   constructor: (@options) ->
     @_scrollingFunction = (event) => @_onWheel event
-    @options.$element.on 'wheel', @_scrollingFunction
+    @options.element.addEventListener 'wheel', @_scrollingFunction, passive: true
     
     @_lastDeltaAmount = 0
     @_lastSign = 0
@@ -12,10 +12,10 @@ class AC.DiscreteWheelEventListener
     @_lastCallbackTime = 0
     
   destroy: ->
-    @options.$element.off 'wheel', @_onWheel
+    @options.element.removeEventListener 'wheel', @_scrollingFunction
     
   _onWheel: (event) ->
-    delta = event.originalEvent.deltaY
+    delta = event.deltaY
     amount = Math.abs delta
     sign = Math.sign delta
     time = Date.now()

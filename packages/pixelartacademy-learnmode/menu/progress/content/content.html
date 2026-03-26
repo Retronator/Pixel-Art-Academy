@@ -19,6 +19,9 @@
       {{#if $is type 'DrawingTutorialContent'}}
         {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
       {{/if}}
+      {{#if $is type 'AssetContent'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
     </div>
     {{#if contents.length}}
       <ul class="contents {{contentsDisplayedClass}}">
@@ -44,6 +47,12 @@
       {{/if}}
       {{#if $is depth 4}}
         <h4 class="title">{{displayName}}</h4>
+      {{/if}}
+      {{#if $is depth 5}}
+        <h5 class="title">{{displayName}}</h5>
+      {{/if}}
+      {{#if $is depth 6}}
+        <h6 class="title">{{displayName}}</h6>
       {{/if}}
       {{#if tags.length}}
         <ul class="tags">

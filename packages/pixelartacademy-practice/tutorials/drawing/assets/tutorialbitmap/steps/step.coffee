@@ -5,6 +5,21 @@ LOI = LandsOfIllusions
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
+_topLeftCorner = x: 0, y: 0
+_bottomRightCorner = x: 0, y: 0
+
+_darkRedRGBString = "158, 32, 32"
+_lightRedRGBString = "254, 182, 182"
+_darkLightColorErrorLuminosityThreshold = 60
+
+_darkRed = "rgb(#{_darkRedRGBString})"
+_lightRed = "rgb(#{_lightRedRGBString})"
+
+_darkRedSemiTransparent = "rgba(#{_darkRedRGBString}, 1)"
+_lightRedSemiTransparent = "rgba(#{_lightRedRGBString}, 1)"
+_darkRedTransparent = "rgba(#{_darkRedRGBString}, 0)"
+_lightRedTransparent = "rgba(#{_lightRedRGBString}, 0)"
+
 class TutorialBitmap.Step
   # Override to true (or provide through options) if the step area should
   # remember the completed state of this step instead of asking to reconfirm it.
@@ -18,8 +33,12 @@ class TutorialBitmap.Step
   
   @getEditor: -> PAA.PixelPad.Apps.Drawing.Editor.getEditor()
   
+  @_luminosityForRGB = {}
+  
   constructor: (@tutorialBitmap, @stepArea, @options = {}) ->
     @stepArea.addStep @, @options.stepIndex
+    
+  destroy: -> # Override to do any cleanup.
   
   # Override to specify when the step's conditions are satisfied.
   completed: ->
@@ -85,26 +104,114 @@ class TutorialBitmap.Step
   drawUnderlyingHints: (context, renderOptions = {}) -> # Override to draw hints under the bitmap.
   drawOverlaidHints: (context, renderOptions = {}) -> # Override to draw hints over the bitmap.
   
-  _preparePixelHintSize: (renderOptions) ->
+  _prepareColorHelp: (context, renderOptions) ->
     # Hints are ideally 5x smaller dots in the middle of a pixel.
     pixelSize = renderOptions.camera.effectiveScale()
-    hintSize = Math.ceil pixelSize / 5
-    offset = Math.floor (pixelSize - hintSize) / 2
+    dotHintSizeWindow = Math.ceil pixelSize / 5
+    dotHintOffsetWindow = Math.floor (pixelSize - dotHintSizeWindow) / 2
     
     # We need to store sizes relative to the pixel.
-    @_pixelHintSize = hintSize / pixelSize
-    @_pixelHintOffset = offset / pixelSize
+    @_dotHintSize = dotHintSizeWindow / pixelSize
+    @_dotHintOffset = dotHintOffsetWindow / pixelSize
+    
+    @_pixelOutlineErrorOffset = 1.5 / pixelSize
+    @_pixelOutlineErrorWidth = 4 / pixelSize
+    
+    @_ColorHelp = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp
+    
+    @_hintStyle = @_ColorHelp.hintStyle()
+    @_errorStyle = @_ColorHelp.errorStyle()
+    @_displayAllColorErrors = @tutorialBitmap.hintsEngineComponents.overlaid.displayAllColorErrors()
+    
+    @_dotHintOutlineErrorSize = (dotHintSizeWindow + 4) / pixelSize
+    @_dotHintOutlineErrorOffset = (dotHintOffsetWindow - 2) / pixelSize
     
     # If pixel is less than 2 big, we should lower the opacity of the hint to mimic less coverage.
-    @_pixelHintOpacity = if pixelSize < 2 then pixelSize / 5 else 1
+    @_hintOpacity = if pixelSize < 2 then pixelSize / 5 else 1
+    
+    context.font = '0.5px Adventure Retronator'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
   
-  _drawPixelHint: (context, x, y, color) ->
-    absoluteX = x + @stepArea.bounds.x + @_pixelHintOffset
-    absoluteY = y + @stepArea.bounds.y + @_pixelHintOffset
+  _drawColorHelpForPixel: (context, x, y, assetColor, palette, error, renderOptions) ->
+    absoluteX = x + @stepArea.bounds.x
+    absoluteY = y + @stepArea.bounds.y
+    
+    _topLeftCorner.x = absoluteX
+    _topLeftCorner.y = absoluteY
+    renderOptions.camera.roundCanvasToWindowPixel _topLeftCorner, _topLeftCorner
+      
+    _bottomRightCorner.x = absoluteX + 1
+    _bottomRightCorner.y = absoluteY + 1
+    renderOptions.camera.roundCanvasToWindowPixel _bottomRightCorner, _bottomRightCorner
+    
+    color = LOI.Assets.ColorHelper.resolveAssetColor palette, assetColor if assetColor
     
     if color
-      context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_pixelHintOpacity})"
-      context.fillRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize
+      unless colorLuminosity = @constructor._luminosityForRGB[color.r]?[color.g]?[color.b]
+        colorLuminosity = THREE.Color.fromObject(color).getLCh().l
+        @constructor._luminosityForRGB[color.r] ?= {}
+        @constructor._luminosityForRGB[color.r][color.g] ?= {}
+        @constructor._luminosityForRGB[color.r][color.g][color.b] = colorLuminosity
+      
+      errorColorIsLight = colorLuminosity < _darkLightColorErrorLuminosityThreshold
+      
+    else
+      errorColorIsLight = true
+      
+    errorColor = if errorColorIsLight then _lightRed else _darkRed
     
-    else unless @_pixelHintOpacity < 1
-      context.clearRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize
+    if error or @_displayAllColorErrors
+      # Draw the error.
+      if @_errorStyle is @_ColorHelp.ErrorStyle.PixelOutline
+        # Draw a pixel outline.
+        context.strokeStyle = errorColor
+        context.lineWidth = @_pixelOutlineErrorWidth
+        width = _bottomRightCorner.x - _topLeftCorner.x - @_pixelOutlineErrorOffset * 2
+        height = _bottomRightCorner.y - _topLeftCorner.y - @_pixelOutlineErrorOffset * 2
+        context.strokeRect _topLeftCorner.x + @_pixelOutlineErrorOffset, _topLeftCorner.y + @_pixelOutlineErrorOffset, width, height if width > 0 and height > 0
+  
+      else if @_errorStyle is @_ColorHelp.ErrorStyle.HintOutline
+        context.fillStyle = errorColor
+
+        if @_hintStyle is @_ColorHelp.HintStyle.Dots or not assetColor
+          # Draw a slightly bigger dot.
+          context.fillRect _topLeftCorner.x + @_dotHintOutlineErrorOffset, _topLeftCorner.y + @_dotHintOutlineErrorOffset, @_dotHintOutlineErrorSize, @_dotHintOutlineErrorSize
+          
+        else
+          # Draw the symbol offset to create an outline.
+          serialIndex = LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor
+          symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
+
+          for offset in [-0.08, 0.08]
+            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5
+            context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5 + offset
+            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5 + offset
+            context.fillText symbol, absoluteX + 0.5 - offset, absoluteY + 0.5 + offset
+      
+      else if @_errorStyle is @_ColorHelp.ErrorStyle.HintGlow or @_displayAllColorErrors and not @_errorStyle
+        # Draw a radial gradient from the center of the pixel.
+        hintGlowErrorGradient = context.createRadialGradient absoluteX + 0.5, absoluteY + 0.5, 0, absoluteX + 0.5, absoluteY + 0.5, 0.7
+        hintGlowErrorGradient.addColorStop 0, if errorColorIsLight then _lightRedSemiTransparent else _darkRedSemiTransparent
+        hintGlowErrorGradient.addColorStop 1, if errorColorIsLight then _lightRedTransparent else _darkRedTransparent
+        context.fillStyle = hintGlowErrorGradient
+        context.fillRect absoluteX, absoluteY, 1, 1
+
+    if color
+      context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_hintOpacity})"
+
+    if @_hintStyle is @_ColorHelp.HintStyle.Dots or not assetColor
+      # Draw the dot hint.
+      if color
+        context.fillRect _topLeftCorner.x + @_dotHintOffset, _topLeftCorner.y + @_dotHintOffset, @_dotHintSize, @_dotHintSize
+      
+      else unless @_hintOpacity < 1
+        context.clearRect _topLeftCorner.x + @_dotHintOffset, _topLeftCorner.y + @_dotHintOffset, @_dotHintSize, @_dotHintSize
+        
+    else
+      # Draw the symbol hint.
+      serialIndex = LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor
+      symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
+
+      # Write the symbol in the center of the pixel.
+      context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5

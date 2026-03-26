@@ -1,0 +1,2 @@
+jaggy
+{"_id":"CabgzEbRq68vFaqcd","name":{"_id":"NFqxAbqP2HuL2hbbu","translations":{"en":{"us":{"text":"jaggy","quality":0},"best":{"text":"jaggy","quality":0,"languageRegion":"en-US"}},"best":{"text":"jaggy","quality":0,"languageRegion":"en-US"}}},"_schema":"1.1.0","searchTerms":["jaggy"],"lastEditTime":{"$date":1769194966250},"referenceName":"jaggy"}

@@ -7,10 +7,12 @@ class PAA.Practice.PixelArtEvaluation
   #   doubles:
   #     score: float between 0 and 1 with this criterion evaluation
   #     count: how many pixels lie on axis-aligned side-steps or wide lines
+  #     countAllLineWidthTypes: boolean whether doubles should be counted on all line width types, false by default
+  #     countPointsWithMultiplePixels: boolean whether multi-pixel lines count as doubles, false by default
   #   corners:
   #     score: float between 0 and 1 with this criterion evaluation
   #     count: how many pixels have two or more direct neighbors
-  #     ignoreStraightLineCorners: boolean, whether to filter out corners appearing at edges of straight line parts
+  #     ignoreStraightLineCorners: boolean whether to filter out corners appearing at edges of straight line parts, true by default
   # evenDiagonals
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
@@ -23,6 +25,7 @@ class PAA.Practice.PixelArtEvaluation
   #       matching, shorter: how many line parts has this type
   # smoothCurves: objects with different criteria evaluations
   #   score: float between 0 and 1 with this criterion evaluation
+  #   ignoreMostlyStraightLines: boolean whether to filter out lines that have more straight than curved parts, true by default
   #   abruptSegmentLengthChanges:
   #     score: float between 0 and 1 with this criterion evaluation
   #     counts: object with counts of how many segment length changes are abrupt for each severity
@@ -101,6 +104,19 @@ class PAA.Practice.PixelArtEvaluation
     
     letterGrade
     
+  @_getEvaluationOptions: (pixelArtEvaluationProperty) ->
+    options =
+      pixelPerfectLines:
+        doubles:
+          countAllLineWidthTypes: false
+          countPointsWithMultiplePixels: false
+        corners:
+          ignoreStraightLineCorners: true
+      smoothCurves:
+        ignoreMostlyStraightLines: true
+        
+    _.overrideDeep options, pixelArtEvaluationProperty
+  
   constructor: (@bitmap, @options = {}) ->
     @layers = []
     
@@ -150,6 +166,16 @@ class PAA.Practice.PixelArtEvaluation
       layer.getLinePartsBetween points...
     
     _.flatten lineParts
+  
+  getPointsAt: (x, y) ->
+    points = []
+    
+    for layer in @layers
+      if pixel = layer.getPixel(x, y)
+        if point = layer.getPointOn pixel
+          points.push point
+      
+    points
     
   _updateArea: (layerIndex, bounds) ->
     if @layers[layerIndex]
@@ -219,7 +245,7 @@ class PAA.Practice.PixelArtEvaluation
     
       evaluation.pixelPerfectLines = @_calculateWeightedEvaluation @constructor.Subcriteria.PixelPerfectLines, @constructor.SubcriteriaWeights.PixelPerfectLines, pixelArtEvaluationProperty.pixelPerfectLines, @_evaluation.pixelPerfectLines
       
-      if evaluation.pixelPerfectLines.score
+      if evaluation.pixelPerfectLines.score?
         finalScore += evaluation.pixelPerfectLines.score
         criteriaCount++
         
@@ -268,7 +294,7 @@ class PAA.Practice.PixelArtEvaluation
       
       evaluation.evenDiagonals = @_calculateWeightedEvaluation @constructor.Subcriteria.EvenDiagonals, @constructor.SubcriteriaWeights.EvenDiagonals, pixelArtEvaluationProperty.evenDiagonals, @_evaluation.evenDiagonals
       
-      if evaluation.evenDiagonals.score
+      if evaluation.evenDiagonals.score?
         finalScore += evaluation.evenDiagonals.score
         criteriaCount++
       
@@ -298,7 +324,7 @@ class PAA.Practice.PixelArtEvaluation
         
         for layer in @layers
           for line in layer.lines
-            lineEvaluation = line.evaluate()
+            lineEvaluation = line.evaluate pixelArtEvaluationProperty
             continue unless lineEvaluation.curveSmoothness
             
             # We use the square root of the length so that long lines can't hugely overtake the short ones.
@@ -351,7 +377,7 @@ class PAA.Practice.PixelArtEvaluation
         
         for layer in @layers
           for line in layer.lines
-            lineEvaluation = line.evaluate()
+            lineEvaluation = line.evaluate pixelArtEvaluationProperty
             widthType = lineEvaluation.width.type
             
             weight = Math.sqrt line.points.length
@@ -385,7 +411,7 @@ class PAA.Practice.PixelArtEvaluation
       
       evaluation.consistentLineWidth = @_calculateMaximumEvaluation @constructor.Subcriteria.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
       
-      if evaluation.consistentLineWidth.score
+      if evaluation.consistentLineWidth.score?
         finalScore += evaluation.consistentLineWidth.score
         criteriaCount++
         

@@ -15,6 +15,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   width: -> throw new AE.NotImplementedException "You must specify the asset width."
   height: -> throw new AE.NotImplementedException "You must specify the asset height."
   portfolioBorderWidth: -> 0
+  pixelArtScaling: -> true
   
   portfolioComponent: -> throw new AE.NotImplementedException "You must provide a component to render the asset in the portfolio."
   

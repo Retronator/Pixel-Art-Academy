@@ -9,7 +9,11 @@ class LM.PixelPad extends PAA.PixelPad
   
   backButtonCallback: ->
     =>
-      if @backButtonVisible()
+      # If we have focused artworks, we need to close them.
+      if LOI.adventure.interface.focusedArtworks()
+        LOI.adventure.interface.unfocusArtworks()
+      
+      else if @backButtonVisible()
         @os.backButtonCallback()
         
       else

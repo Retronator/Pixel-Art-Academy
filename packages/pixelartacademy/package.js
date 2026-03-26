@@ -10,13 +10,26 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'onnxruntime-web': '1.16.3',
+  'bresenham-zingl': '0.2.0'
+});
+
 Package.onUse(function(api) {
+  api.use('retronator:artificialengines');
   api.use('retronator:landsofillusions-ui');
   api.imply('retronator:landsofillusions-ui');
 
   api.export('PixelArtAcademy');
 
   api.addFile('pixelartacademy');
+
+  api.addFile('imageclassification..');
+  api.addFile('imageclassification/simpleclassifier');
+
+  api.addFile('pages..');
+  api.addComponent('pages/imageclassification..');
+  api.addFile('pages/imageclassification/classifier');
 
   api.addFile('adventure..');
   api.addFile('chapter..');

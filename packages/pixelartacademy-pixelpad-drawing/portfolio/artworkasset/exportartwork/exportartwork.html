@@ -1,0 +1,66 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork">
+  <form class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-exportartwork pixelartacademy-pixelpad-apps-drawing-portfolio-forms-form export-artwork-form">
+    <div class="form-title">Export artwork form</div>
+    <div class="prompt">
+      Check the sizes you want to export.
+    </div>
+    <div class="scales">
+      <div class="category">
+        <span class="name">Original</span>
+        <span class="description">Good for further editing, game use, and backup.</span>
+      </div>
+      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale originalScale}}
+      {{#if previewScales.length}}
+        <div class="category">
+          <span class="name">Preview</span>
+          <span class="description">General storage with a better preview.</span>
+        </div>
+        {{#each previewScales}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+        {{/each}}
+      {{/if}}
+      {{#if publishingScales.length}}
+        <div class="category">
+          <span class="name">Publishing</span>
+          <span class="description">High resolution for posting online.</span>
+        </div>
+        {{#each publishingScales}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+        {{/each}}
+      {{/if}}
+      {{#if wallpaperScales.length}}
+        <div class="category">
+          <span class="name">Wallpaper</span>
+          <span class="description">Big enough to fill your screen.</span>
+        </div>
+        {{#each wallpaperScales}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+        {{/each}}
+      {{/if}}
+    </div>
+    <div class="submit-area">
+      <div class="title">Signature</div>
+      <div class="button-area">
+        <button class="submit-button">
+          {{#if adventure.isAdventureMode}}
+            {{currentCharacter.avatar.fullName}}
+          {{else}}
+            {{currentProfile.displayName}}
+          {{/if}}
+        </button>
+        <div class="prompt">
+          Click on the line<br/>
+          above to export
+        </div>
+      </div>
+    </div>
+  </form>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale">
+  <label class="scale">
+    <div class="selection"><input type="checkbox" class="factor-input" data-factor="{{factor}}"><span class="checkmark"></span></div>
+    <div class="factor">{{factor}}x {{#if factorDescription}}({{factorDescription}}){{/if}}</div>
+    <div class="dimensions">{{width}}×{{height}}</div>
+  </label>
+</template>

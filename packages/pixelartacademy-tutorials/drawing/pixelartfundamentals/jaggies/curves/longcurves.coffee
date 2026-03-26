@@ -76,7 +76,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LongCurves exten
     
     @initialize()
   
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     

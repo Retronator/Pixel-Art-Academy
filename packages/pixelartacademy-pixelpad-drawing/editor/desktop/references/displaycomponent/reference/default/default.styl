@@ -1,0 +1,71 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-default
+  position absolute
+  cursor grab
+
+  &.image-only
+    .figure
+      border none
+      background none
+      box-shadow none
+      filter drop-shadow(-1rem 1rem 0 desktopShadowColor)
+
+    &.dragging
+      .figure
+        box-shadow none
+        filter drop-shadow(-12rem 5rem 0 desktopShadowColor)
+
+  &.dragging
+    position fixed
+    z-index 101 !important
+
+    .figure
+      box-shadow -12rem 3rem 0 desktopShadowColor
+      transition-duration referenceMovementDurationLift
+
+  &.resizing-n
+  &.resizing-s
+    cursor ns-resize
+
+  &.resizing-e
+  &.resizing-w
+    cursor ew-resize
+
+  &.resizing-nw
+  &.resizing-se
+    cursor nwse-resize
+
+  &.resizing-ne
+  &.resizing-sw
+    cursor nesw-resize
+
+  .figure
+    absolute-cover()
+    margin -4rem
+    border 4rem solid atariGray(6)
+    background atariGray(6)
+    box-shadow -1rem 1rem 0 desktopShadowColor
+    transition all referenceMovementDurationDrop
+
+    .stored-references &
+      z-index 16
+
+    .displayed-references &
+      z-index 12
+
+    .image
+      display block
+      width 100%
+      image-rendering auto
+
+    .caption
+      height 14rem
+      padding-top 3rem
+      freehand()
+      color atariPurple(3)
+      text-align center
+      white-space nowrap
+      text-overflow ellipsis
+      overflow hidden

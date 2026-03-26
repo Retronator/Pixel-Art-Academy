@@ -19,13 +19,3 @@ class LM.Content.Progress.Entry extends AM.Document
     name: @id()
       
   @enablePersistence()
-  
-  @makeProgress: (profileId, contentId, data) ->
-    entry = _.extend
-      profileId: profileId
-      lastEditTime: new Date()
-      contentId: contentId
-    ,
-      data
-
-    PAA.Learning.Task.Entry.documents.upsert entry

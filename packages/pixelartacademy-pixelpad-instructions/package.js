@@ -13,10 +13,13 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');
+  api.use('retronator:pixelartacademy-practice');
 
   api.export('PixelArtAcademy');
 
   api.addFile('instructions');
 
   api.addUnstyledComponent('instruction..');
+
+  api.addComponent('interfacemarking..');
 });

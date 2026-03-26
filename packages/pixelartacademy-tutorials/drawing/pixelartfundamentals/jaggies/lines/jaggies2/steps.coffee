@@ -44,6 +44,8 @@ class Jaggies2.Steps
       
     drawOverlaidHints: (context, renderOptions = {}) ->
       # Draw hints only for the provided pixels.
-      @_preparePixelHintSize renderOptions
+      @_prepareColorHelp context, renderOptions
 
-      @_drawPixelHint context, hintPixel.x, hintPixel.y, hintPixel.directColor for hintPixel in @hintPixels
+      palette = @tutorialBitmap.palette()
+
+      @_drawColorHelpForPixel context, hintPixel.x, hintPixel.y, hintPixel, palette, false, renderOptions for hintPixel in @hintPixels

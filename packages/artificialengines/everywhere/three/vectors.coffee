@@ -1,6 +1,10 @@
 # Extra functionality for the vector classes.
 
 # Convert the vector to a plain object.
+THREE.Vector2::toObject = ->
+  x: @x
+  y: @y
+  
 THREE.Vector3::toObject = ->
   x: @x
   y: @y

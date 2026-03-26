@@ -65,8 +65,11 @@ class AM.DatabaseContent.ContentCollection extends AM.Collection
     serverDocument = @documentClass.serverDocuments.findOne documentId
     informationDocument = @findOne documentId
     
+    # We need to handle the server document if we're responsible for all of them or if it's not a persistent document.
+    handleServerDocument = @_handleServerDocuments or serverDocument and not serverDocument.profileId
+    
     # We should always upsert the server document (it has priority since it's changeable).
-    if @_handleServerDocuments and serverDocument
+    if handleServerDocument and serverDocument
       @documentClass.documents.upsert serverDocument._id, serverDocument
       
       # See if this document is part of database content and was inserted from there.
@@ -82,7 +85,7 @@ class AM.DatabaseContent.ContentCollection extends AM.Collection
     # See if we need to remove the document.
     if document
       # We should clean up the server document if it was removed.
-      if @_handleServerDocuments and not informationDocument?._localInsert
+      if handleServerDocument and not informationDocument?._localInsert
         # If this document is part of database content and subscriptions
         # still require it, we should replace it with that.
         if informationDocument?._subscriptionsCount > 0

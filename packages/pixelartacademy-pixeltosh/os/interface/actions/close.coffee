@@ -9,11 +9,5 @@ class PAA.Pixeltosh.OS.Interface.Actions.Close extends PAA.Pixeltosh.OS.Interfac
 
   @initialize()
   
-  enabled: ->
-    # We can perform a close action when a folder is the active window.
-    return unless activeWindow = @interface.getWindow @os.activeWindowId()
-    
-    activeWindow.allChildComponentsOfType(PAA.Pixeltosh.Programs.Finder.Folder).length
-  
   execute: ->
     @os.removeWindow @os.activeWindowId()

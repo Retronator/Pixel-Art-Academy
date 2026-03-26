@@ -30,8 +30,7 @@ class Retronator.App extends Artificial.Base.App
     super arguments...
 
     # Wire the main admin pages.
-    @constructor.addAdminPage '/admin', @constructor.Admin
-    @constructor.addAdminPage '/admin/facts', @constructor.Admin.Facts
+    Retronator.Admin.initialize()
 
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
@@ -56,6 +55,9 @@ class Retronator.App extends Artificial.Base.App
     new LOI.Construct.Pages
 
     new Retropolis.City
+
+    # Initialize other routes.
+    PAA.Publication.initializeRouting()
 
     # Add adventure pages last so they capture all remaining URLs.
     new PixelArtAcademy

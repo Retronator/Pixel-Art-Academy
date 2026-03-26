@@ -65,6 +65,7 @@
         }}
         <li class="menu-item"><span class="actionable display">Display</span></li>
         <li class="menu-item"><span class="actionable audio">Audio</span></li>
+        <li class="menu-item"><span class="actionable controls">Controls</span></li>
         <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
@@ -95,6 +96,13 @@
       </ul>
     {{/if}}
 
+    {{#if inControls}}
+      <ul class="controls menu">
+        {{> LandsOfIllusions.Components.Menu.Items.RightClick}}
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
     {{> LandsOfIllusions.Components.Menu.Items.Permissions}}
   </div>
 </template>
@@ -117,11 +125,13 @@
       <button class="previous-button">◀</button>
     {{/if}}
     {{#if graphicsMaximumScale}}
-      {{graphicsMaximumScale}}x
+      {{graphicsScale}}x
     {{else}}
       Auto
     {{/if}}
-    <button class="next-button">▶</button>
+    {{#if canIncreaseGraphicsScale}}
+      <button class="next-button">▶</button>
+    {{/if}}
   </li>
 </template>
 
@@ -150,6 +160,15 @@
   <li class="menu-item">
     Music: <input class="music-volume" type="range" min="0" max="1" step="0.05" value="{{musicVolume}}"/>
   </li>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.RightClick">
+  <li class="menu-item"><span class="right-click actionable">
+    Right click:
+    {{#if $is rightClick 'None'}}none{{/if}}
+    {{#if $is rightClick 'Eraser'}}Eraser{{/if}}
+    {{#if $is rightClick 'BackButton'}}Back button{{/if}}
+  </span></li>
 </template>
 
 <template name="LandsOfIllusions.Components.Menu.Items.Permissions">

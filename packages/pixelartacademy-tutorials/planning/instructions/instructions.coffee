@@ -1,0 +1,6 @@
+AB = Artificial.Babel
+AM = Artificial.Mirage
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
+
+class PAA.Tutorials.Planning.Instructions

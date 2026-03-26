@@ -89,17 +89,17 @@
                 height 21rem !important
                 margin-top -1rem
 
-        &.group-in-section-active
-          .groups
-            .group
-              height 5rem
-
-              &:first-child:not(.active)
+          &.group-in-section-active
+            .groups
+              .group
                 height 5rem
 
-              &:hover:not(.active)
-                height 15rem
-                margin-top -1rem
+                &.active
+                  height 150rem
+
+                &:hover:not(.active)
+                  height 15rem
+                  margin-top -1rem
 
         &.settings
           width 292rem
@@ -179,7 +179,6 @@
               height 19rem
 
             &.active
-              height 150rem
               overflow initial
 
             .group-header

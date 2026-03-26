@@ -9,9 +9,6 @@ class Jaggies2.Instructions
   class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Jaggies2
     
-    # The length of the arrow to indicate a pixel move.
-    @movePixelArrowLength = 1.2
-    
     @resetCompletedConditions: ->
       not @getActiveAsset()
     
@@ -156,26 +153,8 @@ class Jaggies2.Instructions
         
       markup = _.flatten markup
       
-      bitmap = asset.bitmap()
+      markup.push PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelMarkup(asset, 25, 7, 0, -1)...
       
-      unless bitmap.findPixelAtAbsoluteCoordinates 25, 6
-        markupStyle = Markup.errorStyle()
-        
-        arrowBase =
-          arrow:
-            end: true
-            width: 0.5
-            length: 0.25
-          style: markupStyle
-        
-        markup.push
-          line: _.extend {}, arrowBase,
-            points: [
-              x: 25.5, y: 7.5
-            ,
-              x: 25.5, y: 7.5 - @constructor.movePixelArrowLength
-            ]
-        
       markup
   
   class @Line5Draw extends @StepInstruction
@@ -237,7 +216,7 @@ class Jaggies2.Instructions
                 x: arrowData.x
                 y: arrowData.y
               ,
-                x: arrowData.x + arrowData.sign * @constructor.movePixelArrowLength
+                x: arrowData.x + arrowData.sign * PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
                 y: arrowData.y
               ]
             

@@ -16,7 +16,7 @@ class Pinball.Project extends PAA.Practice.Project.Thing
   #     rotationAngle: the angle
   #     flipped: boolean whether the part mesh should be mirrored horizontally
   #     ...
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball'
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Project'
   
   @fullName: -> "Pinball"
 

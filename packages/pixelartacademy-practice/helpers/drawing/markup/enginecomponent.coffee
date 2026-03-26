@@ -10,30 +10,58 @@ class Markup.EngineComponent
   # (markup pixels will be scaled down when zoomed out more than this).
   @minimumZoomPercentage = 400 # %
   
-  constructor: (@options) ->
+  @_fontsAvailable = {}
   
-  drawMarkup: (markup, context, renderOptions = {}) ->
-    pixelSize = 1 / renderOptions.camera.effectiveScale()
-    displayScale = renderOptions.editor.display.scale()
-    displayPixelSize = pixelSize * displayScale
+  @fontAvailable: (font) ->
+    unless @_fontsAvailable[font]
+      @_fontsAvailable[font] = new ReactiveField false
+      
+      Tracker.nonreactive =>
+        await document.fonts.load font
+        await document.fonts.ready
+        @_fontsAvailable[font] true
     
-    scaledDisplayPixelSize = Math.min 100 / @constructor.minimumZoomPercentage, displayPixelSize
+    @_fontsAvailable[font]()
+    
+  constructor: ->
+    @_bitmapPixelImages = []
+    @_urlImages = []
+  
+  drawMarkup: (markup, context, properties) ->
+    # How big is an HTML canvas pixel relative to the unit of the context.
+    pixelSize = properties.pixelSize
+  
+    # How big is a game display pixel relative to the unit of the context.
+    displayPixelSize = properties.displayPixelSize
+    
+    minimumZoomPercentage = properties.minimumZoomPercentage ? @constructor.minimumZoomPercentage
+    
+    scaledDisplayPixelSize = Math.min 100 / minimumZoomPercentage, displayPixelSize
     
     context.save()
     
-    for element in markup
-      if pixel = element.pixel
+    bitmapCanvases = []
+    
+    for marking in markup
+      if pixel = marking.pixel
         context.fillStyle = pixel.style
         context.fillRect pixel.x, pixel.y, 1, 1
         
-      if point = element.point
+      if point = marking.point
         radius = scaledDisplayPixelSize * (point.radius or 0.5)
         context.fillStyle = point.style
         context.beginPath()
         context.arc point.x, point.y, radius, 0, 2 * Math.PI
         context.fill()
       
-      if line = element.line
+      if circle = marking.circle
+        radius = circle.radius or 0.5
+        context.fillStyle = circle.style
+        context.beginPath()
+        context.arc circle.x, circle.y, radius, 0, 2 * Math.PI
+        context.fill()
+      
+      if line = marking.line
         context.strokeStyle = line.style
         context.lineCap = line.cap
         context.lineWidth = scaledDisplayPixelSize * (line.width or 1)
@@ -88,58 +116,121 @@ class Markup.EngineComponent
           context.arc line.arc.x, line.arc.y, line.arc.radius, startAngle, endAngle
           context.stroke()
         
-      if text = element.text
-        if text.backgroundStyle
-          context.fillStyle = text.backgroundStyle
-          @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
-      
+      if rectangle = marking.rectangle
+        if rectangle.fillStyle
+          context.fillStyle = rectangle.fillStyle
+          context.fillRect rectangle.x, rectangle.y, rectangle.width, rectangle.height
+        
+        if rectangle.strokeStyle
+          context.lineWidth = scaledDisplayPixelSize * (rectangle.strokeWidth or 1)
+          context.strokeStyle = rectangle.strokeStyle
+          
+          effectiveLineWidth = context.lineWidth / pixelSize
+          sharpPixelOffset = if effectiveLineWidth % 2 is 1 then 0.5 else 0
+          
+          sharpX = (Math.floor(rectangle.x / pixelSize) + sharpPixelOffset) * pixelSize
+          sharpY = (Math.floor(rectangle.y / pixelSize) + sharpPixelOffset) * pixelSize
+          
+          context.strokeRect sharpX, sharpY, rectangle.width, rectangle.height
+          
+      if text = marking.text
         textSize = text.size * scaledDisplayPixelSize
         context.font = "#{textSize}px #{text.font}"
         
-        if text.lineHeight
-          lineHeight = text.lineHeight * scaledDisplayPixelSize
+        if @constructor.fontAvailable context.font
+          if text.backgroundStyle
+            context.fillStyle = text.backgroundStyle
+            @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
           
-        else
-          lineHeight = textSize * 1.2
+          if text.lineHeight
+            lineHeight = text.lineHeight * scaledDisplayPixelSize
+            
+          else
+            lineHeight = textSize * 1.2
+            
+          textPosition = _.clone text.position
           
-        textPosition = _.clone text.position
-        
-        # Adjust for right-based origin to have an extra pixel space.
-        if _.endsWith textPosition.origin, 'Right'
-          textPosition.x += scaledDisplayPixelSize
-          
-        if text.outline
-          # Adjust position to accommodate for the outline.
-          if _.endsWith textPosition.origin, 'Left'
+          # Adjust for right-based origin to have an extra pixel space.
+          if _.endsWith textPosition.origin, 'Right'
             textPosition.x += scaledDisplayPixelSize
             
-          if _.endsWith textPosition.origin, 'Right'
-            textPosition.x -= scaledDisplayPixelSize
-          
-          if _.startsWith textPosition.origin, 'Top'
-            textPosition.y += scaledDisplayPixelSize
-          
-          if _.startsWith textPosition.origin, 'Bottom'
-            textPosition.y -= scaledDisplayPixelSize
-          
-          context.fillStyle = text.outline.style
-          
-          outlineWidth = text.outline.width or 1
-          outlinePosition = _.clone textPosition
-          
-          context.beginPath()
-          
-          for offsetX in [-outlineWidth..outlineWidth]
-            for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
-              outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
-              outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
-              @_drawText context, text.value, outlinePosition, lineHeight, text.align
+          if text.outline
+            # Adjust position to accommodate for the outline.
+            if _.endsWith textPosition.origin, 'Left'
+              textPosition.x += scaledDisplayPixelSize
               
-          context.fill()
-        
-        context.fillStyle = text.style
-        @_drawText context, text.value, textPosition, lineHeight, text.align
+            if _.endsWith textPosition.origin, 'Right'
+              textPosition.x -= scaledDisplayPixelSize
+            
+            if _.startsWith textPosition.origin, 'Top'
+              textPosition.y += scaledDisplayPixelSize
+            
+            if _.startsWith textPosition.origin, 'Bottom'
+              textPosition.y -= scaledDisplayPixelSize
+            
+            context.fillStyle = text.outline.style
+            
+            outlineWidth = text.outline.width or 1
+            outlinePosition = _.clone textPosition
+            
+            context.beginPath()
+            
+            for offsetX in [-outlineWidth..outlineWidth]
+              for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
+                outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
+                outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
+                @_drawText context, text.value, outlinePosition, lineHeight, text.align
+                
+            context.fill()
+          
+          context.fillStyle = text.style
+          @_drawText context, text.value, textPosition, lineHeight, text.align
       
+      if image = marking.image
+        if bitmap = image.bitmap
+          if bitmapCanvas = _.find bitmapCanvases, (bitmapCanvas) => bitmapCanvas.bitmap is bitmap
+            source = bitmapCanvas.canvas
+        
+          else
+            unless bitmapPixelImage = _.find @_bitmapPixelImages, (bitmapPixelImage) => bitmapPixelImage.bitmap is bitmap
+              bitmapPixelImage =
+                bitmap: bitmap
+                pixelImage: new LOI.Assets.Engine.PixelImage.Bitmap asset: => bitmap
+              
+              @_bitmapPixelImages.push bitmapPixelImage
+              
+            if source = bitmapPixelImage.pixelImage.getCanvas()
+              bitmapCanvases.push
+                bitmap: bitmap
+                canvas: source
+          
+        if url = image.url
+          unless urlImage = @_urlImages[url]
+            loadDependency = new Tracker.Dependency
+            
+            imageElement = new Image
+            imageElement.onload = => loadDependency.changed()
+            imageElement.src = url
+            
+            urlImage = {image: imageElement, loadDependency}
+            @_urlImages[url] = urlImage
+            
+          source = urlImage.image
+          urlImage.loadDependency.depend()
+            
+        if source
+          sourceX = image.source?.position.x or 0
+          sourceY = image.source?.position.y or 0
+          sourceWidth = image.source?.width or source.width
+          sourceHeight = image.source?.height or source.height
+          
+          destinationX = image.position.x
+          destinationY = image.position.y
+          destinationWidth = image.width or sourceWidth
+          destinationHeight = image.height or sourceHeight
+          
+          context.drawImage source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight
+        
     context.restore()
 
   _drawArrow: (context, start, end, width = 1, length = 0.5) ->
@@ -163,6 +254,8 @@ class Markup.EngineComponent
 
     widths = (context.measureText(line).width for line in lines)
     maxWidth = _.max widths
+    
+    context.textAlign = 'left'
     
     middleFactor = 0
     context.textBaseline = 'top'

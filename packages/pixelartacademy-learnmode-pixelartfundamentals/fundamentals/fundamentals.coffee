@@ -20,6 +20,9 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @PixeltoshFiles
     @Workbench
     @MusicTapes
+    @Publications
+    @Publications.Parts
+    @Pico8Cartridges
   ]
 
   @courses: -> [

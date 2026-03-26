@@ -12,7 +12,7 @@ Package.describe({
 
 Npm.depends({
   'quill-delta': '4.2.2',
-  'path-data-polyfill': '1.0.4'
+  'path-data-polyfill': '1.0.10'
 });
 
 Package.onUse(function(api) {
@@ -58,10 +58,10 @@ Package.onUse(function(api) {
   api.addFile('checkin/methods');
   api.addServerFile('checkin/methods-server');
   api.addServerFile('checkin/subscriptions');
-  api.addServerFile('checkin/migrations/0000-renamecollection');
-  api.addServerFile('checkin/migrations/0001-characterreferencefieldsupdate');
-  api.addServerFile('checkin/migrations/0002-removecharacternamefield');
-  api.addServerFile('checkin/migrations/0003-changetomemories');
+  api.addFile('checkin/migrations/0000-renamecollection');
+  api.addFile('checkin/migrations/0001-characterreferencefieldsupdate');
+  api.addFile('checkin/migrations/0002-removecharacternamefield');
+  api.addFile('checkin/migrations/0003-changetomemories');
 
   api.addFile('importeddata/importeddata');
   api.addServerFile('importeddata/checkin-server/checkin');
@@ -95,7 +95,10 @@ Package.onUse(function(api) {
   api.addFile('project/assets/bitmap..');
   api.addComponent('project/assets/bitmap/portfoliocomponent..');
   api.addComponent('project/assets/bitmap/clipboardcomponent..');
+  api.addFile('project/assets/bitmap/clipboardcomponent/previewinfomixin');
   api.addUnstyledComponent('project/assets/bitmap/briefcomponent..');
+
+  api.addFile('project/migrations/0000-projectthings');
 
   // Challenges
 
@@ -132,6 +135,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/steparea');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/step');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelsstep');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelswithpathsstep');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/ephemeralstep');
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep..');
@@ -174,4 +178,9 @@ Package.onUse(function(api) {
   // Engine component requires lines to be defined.
   api.addFile('pixelartevaluation/enginecomponent')
   api.addFile('pixelartevaluation/enginecomponent-debug')
+
+  // Readability analysis
+  api.addFile('readabilityanalysis..')
+  api.addFile('readabilityanalysis/enginecomponent')
+  api.addFile('readabilityanalysis/enginecomponent-debug')
 });

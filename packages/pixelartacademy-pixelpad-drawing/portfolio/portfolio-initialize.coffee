@@ -91,6 +91,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @_artworkAssetsDependency.changed()
   
       removed: (id) =>
+        @_artworkAssets[id].destroy()
         delete @_artworkAssets[id]
         @_artworkAssetsDependency.changed()
     
@@ -100,7 +101,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
 
     @_wipArtworksGroup =
       index: 0
-      name: => "WIP"
+      name: => "Work in progress"
       assets: new ComputedField =>
         assets = []
         
@@ -126,21 +127,21 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
               asset: asset
               scale: => @_assetScale asset
   
-        # New artworks can be created if the player can edit art with built-in editors.
-        if PAA.PixelPad.Apps.Drawing.canEdit()
+        if PAA.PixelPad.Apps.Drawing.canCreateArtworks()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
             asset: @_newArtworkAsset
             scale: => 1
   
-        # TODO: Artworks can be imported if the player can edit or upload art made with external software.
-        if false and (PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload())
+          # TODO: Enable uploading of artworks.
+          ###
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length
             asset: @_importArtworkAsset
             scale: => 1
+          ###
   
         assets
         
@@ -162,7 +163,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       sections.push @tutorialsSection if @tutorialsSection.groups().length
       sections.push @challengesSection if @challengesSection.groups().length
       sections.push @projectsSection if @projectsSection.groups().length
-      # sections.push @artworksSection if @artworksSection.groups().length
+      sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.
       if @activeSection and not @activeSection() in sections
@@ -297,10 +298,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       activeSectionGroups = activeSection.groups()
 
       if @activeGroup()
-        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @getInactiveGroupHeight(activeSectionGroups.length) + @activeGroupHeight
         
       else
-        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @initialGroupHeight
+        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @getInitialGroupHeight activeSectionGroups.length
       
       sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
       

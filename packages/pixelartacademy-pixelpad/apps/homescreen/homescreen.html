@@ -1,6 +1,6 @@
 <template name="PixelArtAcademy.PixelPad.Apps.HomeScreen">
   <div class="pixelartacademy-pixelpad-apps-homescreen app">
-    <ul class="apps">
+    <ul class="apps {{enabledClass}}">
       {{#each apps}}
         <li class="app">
           <a class="link" href="{{os.appPath this.url}}">

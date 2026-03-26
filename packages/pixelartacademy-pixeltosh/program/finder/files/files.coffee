@@ -27,4 +27,4 @@ class PAA.Pixeltosh.Programs.Finder.Files extends AM.Component
     @finder.selectPath file.path()
   
   onDoubleClickFileButton: (event) ->
-    @os.interface.getOperator(PAA.Pixeltosh.OS.Interface.Actions.Open).execute()
+    @os.interface.getOperator(PAA.Pixeltosh.Programs.Finder.Actions.Open).execute()

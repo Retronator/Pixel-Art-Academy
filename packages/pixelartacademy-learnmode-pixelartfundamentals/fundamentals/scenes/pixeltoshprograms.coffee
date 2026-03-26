@@ -11,4 +11,5 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshPrograms extends LOI.Adventu
   
   things: -> [
     PAA.Pixeltosh.Programs.Pinball if LM.PixelArtFundamentals.pinballEnabled()
+    PAA.Pixeltosh.Programs.DrawQuickly if LM.PixelArtFundamentals.drawQuicklyEnabled()
   ]

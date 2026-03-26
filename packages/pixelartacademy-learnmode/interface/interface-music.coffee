@@ -9,135 +9,14 @@ class LM.Interface extends LM.Interface
   onCreated: ->
     super arguments...
     
-    # Create the Learn Mode composition.
-    @musicComposition = new AMe.Composition LOI.adventure.audioManager
+    @_previousDynamicSoundtrackComposition = null
+    @currentDynamicSoundtrackComposition = new ReactiveField null
     
-    # Intro
-    
-    introSection = new AMe.Section @musicComposition,
-      duration: 8
-      
-    introSection.events = [
-      new AMe.Event.Player introSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/intro.mp3'
-    ]
-    
-    @musicComposition.sections.push introSection
-    @musicComposition.initialSection = introSection
-    
-    # Pixel pad
-    
-    homeScreenSection = new AMe.Section @musicComposition,
-      duration: 40
-    
-    homeScreenSection.events = [
-      new AMe.Event.Player homeScreenSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/homescreen.mp3'
-    ]
-    
-    @musicComposition.sections.push homeScreenSection
-    
-    # Tutorial start
-    
-    tutorialStartSection = new AMe.Section @musicComposition,
-      duration: 40
-      
-    tutorialStartSection.events = [
-      new AMe.Event.Player tutorialStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-start.mp3'
-    ]
-    
-    @musicComposition.sections.push tutorialStartSection
-    
-    # Tutorial middle
-    
-    tutorialMiddleSection = new AMe.Section @musicComposition,
-      duration: 40
-      
-    tutorialMiddleSection.events = [
-      new AMe.Event.Player tutorialMiddleSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-middle.mp3'
-    ]
-    
-    @musicComposition.sections.push tutorialMiddleSection
-    
-    # Tutorial ending
-    
-    tutorialEndingSection = new AMe.Section @musicComposition,
-      duration: 32
-      
-    tutorialEndingSection.events = [
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-ending.mp3'
-    ]
-    
-    @musicComposition.sections.push tutorialEndingSection
-    
-    # Challenge start
-    
-    challengeStartSection = new AMe.Section @musicComposition,
-      duration: 24
-      
-    challengeStartSection.events = [
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/challenge-start.mp3'
-    ]
-    
-    @musicComposition.sections.push challengeStartSection
-    
-    # Challenge ending
-    
-    challengeEndingSection = new AMe.Section @musicComposition,
-      duration: 32
-      
-    challengeEndingSection.events = [
-      new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/challenge-ending.mp3'
-    ]
-    
-    @musicComposition.sections.push challengeEndingSection
-    
-    # Project
-    
-    projectSection = new AMe.Section @musicComposition,
-      duration: 32
-      
-    projectSection.events = [
-      new AMe.Event.Player projectSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/project.mp3'
-    ]
-    
-    @musicComposition.sections.push projectSection
-    
-    # Create transitions.
-    introSection.transitions.push new AMe.Transition introSection,
-      nextSection: homeScreenSection
-    
-    challengeStartSection.transitions.push new AMe.Transition challengeStartSection,
-      nextSection: challengeEndingSection
-      
-    transitioningSections =
-      intro: introSection
-      homeScreen: homeScreenSection
-      tutorialStart: tutorialStartSection
-      tutorialMiddle: tutorialMiddleSection
-      tutorialEnding: tutorialEndingSection
-      challengeStart: challengeStartSection
-      challengeEnding: challengeEndingSection
-      projectStart: projectSection
-    
-    for sectionNameA, sectionA of transitioningSections when sectionA and sectionA isnt challengeStartSection
-      for sectionNameB, sectionB of transitioningSections when sectionB and sectionA isnt sectionB and @audio[sectionNameB]
-        sectionA.transitions.push new AMe.Transition sectionA,
-          nextSection: sectionB
-          trigger: @audio[sectionNameB]
-        
     # Play the composition when we are in play, unless the music system is playing a track or we're in the music app.
-    @musicPlayback = new AMe.Playback LOI.adventure.audioManager, @musicComposition
+    @_previousDynamicSoundtrackPlayback = null
+    @currentDynamicSoundtrackPlayback = new ReactiveField null
     
     @dynamicSoundtrackPlaying = new ComputedField =>
-      return unless @musicComposition.ready()
-      return unless @musicPlayback.ready()
       return unless LOI.adventure.ready()
       return false unless LOI.adventure.currentLocationId() is LM.Locations.Play.id()
       return false if PAA.PixelPad.Systems.Music.state 'playing'
@@ -147,22 +26,49 @@ class LM.Interface extends LM.Interface
 
     @autorun (computation) =>
       dynamicSoundtrackPlaying = @dynamicSoundtrackPlaying()
+      currentDynamicSoundtrackComposition = @currentDynamicSoundtrackComposition()
       return unless dynamicSoundtrackPlaying?
       
       Tracker.nonreactive =>
+        currentDynamicSoundtrackPlayback = @currentDynamicSoundtrackPlayback()
+
         if dynamicSoundtrackPlaying
-          if LOI.adventure.music.isPlayingPlayback @musicPlayback
+          # Check if the right composition is already playing.
+          if @_previousDynamicSoundtrackPlayback?.composition is currentDynamicSoundtrackComposition and LOI.adventure.music.isPlayingPlayback @_previousDynamicSoundtrackPlayback
+            # It is, we simply need to resume it.
             LOI.adventure.music.resume PAA.Music.FadeDurations.InGameMusicModeOffFadeIn
           
           else
-            # Start the music after a short amount of silence.
-            @_musicStartTimeout ?= Meteor.setTimeout =>
-              LOI.adventure.music.startPlayback @musicPlayback
+            startPlaybackWaitDuration = PAA.Music.StartTimeoutDuration
+            
+            # It is not. If we have a different composition playing, we need to fade it out.
+            if @_previousDynamicSoundtrackPlayback
+              LOI.adventure.music.stopPlayback PAA.Music.FadeDurations.DynamicSoundtrackSongChangeFadeOut if LOI.adventure.music.isPlayingPlayback @_previousDynamicSoundtrackPlayback
+              startPlaybackWaitDuration += PAA.Music.FadeDurations.DynamicSoundtrackSongChangeFadeOut
+              
+              # Destroy the playback and composition after the fade out and some grace time.
+              @_destroyCurrentDynamicSoundtrack PAA.Music.FadeDurations.DynamicSoundtrackSongChangeFadeOut
+            
+            # Create new playback.
+            @_previousDynamicSoundtrackComposition = currentDynamicSoundtrackComposition
+            @_previousDynamicSoundtrackPlayback = new AMe.Playback LOI.adventure.audioManager, currentDynamicSoundtrackComposition
+            @currentDynamicSoundtrackPlayback @_previousDynamicSoundtrackPlayback
+            
+            startMusicWhenReady = =>
+              # If the composition playback is not yet ready, retry in 0.1s.
+              unless @_previousDynamicSoundtrackComposition.ready() and @_previousDynamicSoundtrackPlayback.ready()
+                @_musicStartTimeout = Meteor.setTimeout startMusicWhenReady, 100
+                return
+                
+              # The song is now ready. play it!
+              LOI.adventure.music.startPlayback @_previousDynamicSoundtrackPlayback
               @_musicStartTimeout = null
-            ,
-              PAA.Music.StartTimeoutDuration * 1000
+            
+            # Start the music after a short amount of silence.
+            Meteor.clearTimeout @_musicStartTimeout
+            @_musicStartTimeout = Meteor.setTimeout startMusicWhenReady, startPlaybackWaitDuration * 1000
           
-        else if LOI.adventure.music.isPlayingPlayback @musicPlayback
+        else if LOI.adventure.music.isPlayingPlayback currentDynamicSoundtrackPlayback
           Meteor.clearTimeout @_musicStartTimeout
   
           if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
@@ -172,56 +78,17 @@ class LM.Interface extends LM.Interface
           else
             # Outside of play we completely stop the music so it gets restarted the next time around.
             LOI.adventure.music.stopPlayback PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
-      
-    # Trigger events.
-    @autorun (computation) =>
-      # When no app is opened, reset the music to default.
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      
-      currentApp = pixelPad.os.currentApp()
-      
-      if currentApp instanceof PAA.PixelPad.Apps.HomeScreen
-        @audio.homeScreen()
-        return
-      
-      # React to drawing app changes.
-      return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
-      drawing = currentApp
-      
-      # Wait until an asset is activated.
-      return unless portfolio = drawing.portfolio()
-      return unless activeAsset = portfolio.activeAsset()
-      
-      # See which section we're in and how far along in the group.
-      activeSection = portfolio.activeSection()
-      activeGroup = portfolio.activeGroup()
-      activeAssets = activeGroup.assets()
-      
-      activeAssetIndex = _.findIndex activeAssets, (asset) => asset is activeAsset
-      unitIndex = activeAssets.length - 1 - activeAssetIndex
-      
-      unitsCount = activeGroup.content?()?.progress.unitsCount() or 1
-      groupProgress = if unitsCount > 1 then unitIndex / (unitsCount - 1) else 0
-      
-      switch activeSection.nameKey
-        when PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Tutorials
-          if groupProgress < 1 / 3
-            @audio.tutorialStart()
-            
-          else if groupProgress < 2 / 3
-            @audio.tutorialMiddle()
-            
-          else
-            @audio.tutorialEnding()
-            
-        when PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Challenges
-          @audio.challengeStart()
-          
-        when PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Projects
-          @audio.projectStart()
-          
+
+            # Destroy the playback and composition after the fade out and some grace time.
+            @_destroyCurrentDynamicSoundtrack PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
+    
     # Control how to play the in-game music.
     @autorun (computation) =>
+      # In the music effects settings menu, always play the music in location.
+      if LOI.adventure.menu.visible() and LOI.adventure.menu.items.inMusicEffectsSettings()
+        @audio.inGameMusicInLocation true
+        return
+      
       pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
       inGameMusicMode = pixelPad?.os.currentApp()?.inGameMusicMode?()
       
@@ -251,9 +118,113 @@ class LM.Interface extends LM.Interface
       
       else
         LOI.adventure.music.resume PAA.Music.FadeDurations.MenuFadeIn
+        
+    # Start the correct dynamic soundtrack composition.
+    @drawingAppDeterminedCompositionClass = new ComputedField (computation) =>
+      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+      return unless currentApp = pixelPad.os.currentApp()
+      return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
+      
+      # In the drawing app, see which episode the content is coming from.
+      drawing = currentApp
+      
+      # Wait until an asset is activated.
+      return unless portfolio = drawing.portfolio()
+      return unless portfolio.activeAsset()
+      
+      activeGroup = portfolio.activeGroup()
+      activeThing = activeGroup.thing
+      return unless course = activeThing?.content().course
+      
+      if course instanceof LM.Intro.Tutorial.Content.Course
+        # Intro
+        LM.Compositions.PixelArtTools
+        
+      else if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
+        # Pixel art fundamentals
+        if activeThing instanceof PAA.Tutorials.Drawing.ElementsOfArt
+          LM.Compositions.ElementsOfArt
+        
+        else if activeThing instanceof PAA.Tutorials.Drawing.Simplification
+          LM.Compositions.ElementsOfArt
+        
+        else if activeThing instanceof PAA.Tutorials.Drawing.PixelArtFundamentals
+          LM.Compositions.PixelArtFundamentals
+        
+      else if course instanceof LM.Design.Fundamentals.Content.Course
+        # Design fundamentals
+        if activeThing instanceof PAA.Tutorials.Drawing.Design
+          LM.Compositions.ElementsOfArt
+      
+        else if activeThing instanceof PAA.Pico8.Cartridges.Invasion.Project
+          LM.Compositions.PixelArtFundamentals
+
+    previouslyAvailableCompositionClasses = []
+  
+    @autorun (computation) =>
+      drawingAppDeterminedCompositionClass = @drawingAppDeterminedCompositionClass()
+      currentChapters = LOI.adventure.currentChapters()
+      currentLocationId = LOI.adventure.currentLocationId()
+      
+      Tracker.nonreactive =>
+        # Outside of play, there is no dynamic composition.
+        unless currentLocationId is LM.Locations.Play.id()
+          @currentDynamicSoundtrackComposition null
+          previouslyAvailableCompositionClasses = []
+          return
+          
+        currentDynamicSoundtrackComposition = @currentDynamicSoundtrackComposition()
+        
+        if drawingAppDeterminedCompositionClass
+          # When the drawing app is able to determine the composition class, we use that.
+          desiredCompositionClass = drawingAppDeterminedCompositionClass
+          
+        else
+          # Otherwise we leave the composition playing unless no composition is
+          # playing, or if a new composition is available that wasn't previously.
+          availableCourses = _.flatten (chapter.courses for chapter in currentChapters)
+  
+          availableCompositionClasses = []
+          
+          for course in availableCourses
+            if course instanceof LM.Intro.Tutorial.Content.Course
+              availableCompositionClasses.push LM.Compositions.PixelArtTools
+              
+            else if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
+              availableCompositionClasses.push LM.Compositions.ElementsOfArt
+          
+              if LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.activeAndAvailableOrCompleted()
+                availableCompositionClasses.push LM.Compositions.PixelArtFundamentals
+          
+          for compositionClass in availableCompositionClasses when compositionClass not in previouslyAvailableCompositionClasses or not currentDynamicSoundtrackComposition
+            desiredCompositionClass = compositionClass
+          
+          previouslyAvailableCompositionClasses = availableCompositionClasses
+          
+          return unless desiredCompositionClass
+        
+        return if currentDynamicSoundtrackComposition instanceof desiredCompositionClass
+      
+        @currentDynamicSoundtrackComposition new desiredCompositionClass LOI.adventure.audioManager
       
   onDestroyed: ->
     super arguments...
     
-    @musicComposition?.destroy()
-    @musicPlayback?.destroy()
+    @_currentDynamicSoundtrackComposition?.destroy()
+    @_currentDynamicSoundtrackPlayback?.destroy()
+
+  _destroyCurrentDynamicSoundtrack: (fadeOutDuration) ->
+    # Destroy the playback and composition after the fade out and some grace time.
+    previousDynamicSoundtrackComposition = @_previousDynamicSoundtrackComposition
+    previousDynamicSoundtrackPlayback = @_previousDynamicSoundtrackPlayback
+    
+    return unless @_previousDynamicSoundtrackComposition
+
+    @_previousDynamicSoundtrackComposition = null
+    @_previousDynamicSoundtrackPlayback = null
+    
+    Meteor.setTimeout =>
+      previousDynamicSoundtrackPlayback.destroy()
+      previousDynamicSoundtrackComposition.destroy()
+    ,
+      fadeOutDuration * 1100

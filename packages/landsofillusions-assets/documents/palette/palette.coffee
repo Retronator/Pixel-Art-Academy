@@ -7,26 +7,38 @@ class LOI.Assets.Palette extends AM.Document
   # ramps: array of
   #   name: name of the ramp
   #   shades: array of
-  #     r: red attribute (0.0-1.0)
-  #     g: green attribute (0.0-1.0)
-  #     b: blue attribute (0.0-1.0)
+  #     r: red attribute (0.0-1.0) in sRGB space
+  #     g: green attribute (0.0-1.0) in sRGB space
+  #     b: blue attribute (0.0-1.0) in sRGB space
+  # category: the category under which the palette appears in the selector or null if not selectable
   # lospecSlug: the URL slug used on Lospec for this palette
+  # lospecAuthor: the author of the palette as provided by Lospec
   @Meta
     name: @id()
   
   @enableDatabaseContent()
   
+  @Categories =
+    Basic: "Basic"
+    Monoramp: "Monoramp"
+    System: "System"
+    Modern: "Modern"
+  
   @databaseContentInformationFields =
     name: 1
     lospecSlug: 1
+    category: 1
 
   @all = @subscription 'all'
   @allLospec = @subscription 'allLospec'
+  @allCategorized = @subscription 'allCategorized'
   @forId = @subscription 'forId'
   @forIds = @subscription 'forIds'
   @forName = @subscription 'forName'
   
   @insert = @method 'insert'
+  @update = @method 'update'
+  @remove = @method 'remove'
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
@@ -42,7 +54,11 @@ class LOI.Assets.Palette extends AM.Document
   @imageUrl = "/landsofillusions/assets/palette.png"
 
   @defaultPalette: ->
-    @documents.findOne name: @defaultPaletteName
+    return @_defaultPalette if @_defaultPalette
+
+    @_defaultPalette = @documents.findOne name: @defaultPaletteName
+    
+    @_defaultPalette
 
   color: (rampIndex, shadeIndex) ->
     # Ramp index must match exactly.
@@ -55,25 +71,11 @@ class LOI.Assets.Palette extends AM.Document
 
     THREE.Color.fromObject colorData
 
-  closestPaletteColor: (r, g, b, backgroundColor) ->
-    closestRamp = null
-    closestShade = null
-    smallestColorDistance = if backgroundColor then @_colorDistance backgroundColor, r, g, b else 3
+  exactPaletteColor: (color) ->
+    LOI.Assets.ColorHelper.exactPaletteColor @, color
     
-    for ramp, rampIndex in @ramps
-      for shade, shadeIndex in ramp.shades
-        distance = @_colorDistance shade, r, g, b
-        
-        if distance < smallestColorDistance
-          smallestColorDistance = distance
-          closestRamp = rampIndex
-          closestShade = shadeIndex
-
-    # Return nothing if the background color was closer to any of the palette colors.
-    return null unless closestRamp?
-
-    ramp: closestRamp
-    shade: closestShade
+  closestPaletteColor: (color, backgroundColor, secondClosestColor) ->
+    LOI.Assets.ColorHelper.closestPaletteColor @, color, backgroundColor, secondClosestColor
   
-  _colorDistance: (color, r, g, b) ->
-    Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)
+  closestPaletteColorFromRGB: (r, g, b, backgroundColor) ->
+    LOI.Assets.ColorHelper.closestPaletteColorFromRGB @, r, g, b, backgroundColor

@@ -9,6 +9,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   # Override to set the default whether created steps draw hints after completion.
   @drawHintsAfterCompleted: -> null
 
+  # Override to allow more tolerance when completing paths.
+  @pathTolerance: -> 0
+  
   initializeSteps: ->
     fixedDimensions = @constructor.fixedDimensions()
     
@@ -33,6 +36,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
     if stepResources.svgPaths
       svgPaths = stepResources.svgPaths.svgPaths()
+      tolerance = @constructor.pathTolerance()
       
       if @constructor.breakPathsIntoSteps()
         for svgPath, index in svgPaths
@@ -40,12 +44,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             startPixels: if index is 0 then @resources.startPixels else null
             svgPaths: [svgPath]
             drawHintsAfterCompleted: drawHintsAfterCompleted
+            tolerance: tolerance
       
       else
         new @constructor.PathStep @, stepArea,
           startPixels: @resources.startPixels
           svgPaths: svgPaths
           drawHintsAfterCompleted: drawHintsAfterCompleted
+          tolerance: tolerance
     
     if stepResources.steps
       @initializeStepsInAreaWithResources stepArea, step for step in stepResources.steps

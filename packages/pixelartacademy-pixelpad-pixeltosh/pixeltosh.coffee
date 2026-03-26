@@ -27,7 +27,9 @@ class PAA.PixelPad.Apps.Pixeltosh extends PAA.PixelPad.App
     return unless currentApp = pixelPad.os.currentApp()
     return unless currentApp instanceof @
     pixeltosh = currentApp
-    pixeltosh.os()
+    return unless os = pixeltosh.os()
+    return unless os.isRendered()
+    os
 
   constructor: ->
     super arguments...

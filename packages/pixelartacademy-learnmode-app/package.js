@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-learnmode-app',
-  version: '1.2.0',
+  version: '1.3.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -14,12 +14,15 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:artificialengines-pages');
 
+  api.use('retronator:retronator-admin');
   api.use('retronator:retronator-accounts');
   api.use('retronator:retronator-store');
 
   api.use('retronator:landsofillusions');
   api.use('retronator:landsofillusions-assets');
   api.use('retronator:landsofillusions-ui');
+
+  api.use('retronator:illustrapedia');
 
   api.use('retronator:pixelartdatabase');
 
@@ -29,10 +32,15 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-studyguide');
   api.use('retronator:pixelartacademy-challenges');
   api.use('retronator:pixelartacademy-tutorials');
+  api.use('retronator:pixelartacademy-publication');
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
+  api.use('retronator:pixelartacademy-pico8-invasion');
+  api.use('retronator:pixelartacademy-pico8-jungle');
   api.use('retronator:pixelartacademy-pixeltosh');
   api.use('retronator:pixelartacademy-pixeltosh-pinball');
+  api.use('retronator:pixelartacademy-pixeltosh-writer');
+  api.use('retronator:pixelartacademy-pixeltosh-drawquickly');
 
   api.use('retronator:pixelartacademy-pixelpad');
   api.use('retronator:pixelartacademy-pixelpad-pico8');
@@ -45,6 +53,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');
   api.use('retronator:pixelartacademy-learnmode-pixelartfundamentals');
+  api.use('retronator:pixelartacademy-learnmode-design');
 
   api.export('PixelArtAcademy');
 

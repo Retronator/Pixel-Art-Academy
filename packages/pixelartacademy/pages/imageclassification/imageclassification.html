@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Pages.ImageClassification">
+  <div class="pixelartacademy-pages-imageclassification page">
+    <h1>Pixel Art Academy</h1>
+    <h2>Image Classification</h2>
+
+    <div class="controls">
+      Brush size:
+      <button class="brush-size-button" data-size="3">3 px</button>
+      <button class="brush-size-button" data-size="5">5 px</button>
+      <button class="brush-size-button" data-size="7">7 px</button>
+      <span class="brush-size">Current: {{brushSize}} px</span>
+      <button class="clear-canvas-button">Clear</button>
+    </div>
+    <div class="main-area">
+      <div class="canvas-area">
+      </div>
+      <div class="results-area"></div>
+    </div>
+  </div>
+</template>

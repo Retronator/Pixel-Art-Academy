@@ -1,0 +1,121 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-design}/fundamentals/publications/chronoscope/chronoscope.import"
+
+.publication.chronoscope.content-part
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-figure
+          padding 10rem 0 1rem
+
+          &:has(.clear-both)
+            clear both
+
+          &:has(.full-height)
+            height 370rem
+
+          &:has(.half-height)
+            height 185rem
+
+          &:has(.margin-bottom)
+            margin-bottom 10rem
+
+          for heightTens in (1..38)
+            heightRems = heightTens * 10
+
+            &:has(.height-{heightRems})
+              height heightRems rem
+
+          for widthTens in (1..27)
+            widthRems = widthTens * 10
+
+            &:has(.width-{widthRems})
+              width widthRems rem
+
+          .elements
+            display flex
+            flex-direction column
+            height 100%
+
+            &.fit-height
+              .elements-row
+                height 0
+                flex-grow 1
+
+                .element
+                  height 100%
+                  flex-grow 0 !important
+
+                  .pixelartacademy-publication-article-figure-image
+                    height 100%
+
+                    .image
+                      height calc(100% - 9rem)
+                      width auto
+
+            &.justify-content-left
+              .elements-row
+                justify-content start
+
+            &.justify-content-center
+              .elements-row
+                justify-content center
+
+            &.justify-content-right
+              .elements-row
+                justify-content end
+
+            &.justify-content-top
+              justify-content start
+
+            &.justify-content-bottom
+              justify-content end
+
+            .elements-row
+              height content-fit
+              justify-content space-between
+
+              &:not(:last-child)
+                margin-bottom 5rem
+
+              .element
+                height content-fit
+
+                &:not(:last-child)
+                  margin-right 5rem
+
+                .pixelartacademy-publication-article-figure-image
+                  height content-fit
+
+                  &:hover
+                    z-index 2
+
+                  &.added-to-references
+                    &::before
+                      display block
+                      content ""
+                      absolute-cover()
+                      bottom 9rem
+                      figure-image-cutout-gradient(atariGray(3))
+
+                    .image
+                      opacity 0.1
+
+                  .cutout
+                    inset -8rem
+                    bottom 1rem
+
+                    &::before
+                      figure-image-cutout-gradient(atariGray(2))
+
+                    .cut-icon
+                      background url('/pixelartacademy/learnmode/design/fundamentals/publications/chronoscope/scissors.png') 100% 100% / 100%
+
+                  .added-to-references-info
+                    text-transform uppercase
+                    color atariGray(3)
+
+                  .credit
+                    margin-top 2rem
+                    height 7rem

@@ -16,6 +16,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixelpad-music');
   api.use('retronator:pixelartacademy-pixelpad-notifications');
+  api.use('retronator:pixelartacademy-publication');
 
   api.export('PixelArtAcademy');
 
@@ -38,10 +39,14 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/pixeltoshfiles');
   api.addFile('fundamentals/scenes/workbench');
   api.addFile('fundamentals/scenes/musictapes');
+  api.addFile('fundamentals/scenes/publications');
+  api.addFile('fundamentals/scenes/pico8cartridges');
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');
   api.addFile('fundamentals/goals/jaggies');
+  api.addFile('fundamentals/goals/simplification');
+  api.addFile('fundamentals/goals/size');
 
   api.addFile('fundamentals/goals/pinball..');
   api.addFile('fundamentals/goals/pinball/assetstask');
@@ -55,5 +60,23 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/content/drawingchallenges');
   api.addFile('fundamentals/content/projects');
   api.addFile('fundamentals/content/drawingeditors');
-  api.addFile('fundamentals/content/storylines');
+
+  api.addStyledFile('fundamentals/publications/pinballmagazine..')
+  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-cover')
+  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-tableofcontents')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/brown-0-gray-3')
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/orange-3-brown-6')
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/red-1-red-1')
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/red-1-gray-1')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/contents')
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/headerfooter')
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/figure')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/cover')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/prewarmachines')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/gobbleholes')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/bumpers')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/gates')
 });

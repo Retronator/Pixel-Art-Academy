@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Music
   constructor: (@audioManager) ->
-    @playbackChanged = new AB.Event
+    @playbackChanged = new AB.Event @
     
     @currentPlaybackChannel = new @constructor.PlaybackChannel @
     @nextPlaybackChannel = new @constructor.PlaybackChannel @

@@ -53,7 +53,7 @@ class TutorialBitmap.Resource.ImagePixels extends TutorialBitmap.Resource.Pixels
         
         # This is a full pixel. If we have a palette, find the closest palette color.
         if palette
-          paletteColor = palette.closestPaletteColor r, g, b
+          paletteColor = palette.closestPaletteColorFromRGB r, g, b
           pixels.push {x, y, paletteColor}
         
         else

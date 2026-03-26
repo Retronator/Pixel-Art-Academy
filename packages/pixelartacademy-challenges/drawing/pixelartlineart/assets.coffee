@@ -83,7 +83,6 @@ for assetId, asset of assets
       @backgroundColor: -> null
       @imageName: asset.imageName
       @bitmapInfo: asset.bitmapInfo
-      @maxClipboardScale: asset.maxClipboardScale
       @binderScale: -> asset.binderScale or super arguments...
       @initialize()
   

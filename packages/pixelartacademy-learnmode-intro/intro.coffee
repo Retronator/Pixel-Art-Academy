@@ -26,7 +26,7 @@ class LM.Intro extends LOI.Adventure.Episode
   @initialize()
 
   @pico8Enabled: ->
-    PAA.Learning.Goal.getAdventureInstanceForId(LM.Intro.Tutorial.Goals.PixelArtSoftware.id())?.completed()
+    LM.Intro.Tutorial.Goals.Snake.activeOrCompleted()
 
 if Meteor.isServer
   LOI.initializePackage

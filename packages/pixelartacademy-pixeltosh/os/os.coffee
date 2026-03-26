@@ -109,7 +109,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
       _.pull loadedPrograms, program
       @loadedPrograms loadedPrograms
 
-      if @activeProgram() is program
+      if @activeProgram() is program and loadedPrograms.length
         @activateProgram _.last loadedPrograms
       
       # Remove all the windows that belonged to this program.
@@ -172,7 +172,17 @@ class PAA.Pixeltosh.OS extends LOI.Component
 
   onBackButton: ->
     # Relay to the active program.
-    @activeProgram()?.onBackButton?()
+    return unless activeProgram = @activeProgram()
+    return result if result = activeProgram.onBackButton?()
+    
+    # Allow Pixeltosh to close when we're in Finder.
+    return if activeProgram instanceof PAA.Pixeltosh.Programs.Finder
+    
+    # Close the program otherwise.
+    @unloadProgram activeProgram
+    
+    # Inform that we handled the back button.
+    true
     
   menuVisibleClass: ->
     'menu-visible' if @activeMenuItems()

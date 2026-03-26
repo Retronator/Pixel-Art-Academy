@@ -5,6 +5,8 @@ LM = PixelArtAcademy.LearnMode
 
 Persistence = Artificial.Mummification.Document.Persistence
 
+import semver from 'semver'
+
 # The adventure component that is served from pixelart.academy/learn-mode.
 class LM.Adventure extends PAA.Adventure
   @id: -> 'PixelArtAcademy.LearnMode.Adventure'
@@ -25,12 +27,12 @@ class LM.Adventure extends PAA.Adventure
   @episodeClasses: -> [
     LM.Intro
     LM.PixelArtFundamentals
+    LM.Design
   ]
   
-  constructor: ->
-    super arguments...
-    
-    @isLearnMode = true
+  @lastNewLessonsVersion: -> '0.25.0'
+  
+  @lastLoadedProfileIdLocalStorageKey = 'LandsOfIllusions.Adventure.lastLoadedProfileId'
   
   titleSuffix: -> ' // Pixel Art Academy: Learn Mode'
 
@@ -55,6 +57,14 @@ class LM.Adventure extends PAA.Adventure
   ]
   
   episodeClasses: -> @constructor.episodeClasses()
+  
+  startNewGame: ->
+    await super arguments...
+    
+    if gameState = LOI.adventure.gameState()
+      # Automatically acknowledge the lessons in the current version on start.
+      gameState.acknowledgedNewLessonsVersion = @constructor.lastNewLessonsVersion()
+      LOI.adventure.gameState.updated()
 
   loadGame: ->
     await super arguments...
@@ -62,6 +72,33 @@ class LM.Adventure extends PAA.Adventure
 
     @interface.prepareLocation()
     
+    # Warn the user that new lessons were added.
+    if gameState = LOI.adventure.gameState()
+      acknowledgedNewLessonsVersion = gameState.acknowledgedNewLessonsVersion or '0.0.0'
+      lastNewLessonsVersion = @constructor.lastNewLessonsVersion()
+      
+      if semver.lt acknowledgedNewLessonsVersion, lastNewLessonsVersion
+        LOI.adventure.showDialogMessage """
+          New tutorial lessons have been added since you last played the game. If anything in the game seems missing,
+          complete the new lessons first to get back to where you were.
+
+          Use the Progress screen in the Menu to see which tutorials you're missing.
+        """
+        
+        , =>
+          gameState.acknowledgedNewLessonsVersion = lastNewLessonsVersion
+          LOI.adventure.gameState.updated()
+
+  quitGame: ->
+    # Store the last loaded profile so we can load it with the continue button.
+    profile = @profile()
+
+    # We need to make sure profile has syncing since we could be quitting a just started game that was not saved.
+    if profile.hasSyncing()
+      localStorage.setItem @constructor.lastLoadedProfileIdLocalStorageKey, profile._id
+  
+    super arguments...
+  
   showLoading: ->
     # Don't show the loading screen if the interface is already indicating we're waiting.
     return if LOI.adventure.interface.waiting()
