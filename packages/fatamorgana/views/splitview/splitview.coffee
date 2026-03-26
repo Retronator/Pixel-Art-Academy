@@ -41,9 +41,9 @@ class FM.SplitView extends FM.View
 
   events: ->
     super(arguments...).concat
-      'mousedown .fatamorgana-splitview > .divider': @onMouseDownDivider
+      'pointerdown .fatamorgana-splitview > .divider': @onPointerDownDivider
 
-  onMouseDownDivider: (event) ->
+  onPointerDownDivider: (event) ->
     # Only react to the divider directly in this component.
     return unless $(event.target).closest('.fatamorgana-splitview')[0] is @$('.fatamorgana-splitview')[0]
 
@@ -71,7 +71,7 @@ class FM.SplitView extends FM.View
     # Wire dragging handlers.
     @_dragging true
 
-    $interface.on 'mousemove.fatamorgana-splitview', (event) =>
+    $interface.on 'pointermove.fatamorgana-splitview', (event) =>
       dragDelta =
         x: event.pageX - @_dragStart.x
         y: event.pageY - @_dragStart.y
@@ -88,7 +88,7 @@ class FM.SplitView extends FM.View
         # We're dragging from left or right, change main area width.
         mainAreaData.set 'width', @_dimensionsStart.width + dragDelta.x / scale
 
-    $interface.on 'mouseup.fatamorgana-splitview', (event) =>
+    $interface.on 'pointerup.fatamorgana-splitview', (event) =>
       mainArea = mainAreaData.value()
 
       # Apply any size constraints.

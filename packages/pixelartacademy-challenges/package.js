@@ -22,15 +22,42 @@ Package.onUse(function(api) {
   api.addFile('challenges');
 
   api.addFile('drawing..');
+  api.addFile('drawing/referenceselection');
+
+  // Pixel art software
 
   api.addFile('drawing/pixelartsoftware..');
   api.addFile('drawing/pixelartsoftware/copyreference');
-  api.addFile('drawing/pixelartsoftware/errorenginecomponent');
   api.addFile('drawing/pixelartsoftware/assets');
+
   api.addUnstyledComponent('drawing/pixelartsoftware/briefcomponent..');
-  api.addComponent('drawing/pixelartsoftware/clipboardpagecomponent..');
+
+  api.addComponent('drawing/pixelartsoftware/clipboardsecondpagecomponent..');
+
   api.addFile('drawing/pixelartsoftware/referenceselection..');
   api.addComponent('drawing/pixelartsoftware/referenceselection/portfoliocomponent..');
   api.addComponent('drawing/pixelartsoftware/referenceselection/customcomponent..');
   api.addFile('drawing/pixelartsoftware/referenceselection/customcomponent/card');
+
+  // Pixel art line art
+
+  api.addFile('drawing/pixelartlineart..');
+  api.addFile('drawing/pixelartlineart/drawlineart');
+  api.addFile('drawing/pixelartlineart/assets');
+
+  api.addFile('drawing/pixelartlineart/referenceselection..');
+  api.addComponent('drawing/pixelartlineart/referenceselection/portfoliocomponent..');
+  api.addComponent('drawing/pixelartlineart/referenceselection/customcomponent..');
+
+  // Pixel art readability
+
+  api.addFile('drawing/pixelartreadability..');
+
+  api.addFile('drawing/pixelartreadability/iconselection..');
+  api.addFile('drawing/pixelartreadability/iconselection/iconselection-volume1');
+  api.addFile('drawing/pixelartreadability/iconselection/iconselection-volume2');
+  api.addComponent('drawing/pixelartreadability/iconselection/portfoliocomponent..');
+  api.addComponent('drawing/pixelartreadability/iconselection/customcomponent..');
+  api.addComponent('drawing/pixelartreadability/iconselection/customcomponent/iconcanvas..');
+
 });

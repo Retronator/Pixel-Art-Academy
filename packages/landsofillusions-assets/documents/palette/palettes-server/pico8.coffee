@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 Document.startup ->
   return if Meteor.settings.startEmpty
 
-  pico8PaletteName = LOI.Assets.Palette.SystemPaletteNames.pico8
+  pico8PaletteName = LOI.Assets.Palette.SystemPaletteNames.Pico8
 
   pico8PaletteRaw =
     """
@@ -17,8 +17,8 @@ Document.startup ->
       fff1e8	white
       ff004d	red
       ffa300	orange
-      fff024  yellow
-      00e756	green
+      ffec27  yellow
+      00e436	green
       29adff	blue
       83769c	indigo
       ff77a8	pink
@@ -36,6 +36,7 @@ Document.startup ->
   pico8Palette =
     name: pico8PaletteName
     lospecSlug: 'pico-8'
+    lospecAuthor: 'zep'
     ramps: []
 
   for colorLine in colorLines

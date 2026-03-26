@@ -8,14 +8,16 @@
     {{> Render display}}
   {{/if}}
   <div class="pixelartacademy-pixelpad-os">
-    {{#if currentApp}}
-      <div class="app-wrapper">
+    <div class="app-area">
+      {{#if currentApp}}
         {{> Render currentApp}}
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
     <div class="systems">
       {{#each currentSystems}}
-        {{> Render this}}
+        {{#unless dontRender}}
+          {{> Render this}}
+        {{/unless}}
       {{/each}}
     </div>
     <div class="shortcuts-table {{shortcutsTableVisibleClass}}">

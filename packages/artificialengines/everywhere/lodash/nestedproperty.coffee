@@ -1,11 +1,13 @@
 # Access to properties on nested objects.
 
+# We want to split by dots, except those inside quotes (so we can address properties with dots in them).
+partsRegex = /(?:[^".]+(?=(?:[^"]|"[^"]*")*$)|[^"]+(?!(?:[^"]|"[^"]*")*$))/g
+
 _.mixin
   # Gets or sets a property that can be on a nested object, specified with the dot notation.
   nestedProperty: (object, property, value) ->
     nestedObject = object
-    # We want to split by dots, except those inside quotes (so we can address properties with dots in them).
-    parts = property.match /(?:[^".]+(?=(?:[^"]|"[^"]*")*$)|[^"]+(?!(?:[^"]|"[^"]*")*$))/g
+    parts = property.match partsRegex
 
     # Is this a setter? We compare to undefined and not just use
     # value? since we want to be able to set the value null to the property.
@@ -34,3 +36,22 @@ _.mixin
 
     # We've dropped to the end so nestedObject should be the value of the desired property.
     nestedObject
+
+  # Deletes a property that can be on a nested object, specified with the dot notation.
+  deleteNestedProperty: (object, property) ->
+    nestedObject = object
+    parts = property.match partsRegex
+
+    for part, i in parts
+      # If we're already at the end, delete the property.
+      if i is parts.length - 1
+        delete nestedObject[part]
+
+      else
+        # We have to drop deeper. If nestedObject doesn't have the part property, there is nothing to do.
+        return unless nestedObject[part]?
+
+        # Drop in if it is an actual object that we can drop into.
+        throw new Meteor.Error 'invalid-argument', "Property does not address a nested property." unless _.isObject nestedObject[part]
+
+        nestedObject = nestedObject[part]

@@ -1,6 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.7.3",
+    "version": "1.3.0",
     "devTools": false,
     "devtron": true,
     "desktopHCP": true,
@@ -9,50 +9,26 @@
     "exposeLocalFilesystem": true,
     "window": {
         "minWidth": 640,
-        "minHeight": 480,
-        "fullscreen": true,
-        "autoHideMenuBar": true,
-        "icon": "@assets/icons/coatofarms.png",
-        "backgroundColor": "black",
-        "_windows": {
-            "icon": "@assets/icons/coatofarms.ico"
-        }
-    },
-    "windowDev": {
+        "minHeight": 510,
         "fullscreen": false,
-        "fullscreenable": true
-    },
-    "uglify": true,
-    "plugins": {
-        "meteor-desktop-splash-screen": {
-            "version": "0.5.0",
-            "imagePath": "splash/main.png",
-            "windowSettings": {
-                "width": 512,
-                "height": 512
-            },
-            "updateScreen": true,
-            "updateScreenSettings": {
-                "imagePath": "splash/updating.gif",
-                "windowSettings": {
-                    "width": 400,
-                    "height": 300
-                },
-                "clickThrough": false,
-                "style": {
-                    "background-size": "auto"
-                }
-            }
+        "fullscreenable": true,
+        "autoHideMenuBar": true,
+        "icon": "@assets/icons/learnmode-a.png",
+        "backgroundColor": "#000000",
+        "_windows": {
+            "icon": "@assets/icons/learnmode-a.ico"
         }
     },
+    "uglify": false,
+    "plugins": {},
     "devDependencies": {
-        "electron": "11.5.0"
+        "electron": "21.4.4"
     },
     "packageJsonFields": {
         "author": "Retronator",
         "private": true,
         "devDependencies": {
-            "electron": "11.5.0"
+            "electron": "21.4.4"
         }
     },
     "builderOptions": {
@@ -87,15 +63,20 @@
     },
     "packagerOptions": {
         "appBundleId": "com.retronator.pixelartacademy-learnmode",
-        "icon": ".desktop/assets/icons/coatofarms.ico",
+        "icon": ".desktop/assets/icons/learnmode-a.ico",
         "_osx": {
-            "icon": ".desktop/assets/icons/coatofarms.icns"
+            "icon": ".desktop/assets/icons/learnmode-a-squircle.icns"
         },
         "darwinDarkModeSupport": true,
         "appCategoryType": "public.app-category.education",
-        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Matej Jan, Retronator",
+        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2025 Matej Jan, Retronator",
         "overwrite": true,
-        "electronVersion": "11.5.0",
-        "platform": "darwin, win32, linux"
+        "electronVersion": "21.4.4",
+        "platform": "darwin, win32, linux",
+        "osxSign": {
+            "hardenedRuntime": true,
+            "entitlements": ".desktop/entitlements.plist",
+            "entitlements-inherit": ".desktop/entitlements.plist"
+        }
     }
 }

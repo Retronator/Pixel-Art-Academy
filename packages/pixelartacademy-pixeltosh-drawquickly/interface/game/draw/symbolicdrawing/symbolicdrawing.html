@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw-symbolicdrawing">
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.Timer symbolicDrawing.timer}}
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.Canvas}}
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing.Things}}
+    {{#if symbolicDrawing.canvasText}}
+      <div class="canvas-text" data-cursor="">{{symbolicDrawing.canvasText}}</div>
+    {{/if}}
+    <div class="pixeltosh {{symbolicDrawing.pixeltoshClass}}"></div>
+    <div class="pixeltosh-text">
+      {{#if showInstructions}}
+        <div class="instructions">Start drawing and I will guess what it is.</div>
+      {{else}}
+        {{{symbolicDrawing.guessesText}}}
+      {{/if}}
+    </div>
+  </div>
+</template>

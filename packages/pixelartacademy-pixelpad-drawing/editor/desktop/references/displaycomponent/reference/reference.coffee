@@ -1,21 +1,24 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AP = Artificial.Program
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference extends LOI.Assets.Components.References.Reference
-  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference'
-  @register @id()
-
   constructor: ->
     super arguments...
 
     @trayWidth = 165
     @trayHeight = 190
     @trayHideActiveHeight = 10
-    @trayBorder = 8
+    # We need 13 pixels clearance so the reference doesn't appear when hovering over the tray.
+    @trayBorder = 13
 
+    # This represent the border around the reference as visible to the player.
+    @referenceBorder = 4
+
+    # We increase the resizing width beyond the visual border to make it easier to resize.
     @resizingBorder = 6
 
   onCreated: ->
@@ -44,31 +47,43 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         
         return
 
-      # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
-      scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min 150 / imageSize.width, 150 / imageSize.height
+      # Scale should be such that 100^2 pixels are covered, but any side is not larger than the tray.
+      maxWidth = @trayWidth - (@trayBorder + @referenceBorder) * 2
+      maxHeight = @trayHeight - (@trayBorder + @referenceBorder) * 2
+      
+      scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min maxWidth / imageSize.width, maxHeight / imageSize.height
       Tracker.nonreactive => @hiddenScale scale
   
       return unless displaySize = @displaySize scale
   
       # Make sure reference is within the tray.
-      halfWidth = displaySize.width / 2 + @resizingBorder
-      halfHeight = displaySize.height / 2 + @resizingBorder
-
-      position = _.propertyValue(reference, 'position') or x: 0, y: 0
+      halfWidth = displaySize.width / 2 + @referenceBorder
+      halfHeight = displaySize.height / 2 + @referenceBorder
 
       maxX = @trayWidth / 2 - halfWidth - @trayBorder
       maxY = @trayHeight / 2 - halfHeight - @trayBorder
 
+      unless initialPosition = _.propertyValue(reference, 'position')
+        # Generate a stably-random position from the reference's url.
+        hash = AP.HashFunctions.getObjectHash reference.image?.url, AP.HashFunctions.circularShift5
+        randomX = ((hash & 0xFF00) >> 8) / 0xFF
+        randomY = (hash & 0x00FF) / 0xFF
+        
+        initialPosition =
+          x: maxX * (2 * randomX - 1)
+          y: maxY * (2 * randomY - 1)
+      
       position =
-        x: _.clamp position.x, -maxX, maxX
-        y: _.clamp position.y, -maxY, maxY
+        x: _.clamp initialPosition.x, -maxX, maxX
+        y: _.clamp initialPosition.y, -maxY, maxY
   
       Tracker.nonreactive => @hiddenPosition position
 
     @autorun (computation) =>
       return unless draggingPosition = @draggingPosition()
-      return unless displaySize = @displaySize()
-      displayScale = @display.scale()
+      
+      referenceScale = if @currentDisplayed() then @currentScale() else @hiddenScale()
+      return unless displaySize = @displaySize referenceScale
 
       halfWidth = displaySize.width / 2
       halfHeight = displaySize.height / 2
@@ -78,6 +93,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         @references.opened false
 
       # Activate hide mode when nearing tray.
+      displayScale = @display.scale()
       @references.hideActive not @references.opened() and Math.abs(draggingPosition.x) < @trayWidth / 2 and draggingPosition.y + @parentOffset.top / displayScale - halfHeight < @trayHideActiveHeight
 
     @caption = new ComputedField =>
@@ -109,11 +125,18 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
   currentPosition: ->
     return hiddenPosition if hiddenPosition = @hiddenPosition()
   
-    super arguments...
-
-  imageOnlyClass: ->
-    reference = @data()
-    'image-only' if reference.displayOptions?.imageOnly
+    position = super arguments...
+    
+    # Don't allow the reference to go off screen. We ensure enough of it is left
+    # on screen (70px) that it doesn't get covered by items like the calculator.
+    return hiddenPosition unless displaySize = @displaySize()
+    editorSize = @references.options.editorSize()
+    
+    maxX = editorSize.width / 2 + displaySize.width / 2 - 70
+    maxY = editorSize.height / 2 + displaySize.height / 2 - 70
+    
+    x: _.clamp position.x, -maxX, maxX
+    y: _.clamp position.y, -maxY, maxY
 
   displaySize: (scale) ->
     return unless imageSize = @imageSize()
@@ -125,6 +148,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     height: imageSize.height * scale + captionHeight
 
   endDrag: ->
+    @startUpdate()
+    
     # When displaying a reference, also set its scale from its hidden default.
     @setScale @hiddenScale() if @references.draggingDisplayed() and not @currentDisplayed()
   
@@ -132,7 +157,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     @references.hideActive false
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
     
     return unless event.which is 1
@@ -145,7 +170,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @parentOffset.left -= pixelPadOffset.left
       @parentOffset.top -= pixelPadOffset.top
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     # Don't allow resizing when not displayed.
     return unless @currentDisplayed()
 
@@ -166,7 +191,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       distance = new THREE.Vector2(240, 180).length()
 
-      if displaySize = @displaySize()
+      scale = @resizingScale() ? @currentScale()
+
+      if displaySize = @displaySize scale
         halfWidth = displaySize.width / 2
         halfHeight = displaySize.height / 2
 
@@ -174,8 +201,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       position.normalize().multiplyScalar(distance)
 
-      style.left = "#{position.x}rem"
-      style.top = "#{position.y}rem"
+      style.left = "#{position.x - (displaySize?.width or 0) / 2}rem"
+      style.top = "#{position.y - (displaySize?.height or 0) / 2}rem"
 
     style
 
@@ -194,9 +221,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         y: @parentOffset.top / displayScale + position.y
     
     else
-      position = @hiddenPosition()
+      return unless position = @hiddenPosition()
     
-    left: "#{position.x}rem"
-    top: "#{position.y}rem"
+    left: "#{position.x - displaySize.width / 2}rem"
+    top: "#{position.y - displaySize.height / 2}rem"
     width: "#{displaySize.width}rem"
     height: "#{displaySize.height}rem"

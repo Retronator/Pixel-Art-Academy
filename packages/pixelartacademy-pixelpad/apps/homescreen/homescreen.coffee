@@ -68,6 +68,10 @@ class PAA.PixelPad.Apps.HomeScreen extends PAA.PixelPad.App
       finishedDeactivatingCallback()
 
   allowsShortcutsTable: -> true
+  
+  enabledClass: ->
+    # Note: We have to check the URL since the app itself won't change until the transition.
+    'enabled' unless @os.currentAppUrl()
 
   apps: ->
     # Show all apps except the home screen.

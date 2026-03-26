@@ -21,6 +21,7 @@ class PAA.Pico8.Device extends LOI.Component
 
     @game = new ReactiveField null
     @projectId = new ReactiveField null
+    @startParameter = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -35,9 +36,10 @@ class PAA.Pico8.Device extends LOI.Component
     
     @stop() if @_started
 
-  loadGame: (game, projectId) ->
+  loadGame: (game, projectId, startParameter) ->
     @game game
     @projectId projectId
+    @startParameter startParameter
 
   start: ->
     @stop() if @_started
@@ -50,7 +52,10 @@ class PAA.Pico8.Device extends LOI.Component
     # Clear the pixel replacement cache since changes up to now will be already included in the cartridge itself.
     @_updatedPixels = []
 
-    game = @game()
+    unless game = @game()
+      console.warn "Game was not loaded (anymore) by the time start was called."
+      @_started = false
+      return
 
     if projectId = @projectId()
       # We need to get a modified cartridge PNG with the project's assets.
@@ -63,10 +68,15 @@ class PAA.Pico8.Device extends LOI.Component
   _startWithCartridgeUrl: (cartridgeUrl) ->
     console.groupCollapsed "PICO-8"
     
+    pico8Arguments = [cartridgeUrl]
+    
+    if startParameter = @startParameter()
+      pico8Arguments.push "-p", startParameter
+    
     PAA.Pico8.Device.Module =
       audioContext: @options.audioContext
       audioOutputNode: @options.audioOutputNode
-      arguments: [cartridgeUrl]
+      arguments: pico8Arguments
       canvas: @_$canvas[0]
       postRun: [
           =>

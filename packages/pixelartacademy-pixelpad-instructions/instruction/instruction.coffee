@@ -23,10 +23,15 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   @priority: -> 0
   
   @delayDuration: -> 0
+  @delayOnActivate: -> true
   
   @activeDisplayState: ->
     # Override if you want the instruction to display closed.
     PAA.PixelPad.Systems.Instructions.DisplayState.Open
+    
+  @displaySide: ->
+    # Override if the instruction doesn't appear at the bottom.
+    PAA.PixelPad.Systems.Instructions.DisplaySide.Bottom
 
   @initialize: ->
     @register @id()
@@ -75,8 +80,9 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
     @_activeAutorun = Tracker.autorun (computation) =>
       active = @activeConditions()
       
-      @onActivate() if active and not @_wasActive
-      @onDeactivate() if @_wasActive and not active
+      Tracker.nonreactive =>
+        @onActivate() if active and not @_wasActive
+        @onDeactivate() if @_wasActive and not active
       
       @_wasActive = active
 
@@ -92,7 +98,7 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
       return unless @completed()
       return unless @resetCompletedConditions()
   
-      @completed false
+      @resetCompleted()
 
   destroy: ->
     @_activeAutorun.stop()
@@ -109,11 +115,13 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   resetCompletedConditions: -> @constructor.resetCompletedConditions()
   priority: -> @constructor.priority()
   delayDuration: -> @constructor.delayDuration()
+  delayOnActivate: -> @constructor.delayOnActivate()
   activeDisplayState: -> @constructor.activeDisplayState()
+  displaySide: -> @constructor.displaySide()
   
   onActivate: ->
     # Override to perform additional setup when the instruction activates.
-    @resetDelay()
+    @delayTime if @delayOnActivate() then @delayDuration() else 0
   
   onDeactivate: ->
     # Override to perform any cleanup when the instruction deactivates.
@@ -121,9 +129,18 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   onCompleted: ->
     # Override to do something when the instruction has completed.
   
+  onDisplay: ->
+    # Override to do something when the instruction starts displaying.
+    
+  onDisplayed: ->
+    # Override to do something when the instruction is fully displayed.
+  
   resetDelay: -> @delayTime @delayDuration()
   
   reduceDelayTime: (elapsedTime) ->
     @delayTime Math.max 0, @delayTime() - elapsedTime
 
   delayed: -> @delayTime() > 0
+  
+  resetCompleted: ->
+    @completed false

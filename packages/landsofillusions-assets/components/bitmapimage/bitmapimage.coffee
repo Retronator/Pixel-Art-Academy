@@ -14,8 +14,14 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
     super arguments...
 
     @bitmapData = new ComputedField =>
-      return unless bitmapId = @options.bitmapId()
-      LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+      if @options.bitmapId
+        LOI.Assets.Bitmap.versionedDocuments.getDocumentForId @options.bitmapId()
+        
+      else if @options.bitmap
+        @options.bitmap()
+        
+      else
+        throw new AE.ArgumentException "Bitmap image must be provided with a way to get bitmap data."
 
     @bitmap = new LOI.Assets.Engine.PixelImage.Bitmap
       asset: @bitmapData
@@ -24,8 +30,65 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
       @autorun (computation) =>
         return unless bitmapData = @bitmapData()
         return if bitmapData.customPalette
+        return unless bitmapData.palette
         
         LOI.Assets.Palette.forId.subscribeContent @, bitmapData.palette._id
+        
+    @bounds = new ComputedField =>
+      return unless bitmapData = @bitmapData()
+      return unless bounds = bitmapData.bounds
+      return bounds unless @options.autoCrop
+      
+      # Further crop into the image based on transparent pixels.
+      bounds = _.clone bounds
+      
+      while bounds.left <= bounds.right
+        pixelFound = false
+        for y in [bounds.top..bounds.bottom]
+          if bitmapData.findPixelAtAbsoluteCoordinates bounds.left, y
+            pixelFound = true
+            break
+        break if pixelFound
+        bounds.left++
+        
+      return if bounds.left > bounds.right
+      
+      while bounds.right >= bounds.left
+        pixelFound = false
+        for y in [bounds.top..bounds.bottom]
+          if bitmapData.findPixelAtAbsoluteCoordinates bounds.right, y
+            pixelFound = true
+            break
+        break if pixelFound
+        bounds.right--
+      
+      while bounds.top <= bounds.bottom
+        pixelFound = false
+        for x in [bounds.left..bounds.right]
+          if bitmapData.findPixelAtAbsoluteCoordinates x, bounds.top
+            pixelFound = true
+            break
+        break if pixelFound
+        bounds.top++
+      
+      return if bounds.top > bounds.bottom
+      
+      while bounds.bottom >= bounds.top
+        pixelFound = false
+        for x in [bounds.left..bounds.right]
+          if bitmapData.findPixelAtAbsoluteCoordinates x, bounds.bottom
+            pixelFound = true
+            break
+        break if pixelFound
+        bounds.bottom--
+      
+      bounds.x = bounds.left
+      bounds.y = bounds.top
+      bounds.width = bounds.right - bounds.left + 1
+      bounds.height = bounds.bottom - bounds.top + 1
+      bounds
+    ,
+      EJSON.equals
 
   onRendered: ->
     super arguments...
@@ -36,15 +99,17 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
 
       # Update canvas when bitmap changes.
       bitmapData = @bitmapData()
-      bounds = bitmapData?.bounds
+      bounds = @bounds()
 
       unless bitmapData and bounds
         context.setTransform 1, 0, 0, 1, 0, 0
         context.clearRect 0, 0, canvas.width, canvas.height
         return
 
-      canvas.width = bounds.width
-      canvas.height = bounds.height
+      scale = @options.scale or 1
+
+      canvas.width = bounds.width * scale
+      canvas.height = bounds.height * scale
 
       context.setTransform 1, 0, 0, 1, -bounds.x, -bounds.y
       context.clearRect 0, 0, canvas.width, canvas.height
@@ -53,11 +118,16 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
 
       @bitmap.drawToContext context,
         lightDirection: @options.lightDirection?()
+        scale: scale
+        targetPalette: @options.targetPalette?()
+        ditherSize: @options.ditherSize
+        backgroundColor: @options.backgroundColor?()
 
       context.restore()
 
   canvasStyle: ->
-    return unless bounds = @bitmapData()?.bounds
+    return unless bounds = @bounds()
+    scale = @options.scale or 1
 
-    width: "#{bounds.width}rem"
-    height: "#{bounds.height}rem"
+    width: "#{bounds.width * scale}rem"
+    height: "#{bounds.height * scale}rem"

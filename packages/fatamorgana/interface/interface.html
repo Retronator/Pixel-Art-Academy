@@ -1,5 +1,5 @@
 <template name="FataMorgana.Interface">
-  <div class="fatamorgana-interface {{toolClass}}">
+  <div class="fatamorgana-interface {{activeToolClasses}} {{activeToolEngagedClass}}">
     {{> FataMorgana.ApplicationArea currentApplicationAreaData}}
     {{#each windows}}
       {{> FataMorgana.FloatingArea}}
@@ -8,6 +8,9 @@
       <div class="dialog-area">
         {{> FataMorgana.FloatingArea}}
       </div>
+    {{/each}}
+    {{#each overlays}}
+      {{> FataMorgana.FloatingArea}}
     {{/each}}
   </div>
 </template>

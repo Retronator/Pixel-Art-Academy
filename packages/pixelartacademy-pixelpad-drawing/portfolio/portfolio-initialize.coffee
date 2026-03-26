@@ -56,10 +56,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
                     asset: asset
                     scale: => @_assetScale asset
 
+              thing: sectionThing
               index: index
               name: => sectionThing.fullName()
               noAssetsInstructions: => sectionThing.noAssetsInstructions?()
               assets: assets
+              content: => sectionThing.content?()
 
         section =
           nameKey: @constructor.Sections["#{_.upperFirst sectionThingName}s"]
@@ -89,6 +91,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @_artworkAssetsDependency.changed()
   
       removed: (id) =>
+        @_artworkAssets[id].destroy()
         delete @_artworkAssets[id]
         @_artworkAssetsDependency.changed()
     
@@ -98,7 +101,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
 
     @_wipArtworksGroup =
       index: 0
-      name: => "WIP"
+      name: => "Work in progress"
       assets: new ComputedField =>
         assets = []
         
@@ -124,23 +127,21 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
               asset: asset
               scale: => @_assetScale asset
   
-        # New artworks can be created if the player can edit art with built-in editors.
-        # TODO: Enable ability to create artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit()
+        if PAA.PixelPad.Apps.Drawing.canCreateArtworks()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
             asset: @_newArtworkAsset
             scale: => 1
   
-        # Artworks can be imported if the player can edit or upload art made with external software.
-        # TODO: Enable ability to import artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
+          # TODO: Enable uploading of artworks.
+          ###
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length
             asset: @_importArtworkAsset
             scale: => 1
+          ###
   
         assets
         
@@ -169,6 +170,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @activeSection null
         @activeGroup null
         @hoveredAsset null
+        @lastHoveredAsset null
 
       # Update section indices.
       section.index = index for section, index in sections
@@ -205,6 +207,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       @activeGroup null
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
+    @lastHoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
       return unless parameter = AB.Router.getParameter 'parameter3'
 
@@ -288,8 +291,38 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       ,
         0
       
+    @inactiveSectionHeight = new ComputedField =>
+      return @sectionHeight unless activeSection = @activeSection()
+      
+      sections = @sections()
+      activeSectionGroups = activeSection.groups()
+
+      if @activeGroup()
+        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @getInactiveGroupHeight(activeSectionGroups.length) + @activeGroupHeight
+        
+      else
+        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @getInitialGroupHeight activeSectionGroups.length
+      
+      sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
+      
+      if sectionsTotalHeight > @sectionsMaxTotalHeight
+        # We need to decrease inactive section heights to make them all fit into maximum total height.
+        heightForInactiveSections = @sectionsMaxTotalHeight - activeSectionHeight
+        heightForInactiveSections / (sections.length - 1)
+        
+      else
+        @sectionHeight
+        
+  onRendered: ->
+    super arguments...
+    
+    # Allow cheating with the function keys.
+    $(document).on 'keydown.pixelartacademy-pixelpad-apps-drawing-portfolio', (event) => @onKeyDown event
+  
   onDestroyed: ->
     super arguments...
+    
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-portfolio'
     
     editor.destroy?() for editor in @_editors
   

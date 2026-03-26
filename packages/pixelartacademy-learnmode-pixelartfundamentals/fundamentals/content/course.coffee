@@ -13,11 +13,10 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Course extends LM.Content.Cou
   
   @tags: -> [
     LM.Content.Tags.BaseGame
-    LM.Content.Tags.Future
+    LM.Content.Tags.WIP
   ]
 
   @contents: -> [
-    LM.PixelArtFundamentals.Fundamentals.Content.Storylines
     LM.PixelArtFundamentals.Fundamentals.Content.Goals
     LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials
     LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges

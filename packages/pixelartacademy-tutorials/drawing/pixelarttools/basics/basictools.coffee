@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BasicTools extends PAA.Practice
     """
 
   @fixedDimensions: -> width: 16, height: 7
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |     000000

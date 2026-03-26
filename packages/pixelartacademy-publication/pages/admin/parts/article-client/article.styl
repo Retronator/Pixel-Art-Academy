@@ -1,0 +1,39 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-publication-pages-admin-parts-part-article
+  .ql-toolbar
+    position sticky
+    top 0
+    z-index 2
+    background white
+
+    &::after
+      display none !important
+
+  .ql-picker.ql-publication-header-heading
+    width: 98px
+
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Normal'
+
+    for num in (1..6)
+      .ql-picker-label[data-value=\"{num}\"]::before,
+      .ql-picker-item[data-value=\"{num}\"]::before
+        content: 'Header ' + num
+
+  .ql-picker.ql-publication-customclass
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'None'
+
+  .pixelartacademy-publication-article
+    cursor text
+    background atariGray(7)
+    color atariGray(0)
+
+  .pixelartacademy-publication-article-figure
+    .elements
+      .elements-row
+        .element
+          flex-basis 100%

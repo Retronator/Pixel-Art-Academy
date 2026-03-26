@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 
 class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
   # activeProjectId: ID of the project that is currently active
-  @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake'
+  @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake.Project'
   
   @fullName: -> "Snake game"
 
@@ -25,3 +25,7 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
   destroy: ->
     @assets.stop()
     @pico8Cartridge.destroy()
+    
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.Projects.Snake

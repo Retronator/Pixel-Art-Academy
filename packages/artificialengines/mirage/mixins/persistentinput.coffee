@@ -16,7 +16,7 @@ class Artificial.Mirage.PersistentInputMixin extends BlazeComponent
   onFocus: (event) ->
     # Store the value in the input or an empty string in case the value is undefined (if we were to store undefined the
     # mixin wouldn't hold precedence over others and the value would be called from the parent or other mixins instead).
-    @storedValue @mixinParent().value() or ''
+    @storedValue @mixinParent().value() ? ''
 
   onBlur: (event) ->
     @storedValue null

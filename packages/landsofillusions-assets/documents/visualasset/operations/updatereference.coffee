@@ -12,16 +12,13 @@ class LOI.Assets.VisualAsset.Operations.UpdateReference extends AM.Document.Vers
   #   scale: data for how big to display the reference
   #   order: integer value for sorting references
   #   displayMode: where to display the reference (inside the image, over the interface …)
+  #   displayOptions: any extra information specifying how to display the reference
   @initialize()
 
   execute: (document) ->
     reference = document.references[@index]
-    for key, value of @changes
-      if value?
-        reference[key] = value
-        
-      else
-        delete reference[key]
+    
+    _.applyObjectDifference reference, @changes
 
     # Return that the references were changed.
     references: true

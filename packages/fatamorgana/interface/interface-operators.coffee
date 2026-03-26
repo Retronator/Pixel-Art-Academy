@@ -19,7 +19,7 @@ class FM.Interface extends FM.Interface
 
     @operators = new ComputedField =>
       operatorIds = FM.Operator.getIds()
-      currentOperatorIds = @_collectOperatorIds @currentApplicationAreaData().value(), operatorIds
+      currentOperatorIds = @_collectOperatorIds @currentLayoutData().value(), operatorIds
 
       @_getOperatorInstance operatorId for operatorId in currentOperatorIds
 
@@ -58,9 +58,14 @@ class FM.Interface extends FM.Interface
 
     $(document).on 'keydown.fatamorgana-interface', (event) => @onKeyDown event
     $(document).on 'keyup.fatamorgana-interface', (event) => @onKeyUp event
+    $(document).on 'pointerdown.fatamorgana-interface', (event) => @onPointerDown event
+    $(document).on 'pointerup.fatamorgana-interface', (event) => @onPointerUp event
+    $(document).on 'pointerleave.fatamorgana-interface', (event) => @onPointerLeaveWindow event
 
   onDestroyed: ->
     super arguments...
+    
+    operator.destroy() for operatorId, operator of @_operatorInstances
 
     $(document).off '.fatamorgana-interface'
 
@@ -72,9 +77,12 @@ class FM.Interface extends FM.Interface
     operatorId = operatorClassOrId.id?() or operatorClassOrId
     @currentShortcutsMapping()[operatorId]
 
-  activateTool: (tool, storePreviousTool) ->
+  activateTool: (tool, storePreviousTool, toolWasRestored) ->
     previousActiveTool = @activeTool?()
-    return if tool is previousActiveTool
+    
+    if tool is previousActiveTool
+      tool.onReactivated?()
+      return
 
     @storedTool previousActiveTool if storePreviousTool
 
@@ -83,42 +91,74 @@ class FM.Interface extends FM.Interface
 
     # Inform the tools that they (de)activated.
     previousActiveTool?.onDeactivated?()
-    tool.onActivated?()
+    tool.onActivated? toolWasRestored
 
   deactivateTool: ->
     return unless activeTool = @activeTool()
-    @activeToolId null
+    @activeToolId null unless @restoreStoredTool()
     activeTool.onDeactivated?()
+    
+  restoreStoredTool: ->
+    if storedTool = @storedTool()
+      @activateTool storedTool, false, true
+      @storedTool null
+      return true
+      
+    false
 
   shortcutsActive: ->
     # Make sure we're not currently typing into an input.
-    not @inputFocused()
+    return false if @inputFocused()
+    
+    # Don't process shortcuts when the active tool is engaged.
+    return false if @activeToolEngaged()
+    
+    true
 
   onKeyDown: (event) ->
     return unless @active()
-
+    
     @activeTool()?.onKeyDown? event
     
+    @onInputDown event, AC.Keyboard
+  
+  onPointerDown: (event) ->
+    return unless @active()
+    
+    # Ignore touch events.
+    return if event.pointerType is 'touch'
+    
+    @activeTool()?.onPointerDown? event
+    
+    @onInputDown event, AC.Pointer
+
+  onInputDown: (event, inputClass) ->
     return unless @shortcutsActive()
 
-    key = event.which
-
     # TODO: Figure out when to prevent key repeating. It's not always desirable (undo/redo).
-    # return if key is @_activeKey
 
     # Find if the pressed key matches any of the tools' shortcuts.
-    targetTool = _.find @tools(), (tool) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator tool
-    targetAction = _.find @actions(), (action) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator action
+    targetTool = _.find @tools(), (tool) => inputClass.isShortcutDown event, @getShortcutForOperator tool
+    targetAction = _.find @actions(), (action) => inputClass.isShortcutDown event, @getShortcutForOperator action
 
     if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.
       targetToolShortcut = @getShortcutForOperator targetTool
+      
+      isHoldShortcutActive = (shortcut) =>
+        return true if event.keyCode and event.keyCode is shortcut.holdKey
+        return true if event.button and event.button is shortcut.holdButton
+        false
 
       if _.isArray targetToolShortcut
-        storePreviousTool = _.find targetToolShortcut, (shortcut) => key is shortcut.holdKey
+        storePreviousTool = _.find targetToolShortcut, isHoldShortcutActive
 
       else
-        storePreviousTool = key is targetToolShortcut.holdKey
+        storePreviousTool = isHoldShortcutActive targetToolShortcut
+
+      if storePreviousTool
+        @_holdKey = event.keyCode
+        @_holdButton = event.button
 
       @activateTool targetTool, storePreviousTool
       
@@ -132,18 +172,33 @@ class FM.Interface extends FM.Interface
       # Prevent other in-game key listeners to also fire.
       event.stopImmediatePropagation()
 
-    @_activeKey = key
-
   onKeyUp: (event) ->
     return unless @active()
 
     @activeTool()?.onKeyUp? event
-
+    
+    @onInputUp event
+    
+  onPointerUp: (event) ->
+    return unless @active()
+    
+    # Ignore touch events.
+    return if event.pointerType is 'touch'
+    
+    @activeTool()?.onPointerUp? event
+    
+    @onInputUp event
+    
+  onInputUp: (event) ->
     return unless @shortcutsActive()
+    return unless @_holdKey is event.keyCode or @_holdButton is event.button
 
-    # Restore the stored tool.
-    if storedTool = @storedTool()
-      @activateTool storedTool
-      @storedTool null
+    @restoreStoredTool()
 
-    @_activeKey = null
+    @_holdKey = null
+    @_holdButton = null
+  
+  onPointerLeaveWindow: (event) ->
+    return unless @active()
+    
+    @activeTool()?.onPointerLeaveWindow? event

@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Complexity">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-complexity">
+    <div class="title">Choose Complexity</div>
+    <div class="button-area">
+      {{#each complexityOptions}}
+        <div class="complexity">
+          <img class="illustration" src="{{image imageUrl}}" />
+          <button class="complexity-button pixelartacademy-pixeltosh-os-interface-button">{{upperFirst this}}</button>
+          {{#if completedCount}}
+            <div class="completion">
+              Completed: {{completedCount}}/{{allCount}}<br/>
+            </div>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

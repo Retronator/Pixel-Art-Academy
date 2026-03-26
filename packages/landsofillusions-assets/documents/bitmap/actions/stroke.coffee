@@ -85,7 +85,7 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
 
         # Transfer all the other attributes not related to the colors.
         for attributeClass in otherAttributeClasses
-          value = layer.attributes[attributeClass.id].getPixel layerX, layerY
+          value = pixel[attributeClass.id] ? layer.attributes[attributeClass.id].getPixel layerX, layerY
           forwardArea.attributes[attributeClass.id].setPixel changeAreaX, changeAreaY, value
 
       # When going backward, we simply write back the old values.

@@ -114,7 +114,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     super arguments...
   
     @autorun (computation) =>
-      active = @drawingApp.activeAssetClass()?
+      active = @drawingApp.activeAsset()?
       
       Meteor.setTimeout =>
         @active active
@@ -138,6 +138,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   
         Meteor.setTimeout =>
           @cardsVisible shouldBeActive
+          
+          @audio.dealingCenter false
+          @audio.dealingLeft false
+          @audio.dealingRight false
         ,
           1000
   

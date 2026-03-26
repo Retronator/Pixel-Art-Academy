@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing.Things">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw-symbolicdrawing-things">
+    <ul class="things">
+      {{#each symbolicDrawing.thingsToDraw}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing.Things.Thing}}
+      {{/each}}
+    </ul>
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing.Things.Thing">
+  <li class="thing {{drawnClass}}"><span class="text">{{this}}</span></li>
+</template>

@@ -12,14 +12,7 @@
           <li class="menu-item"><span class="load actionable">Load game</span></li>
         {{/if}}
         {{#if isBrowser}}
-          <li class="menu-item"><span class="fullscreen actionable">
-            Fullscreen:
-            {{#if isFullscreen}}
-              on
-            {{else}}
-              off
-            {{/if}}
-          </span></li>
+          {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
         {{/if}}
         {{#if progressVisible}}
           <li class="menu-item"><span class="progress actionable">Progress</span></li>
@@ -35,53 +28,78 @@
         {{/if}}
       </ul>
     {{/if}}
+
     {{#if inSettings}}
       <ul class="settings menu">
         <!-- li class="language menu-item">
           Language: English
         </li -->
-        {{#unless isBrowser}}
-          <!-- TODO: Can't exit fullscreen li class="menu-item"><span class="fullscreen actionable">
-            Fullscreen:
-            {{#if isFullscreen}}
-              on
-            {{else}}
-              off
-            {{/if}}
-          </span></li -->
-        {{/unless}}
-        <li class="graphics-scale menu-item">
-          Pixel scale:
-          {{#if graphicsMaximumScale}}
-            <button class="previous-button actionable">◀</button>
-          {{/if}}
-          {{#if graphicsMaximumScale}}
-            {{graphicsMaximumScale}}x
-          {{else}}
-            Auto
-          {{/if}}
-          <button class="next-button actionable">▶</button>
-        </li>
-        <!-- TODO: Can't disable audio li class="menu-item"><span class="audio actionable">
-          Audio:
-          {{#if $is audioEnabled 'On'}}on{{/if}}
-          {{#if isBrowser}}
-            {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
-          {{/if}}
-          {{#if $is audioEnabled 'Off'}}off{{/if}}
-        </span></li-->
-        {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
+        <li class="menu-item"><span class="actionable display">Display</span></li>
+        <li class="menu-item"><span class="actionable audio">Audio</span></li>
+        <li class="menu-item"><span class="actionable controls">Controls</span></li>
         {{#if isBrowser}}
           <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
         {{/if}}
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
     {{/if}}
+
+    {{#if inDisplay}}
+      <ul class="display menu">
+        {{#unless isBrowser}}
+          {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
+        {{/unless}}
+        {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
+        {{> LandsOfIllusions.Components.Menu.Items.CRTEmulation}}
+        {{> LandsOfIllusions.Components.Menu.Items.SlowCPUEmulation}}
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inAudio}}
+      <ul class="audio menu">
+        <!-- Can't disable audio  class="menu-item"><span class="enabled actionable">
+          Audio:
+          {{#if $is audioEnabled 'On'}}on{{/if}}
+          {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
+          {{#if $is audioEnabled 'Off'}}off{{/if}}
+        </span></li-->
+        {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
+        <li class="menu-item"><span class="in-game-music actionable">
+          Music effects:
+          {{#if $is inGameMusicOutput 'Dynamic'}}automatic{{/if}}
+          {{#if $is inGameMusicOutput 'InLocation'}}radio{{/if}}
+          {{#if $is inGameMusicOutput 'Direct'}}off{{/if}}
+        </span></li>
+        <li class="menu-item"><span class="music-effects-settings actionable">Music effects settings</span></li>
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inMusicEffectsSettings}}
+      <ul class="music-effects-settings menu">
+        <li class="menu-item">
+          Radio effect volume decrease: <input class="in-location-music-volume-decrease" type="range" min="0" max="0.7" step="0.05" value="{{inLocationMusicVolumeDecrease}}"/>
+        </li>
+        <li class="menu-item">
+          Radio effect frequency decrease: <input class="in-location-music-bandpass-q" type="range" min="0" max="0.5" step="0.05" value="{{inLocationMusicBandpassQ}}"/>
+        </li>
+        <li class="menu-item"><span class="back-to-audio actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inControls}}
+      <ul class="controls menu">
+        {{> LandsOfIllusions.Components.Menu.Items.RightClick}}
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
     {{#if inExtras}}
       <ul class="extras menu">
-        <li class="menu-item"><span class="courses actionable">Courses preview</span></li>
-        <!-- TODO: li class="menu-item"><a class="actionable" href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode" target="_blank">Wishlist on Steam</a></li>
-        <li class="menu-item"><a class="actionable" href="https://discord.gg/mngNfvTwG6" target="_blank">Join Discord</a></li -->
+        <li class="menu-item"><span class="courses actionable">Roadmap</span></li>
+        <li class="menu-item"><a class="actionable" href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode" target="_blank">Early Access on Steam</a></li>
+        <li class="menu-item"><a class="actionable" href="https://discord.gg/mngNfvTwG6" target="_blank">Join Discord</a></li>
         <li class="menu-item"><span class="credits actionable">Credits</span></li>
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>

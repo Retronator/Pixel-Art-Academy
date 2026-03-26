@@ -1,0 +1,146 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+hoveredDistance = 3rem
+selectedDistance = 30rem
+
+.pixelartacademy-pixelpad-apps-music-drawer
+  position absolute
+
+  .table-top
+  .drawer
+    position absolute
+    left -210rem
+    width 420rem
+    height 340rem
+
+  .table-top
+    z-index 1
+    background-image image('/pixelartacademy/pixelpad/apps/music/tabletop.png')
+    top -460rem
+
+  .drawer
+    background-image image('/pixelartacademy/pixelpad/apps/music/drawer.png')
+    top -440rem
+    transition top 1s
+
+    &.opened
+      top -170rem
+
+    .contents
+      position absolute
+      right 51rem
+      bottom 51rem
+      width 315rem
+      z-index 1
+
+      .tapes
+        display flex
+        list-style none
+        padding 0
+        margin 0
+        flex-direction row-reverse
+
+        .tape
+          position relative
+          width 21rem
+          height 111rem
+          cursor pointer
+          transition all 0.2s
+
+          &:hover
+            .case
+              bottom hoveredDistance
+
+          &.selected
+            opacity 0
+            pointer-events none
+
+            .case
+              bottom selectedDistance
+
+          &.c60 .case
+            background-image image('/pixelartacademy/pixelpad/apps/music/case-c60.png')
+
+          &.c90 .case
+            background-image image('/pixelartacademy/pixelpad/apps/music/case-c90.png')
+
+          &.c120 .case
+            background-image image('/pixelartacademy/pixelpad/apps/music/case-c120.png')
+
+          .case
+            position absolute
+            bottom 0
+            right 0
+            width 27rem
+            height 120rem
+            transition all 0.2s
+
+            .title
+              position relative
+              top 24rem
+              left 15rem
+              height 88rem
+              text-align center
+              daily()
+              color atariCyan(2)
+              writing-mode vertical-rl
+
+    .shadows
+      absolute-cover()
+      background-image image('/pixelartacademy/pixelpad/apps/music/drawer-shadow.png')
+      mix-blend-mode multiply
+
+      .tape-shadows
+        position absolute
+        right 51rem
+        bottom 51rem
+        display flex
+        flex-direction row-reverse
+
+        .tape-shadow
+          position relative
+          width 21rem
+          height 111rem
+          cursor pointer
+          transition all 0.2s
+
+          &.hovered
+            .top
+              top -9rem - hoveredDistance
+
+            .bottom
+              left -55rem - hoveredDistance * (55 / 12)
+              top 92rem - hoveredDistance * (19 / 12)
+              background-position-x hoveredDistance * (55 / 12)
+              background-position-y hoveredDistance * (19 / 12)
+
+          &.selected
+            opacity 0
+
+            .top
+              top -9rem - selectedDistance
+
+            .bottom
+              left -55rem - selectedDistance * (55 / 12)
+              top 92rem - selectedDistance * (19 / 12)
+              background-position-x selectedDistance * (55 / 12)
+              background-position-y selectedDistance * (19 / 12)
+
+          .top
+          .bottom
+            position absolute
+            transition all 0.2s
+
+          .top
+            top -9rem
+            left -57rem
+            width 68rem
+            bottom 19rem
+            background image('/pixelartacademy/pixelpad/apps/music/case-shadow-top.png') 0 0 / 68rem 114rem no-repeat
+
+          .bottom
+            top 92rem
+            left -55rem
+            width 75rem
+            height 19rem
+            background image('/pixelartacademy/pixelpad/apps/music/case-shadow-bottom.png') 0 0 / 75rem 19rem no-repeat

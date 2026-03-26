@@ -1,21 +1,24 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
+class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   # assets: array of assets that are part of this tutorial
   #   id: unique asset identifier
   #   type: what kind of asset this is
   #   completed: auto-updated field if the player completed this asset
   #
   #   BITMAP
-  #   bitmap: reference to a bitmap
-  #     _id
+  #   bitmapId: ID of the bitmap representing this asset
   @assets: -> [] # Override to provide asset classes that are included in this tutorial.
 
   @assetsCount: -> @assets().length
 
   @completedAssetsCount: ->
-    assets = @state('assets') or []
+    # Due to changes in the curriculum, we have to filter assets to the ones that are currently enabled.
+    @_assetIds ?= (asset.id() for asset in @assets())
+  
+    assets = _.filter @state('assets') or [], (asset) => asset.id in @_assetIds
+    
     _.sum ((if asset.completed then 1 else 0) for asset in assets)
 
   @completedRatio: -> @completedAssetsCount() / @assetsCount()
@@ -35,6 +38,31 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
 
     asset.completed
 
+  constructor: ->
+    super arguments...
+    
+    @_assets = []
+
+    @assets = new ComputedField =>
+      assets = []
+      
+      for assetClass, index in @constructor.assets()
+        @_assets[index] ?= Tracker.nonreactive => new assetClass @
+        assets.unshift @_assets[index]
+        
+        break unless @isAssetCompleted @_assets[index]
+
+      assets
+    ,
+      @_assetsComparison
+    ,
+      true
+
+  destroy: ->
+    asset.destroy() for asset in @_assets
+
+    @assets.stop()
+    
   completed: -> @constructor.completed()
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
 
@@ -44,13 +72,6 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.
     @state('assets') or []
-
-  _assetsCompleted: (assets...) ->
-    for asset in assets
-      return unless asset
-      return unless @isAssetCompleted asset
-
-    true
 
   _assetsComparison: (a, b) =>
     # We consider assets have changed only when the array values differ.

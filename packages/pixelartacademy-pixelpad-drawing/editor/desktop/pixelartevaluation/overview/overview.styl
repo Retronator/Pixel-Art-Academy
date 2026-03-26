@@ -1,0 +1,91 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/pixelartevaluation/pixelartevaluation.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-overview
+  .title
+    margin-top 2rem
+    padding-bottom 1rem !important
+    text-transform uppercase
+    border-bottom none !important
+
+    &::after
+      content ''
+      display block
+      margin 4rem 0 0
+      height 4rem
+      border-top 2rem solid printColor
+      border-bottom 1rem solid printColor
+
+  .evaluation-breakdown
+    margin-bottom 6rem !important
+
+    .criterion
+      .name-area
+        typecast()
+        letter-spacing -1rem
+        line-height 10rem
+
+      .name-area
+      .score
+        cursor pointer
+
+    .criterion
+    .empty-row
+    .final-score-row
+      td
+        position relative
+        padding 1rem 0 0
+        vertical-align bottom
+
+    .empty-row
+    .final-score-row
+      height 10rem
+
+      td
+        position relative
+
+        &::after
+          content ''
+          position absolute
+          left -1rem
+          right -1rem
+          height 1rem
+
+    .empty-row
+      td
+        &::after
+          bottom 0
+          background printColor
+
+    .final-score-row
+      td
+        &::after
+          height 3rem
+          bottom -4rem
+          border-top 1rem solid printColor
+          border-bottom 1rem solid printColor
+
+      .average
+        checkout()
+        text-transform uppercase
+        padding-bottom 1rem
+
+        &:not(:first-child)
+          padding-left 3rem
+
+      .score
+        border-left 1rem solid printColor
+
+  .letter-grade
+    position absolute
+    top 3rem
+    left 4rem
+    width 17rem
+    height 12rem
+    padding 2rem 2rem 2rem 4rem
+    daily()
+    line-height 7rem
+    color penColor
+    text-align center
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pixelartevaluation/gradecircle.png')

@@ -38,5 +38,27 @@
         height 28rem
         small-print()
         color atariGray(1)
-        overflow-wrap break-word
         text-align center
+
+        &:not(:has(textarea))
+          overflow-wrap break-word
+          white-space pre-wrap
+
+        textarea
+          width 100%
+          height 100%
+          padding 0
+          margin 0
+          border none
+          background none
+          font inherit
+          color inherit
+          text-align center
+          input-placeholder atariGray(2)
+          appearance none
+          resize none
+          white-space pre-wrap
+          overflow-wrap break-word
+
+          &:focus
+            outline none

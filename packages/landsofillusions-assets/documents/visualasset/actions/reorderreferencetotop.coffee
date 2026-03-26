@@ -21,7 +21,7 @@ class LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop extends AM.Document.V
     backwardOperation = new LOI.Assets.VisualAsset.Operations.UpdateReference
       index: index
       changes:
-        order: asset.references[index].order
+        order: asset.references[index].order or null
     
     # Update operation arrays and the hash code of the action.
     @forward.push forwardOperation

@@ -219,7 +219,8 @@ class LOI.Adventure.Thing extends LOI.Component
 
   @reset: ->
     # Reset this thing's namespace.
-    LOI.adventure.gameState.resetNamespaces [@id()]
+    # TODO: This method was removed during Learn Mode refactoring.
+    # LOI.adventure.gameState.resetNamespaces [@id()]
 
   # Thing instance
 

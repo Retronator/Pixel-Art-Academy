@@ -15,4 +15,5 @@ class C1.Editors extends LOI.Adventure.Scene
 
   things: -> [
     PAA.PixelPad.Apps.Drawing.Editor.Desktop if C1.PostPixelPad.PixelArt.Listener.Script.state 'ReceiveDesktopEditor'
+    PAA.PixelPad.Apps.Drawing.Editor.Easel if HQ.ArtStudio.Alexandra.Listener.Script.state 'ReceiveEaselEditor'
   ]

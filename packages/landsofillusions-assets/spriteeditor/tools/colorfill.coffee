@@ -9,13 +9,13 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
   @initialize()
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
-    return unless @constructor.mouseState.leftButton
+    return unless @constructor.pointerState.mainButton
     
     return unless editor = @editor()
-    return unless pixelCoordinate = editor.mouse().pixelCoordinate()
+    return unless pixelCoordinate = editor.pointer().pixelCoordinate()
 
     # Make sure we have paint at all.
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
@@ -57,8 +57,11 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       # If the image has no layer, we first have to add it as a partial action.
       unless assetData.getLayer layerAddress
         addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer null, assetData, []
+        AM.Document.Versioning.executePartialAction assetData, addLayerAction
         action.append addLayerAction
 
+    fillActionsWereAdded = false
+    
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.
       continue unless assetData.bounds.left <= xCoordinate <= assetData.bounds.right and assetData.bounds.top <= pixelCoordinate.y <= assetData.bounds.bottom
@@ -78,9 +81,11 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       else if assetData instanceof LOI.Assets.Bitmap
         # Add the fill action.
         colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill @, assetData, layerAddress, pixel
+        AM.Document.Versioning.executePartialAction assetData, colorFillAction if assetData.partialAction
         action.append colorFillAction
+        fillActionsWereAdded = true
 
-    if assetData instanceof LOI.Assets.Bitmap
+    if fillActionsWereAdded and assetData instanceof LOI.Assets.Bitmap
       # Optimize the operations (for the symmetry case) and execute the action.
       action.optimizeOperations assetData
       assetData.executeAction action

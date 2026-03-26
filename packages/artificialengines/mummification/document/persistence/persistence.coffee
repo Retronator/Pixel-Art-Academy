@@ -18,12 +18,15 @@ class AM.Document.Persistence
   @_syncedStoragesById = {}
   @_syncedStoragesDependency = new Tracker.Dependency
 
+  @_profileLoadingPercentagesById = {}
+  @_profileLoadingPercentageDependency = new Tracker.Dependency
+  
   @_activeProfileId = new ReactiveField null
   
   @profileReady = new ReactiveField false
   
   Meteor.startup =>
-    @_activeProfile = new ComputedField =>
+    @activeProfile = new ComputedField =>
       @Profile.documents.findOne @_activeProfileId()
     ,
       true
@@ -46,6 +49,8 @@ class AM.Document.Persistence
     console.log "Registered synced storage", syncedStorage.id() if @debug
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
     @_syncedStoragesDependency.changed()
+    
+  @hasSyncedStorage: (syncedStorageId) -> @_syncedStoragesById[syncedStorageId]
     
   @ready: ->
     @_syncedStoragesDependency.depend()
@@ -71,6 +76,32 @@ class AM.Document.Persistence
       
       @loadProfile(profileId).then =>
         resolve profileId
+        
+  @renameProfile: (profileId, displayName) ->
+    Persistence.Profile.documents.update profileId,
+      $set:
+        displayName: displayName
+        lastEditTime: new Date
+    
+    # We need to manually force updating of the profile in synced storages document since it might not be loaded.
+    profile = Persistence.Profile.documents.findOne profileId
+    
+    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
+      syncedStorage.changed profile
+    
+    Promise.all promises
+  
+  @removeProfile: (profileId) ->
+    await @unloadProfile() if @_activeProfileId() is profileId
+    
+    profile = Persistence.Profile.documents.findOne profileId
+    Persistence.Profile.documents.remove profileId
+    
+    # We need to manually force removal of the profile document in synced storages since it is not loaded.
+    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
+      syncedStorage.removed profile
+    
+    Promise.all promises
   
   @loadProfile: (profileId) ->
     console.log "Persistence loading profile", profileId if @debug
@@ -86,9 +117,23 @@ class AM.Document.Persistence
     # Fetch all profile documents from all storages and resolve conflicts.
     new Promise (resolve, reject) =>
       loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
-        syncedStorage.loadDocumentsForProfileId profileId
-    
+        do (syncedStorageId) =>
+          @_profileLoadingPercentagesById[syncedStorageId] = 0
+          
+          syncedStorage.loadDocumentsForProfileId(profileId,
+            onProgress: (progressValue) =>
+              @_profileLoadingPercentagesById[syncedStorageId] = progressValue * 100
+              @_profileLoadingPercentageDependency.changed()
+          
+          ).catch (error) =>
+            console.error "Loading documents from synced storage", syncedStorageId, "failed.", error
+            throw error
+      
+      @_profileLoadingPercentageDependency.changed()
+      
       Promise.all(loadPromises).then (loadDocumentsResults) =>
+        console.log "Loaded document results", loadDocumentsResults if @debug
+        
         documentClonesByClassIdAndId = {}
         _.merge documentClonesByClassIdAndId, loadDocumentsResults...
   
@@ -151,8 +196,29 @@ class AM.Document.Persistence
           @_endLoad documentsByClassIdAndId
           resolve()
 
+      , (error) =>
+        # Pass the error to the outer promise. Note that we cannot throw here as that would be a throw in the internal
+        # promise (the one started with the .all promise) and would simply result in a promise with an unhandled
+        # exception (since this internal promise is not returned/chained out of the outer promise to hook into its own
+        # catch blocks. Therefore we need to explicitly reject the outer promise.
+        reject error
+        
+  @profileLoadingPercentage: ->
+    @_profileLoadingPercentageDependency.depend()
+    
+    minimumLoadingPercentage = 100
+    
+    for syncedStorageId, loadingPercentage of @_profileLoadingPercentagesById
+      minimumLoadingPercentage = Math.min minimumLoadingPercentage, loadingPercentage
+      
+    minimumLoadingPercentage
+
   @_endLoad: (documentsByClassIdAndId) ->
+    console.log "Profile documents retrieved …" if @debug
+    
     # Insert all documents belonging to this profile.
+    Document.pauseMigrationObserve = true
+    
     for documentClassId, documentsById of documentsByClassIdAndId
       documentClass = AM.Document.getClassForId documentClassId
       
@@ -162,6 +228,12 @@ class AM.Document.Persistence
     
       for documentId, document of documentsById
         documentClass.documents.insert document
+        
+    # Perform migrations on the incoming documents.
+    Document.migrateAllForward true
+    Document.pauseMigrationObserve = false
+    
+    console.log "Profile documents inserted. Profile ready." if @debug
   
     @profileReady true
 
@@ -169,16 +241,22 @@ class AM.Document.Persistence
     profileId = @_activeProfileId()
     throw new AE.InvalidOperationException "There is no loaded profile to unload." unless profileId
   
+    console.log "Persistence unloading profile", profileId if @debug
+    
     @profileReady false
   
     @flushChanges().then =>
       # Deactivate the profile first so that removals will not be seen as active actions.
       @_activeProfileId null
+      
+      console.log "Persistence profile deactivated. Removing documents …", profileId if @debug
 
       # Remove all documents belonging to the active profile, except profiles.
       for documentClassId, documentClass of @_persistentDocumentClassesById when documentClassId isnt @Profile.id()
         documentClass.documents.remove {profileId}
 
+      console.log "Profile documents removed." if @debug
+  
   @flushChanges: ->
     # Flush any throttled changes.
     flushUpdatesPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById
@@ -187,7 +265,7 @@ class AM.Document.Persistence
     Promise.all flushUpdatesPromises
     
   @addSyncingToProfile: (syncedStorageId) ->
-    profile = @_activeProfile()
+    profile = @activeProfile()
     throw new AE.InvalidOperationException "There is no loaded profile to add syncing to." unless profile
   
     throw new AE.ArgumentException "The profile is already syncing with this synced storage." if profile.syncedStorages.syncedStorageId
@@ -235,7 +313,7 @@ class AM.Document.Persistence
     # before that happens.
     return unless document.profileId and document.profileId is @_activeProfileId()
     
-    return unless activeProfile = @_activeProfile()
+    return unless activeProfile = @activeProfile()
     
     promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when activeProfile.syncedStorages[syncedStorageId]
       syncedStorage[methodName] document

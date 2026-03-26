@@ -17,7 +17,7 @@ class LOI.Engine.RadianceState
     @radianceMaterialIn = new @RadianceMaterial.In radianceMaterialOptions
     @radianceMaterialOut = new @RadianceMaterial.Out radianceMaterialOptions
 
-    @radianceAtlasQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), @radianceMaterialIn
+    @radianceAtlasQuad = new THREE.Mesh new THREE.PlaneGeometry(), @radianceMaterialIn
     @radianceAtlasQuad.position.z = -1
 
     @radianceAtlasScene = new THREE.Scene()

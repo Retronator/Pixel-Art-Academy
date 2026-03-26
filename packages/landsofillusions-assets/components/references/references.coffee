@@ -62,15 +62,25 @@ class LOI.Assets.Components.References extends LOI.Component
           enabled: false # TODO: Enable upload of references in learn mode.
         storage:
           enabled: false # TODO: Enable access to reference storage.
+    
+    @defaults = new ComputedField =>
+      @options.defaults() or {}
           
     @uploadingReferences = new ReactiveField []
     
     @references = new ComputedField =>
       return [] unless assetData = @assetData()
+      defaults = @defaults()
 
-      # Reuse image ID on asset to minimize reactivity.
       assetReferences = _.cloneDeep(assetData.references) or []
-      assetReference._id = assetReference.image._id for assetReference in assetReferences
+      
+      for assetReference in assetReferences
+        # Reuse image ID on asset to minimize reactivity.
+        assetReference._id = assetReference.image._id
+        
+        # Apply defaults if provided.
+        if referenceDefaults = defaults[assetReference.image.url]
+          _.defaultsDeep assetReference, referenceDefaults
 
       uploadingReferences = @uploadingReferences()
 
@@ -78,8 +88,9 @@ class LOI.Assets.Components.References extends LOI.Component
       _.sortBy [assetReferences..., uploadingReferences...], (reference) => _.propertyValue(reference, 'order') or 0
 
     @highestOrder = new ComputedField =>
-      return unless highestReference = _.last @references()
-      _.propertyValue(highestReference, 'order') or 0
+      references = _.sortBy @references(), 'order'
+      return unless highestReference = _.last references
+      _.propertyValue(highestReference, 'order') or references.length
       
     @enabled = new ComputedField =>
       # Show references only if there are any in the asset or we can upload them or get them from storage.
@@ -91,6 +102,10 @@ class LOI.Assets.Components.References extends LOI.Component
         assetOptions.upload.enabled
         assetOptions.storage.enabled
       ]
+      
+  getReferenceComponentForUrl: (url) ->
+    referenceComponents = @allChildComponentsOfType LOI.Assets.Components.References.Reference
+    _.find referenceComponents, (referenceComponent) => referenceComponent.data().image.url is url
 
   removeUploadingReference: (referenceId, imageId) ->
     # Wait until references have updated and we have the new one with created image ID.
@@ -108,13 +123,13 @@ class LOI.Assets.Components.References extends LOI.Component
       @uploadingReferences uploadingReferences
       
   startDrag: (options) ->
-    @_dragStartMousePosition = options.mouseCoordinate
+    @_dragStartPointerPosition = options.pointerCoordinate
     @_dragStartReferencePosition = options.referencePosition
 
     options.reference.draggingPosition @_dragStartReferencePosition
 
-    # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
+    # Wire end of dragging on pointer up anywhere in the window.
+    $(document).on "pointerup.landsofillusions-assets-components-references", (event) =>
       $(document).off '.landsofillusions-assets-components-references'
 
       # Make sure we still have the reference in case of recomputation during drag.
@@ -123,12 +138,12 @@ class LOI.Assets.Components.References extends LOI.Component
 
       @draggingReference null
 
-    $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
+    $(document).on "pointermove.landsofillusions-assets-components-references", (event) =>
       scale = @display.scale() * @draggingScale()
 
       dragDelta =
-        x: (event.pageX - @_dragStartMousePosition.x) / scale
-        y: (event.pageY - @_dragStartMousePosition.y) / scale
+        x: (event.pageX - @_dragStartPointerPosition.x) / scale
+        y: (event.pageY - @_dragStartPointerPosition.y) / scale
 
       @draggingReference().draggingPosition
         x: @_dragStartReferencePosition.x + dragDelta.x
@@ -141,13 +156,13 @@ class LOI.Assets.Components.References extends LOI.Component
     @_resizingReferenceCenter = options.referenceCenter
     @_resizingStartReferenceScale = options.referenceScale
 
-    @_resizingVector = new THREE.Vector2 options.mouseCoordinate.x - @_resizingReferenceCenter.x, options.mouseCoordinate.y - @_resizingReferenceCenter.y
+    @_resizingVector = new THREE.Vector2 options.pointerCoordinate.x - @_resizingReferenceCenter.x, options.pointerCoordinate.y - @_resizingReferenceCenter.y
     @_resizingStartDistance = @_resizingVector.length()
 
     options.reference.resizingScale @_resizingStartReferenceScale
 
-    # Wire end of resizing on mouse up anywhere in the window.
-    $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
+    # Wire end of resizing on pointer up anywhere in the window.
+    $(document).on "pointerup.landsofillusions-assets-components-references", (event) =>
       $(document).off '.landsofillusions-assets-components-references'
 
       # Make sure we still have the reference in case of recomputation during resizing.
@@ -156,7 +171,7 @@ class LOI.Assets.Components.References extends LOI.Component
 
       @resizingReference null
 
-    $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
+    $(document).on "pointermove.landsofillusions-assets-components-references", (event) =>
       @_resizingVector.x = event.clientX - @_resizingReferenceCenter.x
       @_resizingVector.y = event.clientY - @_resizingReferenceCenter.y
       resizingDistance = @_resizingVector.length()

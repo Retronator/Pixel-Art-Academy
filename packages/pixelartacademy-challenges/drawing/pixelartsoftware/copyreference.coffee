@@ -27,51 +27,21 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
 
     "/pixelartacademy/challenges/drawing/pixelartsoftware/#{@imageName()}-template.png"
 
-  @briefComponentClass: ->
-    # Note: We need to fully qualify the name instead of using @constructor
-    # since we're overriding with a class with the same name.
-    PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
+  @briefComponentClass: -> @BriefComponent
   
   constructor: ->
     super arguments...
 
-    # Allow to manually provide user image data.
-    @manualUserData = new ReactiveField null
-    
-    # We override the component that shows the goal state with a custom one that only shows drawn errors.
-    @engineComponent = new @constructor.ErrorEngineComponent
-      userData: =>
-        manualUserData = @manualUserData()
-        return manualUserData if manualUserData
-        
-        return unless bitmapId = @bitmapId()
-        LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-
-      spriteData: =>
-        return unless goalPixels = @goalPixels()
-        return unless bitmapId = @bitmapId()
-
-        # Take same overall visual asset data (bounds, palette) as the bitmap used for drawing, but
-        # exclude the layers since we'll be converting the bitmap to a sprite and provide our own pixels.
-        bitmap = LOI.Assets.Bitmap.documents.findOne bitmapId,
-          fields:
-            'layers': false
-            'layerGroups': false
-            'pixelFormat': false
-
-        return unless bitmap
-        
-        spriteData = bitmap.toPlainObject()
-
-        # Replace layers with the goal state.
-        spriteData.layers = [pixels: goalPixels]
-  
-        new LOI.Assets.Sprite spriteData
-        
     @uploadMode = new ReactiveField false
 
-    @_clipboardPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
-
+    @_clipboardSecondPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardSecondPageComponent @
+  
+  initializeSteps: ->
+    super arguments...
+    
+    # Make the pixels step only show drawn errors.
+    @stepAreas()[0].steps()[0].options.drawHintsForGoalPixels = false
+    
   editorOptions: ->
     references:
       upload:
@@ -79,15 +49,29 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
       storage:
         enabled: false
 
-  clipboardPageComponent: ->
+  clipboardSecondPageComponent: ->
     # We only show this page if we can upload.
     return unless PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
     
-    @_clipboardPageComponent
+    @_clipboardSecondPageComponent
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.
-    if @uploadMode() then [] else null
+    return [] if @uploadMode()
+    
+    # Otherwise, show all basic tools.
+    [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+      PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+      PAA.Practice.Software.Tools.ToolKeys.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo
+      PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.References
+    ]
 
   templateUrl: ->
     "/pixelartacademy/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"

@@ -39,15 +39,16 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     super arguments...
     
     @bindingHeight = 14
-    @hideTop = 30
+    @hideTop = 40
     
-    @waitBetweenAnimationsDuration = 0.3
-    @animationStepDuration = 0.03
+    @waitBetweenAnimationsDuration = 0.1
+    @animationStepDuration = 0.02
   
   onCreated: ->
     super arguments...
     
     @mouseHovering = new ReactiveField false
+    @openButtonHovering = new ReactiveField false
     
     @selectedTask = new ReactiveField null
     @contentHeight = new ReactiveField 0
@@ -70,31 +71,66 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
 
       @selectedTask null
   
-    @tasks = new ComputedField =>
-      _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
+    # Handle displayed tasks.
+    @tasks = new ComputedField => LOI.adventure.currentTasks()
   
     @activeTasks = new ComputedField =>
       _.filter @tasks(), (task) => task.active()
+
+    @availableTasks = new ComputedField =>
+      _.filter @tasks(), (task) => task.available()
       
-    @completedTasks = new ReactiveField []
+    @activeTasksToBeDisplayed = new ReactiveField []
     @displayedActiveTasks = new ReactiveField []
-  
+    @completedTasks = new ReactiveField []
+    
     @autorun (computation) =>
-      completedTasks = Tracker.nonreactive => @completedTasks()
-  
-      completedTasks.push task for task in @displayedActiveTasks() when task.completed() and task not in completedTasks
+      activeTasks = @activeTasks()
       
-      @completedTasks completedTasks
+      Tracker.nonreactive =>
+        activeTasksToBeDisplayed = @activeTasksToBeDisplayed()
+        displayedActiveTasks = @displayedActiveTasks()
+        completedTasks = @completedTasks()
+        
+        activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
+        
+        # Remove deactivated tasks.
+        deactivatedActiveTasksToBeDisplayed = _.filter activeTasksToBeDisplayed, (task) => not task.active()
+        
+        for task in deactivatedActiveTasksToBeDisplayed
+          _.pull activeTasksToBeDisplayed, task
+        
+        deactivatedActiveTasks = _.filter displayedActiveTasks, (task) => not task.active() and not task.completed()
+
+        for task in deactivatedActiveTasks
+          _.pull displayedActiveTasks, task
+          @$("[data-task-id='#{task.id()}']").remove()
+
+        # Update active tasks.
+        @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        @displayedActiveTasks displayedActiveTasks if deactivatedActiveTasks.length
+        
+        # Remove completed tasks so that the total shown tasks is not above 9 if possible.
+        tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
+        removeCount = tasksCount - 9
+        return unless removeCount > 0
+        
+        removedTasks = completedTasks.splice 0, removeCount
+        @completedTasks completedTasks
+        
+        # Also remove them from the displayed list.
+        for task in removedTasks
+          @$("[data-task-id='#{task.id()}']").remove()
 
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
+    @$content = @$('.page .content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentHeight @contentHeight()
-      @contentHeight @content$.outerHeight()
+      @contentHeight @$content.outerHeight()
     
-    @_resizeObserver.observe @content$[0]
+    @_resizeObserver.observe @$content[0]
   
     @animating = new ReactiveField false
     
@@ -115,9 +151,20 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
           @_animateTaskCompleted task
           return
           
-      for task in @activeTasks() when task not in displayedActiveTasks
+      # Add new tasks.
+      for task in @activeTasksToBeDisplayed()
         @_animateTaskAdded task
         return
+        
+      # If there are no more active tasks, remove all completed ones.
+      unless @activeTasks().length
+        Tracker.nonreactive =>
+          completedTasks = @completedTasks()
+          @completedTasks []
+          
+          # Also remove them from the displayed list.
+          for task in completedTasks
+            @$("[data-task-id='#{task.id()}']").remove()
     
     Tracker.triggerOnDefinedChange @displayState, (displayState, previousDisplayState) =>
       # Make sure we're still being rendered.
@@ -131,6 +178,15 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       else if displayState is @constructor.DisplayState.Closed and previousDisplayState is @constructor.DisplayState.Open
         @audio.close()
         
+  onDestroyed: ->
+    super arguments...
+    
+    @_resizeObserver?.disconnect()
+    
+    # Disable any ongoing audio.
+    @audio.strikethrough false
+    @audio.writing false
+    
   _animationAvailable: ->
     # If any of the displayed tasks have completed, we should animate.
     displayedActiveTasks = @displayedActiveTasks()
@@ -140,14 +196,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     return true for task in @activeTasks() when task not in displayedActiveTasks
   
   _animateTaskCompleted: (task) ->
-    @animating true
+    return unless await @_animateOpen()
     
-    await @_animateOpen()
-    
-    # Make sure we're still being rendered.
-    return unless @isRendered()
-    
-    $taskListItem = $("[data-task-id='#{task.id()}']")
+    $taskListItem = @$("[data-task-id='#{task.id()}']")
     directive = task.directive()
     
     @audio.strikethrough true
@@ -162,27 +213,30 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @audio.strikethrough false
 
     displayedActiveTasks = @displayedActiveTasks()
+    completedTasks = @completedTasks()
+
     _.pull displayedActiveTasks, task
+    completedTasks.push task
+
     @displayedActiveTasks displayedActiveTasks
+    @completedTasks completedTasks
   
     await _.waitForSeconds @waitBetweenAnimationsDuration
 
     await task.onCompletedDisplayed()
-  
-    @animating false
     
     @_animateClose()
   
   _animateTaskAdded: (task) ->
-    @animating true
-  
-    await @_animateOpen()
+    return unless await @_animateOpen()
     
-    # Make sure we're still being rendered.
-    return unless @isRendered()
-    
+    activeTasksToBeDisplayed = @activeTasksToBeDisplayed()
     displayedActiveTasks = @displayedActiveTasks()
+    
+    _.pull activeTasksToBeDisplayed, task
     displayedActiveTasks.push task
+    
+    @activeTasksToBeDisplayed activeTasksToBeDisplayed
     @displayedActiveTasks displayedActiveTasks
     
     $taskListItem = $("<li class='task' data-task-id='#{task.id()}'>")
@@ -206,26 +260,55 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     await task.onActiveDisplayed()
   
     @_animateClose()
-
-    @animating false
     
   _updateWritingPan: ->
-    @audio.writingPan AEc.getPanForElement @$('.cursor')[0]
+    # Make sure the cursor is still rendered.
+    return unless cursor = @$('.cursor')?[0]
+    
+    @audio.writingPan AEc.getPanForElement cursor
 
   _animateOpen: ->
+    @animating true
+  
     @selectedTask null
     
-    return if @displayState() is @constructor.DisplayState.Open
-  
-    # Give some time for the other UI animations to finish.
-    await _.waitForSeconds 1.2
-  
-    @manualDisplayState @constructor.DisplayState.Open
+    unless @displayState() is @constructor.DisplayState.Open
+      # Give some time for the other UI animations to finish.
+      await _.waitForSeconds 1
+      
+      # Make sure we're still on the home screen (no app has been opened while we were waiting).
+      if @os.currentAppUrl()
+        @_animateEnd()
+        return false
+      
+      @manualDisplayState @constructor.DisplayState.Open
+      
+      await _.waitForSeconds 0.35
     
-    await _.waitForSeconds 1
+    # Make sure we're still being rendered.
+    unless @isRendered()
+      @_animateEnd()
+      return false
     
+    true
+  
   _animateClose: ->
+    @_animateEnd()
+    
     Meteor.clearTimeout @_animateCloseTimeout
+    
+    # Determine how long to wait before closing the notebook.
+    unless @activeTasks().length or LM.Notifications.TheEnd.condition()
+      # We don't have any more active tasks and the final "all done" message is not active yet either.
+      # Delay closing for longer so that the player can see the instructions for adding new tasks.
+      closeDelay = 4000
+      
+    else if @notifications().displayAlwaysNotifications().length
+      # There are notifications waiting to be displayed that will always be shown, so close quickly.
+      closeDelay = 500
+      
+    else
+      closeDelay = 2000
     
     # Close after a second if no further animations are happening.
     @_animateCloseTimeout = Meteor.setTimeout =>
@@ -235,20 +318,58 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       @manualDisplayState null
     ,
-      2000
+      closeDelay
     
+  _animateEnd: ->
+    @animating false
+      
+  allowsShortcutsTable: -> false
+  
   onBackButton: ->
-    # If we have an animation waiting to happen, we want the back button to return us to the main menu.
+    # If we have an animation waiting to happen, we want any presses on the back button
+    # to return us to the main menu so that the to-do tasks can be visually updated.
     return unless @_animationAvailable()
     
     parameter1 = AB.Router.getParameter 'parameter1'
+    
+    # If any of the goals were completed that haven't been revealed in the Study Plan yet, go there first.
+    if PAA.PixelPad.Apps.StudyPlan.used()
+      studyPlanData = PAA.PixelPad.Apps.StudyPlan.state()
+      
+      if studyPlanData.revealed.goalIds
+        for goalId, goal of studyPlanData.goals when PAA.Learning.Goal.getClassForId(goalId).completed() and goalId not in studyPlanData.revealed.goalIds
+          AB.Router.setParameters {parameter1, parameter2: PAA.PixelPad.Apps.StudyPlan.url()}
+          
+          # Inform that we've handled the back button.
+          return true
+        
     AB.Router.setParameters {parameter1}
   
     # Inform that we've handled the back button.
     true
     
+  isActive: ->
+    @isRendered() and @animating() or @displayState() is @constructor.DisplayState.Open
+    
+  waitUntilInactive: ->
+    new Promise (resolve, reject) =>
+      Tracker.autorun (computation) =>
+        return if @isActive()
+        computation.stop()
+        resolve()
+        
+  close: -> @manualDisplayState null
+  
+  notifications: -> @os.getSystem PAA.PixelPad.Systems.Notifications
+
   displayStateClass: ->
     _.kebabCase @displayState()
+    
+  openButtonHoveredClass: ->
+    'open-button-hovered' if @openButtonHovering()
+    
+  selectedTaskVisibleClass: ->
+    'selected-task-visible' if @selectedTask()
   
   notepadStyle: ->
     switch @displayState()
@@ -256,7 +377,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         top = "calc(-#{@contentHeight()}px - #{@bindingHeight}rem)"
         
       when @constructor.DisplayState.Closed
-        top = "-#{@bindingHeight - 1}rem"
+        top = "-#{@bindingHeight + if @openButtonHovering() then 3 else -1}rem"
         
       else
         top = "#{@hideTop}rem"
@@ -270,7 +391,10 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     height: "#{maxContentHeight * 1.1}px"
   
   showToDo: ->
-    @activeTasks() or @completedTasks()
+    @activeTasks().length or @completedTasks().length or @displayedActiveTasks().length
+  
+  hasAvailableTasks: ->
+    @availableTasks().length
 
   taskSelectedClass: ->
     'task-selected' if @selectedTask()
@@ -280,7 +404,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       'click': @onClick
       'mouseenter .pixelartacademy-pixelpad-systems-todo': @onMouseEnterToDo
       'mouseleave .pixelartacademy-pixelpad-systems-todo': @onMouseLeaveToDo
-      'click .binding': @onClickBinding
+      'mouseenter .open-button': @onMouseEnterOpenButton
+      'mouseleave .open-button': @onMouseLeaveOpenButton
+      'click .open-button': @onClickOpenButton
       'click .task': @onClickTask
       'click .back-button': @onClickBackButton
     
@@ -293,7 +419,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onMouseLeaveToDo: (event) ->
     @mouseHovering false
 
-  onClickBinding: (event) ->
+  onMouseEnterOpenButton: (event) ->
+    @openButtonHovering true
+  
+  onMouseLeaveOpenButton: (event) ->
+    @openButtonHovering false
+  
+  onClickOpenButton: ->
     defaultDisplayState = @defaultDisplayState()
     
     if defaultDisplayState is @constructor.DisplayState.Hidden
@@ -321,4 +453,3 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
   _updateNotepadPan: ->
     @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
-

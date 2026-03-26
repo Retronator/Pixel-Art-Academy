@@ -17,6 +17,14 @@
     padding-left 10rem
     color atariGray(4)
 
+  &.depth-5
+    padding-left 15rem
+    color atariGray(4)
+
+  &.depth-6
+    padding-left 20rem
+    color atariGray(4)
+
   &.unavailable
     color atariGray(3)
 
@@ -35,7 +43,7 @@
       color atariGreen(5)
 
       .title-area
-        h1, h2, h3, h4
+        h1, h2, h3, h4, h5, h6
           color atariGreen(6)
 
         .title::after
@@ -111,6 +119,17 @@
               .description
                 background atariIndigo(0)
 
+            &.wip
+              background atariBrown(2)
+              color atariBrown(7)
+
+              &::before
+              &::after
+                border-color atariBrown(3)
+
+              .description
+                background atariBrown(1)
+
             &::before
             &::after
               content ''
@@ -160,9 +179,12 @@
   .contents
     list-style none
     margin 0
-    padding 0
+    padding 1px 0 0 0
     height 0
     overflow hidden
 
     &.displayed
       height auto
+
+    &.fully-displayed
+      overflow visible

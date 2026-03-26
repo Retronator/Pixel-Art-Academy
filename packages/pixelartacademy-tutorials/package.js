@@ -23,16 +23,30 @@ Package.onUse(function(api) {
   api.addFile('tutorials');
 
   api.addFile('drawing..');
+  api.addFile('drawing/markup');
 
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
   api.addFile('drawing/instructions/generalinstruction')
+  api.addFile('drawing/instructions/completedinstruction')
+  api.addFile('drawing/instructions/stepinstruction')
+  api.addFile('drawing/instructions/referencestrayinstruction')
+
+  api.addFile('drawing/instructions/multiarea..');
+  api.addFile('drawing/instructions/multiarea/instruction')
+  api.addFile('drawing/instructions/multiarea/uncompletedinstruction')
+  api.addFile('drawing/instructions/multiarea/generalinstruction')
+  api.addFile('drawing/instructions/multiarea/completedinstruction')
+  api.addFile('drawing/instructions/multiarea/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');
+
+  // Pixel art tools
 
   api.addFile('drawing/pixelarttools..');
 
   api.addFile('drawing/pixelarttools/basics..');
+  api.addFile('drawing/pixelarttools/basics/backbuttonshortcutinstruction');
   api.addFile('drawing/pixelarttools/basics/pencil');
   api.addFile('drawing/pixelarttools/basics/eraser');
   api.addFile('drawing/pixelarttools/basics/colorfill');
@@ -44,6 +58,7 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelarttools/colors..');
   api.addFile('drawing/pixelarttools/colors/colorswatches');
+  api.addFile('drawing/pixelarttools/colors/colorpickingwithundo');
   api.addFile('drawing/pixelarttools/colors/colorpicking');
   api.addFile('drawing/pixelarttools/colors/quickcolorpicking');
   api.addServerFile('drawing/pixelarttools/colors/palette-server');
@@ -53,4 +68,161 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelarttools/helpers/movecanvas');
   api.addFile('drawing/pixelarttools/helpers/undoredo');
   api.addFile('drawing/pixelarttools/helpers/lines');
+
+  // Elements of art
+
+  api.addFile('drawing/elementsofart..');
+  api.addFile('drawing/elementsofart/errorinstruction');
+
+  api.addFile('drawing/elementsofart/line..');
+  api.addFile('drawing/elementsofart/line/asset');
+  api.addFile('drawing/elementsofart/line/assetwithreferences');
+
+  api.addFile('drawing/elementsofart/line/straightlines');
+  api.addFile('drawing/elementsofart/line/curvedlines');
+  api.addFile('drawing/elementsofart/line/brokenlines');
+  api.addFile('drawing/elementsofart/line/brokenlines2');
+  api.addFile('drawing/elementsofart/line/outlines');
+  api.addFile('drawing/elementsofart/line/outlines2');
+  api.addFile('drawing/elementsofart/line/edges');
+  api.addFile('drawing/elementsofart/line/patterns');
+
+  api.addFile('drawing/elementsofart/line/errorinstruction');
+  api.addFile('drawing/elementsofart/line/referencestrayinstruction');
+
+  api.addFile('drawing/elementsofart/shape..');
+  api.addFile('drawing/elementsofart/shape/asset');
+  api.addFile('drawing/elementsofart/shape/assetwithreferences');
+
+  api.addFile('drawing/elementsofart/shape/cleanconstructionlinesstep');
+
+  api.addFile('drawing/elementsofart/shape/errorinstruction');
+  api.addFile('drawing/elementsofart/shape/referencestrayinstruction');
+  api.addFile('drawing/elementsofart/shape/cleanupconstructionlinesinstruction');
+  api.addFile('drawing/elementsofart/shape/requiredrampinstruction');
+
+  api.addFile('drawing/elementsofart/shape/basicshapes');
+  api.addFile('drawing/elementsofart/shape/combiningbasicshapes');
+  api.addFile('drawing/elementsofart/shape/transformedbasicshapes');
+  api.addFile('drawing/elementsofart/shape/basicshapesbreakdown');
+  api.addFile('drawing/elementsofart/shape/solidshapes');
+  api.addFile('drawing/elementsofart/shape/organicshapes');
+  api.addFile('drawing/elementsofart/shape/organicshapes2');
+
+  api.addFile('drawing/elementsofart/shape/detailing..');
+  api.addFile('drawing/elementsofart/shape/detailing/detailingstep');
+
+  // Pixel art fundamentals
+
+  api.addFile('drawing/pixelartfundamentals..');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/asset');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/intendedandperceivedlines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/corners');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/constrainingangles');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonalsartstyle');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/endsegments..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/endsegments/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/circles');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/longcurves');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/linewidthasset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thinlines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
+
+  api.addFile('drawing/pixelartfundamentals/size..');
+  api.addFile('drawing/pixelartfundamentals/size/assetwithreferences');
+  api.addFile('drawing/pixelartfundamentals/size/displayresolution');
+  api.addFile('drawing/pixelartfundamentals/size/perceivedresolution');
+  api.addFile('drawing/pixelartfundamentals/size/smallestdetails');
+  api.addFile('drawing/pixelartfundamentals/size/smallestrecognizablesize');
+  api.addFile('drawing/pixelartfundamentals/size/readabilityanalysis');
+
+  // Simplification
+
+  api.addFile('drawing/simplification..');
+  api.addFile('drawing/simplification/asset');
+  api.addFile('drawing/simplification/assetwithreferences');
+  api.addFile('drawing/simplification/instructions');
+  api.addFile('drawing/simplification/modelstep');
+  api.addFile('drawing/simplification/symbols');
+  api.addFile('drawing/simplification/symbolicandrealisticdrawing');
+  api.addFile('drawing/simplification/intentionalsimplification');
+  api.addFile('drawing/simplification/definingfeatures');
+  api.addFile('drawing/simplification/stylizedproportions');
+  api.addFile('drawing/simplification/basicshapes');
+
+  api.addFile('drawing/simplification/silhouette..');
+  api.addFile('drawing/simplification/silhouette/rotatestep');
+
+  // Design
+
+  api.addFile('drawing/design..');
+
+  api.addFile('drawing/design/shapelanguage..');
+  api.addFile('drawing/design/shapelanguage/asset');
+  api.addFile('drawing/design/shapelanguage/shapesasset');
+  api.addFile('drawing/design/shapelanguage/assetwithreferences');
+  api.addFile('drawing/design/shapelanguage/referencestrayinstruction');
+  api.addFile('drawing/design/shapelanguage/shapesinnature');
+  api.addFile('drawing/design/shapelanguage/circle');
+  api.addFile('drawing/design/shapelanguage/circle2');
+  api.addFile('drawing/design/shapelanguage/square');
+  api.addFile('drawing/design/shapelanguage/square2');
+  api.addFile('drawing/design/shapelanguage/triangle');
+  api.addFile('drawing/design/shapelanguage/triangle2');
+  api.addFile('drawing/design/shapelanguage/shapecombinations');
+  api.addFile('drawing/design/shapelanguage/breakingtherules');
+
+  // Planning
+
+  api.addFile('planning..');
+
+  api.addFile('planning/instructions..');
+  api.addFile('planning/instructions/instruction')
+  api.addComponent('planning/instructions/studyplan..');
+
 });

@@ -29,7 +29,7 @@ class LOI.Engine.World.Navigator
   update: (appTime) ->
     for movement in @_movements
       physicsObject = movement.options.avatar.getPhysicsObject()
-      physicsObject.getPositionTo @_position
+      physicsObject.getPosition @_position
 
       unless movement.pathSegment
         # Set the next path segment.

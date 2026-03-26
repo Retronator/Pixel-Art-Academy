@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus extends FM.Action
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus'
-  @displayName: -> "Move canvas"
+  @displayName: -> "Focus mode"
   
   @initialize()
 

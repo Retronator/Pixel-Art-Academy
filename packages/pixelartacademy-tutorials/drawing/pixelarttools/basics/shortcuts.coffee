@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
   @displayName: -> "Shortcuts"
 
   @description: -> """
-      An efficient pixel artist will learn shortcuts to switch between tools.
+      An efficient pixel artist will learn shortcuts to switch between tools:
 
       - B: pencil (brush)
       - E: eraser
@@ -15,7 +15,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
     """
 
   @fixedDimensions: -> width: 12, height: 8
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |
@@ -71,7 +71,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
       # Show this tip closed.
       PAA.PixelPad.Systems.Instructions.DisplayState.Closed
       
-    @delayDuration: -> 5
+    @delayDuration: -> 3
   
     @resetDelayOnOperationExecuted: -> true
     

@@ -1,0 +1,161 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+printColor = atariGray(2)
+paperColor = atariOrange(7)
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette-colorhelp
+  position absolute
+  top 50%
+  left -240rem
+  width 160rem
+  z-index 14
+  padding 4rem 8rem 5rem 25rem
+  transition left 0.5s ease-in-out
+  background paperColor
+  color printColor
+  box-shadow rgba(atariBrown(0), 0.5) -20rem 5rem 40rem
+  transform translateY(-50%)
+  cursor default
+
+  &.visible
+    left 10rem
+
+  &:hover
+    .close-button
+      visibility visible
+
+  .close-button
+    position absolute
+    right 0
+    top 0
+    padding 2rem 3rem
+    margin 0
+    border none
+    background none
+    visibility hidden
+    daily()
+    color atariGray(3)
+
+    &:hover
+      color atariGray(2)
+
+  .title-area
+    position absolute
+    left 4rem
+    top 6rem
+    bottom 6rem
+    width 20rem
+    border-right 3rem double printColor
+
+    .title
+      position absolute
+      left 50%
+      top 50%
+      width 200rem
+      transform translate(-50%, -50%) rotate(-90deg)
+      typecast()
+      line-height 10rem
+      text-align center
+      font-style italic
+      letter-spacing -1rem
+
+  label
+    cursor pointer
+
+  .checkbox
+    display inline-block
+    width 10rem
+    height 10rem
+    border 1rem solid printColor
+    daily()
+    cursor text
+
+    input[type='checkbox']
+      display none
+
+      &:checked + .checkmark::before
+        content '✓'
+        position relative
+        left 1rem
+        top -1rem
+
+  .radio-area
+    display block
+
+    input[type=radio]
+      display none
+
+      &:checked + .radio
+        background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/colorhelp/radio-full.png')
+
+    .radio
+      position relative
+      display inline-block
+      width 9rem
+      height 11rem
+      vertical-align middle
+      background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/colorhelp/radio-empty.png') center center / 9rem 9rem no-repeat
+      cursor text
+
+  .divider
+    position relative
+    margin 16rem 0 12rem
+    text-transform uppercase
+    text-align center
+    adventure()
+
+    hr
+      width 100%
+      height 0
+      border none
+      border-top 1rem solid printColor
+      margin 0
+
+    .or
+      display block
+      position absolute
+      left calc(50% - 10rem)
+      top -4rem
+      width 20rem
+      z-index 1
+      background paperColor
+
+  .help-types
+    typecast()
+    margin 0
+    padding 0 0 0 20rem
+
+    .help-type
+      margin-bottom 4rem
+
+      &:last-child
+        margin-bottom 0
+
+      &.one-time
+        .description
+          display block
+
+        .checkbox
+          vertical-align middle
+
+        .instruction
+          display inline-block
+          position relative
+          width 90rem
+          padding-left 8rem
+          vertical-align middle
+
+          &::before
+            content '←'
+            position absolute
+            left 0
+            top calc(50% - 0.6em)
+
+      .description
+        letter-spacing -1rem
+
+      .instruction
+        small-print()
+
+      .radio-area
+        daily()

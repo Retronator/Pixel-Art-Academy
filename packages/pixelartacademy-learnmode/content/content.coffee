@@ -27,7 +27,7 @@ class LM.Content
   # Id string for this content used to identify the content in code.
   @id: -> throw new AE.NotImplementedException "You must specify content's id."
 
-  # The type that identifies the content class individual tasks inherit from.
+  # The type that identifies the content class individual content inherits from.
   @type: -> 'Content'
 
   # String to represent the course in the UI. Note that we can't use
@@ -45,6 +45,7 @@ class LM.Content
 
   # Override to provide any children content classes that are part of this content.
   @contents: -> []
+  @availableContents: -> content for content in @contents() when LM.Content.Tags.Future not in content.tags()
 
   @initialize: ->
     # Store content class by ID.
@@ -70,6 +71,8 @@ class LM.Content
 
     console.warn "Unknown content requested.", contentId
     null
+    
+  @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
   constructor: (@parent, @options = {}) ->
     @course = @options.course
@@ -115,12 +118,14 @@ class LM.Content
     AB.translation @_translationSubscription, 'unlockInstructions'
 
   contents: -> @_contents
+  availableContents: -> content for content in @_contents when LM.Content.Tags.Future not in content.tags()
 
   allContents: -> _.flatten [@, (content.allContents() for content in @_contents)...]
 
   status: -> throw new AE.NotImplementedException "Content must provide its status."
   available: -> @parent.unlocked() and @status() isnt @constructor.Status.Unavailable
   unlocked: -> @parent.unlocked() and @status() is @constructor.Status.Unlocked
+  locked: -> @parent.locked() or @status() is @constructor.Status.Locked
 
   completed: ->
     return unless @unlocked()

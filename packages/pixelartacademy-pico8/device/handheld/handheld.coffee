@@ -35,7 +35,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     @buttons = (new ReactiveField false for button in [0..5])
     @powerOn = new ReactiveField false
-    @mouseDownDPad = new ReactiveField false
+    @pointerDownDPad = new ReactiveField false
     
     @touches = new ReactiveField null
 
@@ -73,7 +73,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       @_transferButtons {}
       @_transferDirections {}
 
-      @mouseDownDPad false
+      @pointerDownDPad false
       
     @powerSwitch = @$('.power-switch')[0]
     @menuButton = @$('.menu-button')[0]
@@ -187,11 +187,11 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     super(arguments...).concat
       'click .power-toggle-button': @onClickPowerToggleButton
       'click .menu-button': @onClickMenuButton
-      'mousedown .menu-button': @onMouseDownMenuButton
+      'pointerdown .menu-button': @onPointerDownMenuButton
       'mouseup .menu-button': @onMouseUpMenuButton
-      'mousedown .buttons': @onMouseDownButtons
+      'pointerdown .buttons': @onPointerDownButtons
       'touchstart .buttons, touchmove .buttons, touchcancel .buttons, touchend .buttons': @onTouchButtons
-      'mousedown .d-pad': @onMouseDownDPad
+      'pointerdown .d-pad': @onPointerDownDPad
       'mousemove .d-pad': @onMouseMoveDPad
       'touchstart .d-pad, touchmove .d-pad, touchcancel .d-pad, touchend .d-pad': @onTouchDPad
 
@@ -213,7 +213,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     
     @reversedControls not @reversedControls()
   
-  onMouseDownMenuButton: (event) ->
+  onPointerDownMenuButton: (event) ->
     @_updateMenuButtonPan()
     @audio.smallButtonOn()
     
@@ -224,7 +224,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
   _updateMenuButtonPan: ->
     @audio.smallButtonPan AEc.getPanForElement @menuButton
 
-  onMouseDownButtons: (event) ->
+  onPointerDownButtons: (event) ->
     return unless @enabled()
     
     position = @_getNormalizedPosition event, event
@@ -270,14 +270,14 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     if value < 0 then @constructor.Buttons.Z else @constructor.Buttons.X
 
-  onMouseDownDPad: (event) ->
+  onPointerDownDPad: (event) ->
     return unless @enabled()
     
-    @mouseDownDPad true
+    @pointerDownDPad true
     @_processMouseOnDPad event
 
   onMouseMoveDPad: (event) ->
-    return unless @mouseDownDPad()
+    return unless @pointerDownDPad()
 
     @_processMouseOnDPad event
 

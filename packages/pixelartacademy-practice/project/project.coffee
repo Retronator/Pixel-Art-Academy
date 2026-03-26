@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 class PAA.Practice.Project extends AM.Document
   @id: -> 'PixelArtAcademy.Practice.Project'
   # profileId: profile that created the project
+  # name: text identifier for the project including the path, used for public projects
   # lastEditTime: the time the document was last edited
   # startTime: when the project was started
   # endTime: when the project was ended
@@ -14,17 +15,16 @@ class PAA.Practice.Project extends AM.Document
   #   type: what kind of asset this is
   #
   #   BITMAP
-  #   bitmapId: reference to a bitmap
+  #   bitmapId: ID of the bitmap representing this asset
   @Meta
     name: @id()
-    fields: =>
-      assets: [
-        bitmap: Document.ReferenceField LOI.Assets.Bitmap
-      ]
-      
+    
   @enablePersistence()
+  @enableDatabaseContent()
 
   # Subscriptions
 
+  @all: @subscription 'all'
   @forId: @subscription 'forId'
   @forCharacterId: @subscription 'forCharacterId'
+  @assetsForProjectId: @subscription 'assetsForProjectId'

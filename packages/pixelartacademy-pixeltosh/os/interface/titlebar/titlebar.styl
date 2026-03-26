@@ -1,0 +1,53 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-titlebar
+  height 14rem
+  padding 1rem
+  border-bottom 1rem solid black
+  overflow hidden
+
+  &.active
+    .contents
+      background image('/pixelartacademy/pixeltosh/os/interface/titlebar/background.png') 0 0 / 1rem 11rem
+
+      .close-button
+        visibility visible
+
+  .contents
+    display flex
+    height 11rem
+
+    &::after
+      content ''
+      display block
+      width 17rem
+
+    .close-button
+      display block
+      width 9rem
+      margin 0 3rem 0 5rem
+      padding 1rem
+      background white
+      border none
+      visibility hidden
+
+      &::after
+        content ''
+        display block
+        width 7rem
+        height 7rem
+        border 1rem solid black
+
+      &:active::after
+        background-image image('/pixelartacademy/pixeltosh/os/interface/titlebar/closebutton-active.png')
+
+    .text-area
+      flex-grow 1
+      text-align center
+
+      .text
+        display inline-block
+        padding 1rem 5rem 0
+        background white
+        chicago-mini()
+        white-space nowrap

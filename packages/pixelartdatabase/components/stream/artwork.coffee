@@ -70,7 +70,7 @@ class PADB.Components.Stream.Artwork extends AM.Component
     @$artworkArea = @$('.artwork-area')
     @$backgroundCanvas = @$('.background')
     @backgroundCanvas = @$backgroundCanvas[0]
-    @backgroundContext = @backgroundCanvas.getContext '2d'
+    @backgroundContext = @backgroundCanvas.getContext '2d', willReadFrequently: true
 
     # Update background when artwork-area size changes.
     @_areaResizedDependency = new Tracker.Dependency
@@ -124,13 +124,12 @@ class PADB.Components.Stream.Artwork extends AM.Component
     # Depend on window size changes.
     clientBounds = AM.Window.clientBounds()
     clientHeight = clientBounds.height()
-    artworkFrameWidth = @$('.artwork-frame').width()
+    $artworkFrame = @$('.artwork-frame')
+    artworkFrameWidth = $artworkFrame.width()
+    artworkFrameHeight = $artworkFrame.width()
 
     # Increase desired image until we reach certain limits.
     loop
-      # Don't go over scale of 8.
-      break if desiredImageScale is 8
-
       # Don't go over scale of 2 if we'd cover more than the screen height.
       nextDisplayHeight = sourceHeight * (desiredImageScale + 1)
       break if desiredImageScale >= 2 and nextDisplayHeight > clientHeight
@@ -138,6 +137,10 @@ class PADB.Components.Stream.Artwork extends AM.Component
       # Don't increase scale if we've covered at least half the artwork frame width.
       displayWidth = sourceWidth * desiredImageScale
       break if displayWidth > artworkFrameWidth * 0.5
+      
+      # Don't increase scale if we've reached 8x and we've covered at least a third of the artwork frame height.
+      displayHeight = sourceHeight * desiredImageScale
+      break if desiredImageScale >= 8 and displayHeight > artworkFrameHeight * 0.33
 
       # No limits were reached, increase scale.
       desiredImageScale++

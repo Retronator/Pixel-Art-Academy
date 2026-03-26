@@ -6,9 +6,13 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
-  # scrollingEnabled: boolean whether you can scroll to pan and zoom
+  # smoothScrolling: boolean whether you can scroll to pan and zoom with a smooth, 2D input device
+  # scrollToZoom: object enabling change in zoom levels by scrolling
+  #   animate: object whether the change in zoom levels should be animated
+  #     duration: how long should the animation be in seconds
   # components: array of helper IDs that should be drawn to context
   # displayMode: how to display the canvas relative to the pixel canvas
+  # borderWidth: how many pixels to add as a border around the image in framed and full modes
   #
   # EDITOR FILE DATA
   # camera:
@@ -30,9 +34,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
   @componentDataFields: -> [
     'initialCameraScale'
-    'scrollingEnabled'
+    'smoothScrolling'
+    'scrollToZoom'
     'components'
     'displayMode'
+    'borderWidth'
   ]
 
   @editorFileDataFieldsWithDefaults: ->
@@ -42,18 +48,23 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     super arguments...
     
     @camera = new ReactiveField null
-    @mouse = new ReactiveField null
+    @pointer = new ReactiveField null
     @cursor = new ReactiveField null
     @landmarks = new ReactiveField null
     @pixelGrid = new ReactiveField null
     @operationPreview = new ReactiveField null
-    @toolInfo = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @windowSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
     
     @canvas = new ReactiveField null
     @context = new ReactiveField null
+    
+    @_drawToContextOptions =
+      lightDirection: null
+      camera: null
+      editor: @
+      smoothShading: false
 
   onCreated: ->
     super arguments...
@@ -118,12 +129,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     # Initialize components.
     @camera new @constructor.Camera @, $parent: @$pixelCanvas
-    @mouse new @constructor.Mouse @
+    @pointer new @constructor.Pointer @
     @cursor new @constructor.Cursor @
     @landmarks new @constructor.Landmarks @
     @pixelGrid new @constructor.PixelGrid @
     @operationPreview new @constructor.OperationPreview @
-    @toolInfo new @constructor.ToolInfo @
 
     # Prepare helpers.
     @fileIdForHelpers = new ComputedField =>
@@ -140,6 +150,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       landmarksHelperClass = @options?.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
       @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
+    @invertUIColorsData = new ComputedField =>
+      @interface.getActiveFileData()?.child 'invertUIColors'
+    
+    @invertUIColors = new ComputedField =>
+      @invertUIColorsData()?.value()
+      
     @shadingEnabled = new ComputedField =>
       @editorFileData()?.get('shadingEnabled') ? true
 
@@ -148,7 +164,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         drawComponents = _.clone @options.drawComponents()
 
       else
-        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
+        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks()]
         
       if componentIds = @components()
         for componentId in componentIds
@@ -174,34 +190,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
       drawComponents
 
-    # Reactively redraw the canvas.
-    @autorun => @_redraw()
-    
-  _redraw: ->
-    return unless context = @context()
-  
-    camera = @camera()
-  
-    context.setTransform 1, 0, 0, 1, 0, 0
-    context.clearRect 0, 0, camera.canvasWindowBounds.width(), camera.canvasWindowBounds.height()
-  
-    camera.applyTransformToCanvas()
-  
-    lightDirection = @lightDirectionHelper()
-    shadingEnabled = @shadingEnabled()
-  
-    for component in @drawComponents()
-      continue unless component
-    
-      context.save()
-      component.drawToContext context,
-        lightDirection: if shadingEnabled then lightDirection() else null
-        camera: camera
-        editor: @
-        smoothShading: false
-    
-      context.restore()
-
   onRendered: ->
     super arguments...
 
@@ -223,20 +211,45 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     # Reactively resize the canvas.
     @autorun (computation) =>
       @_resizeCanvas()
+    
+    # Reactively redraw the canvas when the active tool is not requesting realtime updating.
+    @autorun =>
+      return if @interface.activeTool()?.realtimeUpdating?()
+      
+      @_redraw()
   
     @_resizeObserver.observe $pixelCanvas[0]
-
-    # React to keys and global mouse events.
-    $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
-    $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
-    $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
-    $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
     
+    # Register with the app to support updates.
+    @app = @ancestorComponentWith 'addComponent'
+    @app.addComponent @
+    
+    # Change brush size with the wheel event.
+    new AC.DiscreteWheelEventListener
+      timeout: 0.2
+      element: $pixelCanvas[0]
+      callback: (sign) =>
+        keyboardState = AC.Keyboard.getState()
+        return unless keyboardState.isKeyDown AC.Keys.ctrl
+    
+        brushSizeHelper = @interface.getOperator if sign < 0 then LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease else LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease
+        brushSizeHelper?.execute()
+  
+  onDestroyed: ->
+    super arguments...
+  
+    # Note: The component can get destroyed before it is rendered, in which case app will not be retrieved yet.
+    @app?.removeComponent @
+    
+    @_resizeObserver?.disconnect()
+    
+    $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
+  
   _resizeCanvas: ->
     camera = @camera()
     newSize =
-      width: camera.canvasWindowBounds.width()
-      height:  camera.canvasWindowBounds.height()
+      width: camera.canvasWindowBounds.width() * devicePixelRatio
+      height:  camera.canvasWindowBounds.height() * devicePixelRatio
     
     changedCanvasSize = false
     
@@ -246,17 +259,32 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     for key, value of newSize when canvas[key] isnt value
       canvas[key] = value
       changedCanvasSize = true
-  
+    
     # Redraw the image to prevent flickering since the reactive routine won't kick in until the next frame.
-    @_redraw() if changedCanvasSize
+    @_redraw() if changedCanvasSize and not @interface.activeTool()?.realtimeUpdating?()
+    
+  _redraw: ->
+    context = @context()
+    canvas = @canvas()
+    
+    camera = @camera()
+    
+    context.resetTransform()
+    context.clearRect 0, 0, canvas.width, canvas.height
+    
+    camera.applyTransformToCanvas()
+    
+    lightDirection = @lightDirectionHelper()
+    shadingEnabled = @shadingEnabled()
+    
+    @_drawToContextOptions.lightDirection = if shadingEnabled then lightDirection() else null
+    @_drawToContextOptions.camera = camera
+    
+    for component in @drawComponents()
+      continue unless component
+      
+      component.drawToContext context, @_drawToContextOptions
 
-  onDestroyed: ->
-    super arguments...
-  
-    @_resizeObserver?.disconnect()
-
-    $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
-  
   drawingAreaStyle: ->
     style = @camera().drawingAreaWindowBounds.toDimensions()
     
@@ -277,28 +305,51 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
     
     canvasWindowBounds
+    
+  toolInfoInvertColorsClass: ->
+    'invert-colors' if @invertUIColors()
+  
+  toolInfoStyle: ->
+    return unless @toolInfoText()
+    
+    unless pointerPosition = @pointer().windowCoordinate()
+      return display: 'none'
+    
+    left: "calc(#{pointerPosition.x}px + 16rem)"
+    top: "#{pointerPosition.y}px"
+  
+  toolInfoText: ->
+    return unless @interface.active()
+    @interface.activeTool()?.infoText?()
+
+  draw: (appTime) ->
+    # Render the canvas each frame when the tool requests realtime updating.
+    return unless @interface.activeTool()?.realtimeUpdating?()
+    
+    @_redraw()
 
   # Events
 
   events: ->
     super(arguments...).concat
-      'mousedown .canvas': @onMouseDownCanvas
-      'mousemove .canvas': @onMouseMoveCanvas
-      'mouseenter .canvas': @onMouseEnterCanvas
-      'mouseleave .canvas': @onMouseLeaveCanvas
+      'pointermove .canvas': @onPointerMoveCanvas
+      'pointerenter .canvas': @onPointerEnterCanvas
+      'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
+      'contextmenu .canvas': @onContextMenu
 
-  onMouseDownCanvas: (event) ->
-    @interface.activeTool()?.onMouseDown? event if @interface.active()
+  onPointerMoveCanvas: (event) ->
+    @interface.activeTool()?.onPointerMove? event if @interface.active()
 
-  onMouseMoveCanvas: (event) ->
-    @interface.activeTool()?.onMouseMove? event if @interface.active()
+  onPointerEnterCanvas: (event) ->
+    @interface.activeTool()?.onPointerEnter? event if @interface.active()
 
-  onMouseEnterCanvas: (event) ->
-    @interface.activeTool()?.onMouseEnter? event if @interface.active()
-
-  onMouseLeaveCanvas: (event) ->
-    @interface.activeTool()?.onMouseLeave? event if @interface.active()
+  onPointerLeaveCanvas: (event) ->
+    @interface.activeTool()?.onPointerLeave? event if @interface.active()
 
   onDragStartCanvas: (event) ->
     @interface.activeTool()?.onDragStart? event if @interface.active()
+  
+  onContextMenu: (event) ->
+    # Prevent context menu opening.
+    event.preventDefault()

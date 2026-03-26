@@ -259,10 +259,9 @@ Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, trY, trU, 
 	else if( scale === 4 ) hq4x( img.width, img.height, trY, trU, trV );
 	// alternative: window['hq'+scale+'x']( img.width, img.height );
 
-  scaled = new Artificial.Mirage.Canvas(img.width * scale, img.height * scale);
+  scaled = new Artificial.Mirage.ReadableCanvas(img.width * scale, img.height * scale);
 
-	var scaledCtx = scaled.getContext('2d');
-	var scaledPixels = scaledCtx.getImageData( 0, 0, scaled.width, scaled.height );
+	var scaledPixels = scaled.getFullImageData();
 	var scaledPixelsData = scaledPixels.data;
 
 	// unpack integers to RGBA
@@ -276,7 +275,7 @@ Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, trY, trU, 
 	}
 	_src = src = null;
 	_dest = dest = null;
-	scaledCtx.putImageData( scaledPixels, 0, 0 );
+  scaled.putFullImageData( scaledPixels );
 	return scaled;
 };
 

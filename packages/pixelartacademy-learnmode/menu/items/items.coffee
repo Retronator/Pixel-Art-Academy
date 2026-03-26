@@ -4,10 +4,17 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
+Persistence = Artificial.Mummification.Document.Persistence
+
 class LM.Menu.Items extends LOI.Components.Menu.Items
   @register 'PixelArtAcademy.LearnMode.Menu.Items'
   template: -> 'PixelArtAcademy.LearnMode.Menu.Items'
-
+  
+  constructor: ->
+    super arguments...
+    
+    @progress = new LM.Menu.Progress
+  
   onCreated: ->
     super arguments...
     
@@ -18,11 +25,17 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Listen to fullscreen changes.
       Desktop.on 'window', 'isFullscreen', (event, isFullscreen) =>
         @_isFullscreen isFullscreen
+        LOI.settings.graphics.preferFullscreen.value isFullscreen
       
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
-  
-    @progress = new LM.Menu.Progress
+    
+  continueVisible: ->
+    # Continue is visible when we're not on the landing page and if there is a last loaded game.
+    return true unless @options.landingPage
+    
+    return unless profileId = localStorage.getItem LOI.adventure.constructor.lastLoadedProfileIdLocalStorageKey
+    Persistence.Profile.documents.findOne profileId
   
   loadVisible: ->
     # TODO: You can't load in the kiosk demo.
@@ -43,6 +56,15 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     else
       super arguments...
   
+  inGameMusicOutput: ->
+    LOI.settings.audio.inGameMusicOutput.value()
+
+  inLocationMusicVolumeDecrease: ->
+    1 - LOI.settings.audio.inLocationMusicVolume.value()
+    
+  inLocationMusicBandpassQ: ->
+    LOI.settings.audio.inLocationMusicBandpassQ.value()
+  
   extrasVisible: ->
     # Extras are visible only on the landing page.
     @options.landingPage
@@ -57,17 +79,41 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .main-menu .progress': @onClickMainMenuProgress
       'click .main-menu .extras': @onClickMainMenuExtras
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
-      'click .settings .fullscreen': @onClickSettingsFullscreen
+
+      # Display
+      'click .display .fullscreen': @onClickDisplayFullscreen
+      
+      # Audio
+      'click .audio .in-game-music': @onClickAudioInGameMusic
+      'click .audio .music-effects-settings': @onClickAudioMusicEffectsSettings
+      
+      # Music effects settings
+      'input .music-effects-settings .in-location-music-volume-decrease': @onInputMusicEffectsSettingsInLocationMusicVolumeDecrease
+      'input .music-effects-settings .in-location-music-bandpass-q': @onInputMusicEffectsSettingsInLocationMusicBandpassQ
+      'click .music-effects-settings .back-to-audio': @onClickMusicEffectsSettingsBackToAudio
+      
+      # Extras
       'click .extras .courses': @onClickExtrasCourses
       'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
       'click .ending': @onClickEnding
 
-  onClickMainMenuContinue: (event) ->
-    LOI.adventure.menu.hideMenu()
+  onClickMainMenuContinue: (event) ->    
+    if @options.landingPage
+      LOI.adventure.interface.startWaiting()
+
+      # Load last loaded game.
+      return unless profileId = localStorage.getItem LOI.adventure.constructor.lastLoadedProfileIdLocalStorageKey
+      
+      console.log "Loading last loaded profile ID", profileId if LOI.debug
+      
+      await LOI.adventure.interface.goToPlay profileId
+    
+    else
+      LOI.adventure.menu.hideMenu()
   
   onClickMainMenuNew: (event) ->
-    LOI.adventure.interface.waiting true
+    LOI.adventure.interface.startWaiting()
 
     LOI.adventure.startNewGame().then =>
       LOI.adventure.interface.goToPlay()
@@ -100,14 +146,16 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
           @_quitGame() if dialog.result
           
   _quitGame: ->
-    LOI.adventure.interface.waiting true
+    LOI.adventure.interface.startWaiting()
 
     LOI.adventure.menu.hideMenu()
     LOI.adventure.deactivateActiveItem()
+    LOI.adventure.interface.quitting true
     
     Meteor.setTimeout =>
       LOI.adventure.quitGame callback: =>
         LOI.adventure.interface.goToMainMenu()
+        LOI.adventure.interface.quitting false
         
         # Notify that we've handled the quitting sequence.
         true
@@ -120,18 +168,15 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
   onClickMainMenuFullscreen: (event) ->
     if Meteor.isDesktop
-      if @_isFullscreen()
-        Desktop.send 'window', 'setFullscreen', false
-    
-      else
-        Desktop.send 'window', 'setFullscreen', true
-        
+      fullscreen = not @_isFullscreen()
+      
+      Desktop.send 'window', 'setFullscreen', fullscreen
+      @_isFullscreen fullscreen
+      
+      LOI.settings.graphics.preferFullscreen.value fullscreen
+      
     else
-      if AM.Window.isFullscreen()
-        AM.Window.exitFullscreen()
-    
-      else
-        AM.Window.enterFullscreen()
+      super arguments...
       
     # Do a late UI resize to accommodate any fullscreen transitions.
     Meteor.setTimeout =>
@@ -139,9 +184,36 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     ,
       1000
   
-  onClickSettingsFullscreen: (event) ->
+  onClickDisplayFullscreen: (event) ->
     # Act the same as the main menu fullscreen button.
     @onClickMainMenuFullscreen event
+  
+  onClickAudioInGameMusic: (event) ->
+    switch LOI.settings.audio.inGameMusicOutput.value()
+      when LOI.Settings.Audio.InGameMusicOutput.Dynamic
+        value = LOI.Settings.Audio.InGameMusicOutput.InLocation
+      
+      when LOI.Settings.Audio.InGameMusicOutput.InLocation
+        value = LOI.Settings.Audio.InGameMusicOutput.Direct
+      
+      when LOI.Settings.Audio.InGameMusicOutput.Direct
+        value = LOI.Settings.Audio.InGameMusicOutput.Dynamic
+      
+    LOI.settings.audio.inGameMusicOutput.value value
+  
+  onClickAudioMusicEffectsSettings: (event) ->
+    @currentScreen @constructor.Screens.MusicEffectsSettings
+    
+  onInputMusicEffectsSettingsInLocationMusicVolumeDecrease: (event) ->
+    value = parseFloat $(event.target).val()
+    LOI.settings.audio.inLocationMusicVolume.value 1 - value
+    
+  onInputMusicEffectsSettingsInLocationMusicBandpassQ: (event) ->
+    value = parseFloat $(event.target).val()
+    LOI.settings.audio.inLocationMusicBandpassQ.value value
+  
+  onClickMusicEffectsSettingsBackToAudio: (event) ->
+    @currentScreen @constructor.Screens.Audio
 
   onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu

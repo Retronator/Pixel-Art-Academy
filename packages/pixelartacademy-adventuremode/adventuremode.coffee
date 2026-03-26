@@ -4,6 +4,8 @@ class PixelArtAcademy.AdventureMode
   constructor: ->
     # Create the main adventure engine url capture.
     Retronator.App.addPublicPage 'pixelart.academy/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', @constructor.Adventure
+    
+    @isAdventureMode = true
 
   @TimelineIds:
     # Dream sequence from the intro episode.

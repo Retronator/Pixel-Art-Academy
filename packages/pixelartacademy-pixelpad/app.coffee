@@ -35,13 +35,6 @@ class PAA.PixelPad.App extends LOI.Adventure.Item
     # Override to display shortcuts table in the app.
     false
 
-  onRendered: ->
-    super arguments...
-    
-    $appWrapper = $('.app-wrapper')
-    $appWrapper.velocity 'transition.slideUpIn', complete: ->
-      $appWrapper.css('transform', '')
-
   setDefaultPixelPadSize: ->
     @setMaximumPixelPadSize()
 
@@ -62,7 +55,7 @@ class PAA.PixelPad.App extends LOI.Adventure.Item
   setMinimumPixelPadSize: ->
     @setFixedPixelPadSize 310, 230
 
-  setMaximumPixelPadSize: (options = {}) ->
+  getMaximumPixelPadSize: (options = {}) ->
     display = LOI.adventure.interface.display
 
     viewport = display.viewport()
@@ -77,8 +70,12 @@ class PAA.PixelPad.App extends LOI.Adventure.Item
       # Add gaps for the back button and top border
       width -= 100
       height -= 20
-
-    @setFixedPixelPadSize width, height
+      
+    {width, height}
+    
+  setMaximumPixelPadSize: (options = {}) ->
+    size = @getMaximumPixelPadSize options
+    @setFixedPixelPadSize size.width, size.height
 
   maximize: ->
     @os.pixelPad.size

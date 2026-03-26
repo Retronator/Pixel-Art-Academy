@@ -40,7 +40,7 @@ class FM.Area extends AM.Component
       style[property] = "#{value}rem"
 
     style
-
+  
   componentData: ->
     # We allow sending custom component data for particular instances (such as for dialogs).
     if contentComponentData = @contentComponentData()

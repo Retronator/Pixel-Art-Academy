@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Difficulty">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-difficulty">
+    <div class="title">Choose Difficulty</div>
+    <div class="button-area">
+      {{#each difficultyOptions}}
+        <div class="difficulty">
+          <img class="illustration" src="{{image imageUrl}}" />
+          <button class="difficulty-button pixelartacademy-pixeltosh-os-interface-button">{{upperFirst this}}</button>
+          {{#if bestScore}}
+            <div class="best-score">
+              Best: {{bestScore.score}}/10<br/>
+              {{bestScore.speed}} speed
+            </div>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

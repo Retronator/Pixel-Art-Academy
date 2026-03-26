@@ -5,6 +5,8 @@ PADB = PixelArtDatabase
 
 class PADB.Artist extends AM.Document
   @id: -> 'PixelArtDatabase.Artist'
+  # profileId: the profile who created this artist, for user-generated artists
+  # lastEditTime: the time the document was last edited
   # name: real life name of the artist
   #   first
   #   middle
@@ -74,7 +76,9 @@ class PADB.Artist extends AM.Document
         combinedFollowersCount = _.sumBy profiles, 'followersCount'
 
         [fields._id, combinedFollowersCount]
-
+        
+  @enablePersistence()
+  
   # Methods
 
   @insert: @method 'insert'

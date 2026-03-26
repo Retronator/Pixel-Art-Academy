@@ -94,7 +94,7 @@ class PAA.Items.StillLifeItems.Item.Avatar extends LOI.Adventure.Thing.Avatar
       angular: angularDragFactor
 
     initialize: ->
-      transform = new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3
       @motionState = new Ammo.btDefaultMotionState transform
 
       @mass = @avatar.properties.mass ? 1

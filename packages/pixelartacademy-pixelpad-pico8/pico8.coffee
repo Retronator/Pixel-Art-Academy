@@ -1,8 +1,9 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AM = Artificial.Mirage
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
 
 class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Pico8'
@@ -45,10 +46,15 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
     
     # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
     @autorun (computation) =>
-      return unless audioContext = LOI.adventure.interface.audioManager.context()
+      return unless audioContext = LOI.adventure.audioManager.context()
       computation.stop()
       
+      audioOutputNode = AEc.Node.Mixer.getOutputNodeForName 'location', audioContext
+      
       @device new PAA.Pico8.Device.Handheld
+        audioContext: audioContext
+        audioOutputNode: audioOutputNode
+        
         # Relay input/output calls to the cartridge.
         onInputOutput: (address, value) =>
           @cartridge().onInputOutput? address, value
@@ -56,18 +62,54 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         # Enable interface when the cartridge is in the device.
         enabled: => @cartridge()
 
+    # Change PixelPad size.
     @autorun (computation) =>
       if @cartridge()
         @setFixedPixelPadSize 320, 157
 
       else
         @setFixedPixelPadSize 380, 300
-
+    
+    # Set/unset cartridge if in play.
+    @autorun (computation) =>
+      # Depend only on parameters to minimize reactivity.
+      cartridgeParameter = AB.Router.getParameter 'parameter3'
+      playParameter = AB.Router.getParameter 'parameter4'
+      
+      Tracker.autorun (computation) =>
+        drawer = @drawer()
+        
+        if cartridgeParameter and playParameter
+          return unless cartridge = drawer.selectedCartridge()
+          computation.stop()
+          @cartridge cartridge
+        
+        else
+          computation.stop()
+          # Turn off the device and deselect the cartridge when returning from play.
+          if @cartridge()
+            # Wait for the power off animation if needed.
+            delay = 0
+            device = @device()
+  
+            if device.powerOn()
+              device.powerStop()
+              delay = 500
+            
+            Meteor.setTimeout =>
+              @cartridge null
+              drawer.deselectCartridge()
+            ,
+              delay
+      
+    # Start the device when we have the cartridge.
     @autorun (computation) =>
       return unless cartridge = @cartridge()
-
-      device = @device()
-      device.loadGame cartridge.game(), cartridge.projectId()
+      return unless device = @device()
+      
+      # Load the game non-reactively so that changing of the project ID won't
+      # cause a restart (instead we're forcing the player to go out and back in).
+      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId(), cartridge.startParameter()
 
       Meteor.clearTimeout @_deviceStartTimeout
 
@@ -75,28 +117,10 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         device.powerStart()
       ,
         1500
-
-  onBackButton: ->
-    drawer = @drawer()
-
-    if @cartridge()
-      @device().powerStop()
-
-      Meteor.setTimeout =>
-        @cartridge null
-        drawer.deselectCartridge()
-      ,
-        500
-
-    else if drawer.selectedCartridge()
-      drawer.selectedCartridge null
-      drawer.audio.caseClose()
+  
+  inGameMusicMode: ->
+    # Turn off music when viewing the device.
+    if AB.Router.getParameter 'parameter4' then LM.Interface.InGameMusicMode.Off else LM.Interface.InGameMusicMode.Direct
     
-    else
-      return
-
-    # Inform that we've handled the back button.
-    true
-
   cartridgeActiveClass: ->
     'cartridge-active' if @cartridge()

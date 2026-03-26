@@ -21,7 +21,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
       spriteData.recomputeBounds()
 
       # Transfer color properties from the asset.
-      for propertyName in ['palette', 'customPalette', 'materials']
+      for propertyName in ['palette', 'customPalette', 'materials', 'properties']
         spriteData[propertyName] = assetData[propertyName]
 
       spriteData

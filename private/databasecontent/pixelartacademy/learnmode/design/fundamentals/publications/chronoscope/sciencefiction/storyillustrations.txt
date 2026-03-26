@@ -1,0 +1,3 @@
+Story Illustrations
+
+{"_id":"GEf6MsDKuREu7KxKs","lastEditTime":{"$date":1754905053696},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.Design.Fundamentals.Publications.Chronoscope.ScienceFiction.StoryIllustrations","title":"Story Illustrations","design":{"class":""}}

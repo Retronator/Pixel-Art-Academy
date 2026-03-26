@@ -11,11 +11,17 @@ class LOI.Assets.VisualAsset.Operations.AddReference extends AM.Document.Version
   #   scale: data for how big to display the reference
   #   order: integer value for sorting references
   #   displayMode: where to display the reference (inside the image, over the interface …)
+  # index: optional index if the reference is to be inserted at a specific position
   @initialize()
 
   execute: (document) ->
     document.references ?= []
-    document.references.push @reference
+    
+    if @index?
+      document.references.splice @index, 0, @reference
+  
+    else
+      document.references.push @reference
 
     # Return that the references were changed.
     references: true

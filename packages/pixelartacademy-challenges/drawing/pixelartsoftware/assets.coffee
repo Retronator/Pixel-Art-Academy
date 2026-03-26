@@ -12,7 +12,6 @@ assets =
 
       Artist: Isabel 'Erien' Armentero
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Isabel'
@@ -32,7 +31,6 @@ assets =
 
       Artist: Hjalte Tagmose
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -51,7 +49,6 @@ assets =
 
       Artist: Hjalte Tagmose
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -63,7 +60,7 @@ assets =
 
   MSEMLAbbayeDesMorts:
     dimensions: -> width: 15, height: 9
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
     backgroundColor: ->
       paletteColor:
         ramp: 0
@@ -132,7 +129,6 @@ assets =
 
       Artist: Chris Taylor
     """
-    maxClipboardScale: -> 1.5
     artist:
       name:
         first: 'Chris'
@@ -162,14 +158,13 @@ assets =
 
   MBEMSaboteurSiO:
     dimensions: -> width: 32, height: 46
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
     imageName: -> 'mbem-saboteursio'
     bitmapInfo: -> """
       Artwork from [Saboteur SiO](http://www.clivetownsend.com), WIP
 
       Artist: Ricardo Oyón Rodríguez
     """
-    maxClipboardScale: -> 1.5
     artist:
       name:
         first: 'Ricardo'
@@ -227,7 +222,6 @@ assets =
 
       Artist: Mati Ernst
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Mati'
@@ -239,7 +233,7 @@ assets =
 
   CSHMCeleste:
     dimensions: -> width: 9, height: 7
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 0
@@ -261,7 +255,7 @@ assets =
 
   CSEMHookLineAndThinker:
     dimensions: -> width: 7, height: 8
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 1
@@ -302,7 +296,7 @@ assets =
 
   CSVMFroggi:
     dimensions: -> width: 16, height: 12
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 0
@@ -330,7 +324,6 @@ assets =
 
       Artist: Daniel Müller
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Daniel'
@@ -349,7 +342,6 @@ assets =
 
       Artist: Phil Fish
     """
-    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Phil'
@@ -367,7 +359,6 @@ assets =
 
       Artist: Simon Stafsnes 'Snake' Andersen
     """
-    maxClipboardScale: -> 2
     artist:
       name:
         first: 'Simon'
@@ -383,11 +374,10 @@ assets =
     dimensions: -> width: 15, height: 19
     imageName: -> 'cbhm-courierofthecrypts'
     bitmapInfo: -> """
-      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com), WIP
+      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com), 2019
 
       Artist: Primož Vovk
     """
-    maxClipboardScale: -> 4
     artist:
       name:
         first: 'Primož'
@@ -401,11 +391,10 @@ assets =
     dimensions: -> width: 9, height: 23
     imageName: -> 'cbhm-nykra'
     bitmapInfo: -> """
-      Artwork from [NYKRA](http://nykra.com), WIP
+      Artwork from [NYKRA: Before](http://nykra.com), 2021
 
       Artist: ENDESGA
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         nickname: 'ENDESGA'
@@ -422,7 +411,6 @@ assets =
 
       Artist: Roy Nathan de Groot
     """
-    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Roy'
@@ -438,11 +426,10 @@ assets =
     dimensions: -> width: 30, height: 32
     imageName: -> 'cbem-intotherift'
     bitmapInfo: -> """
-      Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/), WIP
+      Artwork from [Into The Rift](https://store.steampowered.com/app/1093810/Savior/), WIP
 
      Artist: Weston Tracy
     """
-    maxClipboardScale: -> 2.5
     artist:
       name:
         first: 'Weston'
@@ -460,7 +447,6 @@ assets =
 
       Artist: Thomas van den Berg
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Thomas'
@@ -479,7 +465,6 @@ assets =
 
       Artist: Tristan Barona
     """
-    maxClipboardScale: -> 3
     artist:
       name:
         first: 'Tristan'
@@ -495,12 +480,11 @@ assets =
     bitmapInfo: -> """
       Artwork from [Into The Breach](https://subsetgames.com/itb.html), 2018
 
-      Artist: Justin Ma
+      Artist: Jay Ma
     """
-    maxClipboardScale: -> 2.5
     artist:
       name:
-        first: 'Justin'
+        first: 'Jay'
         last: 'Ma'
     artwork:
       title: 'Rift Walkers Combat Mech'
@@ -531,7 +515,7 @@ assets =
     dimensions: -> width: 31, height: 23
     imageName: -> 'cbom-virtuaverse'
     bitmapInfo: -> """
-      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), WIP
+      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), 2020
 
       Artist: Ra 'Valenberg' Mei
     """
@@ -573,7 +557,6 @@ for assetId, asset of assets
       @restrictedPaletteName: asset.restrictedPaletteName or -> null
       @imageName: asset.imageName
       @bitmapInfo: asset.bitmapInfo
-      @maxClipboardScale: asset.maxClipboardScale
       @initialize()
   
     PAA.Challenges.Drawing.PixelArtSoftware.copyReferenceClasses[assetId] = CopyReference[assetId]

@@ -1,0 +1,51 @@
+running-header-gradient(color, shadow=atariGray(0))
+  background linear-gradient(to left,
+    color 0,
+    color 5rem,
+    transparent 5rem,
+    transparent 7rem,
+    color 7rem,
+    color 17rem,
+    transparent 17rem,
+    transparent 19rem,
+    color 19rem
+  )
+  padding 10rem 39rem 10rem 20rem
+  border-bottom none
+  color atariGray(6)
+  text-shadow shadow -1rem 1rem
+  filter none
+
+leadImageCreditTop()
+  top -35rem
+
+leadImageCreditRight()
+  left 151rem
+  width 100rem
+  text-align right
+
+leadImageCreditBottom()
+  bottom -12rem
+
+figure-image-cutout-gradient(color)
+  background-image repeating-linear-gradient(0deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(90deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(180deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(270deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem)
+  background-size 1rem 100%, 100% 1rem, 1rem 100%, 100% 1rem
+  background-position 0 0, 0 0, 100% 0, 0 100%
+  background-repeat no-repeat
+
+figure-image-cutout(mainColor, fadeColor, inkPaperColorName)
+  scissorsImageUrl = '/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/scissors-%s.png' % inkPaperColorName
+
+  &.added-to-references
+    color mainColor
+    figure-image-cutout-gradient(fadeColor)
+
+  .cutout
+    &::before
+      figure-image-cutout-gradient(mainColor)
+
+    .cut-icon
+      background url(scissorsImageUrl) 100% 100% / 100%

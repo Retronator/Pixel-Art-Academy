@@ -6,7 +6,7 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
 
   @displayName: -> "Drawing tutorials"
 
-  @unlockInstructions: -> "Drawing tutorials are unlocked from the start."
+  @unlockInstructions: -> "Learn how to use to-do tasks to unlock drawing tutorials."
 
   @contents: -> [
     @Basics
@@ -25,8 +25,10 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
       requiredUnits: "tutorials"
       totalUnits: "tutorial steps"
       totalRecursive: true
-
-  status: -> LM.Content.Status.Unlocked
+  
+  status: ->
+    toDoTasksGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.ToDoTasks.id()
+    if toDoTasksGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
 
   class @Basics extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics'

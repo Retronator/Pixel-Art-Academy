@@ -21,7 +21,7 @@ Document.startup ->
   #
   pixelArtAcademyPalette =
     _id: 'irb2G8JnwW6sGMfmu'
-    name: LOI.Assets.Palette.SystemPaletteNames.pixelArtAcademy
+    name: LOI.Assets.Palette.SystemPaletteNames.PixelArtAcademy
     ramps: []
 
   for rampIndex in [0..15]

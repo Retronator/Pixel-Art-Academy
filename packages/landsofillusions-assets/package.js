@@ -14,10 +14,10 @@ Npm.depends({
   'pngjs': '2.3.0',
   'fast-png': '4.0.1',
   'delaunator': '3.0.2',
-  'bresenham-zingl': '0.1.1',
+  'bresenham-zingl': '0.2.0',
   'pako': '1.0.8',
   'ml-regression-theil-sen': '1.0.0',
-  'canvas': '2.6.1'
+  'canvas': '2.11.2'
 });
 
 Package.onUse(function(api) {
@@ -33,6 +33,8 @@ Package.onUse(function(api) {
 
   api.addFile('assets');
 
+  api.addFile('colorhelper');
+
   api.addComponent('layout/layout');
 
   // Documents
@@ -47,12 +49,13 @@ Package.onUse(function(api) {
   api.addFile('documents/palette/methods');
   api.addFile('documents/palette/atari2600');
   api.addFile('documents/palette/subscriptions');
-  api.addServerFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
+  api.addFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
 
   api.addServerFile('documents/palette/palettes-server/pixelartacademy');
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
   api.addServerFile('documents/palette/palettes-server/zxspectrum');
+  api.addServerFile('documents/palette/palettes-server/macintosh');
 
   api.addClientFile('documents/asset/asset-cache-client');
   api.addServerFile('documents/asset/asset-cache-server');
@@ -69,12 +72,15 @@ Package.onUse(function(api) {
   api.addServerFile('documents/visualasset/subscriptions');
   api.addFile('documents/visualasset/actions..');
   api.addFile('documents/visualasset/actions/addreferencebyurl');
+  api.addFile('documents/visualasset/actions/removereferencebyurl');
   api.addFile('documents/visualasset/actions/updatereference');
   api.addFile('documents/visualasset/actions/reorderreferencetotop');
+  api.addFile('documents/visualasset/actions/updateproperty');
   api.addFile('documents/visualasset/operations..');
   api.addFile('documents/visualasset/operations/addreference');
   api.addFile('documents/visualasset/operations/updatereference');
   api.addFile('documents/visualasset/operations/removereference');
+  api.addFile('documents/visualasset/operations/updateproperty');
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');
@@ -96,6 +102,7 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/layer');
   api.addFile('documents/bitmap/layergroup');
   api.addFile('documents/bitmap/pixelformat');
+  api.addServerFile('documents/bitmap/server');
 
   api.addFile('documents/bitmap/attribute..');
   api.addFile('documents/bitmap/attribute/alpha');
@@ -111,11 +118,13 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/actions/addlayer');
   api.addFile('documents/bitmap/actions/stroke');
   api.addFile('documents/bitmap/actions/colorfill');
+  api.addFile('documents/bitmap/actions/changebounds');
 
   api.addFile('documents/bitmap/operations..');
   api.addFile('documents/bitmap/operations/addlayer');
   api.addFile('documents/bitmap/operations/removelayer');
   api.addFile('documents/bitmap/operations/changepixels');
+  api.addFile('documents/bitmap/operations/changebounds');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');
@@ -167,7 +176,7 @@ Package.onUse(function(api) {
   api.addFile('documents/audio/methods/updatenodeparameters');
   api.addFile('documents/audio/methods/updateconnections');
 
-  api.addServerFile('documents/asset/migrations/0000-moveauthorstoprofileid');
+  api.addFile('documents/asset/migrations/0000-moveauthorstoprofileid');
 
   // Upload
 
@@ -200,7 +209,7 @@ Package.onUse(function(api) {
   api.addFile('components/tools..');
   api.addFile('components/tools/tool');
   api.addFile('components/tools/pencil');
-  api.addFile('components/tools/eraser');
+  api.addFile('components/tools/harderaser');
   api.addFile('components/tools/colorfill');
   api.addFile('components/tools/colorpicker');
   api.addFile('components/tools/undo');
@@ -296,13 +305,20 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
-  api.addFile('spriteeditor/tools/stroke');
+  api.addFile('spriteeditor/tools/aliasedstrokemask');
+  api.addFile('spriteeditor/tools/aliasedstroke');
   api.addFile('spriteeditor/tools/pencil');
-  api.addFile('spriteeditor/tools/eraser');
+  api.addFile('spriteeditor/tools/harderaser');
   api.addFile('spriteeditor/tools/smooth');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');
+  api.addFile('spriteeditor/tools/shape');
+  api.addFile('spriteeditor/tools/line');
+  api.addFile('spriteeditor/tools/line-perfectline');
+  api.addFile('spriteeditor/tools/fillableshape');
+  api.addFile('spriteeditor/tools/rectangle');
+  api.addFile('spriteeditor/tools/ellipse');
 
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
@@ -335,13 +351,12 @@ Package.onUse(function(api) {
   api.addComponent('spriteeditor/resizedialog..');
 
   api.addComponent('spriteeditor/pixelcanvas..');
-  api.addFile('spriteeditor/pixelcanvas/mouse');
+  api.addFile('spriteeditor/pixelcanvas/pointer');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
   api.addFile('spriteeditor/pixelcanvas/landmarks');
   api.addFile('spriteeditor/pixelcanvas/pixelgrid');
   api.addFile('spriteeditor/pixelcanvas/operationpreview');
-  api.addFile('spriteeditor/pixelcanvas/toolinfo');
 
   api.addComponent('spriteeditor/shadingsphere..');
   api.addFile('spriteeditor/shadingsphere/normalpicker');
@@ -356,7 +371,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
   api.addFile('mesheditor/tools/pencil');
-  api.addFile('mesheditor/tools/eraser');
+  api.addFile('mesheditor/tools/harderaser');
   api.addFile('mesheditor/tools/colorfill');
   api.addFile('mesheditor/tools/translate');
 
@@ -451,6 +466,16 @@ Package.onUse(function(api) {
 
   api.addFile('audioeditor/actions..');
   api.addFile('audioeditor/actions/duplicatenode');
+  api.addFile('audioeditor/actions/deletenode');
 
   api.addUnstyledComponent('audioeditor/soundselectdialog..');
+
+  // Admin
+
+  api.addFile('pages..');
+  api.addUnstyledComponent('pages/admin..');
+  api.addFile('pages/admin/palettes..');
+  api.addComponent('pages/admin/palettes/palette');
+  api.addUnstyledComponent('pages/admin/palettes/scripts');
+  api.addServerFile('pages/admin/palettes/scripts-server');
 });

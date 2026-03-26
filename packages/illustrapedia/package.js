@@ -19,11 +19,11 @@ Package.onUse(function(api) {
   api.addFile('illustrapedia');
 
   api.addFile('interest..');
-  api.addClientFile('interest/interest-client');
   api.addServerFile('interest/interest-server');
+  api.addServerFile('interest/interest-server-databasecontent');
   api.addServerFile('interest/methods-server');
-  api.addServerFile('interest/cache-server');
-  api.addServerFile('interest/subscriptions');
+  api.addFile('interest/subscriptions');
+  api.addFile('interest/migrations/0000-referencename');
 
   // Pages
 

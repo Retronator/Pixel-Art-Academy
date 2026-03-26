@@ -9,7 +9,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   constructor: (@options) ->
     super arguments...
 
-    throw new AE.ArgumentNullException 'Relative directory path must be provided.' unless @options?.relativeDirectoryPath?
+    throw new AE.ArgumentNullException 'Relative directory paths must be provided.' unless @options?.relativeDirectoryPath? and @options.relativeBackupDirectoryPath?
   
     @_ready = new ReactiveField false
 
@@ -18,109 +18,141 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   initialize: ->
     applicationPaths = await Desktop.call 'filesystem', 'getApplicationPaths'
     @storagePath = "#{applicationPaths.userData}/#{@options.relativeDirectoryPath}"
+    @backupPath = "#{applicationPaths.userData}/#{@options.relativeBackupDirectoryPath}"
 
-    @directory = {}
-    @directoryPath = "#{@storagePath}/directory.json"
-
-    try
-      directoryResponse = await Desktop.fetchFile @directoryPath
-
-    catch error
-      console.error "Error while fetching file system database directory.", error
-      return
-
-    unless directoryResponse.ok
-      console.log "No file system database directory was present."
-      return
-
-    @directory = await directoryResponse.json()
-
+    @lastEditTimes =
+      "#{Persistence.Profile.id()}": {}
+    
     # Send all profiles to persistence.
+    profileJsons = await Desktop.call 'filesystem', 'getProfiles', @storagePath
+    
     profiles = []
-
-    profileClassId = Persistence.Profile.id()
-    for documentId of @directory[profileClassId]
-      if document = await @_load @_getDocumentPath profileClassId, documentId
-        profiles.push document
-
+    
+    for profileJson in profileJsons
+      try
+        profile = EJSON.parse profileJson
+        
+        @lastEditTimes[Persistence.Profile.id()][profile._id] = profile.lastEditTime
+  
+        profiles.push profile
+        
+      catch error
+        console.error "Error parsing profile JSON.", error, profileJson
+    
     Persistence.addProfiles @constructor.id(), profiles
+  
+    # Listen to loading progress changes.
+    Desktop.on 'filesystem', 'getProfileDocumentsProgress', (event, progressValue) =>
+      @_onLoadProfileProgress progressValue
   
     @_ready true
     
   ready: -> @_ready()
+  
+  loadDocumentsForProfileIdInternal: (profileId, options) ->
+    console.log "File system synced storage is loading documents for profile", profileId if Persistence.debug
 
-  loadDocumentsForProfileId: (profileId) ->
     syncedStorageId = @constructor.id()
+  
+    documents = {}
+    @_onLoadProfileProgress = options.onProgress
+    
+    try
+      unless profileDocumentJsons = await Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+        throw new AE.IOException "Unable to get profile documents for ID #{profileId}."
+        
+    catch error
+      if error is 'timeout'
+        throw new AE.IOException "Reading the save data for ID #{profileId} took longer than 60 seconds."
+        
+      else
+        throw new AE.IOException error
+    
+    console.log "Documents retrieved. Parsing JSON …" if Persistence.debug
+    
+    for documentClassId, documentJsons of profileDocumentJsons when documentClassId isnt Persistence.Profile.id()
+      console.log "#{documentJsons.length} documents for class", documentClassId if Persistence.debug
 
-    new Promise (resolve) =>
-      documents = {}
-
-      for documentClassId, documentClassArea of @directory when documentClassId isnt Persistence.Profile.id()
-        documents[documentClassId] = {}
-
-        for documentId, entry of documentClassArea when entry.profileId is profileId
-          if document = await @_load @_getDocumentPath documentClassId, documentId
-            documents[documentClassId][documentId] = "#{syncedStorageId}": document
-
-      resolve documents
+      documents[documentClassId] = {}
+      @lastEditTimes[documentClassId] ?= {}
+      
+      for documentName, documentJson of documentJsons
+        try
+          document = EJSON.parse documentJson
+          documents[documentClassId][document._id] = "#{syncedStorageId}": document
+          @lastEditTimes[documentClassId][document._id] = document.lastEditTime
+      
+        catch error
+          console.error "Error parsing document JSON for", documentClassId, documentName, error
+          console.log "JSON content", documentJson
+    
+    console.log "Documents successfully parsed." if Persistence.debug
+    documents
 
   addedInternal: (document) -> @_add document
   changedInternal: (document) -> @_update document
   removedInternal: (document) -> @_delete document
 
   _add: (document) ->
-    @_getDirectoryAreaForDocument(document)[document._id] = _.pick document, 'profileId'
-    writeDirectoryPromise = @_saveDirectory()
-    updatePromise = @_update document
-
-    Promise.all [updatePromise, writeDirectoryPromise]
+    @_update document
 
   _update: (document) ->
+    # Check if this is a different version than the one we have.
+    documentClassId = document.constructor.id()
+    return if EJSON.equals document.lastEditTime, @lastEditTimes[documentClassId]?[document._id]
+    
     path = @_getDocumentPath document
     documentJson = EJSON.stringify document.getSourceData()
     error = await Desktop.call 'filesystem', 'writeFile', path, documentJson
-    throw new AE.ExternalException "Writing document to the file system failed.", path, error if error
+    
+    if error
+      LOI.adventure.showDialogMessage """
+        Unfortunately something went wrong with auto-saving the game. It's probably my fault, I'll need to fix this!
+        Please restart the game to avoid losing any game progress.
+        If you report this bug, this could be of help: #{error.message}
+      """
+      
+      throw new AE.ExternalException "Writing document to the file system failed.", path, error
+    
+    @lastEditTimes[documentClassId] ?= {}
+    @lastEditTimes[documentClassId][document._id] = document.lastEditTime
 
-  _getDocumentPath: (documentOrDocumentClassId, documentId) ->
-    if _.isObject documentOrDocumentClassId
-      document = documentOrDocumentClassId
-      documentClassId = document.constructor.id()
-      documentId = document._id
-
-    else
-      documentClassId = documentOrDocumentClassId
-
-    "#{@storagePath}/#{documentClassId}/#{documentId}.json"
-
-  _getDirectoryAreaForDocument: (document) ->
+  _getDocumentPath: (document) ->
     documentClassId = document.constructor.id()
-    @directory[documentClassId] ?= {}
-    @directory[documentClassId]
+    documentId = document._id
+    profileId = document.profileId
 
-  _load: (path) ->
-    try
-      response = await Desktop.fetchFile path
-
-    catch error
-      console.error "Error while fetching file system file.", path, error
-      return
-
-    unless response.ok
-      console.error "Requested file system file does not exist.", path, response
-      return
-
-    documentJson = await response.text()
-    EJSON.parse documentJson
+    "#{@storagePath}/#{profileId}/#{documentClassId}/#{documentId}.json"
 
   _delete: (document) ->
-    delete @_getDirectoryAreaForDocument(document)[document._id]
-    writeDirectoryPromise = @_saveDirectory()
-
-    path = @_getDocumentPath document
-    deleteDocumentPromise = Desktop.call 'filesystem', 'deleteFile', path
-
-    Promise.all [deleteDocumentPromise, writeDirectoryPromise]
-
-  _saveDirectory: ->
-    directoryJson = EJSON.stringify @directory
-    await Desktop.call 'filesystem', 'writeFile', @directoryPath, directoryJson
+    if document instanceof Persistence.Profile
+      # Profiles get backed up and their directory fully removed.
+      profileId = document._id
+      
+      try
+        unless backupSucceeded = await Desktop.call 'filesystem', 'backupProfile', "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+          throw new AE.IOException "Unable to backup profile #{profileId}."
+      
+      catch error
+        LOI.adventure.showDialogMessage """
+          Removing a profile encountered an error during final backup.
+          If you report this bug, this could be of help: #{error.message}
+        """
+        
+        throw new AE.ExternalException "Backing up profile directory from the file system failed.", path, error
+      
+      try
+        unless removeSucceeded = await Desktop.call 'filesystem', 'removeProfile', "#{@storagePath}/#{profileId}"
+          throw new AE.IOException "Unable to remove profile #{profileId}."
+      
+      catch error
+        LOI.adventure.showDialogMessage """
+          Removing a profile encountered an error during directory removal.
+          If you report this bug, this could be of help: #{error.message}
+        """
+        
+        throw new AE.ExternalException "Removing the profile directory from the file system failed.", path, error
+    
+    else
+      path = @_getDocumentPath document
+      Desktop.call 'filesystem', 'deleteFile', path

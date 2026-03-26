@@ -128,28 +128,12 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
         
         # This is a full pixel. If we have a palette, find the closest palette color.
         if palette
-          closestRamp = null
-          closestShade = null
-          smallestColorDistance = if backgroundColor then @_colorDistance backgroundColor, r, g, b else 3
-    
-          for ramp, rampIndex in palette.ramps
-            for shade, shadeIndex in ramp.shades
-              distance = @_colorDistance shade, r, g, b
-    
-              if distance < smallestColorDistance
-                smallestColorDistance = distance
-                closestRamp = rampIndex
-                closestShade = shadeIndex
+          paletteColor = palette.closestPaletteColorFromRGB r, g, b, backgroundColor
       
           # If we found a palette color, add the pixel.
-          if closestRamp? and closestShade?
-            pixel =
-              x: x
-              y: y
-              paletteColor:
-                ramp: closestRamp
-                shade: closestShade
-              
+          if paletteColor
+            pixel = {x, y, paletteColor}
+            
         else
           pixel =
             x: x
@@ -159,6 +143,3 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
         pixels.push pixel if pixel
         
     pixels
-    
-  _colorDistance: (color, r, g, b) ->
-    Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)

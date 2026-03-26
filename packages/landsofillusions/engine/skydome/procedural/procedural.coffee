@@ -31,10 +31,10 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
     # Create the scenes and camera for rendering.
     @scatteringScene = new THREE.Scene()
-    @scatteringScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), @scatteringRenderMaterial
+    @scatteringScene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), @scatteringRenderMaterial
 
     @scene = new THREE.Scene()
-    @scene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), @renderMaterial
+    @scene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), @renderMaterial
 
     # Create a dummy camera since it's not used in the render material shader.
     @camera = new THREE.Camera
@@ -56,13 +56,13 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
       @readColorsScene = new THREE.Scene()
 
-      skyColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial
+      skyColorQuad = new THREE.Mesh new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial
         map: @scatteringRenderTarget.texture
 
       skyColorQuad.position.x = -1
       @readColorsScene.add skyColorQuad
 
-      @starColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial
+      @starColorQuad = new THREE.Mesh new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial
         map: @renderTarget.texture
 
       @starColorQuad.position.x = 1

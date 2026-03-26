@@ -1,0 +1,37 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-easel-colorfill
+  position absolute
+  top 10rem
+  left 78rem
+  width 23rem
+  height 39rem
+  z-index 6
+
+  &::before
+  &::after
+    content ''
+    absolute-cover()
+
+  &::before
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/easel/jar-back.png')
+
+  &::after
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/easel/jar-front.png')
+
+  .color
+    position absolute
+    transition all 0.2s
+    background-color rgba(255, 255, 255, 0.3)
+
+    &.top
+      left 5rem
+      top 9rem
+      width 13rem
+      height 1rem
+
+    &.bottom
+      left 1rem
+      top 10rem
+      width 21rem
+      height 27rem

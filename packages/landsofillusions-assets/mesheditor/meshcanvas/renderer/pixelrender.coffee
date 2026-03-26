@@ -15,7 +15,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
       map: @renderTarget.texture
       depthWrite: false
 
-    geometry = new THREE.PlaneBufferGeometry
+    geometry = new THREE.PlaneGeometry
 
     @picture = new THREE.Mesh geometry, material
     scene.add @picture

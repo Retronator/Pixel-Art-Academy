@@ -1,0 +1,54 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.TileMap">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap">
+    {{#unless options.noBlueprint}}
+      <canvas class="blueprint" {{style blueprintStyle}}></canvas>
+    {{/unless}}
+    {{#each nonBlueprintTiles}}
+      <div class="tile {{tileTypeClass}} {{revealedClass}} {{groundClass}} {{taskHighlightedClass}}" {{style tileStyle}}>
+        {{#unless options.noGround}}
+          {{#if tileRevealed}}
+            <div class="ground"></div>
+          {{/if}}
+        {{/unless}}
+        {{#if pathwayClasses}}
+          <div class="pathway {{pathwayClasses}}">
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'Building'}}
+          <div class="building {{buildingClass}} {{buildingActiveClass}}">
+            {{#unless tileRevealed}}
+              <div class="blueprint" {{style buildingBlueprintStyle}}></div>
+            {{/unless}}
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'Gate'}}
+          <div class="gate {{gateOpenedClass}}">
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'Flag'}}
+          <div class="flag {{flagRaisedClass}}">
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'ExpansionPoint'}}
+          <div class="expansion-point {{expansionPointDirectionClass}} {{expansionPointGoalTypeClass}}"></div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+</template>

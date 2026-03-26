@@ -16,9 +16,9 @@ class Persistence.SyncedStorage
       
   ready: -> throw new AE.NotImplementedException "A synced storage must specify when it has supplied the profiles and is ready to provide documents."
 
-  loadDocumentsForProfileId: (profileId) ->
-    @loadDocumentsForProfileIdInternal(profileId).then (documents) =>
-      if @options.incrementalSave
+  loadDocumentsForProfileId: (profileId, options) ->
+    @loadDocumentsForProfileIdInternal(profileId, options).then (documents) =>
+      if @options.differentialSave
         @_documentsCache[document._id] = _.cloneDeep document for document in documents
     
       documents
@@ -49,7 +49,7 @@ class Persistence.SyncedStorage
   removed: (document) ->
     @removedInternal document
     
-    delete @_documentsCache[document._id] if @options.incrementalSave
+    delete @_documentsCache[document._id] if @options.differentialSave
     
   flushChanges: ->
     changedPromises = []

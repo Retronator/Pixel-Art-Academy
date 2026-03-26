@@ -131,9 +131,14 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+
+
+    if Meteor.isClient
+      # On the client also create pixel maps.
+      @requirePixelMaps()
       
-    # On the client also create pixel maps.
-    @requirePixelMaps() if Meteor.isClient
+      # For backwards compatibility, sprites should have pixel art scaling by default.
+      @properties.pixelArtScaling ?= true
 
   requirePixelMaps: ->
     return unless @layers?

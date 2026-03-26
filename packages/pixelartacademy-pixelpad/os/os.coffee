@@ -1,9 +1,16 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AEc = Artificial.Echo
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.OS extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.OS'
+class PAA.PixelPad.OS extends LOI.Component
+  @id: -> 'PixelArtAcademy.PixelPad.OS'
+  @register @id()
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      complete: AEc.ValueTypes.Trigger
 
   constructor: (@pixelPad) ->
     super arguments...
@@ -82,6 +89,8 @@ class PAA.PixelPad.OS extends AM.Component
     @appTransitioning = new ReactiveField false
     
     Tracker.autorun (computation) =>
+      return unless @isRendered()
+      
       # Don't route until apps are created.
       return unless currentApps = @currentApps()
       
@@ -100,9 +109,19 @@ class PAA.PixelPad.OS extends AM.Component
         startNewApp = =>
           return unless newApp
 
+          # Hide app area to prevent flickering before the transition starts.
+          @$appArea.css opacity: 0
+
           @currentApp newApp
           newApp.activate()
 
+          # Transition the new app in after it has rendered (and we have a new app wrapper).
+          Tracker.autorun (computation) =>
+            return unless newApp.isRendered()
+            computation.stop()
+            
+            @$appArea.velocity 'transition.slideUpIn', complete: => @$appArea.css transform: ''
+          
         if currentApp
           @appTransitioning true
           currentApp.deactivate =>
@@ -116,7 +135,7 @@ class PAA.PixelPad.OS extends AM.Component
       # Create pixel scaling display.
       @display = new Artificial.Mirage.Display
         safeAreaWidth: 320
-        safeAreaHeight: 240
+        safeAreaHeight: 241
         minScale: 2
 
     else
@@ -128,11 +147,16 @@ class PAA.PixelPad.OS extends AM.Component
 
     @$root = if @justOS then $('html') else @$('.pixelartacademy-pixelpad-os').closest('.os')
     @$root.addClass('pixelartacademy-pixelpad-os-root')
+    
+    @$appArea = @$('.app-area')
 
   onDestroyed: ->
     super arguments...
 
     @$root.removeClass('pixelartacademy-pixelpad-os-root')
+    
+  getSystem: (systemClass) ->
+    _.find @currentSystems(), (system) => system instanceof systemClass
 
   url: ->
     url = PAA.PixelPad.url()
@@ -162,10 +186,7 @@ class PAA.PixelPad.OS extends AM.Component
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
   shortcutsTableVisibleClass: ->
-    programs = @currentSystems()
-    programs.push currentApp if currentApp = @currentApp()
-    
-    'visible' if _.every programs, (program) => program.allowsShortcutsTable()
+    'visible' if _.every [@currentSystems()..., @currentApp()], (program) => program.allowsShortcutsTable()
 
   backButtonCallback: ->
     # See if the app can handle it.

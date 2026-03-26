@@ -1,0 +1,11 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Instructions">
+  <div class="pixelartacademy-pixeltosh-programs-pinball-interface-instructions">
+    <p>{{ballsPerPlay}} balls per play.</p>
+    {{#if hasPlunger}}
+      <p>Plunger: return, space, down arrow</p>
+    {{/if}}
+    {{#if hasFlipper}}
+      <p>Flippers: ctrl, shift, left/right arrow</p>
+    {{/if}}
+  </div>
+</template>

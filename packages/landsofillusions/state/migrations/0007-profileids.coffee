@@ -8,6 +8,11 @@ class Migration extends Document.MajorMigration
   
     collection.findEach
       _schema: currentSchema
+      $or: [
+        user: $exists: true
+      ,
+        character: $exists: true
+      ]
     ,
       (document) =>
         profileId = document.user?._id or document.character?._id

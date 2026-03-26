@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
+class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.Project.Thing
   # assets: array of assets that the player has chosen to complete for the Copy reference challenge
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -9,8 +9,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   #   uploaded: tells if the player used the upload action for this asset
   #
   #   BITMAP
-  #   bitmap: reference to a bitmap
-  #     _id
+  #   bitmapId: ID of the bitmap representing this asset
   @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware'
 
   @fullName: -> "Pixel art software"
@@ -20,7 +19,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   @translations: ->
     noAssetsInstructions: """
       To make sure you are ready to complete pixel art drawing assignments, this challenge requires you to copy an
-      existing game sprite in your editor of choice. First go to the Retronator HQ Gallery and talk to Corinne to
+      existing game sprite in your editor of choice. First, go to the Retronator HQ Gallery and talk to Corinne to
       obtain a reference image and further instructions.
     """
   
@@ -30,13 +29,18 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     assets = @state 'assets'
     _.find assets, (asset) => asset.completed
   
-  @addCopyReferenceAsset: (assetId) ->
+  @addCopyReferenceAsset: (assetClassName) ->
     assets = @state 'assets'
     assets ?= []
-    id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
+    id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetClassName}"
     
-    # Add the asset it's not already added.
-    assets.push {id} unless _.find(assets, (asset) => asset.id is id)
+    # Add the asset if it's not already added.
+    unless _.find(assets, (asset) => asset.id is id)
+      referenceSelectionId = PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.id()
+      referenceSelection = _.find assets, (asset) => asset.id is referenceSelectionId
+      
+      insertionIndex = if referenceSelection then 1 else 0
+      assets.splice insertionIndex, 0, {id}
     
     @state 'assets', assets
     
@@ -100,3 +104,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
         assets.push @_pixelArtSoftwareAssets[asset.id]
 
     assets
+  
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference

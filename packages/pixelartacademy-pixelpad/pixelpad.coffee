@@ -89,7 +89,7 @@ class PAA.PixelPad extends LOI.Adventure.Item
 
     $(document).on 'mousemove.pixelartacademy-pixelpad', (event) => @onMouseMove event
     $(document).on 'mouseup.pixelartacademy-pixelpad', (event) => @onMouseUp event
-    $(document).on 'keydown.landsofillusions-items-sync', (event) => @onKeyDown event
+    $(document).on 'keydown.pixelartacademy-pixelpad', (event) => @onKeyDown event
 
     # Reset scale to 0 to trigger direct setting of size.
     @_lastScale = 0
@@ -294,6 +294,9 @@ class PAA.PixelPad extends LOI.Adventure.Item
 
   onMouseUp: (event) ->
     @resizing false
+    
+    # We need an explicit return, otherwise false would be returned from the call to resizing, which prevents bubbling.
+    return
 
   onKeyDown: (event) ->
     # Don't capture events when the interface is busy.

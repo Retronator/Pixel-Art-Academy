@@ -10,9 +10,24 @@ class LOI.Settings
       Off: 'Off'
       Fullscreen: 'Fullscreen'
       On: 'On'
-  
+    
+    InGameMusicOutput:
+      InLocation: 'InLocation'
+      Dynamic: 'Dynamic'
+      Direct: 'Direct'
+    
+    mainVolume: new AEc.Variable "#{@id()}.audio.mainVolume", AEc.ValueTypes.Number
     soundVolume: new AEc.Variable "#{@id()}.audio.soundVolume", AEc.ValueTypes.Number
+    ambientVolume: new AEc.Variable "#{@id()}.audio.ambientVolume", AEc.ValueTypes.Number
     musicVolume: new AEc.Variable "#{@id()}.audio.musicVolume", AEc.ValueTypes.Number
+    inLocationMusicVolume: new AEc.Variable "#{@id()}.audio.inLocationMusicVolume", AEc.ValueTypes.Number
+    inLocationMusicBandpassQ: new AEc.Variable "#{@id()}.audio.inLocationMusicBandpassQ", AEc.ValueTypes.Number
+    
+  @Controls =
+    RightClick:
+      None: 'None'
+      Eraser: 'Eraser'
+      BackButton: 'BackButton'
     
   constructor: ->
     @persistSettings = new @constructor.ConsentField
@@ -45,32 +60,56 @@ class LOI.Settings
       name: 'persistEditorsInterface'
       question: "Do you want to automatically save changes made to the user interface?"
       moreInfo: "This will use your browser's local storage to save editor settings."
-
-    # By default, we disallow all but persisting settings.
-    @persistGameState.disallow() unless @persistGameState.decided()
-    @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
-    @persistLogin.disallow() unless @persistLogin.decided()
-    @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
+      
+    if AB.ApplicationEnvironment.isBrowser
+      # In the browser, we disallow all but persisting settings by default.
+      @persistGameState.disallow() unless @persistGameState.decided()
+      @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
+      @persistLogin.disallow() unless @persistLogin.decided()
+      @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
+      
+    else
+      # In standalone apps, consent is implied.
+      @persistSettings.allow() unless @persistSettings.decided()
+      @persistGameState.allow() unless @persistGameState.decided()
+      @persistCommandHistory.allow() unless @persistCommandHistory.decided()
+      @persistLogin.allow() unless @persistLogin.decided()
+      @persistEditorsInterface.allow() unless @persistEditorsInterface.decided()
 
     @graphics =
+      preferFullscreen: new @constructor.Field true, 'graphics.preferFullscreen', @persistSettings
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
       smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
       smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
+      crtEmulation: new @constructor.Field true, 'graphics.crtEmulation', @persistSettings
+      slowCPUEmulation: new @constructor.Field true, 'graphics.slowCPUEmulation', @persistSettings
 
     audioDefault = if AB.ApplicationEnvironment.isBrowser then @constructor.Audio.Enabled.Fullscreen else @constructor.Audio.Enabled.On
     
     @audio =
       enabled: new @constructor.Field audioDefault, 'audio.enabled', @persistSettings
+      inGameMusicOutput: new @constructor.Field @constructor.Audio.InGameMusicOutput.Dynamic, 'audio.inGameMusicOutput', @persistSettings
+      mainVolume: new @constructor.Field 1, 'audio.mainVolume', @persistSettings
       soundVolume: new @constructor.Field 1, 'audio.soundVolume', @persistSettings
+      ambientVolume: new @constructor.Field 1, 'audio.ambientVolume', @persistSettings
       musicVolume: new @constructor.Field 1, 'audio.musicVolume', @persistSettings
+      inLocationMusicVolume: new @constructor.Field 0.3, 'audio.inLocationMusicVolume', @persistSettings
+      inLocationMusicBandpassQ: new @constructor.Field 0.5, 'audio.inLocationMusicBandpassQ', @persistSettings
       
+    @controls =
+      rightClick: new @constructor.Field @constructor.Controls.RightClick.Eraser, 'controls.rightClick', @persistSettings
+
     # Update audio variables.
     Tracker.autorun =>
-      @constructor.Audio.soundVolume @audio.soundVolume.value()
-      @constructor.Audio.musicVolume @audio.musicVolume.value()
-
+      for audioTypeName in ['main', 'sound', 'ambient', 'music', 'inLocationMusic']
+        variableName = "#{audioTypeName}Volume"
+        @constructor.Audio[variableName] @audio[variableName].value()
+      
+      for variableName in ['inLocationMusicBandpassQ']
+        @constructor.Audio[variableName] @audio[variableName].value()
+        
   toObject: ->
     values = {}
 

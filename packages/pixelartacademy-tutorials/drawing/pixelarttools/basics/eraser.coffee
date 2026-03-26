@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
     """
 
   @fixedDimensions: -> width: 8, height: 8
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       00000000
@@ -58,7 +58,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
       return unless asset = @getActiveAsset()
       
       # Show when asset has extra pixels so that we don't display it when there are missing pixels.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
     
     @initialize()
 
@@ -74,8 +74,24 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
       return unless asset = @getActiveAsset()
       
       # Show when there are any missing pixels present.
-      @assetHasMissingPixels asset
+      asset.hasMissingPixels()
 
     @priority: -> 1
+    
+    @initialize()
+    
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Complete"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Nice! Continue working through the rest of the sprites to complete the Basics tutorial.
+      """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when the asset is completed.
+      asset.completed()
     
     @initialize()

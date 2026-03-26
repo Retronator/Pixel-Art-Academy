@@ -45,6 +45,7 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
           LOI.Assets.Editor.Actions.Undo.id()
           LOI.Assets.Editor.Actions.Redo.id()
           null
+          LOI.Assets.AudioEditor.Actions.DeleteNode.id()
           LOI.Assets.AudioEditor.Actions.DuplicateNodeWithoutConnections.id()
           LOI.Assets.AudioEditor.Actions.DuplicateNodeWithConnections.id()
         ]
@@ -151,6 +152,9 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
       ]
       "#{LOI.Assets.AudioEditor.Actions.DuplicateNodeWithConnections.id()}": [
         {key: AC.Keys.d, shift: true}
+      ]
+      "#{LOI.Assets.AudioEditor.Actions.DeleteNode.id()}": [
+        {key: AC.Keys.delete}
       ]
       
   constructor: ->

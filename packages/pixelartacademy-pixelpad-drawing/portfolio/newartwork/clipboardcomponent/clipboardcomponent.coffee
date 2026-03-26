@@ -3,13 +3,11 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
+Extras = PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
+
 class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends AM.Component
   @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent'
   @initializeDataComponent()
-  
-  @ArtworkTypes =
-    Sprite: 'Sprite'
-    Bitmap: 'Bitmap'
   
   @SizeTypes =
     Freeform: 'Freeform'
@@ -18,26 +16,28 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   onCreated: ->
     super arguments...
     
-    @paletteNames = [
-      LOI.Assets.Palette.SystemPaletteNames.pico8
-      LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
-      LOI.Assets.Palette.SystemPaletteNames.black
-    ]
-    
-    for paletteName in @paletteNames
-      LOI.Assets.Palette.forName.subscribeContent @, paletteName
+    @autorun (computation) =>
+      LOI.Assets.Palette.allCategorized.subscribeContent @
   
-    @type = new ReactiveField null
-    @maxSize = new ComputedField =>
-      type = @type()
-      if type then PAA.Practice.Artworks.maxSizes[type] else Number.POSITIVE_INFINITY
-    
     @sizeType = new ReactiveField @constructor.SizeTypes.Fixed
     
-    @typeError = new ReactiveField false
     @widthError = new ReactiveField false
     @heightError = new ReactiveField false
     @sizeOutOfRangeError = new ReactiveField false
+    
+    @extras = new PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
+      allowedTypes: [
+        Extras.Extra.Types.CanvasBorder
+        Extras.Extra.Types.RestrictedColors
+        Extras.Extra.Types.PixelArtEvaluation
+      ]
+      initialProperties: [
+        type: Extras.Extra.Types.CanvasBorder
+        value: true
+      ,
+        type: Extras.Extra.Types.RestrictedColors
+        value: LOI.Assets.Palette.SystemPaletteNames.Black
+      ]
   
   validateWidth: (value) -> @widthError @validateDimension value
   validateHeight: (value) -> @heightError @validateDimension value
@@ -48,27 +48,23 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     _.isNaN(value) or 0 <= value > maxSize
   
   errorClasses: ->
-    errorClasses = for field in ['type', 'width', 'height'] when @["#{field}Error"]()
+    errorClasses = for field in ['width', 'height'] when @["#{field}Error"]()
       "error-#{field}"
       
+    errorClasses.push 'error-size-out-of-range' if @sizeOutOfRangeError()
+    errorClasses.push 'error-restricted-colors' if @extras.restrictedColorsError()
+      
     errorClasses.join ' '
+    
+  maxSize: -> PAA.Practice.Artworks.maxSize
   
-  palettes: ->
-    LOI.Assets.Palette.documents.find(name: $in: @paletteNames).fetch()
-
   events: ->
     super(arguments...).concat
-      'change .property.type input': @onChangeType
       'input .property.size .width input': @onInputWidth
       'input .property.size .height input': @onInputHeight
       'change .property.size .width input': @onChangeWidth
       'change .property.size .height input': @onChangeHeight
-      'change .palette': @onChangePalette
-      'submit .newartwork-form': @onSubmitNewArtworkForm
-  
-  onChangeType: (event) ->
-    @typeError false
-    @type @$('.newartwork-form')[0].type.value
+      'submit .new-artwork-form': @onSubmitNewArtworkForm
 
   onInputWidth: (event) ->
     @widthError false
@@ -83,27 +79,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
 
   onChangeHeight: (event) ->
     @validateHeight $(event.target).val()
-  
-  onChangePalette: (event) ->
-    $target = $(event.target)
-    value = $target.val()
-    return unless value is 'lospec'
-    
-    lospecUrl = prompt "Enter Lospec URL for the desired palette"
-    return unless lospecUrl
-    
-    lospecSlug = lospecUrl.substring lospecUrl.lastIndexOf('/') + 1
-    
-    LOI.Assets.Palette.importFromLospec lospecSlug, (error, paletteId) =>
-      return console.error error if error
-
-      # Wait till the new palette is loaded.
-      Tracker.autorun (computation) =>
-        return unless LOI.Assets.Palette.findOne paletteId
-        
-        # Give the dropdown a chance to refresh.
-        Tracker.afterFlush =>
-          $target.val paletteId
     
   onSubmitNewArtworkForm: (event) ->
     event.preventDefault()
@@ -111,11 +86,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     data = new FormData event.target
     
     artworkInfo =
-      assetClassName: data.get 'type'
       title: data.get 'title'
-      paletteId: data.get 'palette'
-      
-    @typeError true unless artworkInfo.assetClassName
     
     if @sizeType() is @constructor.SizeTypes.Fixed
       artworkInfo.size =
@@ -125,23 +96,45 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       @validateWidth artworkInfo.size.width
       @validateHeight artworkInfo.size.height
       
-    return if @errorClasses()
-    
-    PAA.Practice.Artworks.insert LOI.characterId(), artworkInfo, (error, artworkId) =>
-      return console.error error if error
-      
-      # Add artwork to the drawing app.
-      artworks = PAA.PixelPad.Apps.Drawing.state('artworks') or []
-      artworks.push {artworkId}
-      PAA.PixelPad.Apps.Drawing.state 'artworks', artworks
-      
-      # Wait for the artwork to be available on the client.
-      Tracker.autorun (computation) =>
-        return unless PADB.Artwork.documents.findOne artworkId
-        computation.stop()
+    @extras.validateRestrictedColors()
 
-        # Navigate to the artwork.
-        AB.Router.changeParameter 'parameter3', artworkId
+    return if @errorClasses()
+
+    # Add properties.
+    paletteColors = []
+    paletteId = null
+    properties =
+      pixelArtScaling: true
+    
+    getPaletteId = (name) -> LOI.Assets.Palette.documents.findOne({name})._id
+    
+    for property in @extras.properties()
+      if property.type is Extras.Extra.Types.ColorPalette
+        paletteColors.push getPaletteId property.value
+        
+      else if property.type is Extras.Extra.Types.RestrictedColors
+        paletteId = getPaletteId property.value
+        
+      else if property.type is Extras.Extra.Types.PixelArtEvaluation
+        # Convert from a boolean to an editable pixel art evaluation.
+        properties.pixelArtEvaluation = editable: true
+        
+      else
+        properties[_.camelCase property.type] = property.value
+        
+    properties.paletteIds = paletteColors if paletteColors.length > 0
+    artworkInfo.paletteId = paletteId if paletteId?
+    artworkInfo.properties = properties
+    
+    artwork = PAA.Practice.Artworks.insert artworkInfo
+    
+    # Add artwork to the drawing app.
+    artworks = PAA.PixelPad.Apps.Drawing.state('artworks') or []
+    artworks.push artworkId: artwork._id
+    PAA.PixelPad.Apps.Drawing.state 'artworks', artworks
+    
+    # Navigate to the artwork.
+    AB.Router.changeParameter 'parameter3', artwork._id
   
   class @SizeType extends @DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType'

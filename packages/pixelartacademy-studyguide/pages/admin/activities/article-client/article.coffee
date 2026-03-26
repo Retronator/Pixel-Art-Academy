@@ -39,7 +39,6 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
 
     # Initialize quill.
     quill = new Quill @$('.writing-area')[0],
-      scrollingContainer: document.documentElement
       theme: 'snow'
       formats: PAA.StudyGuide.Article.quillFormats
       modules:

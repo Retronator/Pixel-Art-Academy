@@ -7,7 +7,7 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
   constructor: (@options = {}) ->
     super arguments...
 
-    @loader = new THREE.RGBELoader()
+    @loader = new THREE.HDRLoader()
     @loader.setDataType THREE.FloatType
 
     # Don't draw the sphere until a map is loaded.

@@ -3,18 +3,19 @@ LM = PixelArtAcademy.LearnMode
 
 class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
   @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps'
-
   @displayName: -> "Apps"
-
+  @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
-    @StudyPlan
-    @StudyGuide
-    @Arcade
+    @Music
     @Pixeltosh
-    @ZXSpectrum
+    @Pixelvision
+    @PixelKid
+    @PixelFriend
+    @StudyPlan
   ]
-
   @initialize()
+  
+  status: -> LM.Content.Status.Unlocked
 
   constructor: ->
     super arguments...
@@ -23,29 +24,42 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
       content: @
       units: "apps"
 
-  status: -> LM.Content.Status.Unlocked
-
   class @StudyPlan extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.StudyPlan'
     @displayName: -> "Study Plan"
     @initialize()
-
-  class @StudyGuide extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.StudyGuide'
-    @displayName: -> "Study Guide"
+  
+  class @Pixeltosh extends LM.Content.AppContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Pixeltosh'
+    @appClass = PAA.PixelPad.Apps.Pixeltosh
+    
+    @unlockInstructions: -> "Complete the Element of art: line tutorial to unlock the Pixeltosh app."
+    
     @initialize()
     
-  class @Arcade extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Arcade'
-    @displayName: -> "Arcade"
+    status: -> if LM.PixelArtFundamentals.pixeltoshEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+  
+  class @Pixelvision extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelVision'
+    @displayName: -> "Pixelvision"
     @initialize()
   
-  class @Pixeltosh extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Pixeltosh'
-    @displayName: -> "Pixeltosh"
+  class @PixelKid extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelKid'
+    @displayName: -> "Pixel Kid"
     @initialize()
   
-  class @ZXSpectrum extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.ZXSpectrum'
-    @displayName: -> "ZX Spectrum"
+  class @PixelFriend extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelFriend'
+    @displayName: -> "Pixel Friend"
     @initialize()
+    
+  class @Music extends LM.Content.AppContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Music'
+    @appClass = PAA.PixelPad.Apps.Music
+    
+    @unlockInstructions: -> "Complete the Pixel Art Tools course to unlock the Music app."
+    
+    @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Start.finished() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

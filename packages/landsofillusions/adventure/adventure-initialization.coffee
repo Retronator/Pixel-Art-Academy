@@ -1,5 +1,6 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
@@ -25,6 +26,9 @@ class LOI.Adventure extends LOI.Adventure
 
     # Adventure's end run should happen last.
     @endRunOrder = 1000
+    
+    # In the browser, connect to the server automatically.
+    Meteor.reconnect() if AB.ApplicationEnvironment.isBrowser
 
   onCreated: ->
     super arguments...
@@ -35,6 +39,8 @@ class LOI.Adventure extends LOI.Adventure
     @app.addComponent @
 
     $('html').addClass('adventure')
+    
+    @_initializeAudio()
 
     @interface = new (@constructor.interfaceClass())
     @director = new LOI.Director
@@ -87,5 +93,8 @@ class LOI.Adventure extends LOI.Adventure
     $('html').removeClass('adventure')
 
   endRun: ->
+    # Update any lazy fields.
+    @gameState.updated()
+    
     # Flush persistent document updates when the page is about to unload.
-    Persistence.flushUpdates()
+    AMu.Document.Persistence.flushChanges()

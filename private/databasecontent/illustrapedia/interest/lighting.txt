@@ -1,0 +1,2 @@
+lighting
+{"_id":"R96Np8KL2KsyjW5nZ","name":{"_id":"PshoxgKfZYZGojurF","translations":{"en":{"us":{"text":"lighting","quality":0},"best":{"text":"lighting","quality":0,"languageRegion":"en-US"}},"best":{"text":"lighting","quality":0,"languageRegion":"en-US"}}},"_schema":"1.1.0","searchTerms":["lighting"],"lastEditTime":{"$date":1769194966250},"referenceName":"lighting"}

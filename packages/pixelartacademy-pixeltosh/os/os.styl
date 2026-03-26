@@ -1,0 +1,72 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os
+  position relative
+  height 100%
+  background-image image('/pixelartacademy/pixeltosh/os/dither-screen.png')
+  color black
+  geneva-mini()
+  overflow hidden
+  cursor none
+  transform translateX(0)
+
+  *
+    cursor none !important
+
+  .fatamorgana-interface
+    .fatamorgana-menu
+      background-image image('/pixelartacademy/pixeltosh/os/menu.png')
+      chicago-mini()
+
+      .items
+        padding 0 6rem
+
+        .item
+          padding 2rem 5rem
+
+    .fatamorgana-menu-dropdown
+      border 1rem solid black
+      background-color white
+      box-shadow 2rem 2rem 0 -1rem black
+      chicago-mini()
+
+      .items
+        .item
+          display flex
+          position relative
+          padding 1rem 4rem 2rem 0
+
+          &.enabled
+            cursor pointer
+
+            &:hover
+              background-color black
+              color white
+
+          &:not(.enabled)::after
+            content ''
+            absolute-cover()
+            left 11rem
+            background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem
+
+          .active-status
+            width 11rem
+            padding-left 2rem
+
+            &.active
+              &::before
+                content '✔'
+
+          .caption
+            flex-grow 1
+
+          .shortcut
+            margin-left 8rem
+
+            &:empty
+              margin-left 0
+
+        .divider
+          margin 6rem 0
+          height 1rem
+          background image('/pixelartacademy/pixeltosh/os/dither.png') 0 0 / 2rem 2rem

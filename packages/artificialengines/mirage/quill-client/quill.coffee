@@ -1,3 +1,4 @@
 AM = Artificial.Mirage
 
-AM.Quill = require 'quill'
+import Quill from 'quill'
+AM.Quill = Quill

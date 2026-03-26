@@ -6,7 +6,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.ArtStudio.Alexandra extends HQ.Actors.Alexandra
   @defaultScriptUrl: -> 'retronator_retronator-hq/floor4/artstudio/alexandra.script'
   @defaultScriptId: -> 'Retronator.HQ.ArtStudio.Alexandra'
-
+  
+  @version: -> '2.0.0'
+  
   @initialize()
 
   initializeScript: ->
@@ -229,10 +231,30 @@ class HQ.ArtStudio.Alexandra extends HQ.Actors.Alexandra
       PaintingDigitalHighlightUnique: (complete) =>
         LOI.adventure.currentContext().highlight HQ.ArtStudio.Southeast.HighlightGroups.DigitalUnique
         complete()
-
+  
+      LearnDrawingStudyGuide: (complete) =>
+        studyGuide = window.open 'https://retropolis.city/academy-of-art/study-guide', '_blank'
+        studyGuide.focus()
+        
+        # Make sure opening the page worked.
+        unless studyGuide
+          complete()
+          return
+        
+        # Wait for our window to get focus.
+        $(window).on 'focus.study-guide', =>
+          complete()
+          $(window).off '.study-guide'
+          
   onCommand: (commandResponse) ->
     return unless alexandra = LOI.adventure.getCurrentThing HQ.Actors.Alexandra
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, alexandra]
-      action: => @startScript()
+      action: =>
+        # We need to know if the player has the drawing app.
+        pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+        hasDrawingApp = PAA.PixelPad.Apps.Drawing in pixelPad.os.currentAppsSituation().things()
+        Tracker.nonreactive => @script.ephemeralState 'hasDrawingApp', hasDrawingApp
+        
+        @startScript()

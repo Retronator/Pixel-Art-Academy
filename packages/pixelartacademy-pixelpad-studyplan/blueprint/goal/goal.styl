@@ -1,0 +1,84 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-goal
+  position absolute
+
+  .name-area
+    position absolute
+    padding 5rem 0
+    text-align center
+    study-plan()
+    color atariCyan(4)
+    z-index 6
+    cursor default
+
+    &:hover
+      .goal-ui
+        visibility visible
+
+    &.marked-complete
+      color atariCyan(2)
+
+      .name
+        &:hover
+          color atariCyan(3)
+
+      .goal-ui
+        .marked-complete
+          &:hover
+            .checkmark
+              color atariGreen(2)
+
+          .checkmark
+            visibility visible
+
+    .name
+      display inline
+      position relative
+      cursor pointer
+
+      &:hover
+        color atariCyan(5)
+
+    .goal-ui
+      display flex
+      position absolute
+      top calc(50% - 10.5rem)
+      width 40rem
+      padding 5rem 5rem 5rem 2rem
+      text-align left
+      visibility hidden
+
+      .marked-complete
+        display block
+        position relative
+        cursor pointer
+        padding 2rem 2rem 2rem 0
+
+        &:hover
+          .checkmark
+            color atariGreen(3)
+
+        input
+          display none
+
+        .checkmark
+          position relative
+          top 1rem
+
+      .remove-button
+        display block
+        padding 2rem 2rem 2rem 0
+        border none
+        background none
+        font inherit
+        color inherit
+
+        &:hover
+          color atariRed(2)
+
+  .pixelartacademy-pixelpad-apps-studyplan-blueprint.goal-selected &:not(.selected)
+    visibility hidden
+
+    *
+      visibility hidden !important

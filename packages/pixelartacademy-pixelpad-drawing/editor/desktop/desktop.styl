@@ -17,32 +17,14 @@
       left -145rem
 
     .fatamorgana-interface
-      &.pencil
-        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/pencil.png?0.1.0') 2 0, default
-
-        html.scale-3-or-up &
-          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/pencil.png?0.1.0') 3 0, default
-
-      &.eraser
-        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
-
-        html.scale-3-or-up &
-          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
-
-      &.color-picker
-        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/eyedropper.png?0.1.0') 2 0, default
-
-        html.scale-3-or-up &
-          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/eyedropper.png?0.1.0') 3 0, default
-
-      &.color-fill
-        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/colorfill.png?0.1.0') 5 30, default
-
-        html.scale-3-or-up &
-          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/colorfill.png?0.1.0') 7 45, default
-
       &.move-canvas
         cursor grab
+
+      &.active-tool-engaged
+        .fatamorgana-toolbox
+        .table-item
+        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references
+          pointer-events none
 
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
       &:not(.focused-mode)
@@ -121,6 +103,10 @@
       .fatamorgana-toolbox .tools .tool
         transition-duration 0.2s
 
+    &:not(.drawing-active)
+      .fatamorgana-toolbox
+        pointer-events none
+
     .fatamorgana-interface
       .fatamorgana-area.application
         position initial
@@ -150,12 +136,11 @@
 
         .tool
           position absolute
-          cursor pointer
 
           &::before
           &::after
             content ''
-            z-index 3
+            z-index 13
 
           &::before
             position absolute
@@ -167,7 +152,8 @@
           .tool-button
             absolute-cover-size()
             opacity 0
-            z-index 4
+            z-index 14
+            cursor pointer
 
         .eraser
         .pencil
@@ -224,6 +210,31 @@
           right -86rem
           width 72rem
           height 72rem
+
+        .line
+          position absolute
+          top 0
+          left 62rem
+          width 11rem
+          height 37rem
+
+        .rectangle
+          position absolute
+          top 12rem
+          left 78rem
+          width 31rem
+          height 19rem
+
+        .ellipse
+          position absolute
+          top 12rem
+          left 112rem
+          width 31rem
+          height 19rem
+
+        .arrow
+        .move-canvas
+          display none
 
   .pixelartacademy-pixelpad-apps-drawing-clipboard
     &::before

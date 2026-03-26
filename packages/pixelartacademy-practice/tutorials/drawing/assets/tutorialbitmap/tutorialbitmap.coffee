@@ -1,43 +1,51 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Project.Asset.Bitmap
+  # stepAreas: an array of areas that keep track of step progression
+  #   activeStepIndex: the index of the currently active step
+  #   referenceUrl: optional url of the reference chosen to be drawn in this step area
+
+  # Id used for the source of versioning actions.
   @id: -> 'PixelArtAcademy.Practice.Tutorials.Drawing.Assets.TutorialBitmap'
   
-  # Override to provide a bitmap string describing the bitmap.
-  @bitmapString: -> null
-  @goalBitmapString: -> null
-
-  # Override to provide an image URL to describing the bitmap.
-  @imageUrl: -> null
-  @goalImageUrl: -> null
-
+  @portfolioComponentClass: -> @PortfolioComponent
+  
   # Override to limit the scale at which the bitmap appears in the clipboard.
   @minClipboardScale: -> null
   @maxClipboardScale: -> null
-
-  # Override to define a background color.
-  @backgroundColor: -> null
 
   # Override to define a palette.
   @restrictedPaletteName: -> null
   @customPaletteImageUrl: -> null
   @customPalette: -> null
   
+  # Override if the bitmap should have fixed dimensions.
+  @fixedDimensions: -> null
+  
+  # Override if the asset requires display of markup.
+  @markup: -> false
+
+  # Override to provide bitmap properties that need to be set on the asset.
+  @properties: -> null
+  
   @initialize: ->
     super arguments...
     
-    # Create reference images on the server. They should be exported as database content.
-    if Meteor.isServer and not Meteor.settings.startEmpty
-      if references = @references?()
-        Document.startup =>
-          for reference in references
-            # Allow sending in just the reference URL.
-            imageUrl = reference.image?.url or reference
-      
-            LOI.Assets.Image.documents.insert url: imageUrl unless LOI.Assets.Image.documents.findOne url: imageUrl
+    @initializeReferences()
+    
+  @_isPixelEmpty: (pixel, backgroundColor, palette) ->
+    # We're empty if we don't have a pixel.
+    return true unless pixel
+    
+    # We do have a pixel, so if there is no background color, it can't be empty.
+    return false unless backgroundColor
+    
+    # We have a pixel and a background color, the pixel is empty if it matches it.
+    LOI.Assets.ColorHelper.areAssetColorsEqual pixel, backgroundColor, palette
 
   constructor: ->
     super arguments...
@@ -45,7 +53,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     @tutorial = @project
 
     # Create bitmap automatically if it is not present.
-    Tracker.autorun (computation) =>
+    @_createBitmapAutorun = Tracker.autorun (computation) =>
+      # Note: We need to read the assets from the assetsData property instead of directly from the state since this
+      # needs to work even when assets array is not even yet present in the state. The assetsData method ensures at
+      # least an empty array is sent as soon as the state is ready.
       return unless assets = @tutorial.assetsData()
       computation.stop()
 
@@ -53,86 +64,80 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return if _.find assets, (asset) => asset.id is @id() and asset.bitmapId
 
       # We need to create the asset with the bitmap.
-      Tracker.nonreactive => @constructor.create LOI.adventure.profileId(), @tutorial, @id()
+      Tracker.nonreactive => @constructor.create @tutorial
+    
+    @completed = new AE.LiveComputedField =>
+      # Read completed state from the stored assets field unless we're in the editor.
+      return unless assets = @tutorial.state 'assets'
+      asset = _.find assets, (asset) => asset.id is @id()
+      storedCompleted = asset?.completed
       
+      return storedCompleted unless @_isActiveInEditor(true) and @initialized()
+      
+      stepAreas = @stepAreas()
+      return unless stepAreas.length
+      
+      for stepArea in stepAreas
+        return false unless stepArea.completed()
+      
+      true
+      
+    @resetting = new ReactiveField false
+    
+  destroy: ->
+    super arguments...
+    
+    @_createBitmapAutorun.stop()
+    @_initializingAutorun.stop()
+    @completed.stop()
+
+    @hasExtraPixels?.stop()
+    @hasMissingPixels?.stop()
+    @_completedAutorun?.stop()
+    @_loadResourcesAutorun?.stop()
+    
+    if @stepAreas
+      stepArea.destroy() for stepArea in @stepAreas()
+    
+  initializingConditions: ->
+    # Initialize uncompleted artworks immediately so their starting steps can place any pixels.
+    # Otherwise wait till we've selected the asset as the active one in the editor.
+    return unless @tutorial.state 'assets'
+    return true unless @completed()
+    
+    super arguments...
+    
+  debugResourceLoading: -> false
+
+  _initialize: ->
+    super arguments...
+    
     # Fetch palette.
-    @palette = new ComputedField =>
-      return unless bitmapData = @bitmap()
-      bitmapData.customPalette or LOI.Assets.Palette.documents.findOne bitmapData.palette._id
+    @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
+    
+    # Prepare steps.
+    @stepAreas = new ReactiveField []
 
-    # Load goal pixels.
-    @goalPixels = new ReactiveField null
-    @goalPixelsMap = new ReactiveField null
-
-    if goalBitmapString = @constructor.goalBitmapString()
-      # Load pixels from the bitmapString string.
-      @_setGoalPixels @constructor.createPixelsFromBitmapString goalBitmapString
-
-    else if goalImageUrl = @constructor.goalImageUrl()
-      # Load pixels from the source image.
-      image = new Image
-      image.addEventListener 'load', =>
-        @_setGoalPixels @constructor.createPixelsFromImage image
-      ,
-        false
-
-      # Initiate the loading.
-      image.src = Meteor.absoluteUrl goalImageUrl
-
-    # Create the component that will show the goal state.
-    @engineComponent = new @constructor.EngineComponent
-      spriteData: =>
-        return unless goalPixels = @goalPixels()
-        return unless bitmapId = @bitmapId()
-
-        # Take same overall visual asset data (bounds, palette) as the bitmap used for drawing, but
-        # exclude the layers since we'll be converting the bitmap to a sprite and provide our own pixels.
-        bitmap = LOI.Assets.Bitmap.documents.findOne bitmapId,
-          fields:
-            'layers': false
-            'layerGroups': false
-            'pixelFormat': false
-
-        return unless bitmap
-        
-        spriteData = bitmap.toPlainObject()
-
-        # Replace layers with the goal state.
-        spriteData.layers = [pixels: goalPixels]
-  
-        new LOI.Assets.Sprite spriteData
-
-    @completed = new ComputedField =>
-      # Compare goal layer with current bitmap layer.
-      return unless bitmapLayer = @bitmap()?.layers[0]
-      return unless goalPixelsMap = @goalPixelsMap()
-      return unless @palette()
-
-      backgroundColor = @getBackgroundColor()
-
-      for x in [0...bitmapLayer.width]
-        for y in [0...bitmapLayer.height]
-          pixel = bitmapLayer.getPixel(x, y) or backgroundColor
-          goalPixel = goalPixelsMap[x]?[y] or backgroundColor
-  
-          # Both pixels must either exist or not.
-          return false unless pixel? is goalPixel?
-          
-          # Nothing further to check if the pixel is empty.
-          continue unless pixel and goalPixel
-          
-          # If either of the pixels has a direct color, we need to translate the other one too.
-          if pixel.paletteColor and goalPixel.paletteColor
-            return false unless EJSON.equals pixel.paletteColor, goalPixel.paletteColor
-  
-          else
-            pixelIntegerDirectColor = if pixel.paletteColor then @_paletteToIntegerDirectColor pixel.paletteColor else @_directToIntegerDirectColor pixel.directColor
-            return false unless EJSON.equals pixelIntegerDirectColor, goalPixel.integerDirectColor
-
-      true
-    ,
-      true
-
+    @hasExtraPixels = new AE.LiveComputedField =>
+      for stepArea in @stepAreas()
+        return true if stepArea.hasExtraPixels()
+      
+      false
+      
+    @hasMissingPixels = new AE.LiveComputedField =>
+      for stepArea in @stepAreas()
+        return true if stepArea.hasMissingPixels()
+      
+      false
+      
+    # Create engine components.
+    @hintsEngineComponents =
+      underlying: new @constructor.HintsEngineComponent @, 'drawUnderlyingHints'
+      overlaid: new @constructor.HintsEngineComponent @, 'drawOverlaidHints'
+    
+    if @constructor.markup()
+      @instructionsMarkupEngineComponent = new PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent
+      
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
       # Make sure we have the game state loaded. This can become null when switching between characters.
@@ -158,68 +163,86 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       unless asset.completed is completed
         asset.completed = completed
         updated = true
-
-      @tutorial.state 'assets', assets if updated
-
-  destroy: ->
-    super arguments...
-
-    @completed.stop()
-    @_completedAutorun.stop()
-  
-  getBackgroundColor: ->
-    return unless backgroundColor = @constructor.backgroundColor()
-
-    # If the color is given directly it's a direct color.
-    backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
+        
+      if updated
+        Tracker.nonreactive => @tutorial.state 'assets', assets
+      
+    # Create resources.
+    @resources = @constructor.createResources()
     
-    # Calculate integer values for use in comparisons.
-    backgroundColor.integerDirectColor = if backgroundColor.paletteColor then @_paletteToIntegerDirectColor backgroundColor.paletteColor else @_directToIntegerDirectColor backgroundColor.directColor
+    @resourcesReady = new ReactiveField false
     
-    backgroundColor
-  
-  solve: ->
-    bitmap = @bitmap()
-    goalPixelsMap = @goalPixelsMap()
-    pixels = []
-  
-    for x in [0...bitmap.bounds.width]
-      for y in [0...bitmap.bounds.height]
-        pixels.push goalPixelsMap[x]?[y] or {x, y}
-  
-    # Replace the layer pixels in this bitmap.
-    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @id(), bitmap, [0], pixels
-    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
-  
-  _setGoalPixels: (goalPixels) ->
-    @goalPixels goalPixels
-
-    Tracker.autorun (computation) =>
-      return unless @palette()
+    resourcesReadyRecursive = (resources) =>
+      if @debugResourceLoading()
+        console.log "Resource ready?", resources, resources.ready() if resources.ready
+        
+      return resources.ready() if resources.ready
+      
+      if _.isArray resources
+        for resource in resources
+          return false unless resourcesReadyRecursive resource
+      
+      else if _.isObject resources
+        for name, resource of resources
+          return false unless resourcesReadyRecursive resource
+      
+      true
+      
+    @_loadResourcesAutorun = Tracker.autorun (computation) =>
+      # Wait until all resources have loaded.
+      return unless resourcesReadyRecursive @resources
+      
+      @resourcesReady true
+      
+      # Wait until the declared palette (and default for background colors) have loaded.
+      return if @hasPalette() and not @palette()
+      LOI.Assets.Palette.defaultPalette()
+      
+      # Wait until the bitmap document becomes available.
+      return unless @bitmap()
+      
       computation.stop()
-
-      # We create a map representation for fast retrieval as well.
-      map = {}
-
-      for pixel in goalPixels
-        map[pixel.x] ?= {}
-        map[pixel.x][pixel.y] = pixel
-        pixel.integerDirectColor = if pixel.directColor then @_directToIntegerDirectColor pixel.directColor else @_paletteToIntegerDirectColor pixel.paletteColor
-
-      @goalPixelsMap map
-
-  _paletteToIntegerDirectColor: (paletteColor) ->
-    palette = @palette()
-    @_directToIntegerDirectColor palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
-
-  _directToIntegerDirectColor: (color) ->
-    r: Math.round color.r * 255
-    g: Math.round color.g * 255
-    b: Math.round color.b * 255
-
-  editorDrawComponents: -> [
-    component: @engineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
-  ]
+      
+      # Resources are loaded, create tutorial steps.
+      Tracker.nonreactive => @initializeSteps()
+    
+  getAssetData: ->
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    _.find assetsData, (assetData) => assetData.id is assetId
+    
+  setAssetData: (assetData) ->
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    assetDataIndex = _.findIndex assetsData, (assetData) => assetData.id is assetId
+    assetsData[assetDataIndex] = assetData
+    
+    @tutorial.state 'assets', assetsData
+  
+  addStepArea: (stepArea) ->
+    stepAreas = @stepAreas()
+    stepAreas.push stepArea
+    @stepAreas stepAreas
+    
+    # Return the step area index.
+    stepAreas.length - 1
+  
+  editorDrawComponents: ->
+    return [] unless @initialized()
+    
+    components = [
+      component: @hintsEngineComponents.underlying, before: LOI.Assets.Engine.PixelImage.Bitmap
+    ,
+      component: @hintsEngineComponents.overlaid, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+    ]
+    
+    if @instructionsMarkupEngineComponent
+      components.push
+        component: @instructionsMarkupEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+    
+    components
 
   styleClasses: ->
     classes = [
@@ -230,3 +253,25 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   minClipboardScale: -> @constructor.minClipboardScale?()
   maxClipboardScale: -> @constructor.maxClipboardScale?()
+
+  solve: ->
+    @_afterInitialization =>
+      stepArea.solve() for stepArea in @stepAreas()
+    
+  solveAndComplete: ->
+    @_afterInitialization =>
+      @solve()
+      
+      assets = @tutorial.state 'assets'
+      asset = _.find assets, (asset) => asset.id is @id()
+      asset.completed = true
+      @tutorial.state 'assets', assets
+  
+  hasGoalPixel: (x, y) ->
+    return unless @initialized()
+    
+    # Check if any of the step areas require a pixel at these absolute bitmap coordinates.
+    for stepArea in @stepAreas()
+      return true if stepArea.hasGoalPixel x, y
+    
+    false

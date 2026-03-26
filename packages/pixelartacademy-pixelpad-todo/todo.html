@@ -1,10 +1,11 @@
 <template name="PixelArtAcademy.PixelPad.Systems.ToDo">
   <div class="pixelartacademy-pixelpad-systems-todo system {{taskSelectedClass}}">
-    <div class="notepad {{displayStateClass}}" {{style notepadStyle}}>
+    <div class="notepad {{displayStateClass}} {{openButtonHoveredClass}} {{selectedTaskVisibleClass}}" {{style notepadStyle}}>
+      {{> Render notifications}}
+      <button class="open-button"></button>
       <div class="binding">
         <div class="close-hint">x</div>
         <div class="turned-page"></div>
-        <div class="retro"></div>
       </div>
       <div class="page" {{style pageStyle}}>
         <div class="sideline"></div>
@@ -17,25 +18,32 @@
             </div>
           {{/with}}
           <div class="todo">
-            {{#if showToDo}}
-              <div class="header">
+            <div class="header">
+              {{#if showToDo}}
                 TO DO:
-              </div>
-              <div class="tasks-area">
-                <ul class="displayed-tasks">
-                </ul>
-                <ul class="tasks">
-                  {{#each completedTasks}}
-                    <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
-                  {{/each}}
-                  {{#each activeTasks}}
-                    <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
-                  {{/each}}
-                </ul>
-              </div>
-            {{else}}
-              You're all done!
-            {{/if}}
+              {{else}}
+                {{#if hasAvailableTasks}}
+                  Add new goals in the Study Plan to get more tasks.
+                {{else}}
+                  You're all done!
+                {{/if}}
+              {{/if}}
+            </div>
+            <div class="tasks-area">
+              <ul class="displayed-tasks">
+              </ul>
+              <ul class="tasks">
+                {{#each completedTasks}}
+                  <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+                {{#each displayedActiveTasks}}
+                  <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+                {{#each activeTasksToBeDisplayed}}
+                  <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

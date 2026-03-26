@@ -17,10 +17,11 @@ class LM.Intro.Workbench extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    if projectId = PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
-      @_snake?.destroy()
-      @_snake = new PAA.Pico8.Cartridges.Snake.Project projectId
-
-      things.push @_snake
+    if LM.Intro.Tutorial.Goals.Snake.activeAndAvailable()
+      if projectId = PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
+        @_snake?.destroy()
+        @_snake = new PAA.Pico8.Cartridges.Snake.Project projectId
+  
+        things.push @_snake
 
     things

@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Practice.Pages.Admin.Projects">
+  <h1>Projects</h1>
+  <h2>Local profiles</h2>
+  <ul>
+    {{#each profiles}}
+      <li><button class="load-profile-button">{{displayName}}</button></li>
+    {{/each}}
+  </ul>
+  <h2>Public projects</h2>
+  Enter the name for the project to go public as: <input class="public-project-name" placeholder="public/project/name" />
+  <ul>
+    {{#each projects}}
+      <li>{{_id}}
+        {{#if profileId}}
+          <button class="create-public-copy-button">Create public copy</button>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+</template>

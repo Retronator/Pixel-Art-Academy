@@ -35,16 +35,11 @@ class LM.Intro.ChallengesDrawing extends LOI.Adventure.Scene
 
   things: ->
     things = []
-    DrawingApp = PAA.PixelPad.Apps.Drawing
 
-    # Player needs the Desktop editor selected for the tutorial to display.
-    situation = new LOI.Adventure.Situation location: PAA.Practice.Tutorials.Drawing
-    return things unless basics = _.find situation.things(), (thing) => thing instanceof PAA.Tutorials.Drawing.PixelArtTools.Basics
-    
-    if DrawingApp.state('editorId') is PAA.PixelPad.Apps.Drawing.Editor.Desktop.id()
-      if basics.completed()
+    if LM.Intro.Tutorial.Goals.PixelArtSoftware.activeAndAvailable()
+      if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed()
         @_pixelArtSoftware ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtSoftware
-
+  
         things.push @_pixelArtSoftware
 
     things

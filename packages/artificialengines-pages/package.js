@@ -42,6 +42,8 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/pages');
   api.addComponent('pyramid/interpolation..');
+  api.addFile('pyramid/polygonalchain..')
+  api.addComponent('pyramid/polygonalchain/decimate..');
 
   api.addFile('reality/pages');
 
@@ -70,6 +72,8 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/gases/gases-measurements');
   api.addFile('reality/chemistry/gases/gases-propertiesgraph');
   api.addFile('reality/chemistry/gases/gases-spectrumgraph');
+
+  api.addUnstyledComponent('reality/ammo..');
 
   api.addFile('reality/optics..');
 

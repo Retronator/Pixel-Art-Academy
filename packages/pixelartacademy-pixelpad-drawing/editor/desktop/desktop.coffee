@@ -21,6 +21,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
+      clipboardWithItems: AEc.ValueTypes.Boolean
       clipboardDrag: AEc.ValueTypes.Boolean
       clipboardPan: AEc.ValueTypes.Number
       artworkDrag: AEc.ValueTypes.Boolean
@@ -44,7 +45,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       colorSwatchesPan: AEc.ValueTypes.Number
       pico8Drag: AEc.ValueTypes.Boolean
       pico8Pan: AEc.ValueTypes.Number
+      pixelArtEvaluationDrag: AEc.ValueTypes.Boolean
+      pixelArtEvaluationPan: AEc.ValueTypes.Number
+      readabilityAnalysisDrag: AEc.ValueTypes.Boolean
+      readabilityAnalysisPan: AEc.ValueTypes.Number
       cursorPan: AEc.ValueTypes.Number
+      publicationsDrag: AEc.ValueTypes.Boolean
+      rulerDrag: AEc.ValueTypes.Boolean
+      rulerPan: AEc.ValueTypes.Number
+      rulerActivate: AEc.ValueTypes.Trigger
+      rulerActivateFilled: AEc.ValueTypes.Trigger
   
   @compressPan: (x) ->
     # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.
@@ -97,6 +107,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.TestPaper.id()}": [PAA.Practice.Software.Tools.ToolKeys.Pencil, PAA.Practice.Software.Tools.ToolKeys.Eraser, PAA.Practice.Software.Tools.ToolKeys.Undo, PAA.Practice.Software.Tools.ToolKeys.Redo]
       "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.id()}": PAA.Practice.Software.Tools.ToolKeys.References
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Ruler.id()}": [PAA.Practice.Software.Tools.ToolKeys.Line, PAA.Practice.Software.Tools.ToolKeys.Rectangle, PAA.Practice.Software.Tools.ToolKeys.Ellipse]
 
     for viewId, toolKeys of viewsToolRequirements
       do (viewId, toolKeys) =>
@@ -110,14 +121,43 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @autorun (computation) =>
       pico8Cartridge = @displayedAsset()?.project?.pico8Cartridge?
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
+    
+    @autorun (computation) =>
+      # Show pixel art evaluation if the document has it.
+      documentHasPixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
+      
+      # Show pixel art evaluation if the asset requires it.
+      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation?()
 
+      # TODO: Show pixel art evaluation if the asset allows it and it was unlocked.
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
+
+    @autorun (computation) =>
+      # Show readability analysis if the document has it.
+      documentHasReadabilityAnalysis = @displayedAsset()?.document()?.properties?.readabilityAnalysis
+      
+      # Show readability analysis if the asset requires it.
+      assetRequiresReadabilityAnalysis = @displayedAsset()?.constructor.readabilityAnalysis?()
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis.id(), documentHasReadabilityAnalysis or assetRequiresReadabilityAnalysis
+    
+    @autorun (computation) =>
+      # Show publications if the asset requires it.
+      publications = @displayedAsset()?.constructor.availablePublications?()
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.id(), publications?.length
+      
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
-      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
+      "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{@constructor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{LOI.Assets.SpriteEditor.Tools.Line.id()}": PAA.Practice.Software.Tools.ToolKeys.Line
+      "#{LOI.Assets.SpriteEditor.Tools.Rectangle.id()}": PAA.Practice.Software.Tools.ToolKeys.Rectangle
+      "#{LOI.Assets.SpriteEditor.Tools.Ellipse.id()}": PAA.Practice.Software.Tools.ToolKeys.Ellipse
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -149,8 +189,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       Tracker.nonreactive => applicationAreaData.set "views.#{testPaperViewIndex}.actions", actions
 
     zoomActionRequirements =
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
 
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -162,92 +202,25 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
-  
-    # Invert UI colors for assets with dark backgrounds.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-      return unless fileData = @interface.getActiveFileData()
       
-      invert = false
-  
-      if backgroundColor = @displayedAsset()?.backgroundColor?()
-        invert = backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
+    # Add or remove right-click for eraser.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      rightClick = LOI.settings.controls.rightClick.value()
       
-      Tracker.nonreactive => fileData.set 'invertUIColors', invert
-  
-    # Select the first color if no color is set or the color is not available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-      @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-
-      if paletteColor = @paintHelper.paletteColor()
-        # We have a palette color. Wait until information about the palette is available.
-        return unless palette = @interface.getLoaderForActiveFile()?.palette()
-
-        # Only reset the color if the palette does not contain the current one.
-        setFirst = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
-
-      else
-        # Palette color has not been set yet so we set it automatically.
-        setFirst = true
-
-      if setFirst
-        Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
-
-    # Set zoom levels based on display scale.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      zoomLevels = [100, 200, 300, 400, 600, 800, 1200, 1600]
-      displayScale = LOI.adventure.interface.display.scale()
-
-      if displayScale % 3 is 0
-        zoomLevels = [100 / 3, 200 / 3, zoomLevels...]
-
-      else
-        zoomLevels = [50, zoomLevels...]
-
-      # Extend zoom levels down to clipboard scale if necessary.
-      if displayedAsset = @displayedAsset()
-        if displayedAsset.clipboardComponent.isCreated()
-          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-            minimumScale = clipboardAssetSize.scale * 100
-            while Math.round(minimumScale) < Math.round(zoomLevels[0])
-              zoomLevels.unshift zoomLevels[0] / 2
+      Tracker.nonreactive =>
+        shortcut = {holdButton: AC.Buttons.secondary}
+        interfaceData = @localInterfaceData()
         
-      zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
-      Tracker.nonreactive => zoomLevelsHelper zoomLevels
-
-    # Automatically enter focused mode when PICO-8 is active.
-    @autorun (computation) =>
-      return unless pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8
-
-      @focusedMode pico8.active()
-
-    # Automatically deactivate PICO-8 when exiting focused mode.
-    @autorun (computation) =>
-      return unless pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8
-
-      pico8.active false unless @focusedMode()
-
-    # Deactivate active tool when closing the editor and reactivate it when opening if it's still available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      if @active()
-        # The editor is opened.
-        unless @interface.activeTool()
-          # Reactivate the last tool, but switch to the arrow (default) if the last active tool is still allowed.
-          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.Editor.Tools.Arrow
-          Tracker.nonreactive => @interface.activateTool tool
-
-      else
-        # The editor is being closed.
-        if activeTool = @interface.activeTool()
-          # Remember which tool was used and deactivate it.
-          @_lastActiveTool = activeTool
-          Tracker.nonreactive => @interface.deactivateTool()
+        if rightClick is LOI.Settings.Controls.RightClick.Eraser
+          interfaceData.shortcuts.default.mapping[LOI.Assets.SpriteEditor.Tools.HardEraser.id()].push shortcut
           
+        else
+          _.remove interfaceData.shortcuts.default.mapping[LOI.Assets.SpriteEditor.Tools.HardEraser.id()], (existingShortcut) =>
+            EJSON.equals existingShortcut, shortcut
+        
+        @localInterfaceData interfaceData
+    
     # Listen for tool changes to play activation sounds.
     @_hadStoredTool = false
     
@@ -267,7 +240,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         # If the tool was selected through the toolbox, the sound should come from the tool position.
         toolbox = @interface.getView FM.Toolbox
         if toolbox?.timeOfLastToolActivation()?.getTime() > Date.now() - 100
-          @_prepareUpdatePan()
+          @_prepareUpdatePan activeToolId
           @_updatePan()
           
         else
@@ -275,13 +248,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           @audio.colorFillPan 0
           @audio.pencilPan 0
           @audio.colorPickerPan 0
+          @audio.rulerPan 0
         
         # Trigger tool sound.
         switch activeToolId
           when LOI.Assets.SpriteEditor.Tools.ColorFill.id() then @audio.colorFillActivate()
           when LOI.Assets.SpriteEditor.Tools.ColorPicker.id() then @audio.colorPickerActivate()
-          when LOI.Assets.SpriteEditor.Tools.Eraser.id() then @audio.eraserActivate()
+          when LOI.Assets.SpriteEditor.Tools.HardEraser.id() then @audio.eraserActivate()
           when LOI.Assets.SpriteEditor.Tools.Pencil.id() then @audio.pencilActivate()
+          when LOI.Assets.SpriteEditor.Tools.Line.id() then @audio.rulerActivate()
+          when LOI.Assets.SpriteEditor.Tools.Rectangle.id() then @audio.rulerActivate()
+          when LOI.Assets.SpriteEditor.Tools.Ellipse.id() then @audio.rulerActivate()
         
         @_hadStoredTool = @interface.storedTool()
   
@@ -289,8 +266,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     super arguments...
 
     @autorun =>
-      # Cancel any previous timeout.
+      # Cancel any previous timeouts.
       Meteor.clearTimeout @_activateDrawingTimeout
+      Meteor.clearTimeout @_setEditorInvisibleTimeout
       
       if @active()
         # Add the drawing active class with delay so that the initial transitions still happen slowly.
@@ -298,11 +276,20 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           @drawingActive true
         ,
           1000
+        
+        # Immediately set the editor to be visible.
+        @visible true
 
       else
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
+        # The editor become invisible after the transition.
+        @_setEditorInvisibleTimeout = Meteor.setTimeout =>
+          @visible false
+        ,
+          1000
+        
     # Trigger dragging of present items when the active status changes.
     Tracker.triggerOnDefinedChange =>
       if @active() then true else false
@@ -310,11 +297,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       # Tools come in with a half a second delay when entering.
       toolsDelay = if active then 500 else 0
 
-      @_dragPresentItems active, true, toolsDelay
+      @_dragPresentItems active, not active, true, toolsDelay
       
-    # Trigger dragging of present items (but not the main ones since those don't move) when the focused mode changes.
+    # Trigger dragging of present items (but not the asset since that doesn't move) when the focused mode changes.
     Tracker.triggerOnDefinedChange @focusedMode, (focused) =>
-      @_dragPresentItems not focused, false, 0
+      @_dragPresentItems not focused, true, false, 0
       
     # Update pan for the first time if we're starting directly in the editor.
     @_prepareUpdatePan()
@@ -324,8 +311,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     super arguments...
     
     @app.removeComponent @
+  
+  editorDrawComponents: ->
+    providers = [
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+    ]
     
-  _dragPresentItems: (visible, mainDrag, toolsDelay) ->
+    _.flatten(provider.editorDrawComponents() for provider in providers when provider?)
+    
+  _dragPresentItems: (visible, clipboardWithItems, mainDrag, toolsDelay) ->
     @_prepareUpdatePan()
 
     @_dragTimeLeft = 1
@@ -336,6 +331,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       @audio.artworkDrag visible
       
     @audio.clipboardDrag visible
+    
+    # Specify whether clipboard travels together with other items (it does when focused or when closing the editor).
+    # When traveling separately, the clipboard plays at full volume and lets other items be louder as well.
+    @audio.clipboardWithItems clipboardWithItems
     
     if editorStyleClasses = @displayedAsset()?.editorStyleClasses()
       if editorStyleClasses.indexOf('hidden-tools') > -1
@@ -348,6 +347,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       incrementToolCount = (toolIsAvailable) =>
         toolsCount++ if toolIsAvailable
         toolIsAvailable
+        
+      displayedAsset = @displayedAsset()
       
       @audio.colorFillDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorFill
       @audio.pencilDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Pencil) or @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Eraser
@@ -355,13 +356,26 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       @audio.colorPickerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.ColorPicker) and (not editorStyleClasses or editorStyleClasses.indexOf('hidden-color-picker') is -1)
       @audio.zoomDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
       @audio.colorSwatchesDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
-      @audio.pico8Drag visible if incrementToolCount @displayedAsset()?.project?.pico8Cartridge?
+      @audio.pico8Drag visible if incrementToolCount displayedAsset?.project?.pico8Cartridge?
+      
+      if pixelArtEvaluation = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+        @audio.pixelArtEvaluationDrag visible if incrementToolCount pixelArtEvaluation.paperDisplayed() and not pixelArtEvaluation.active()
+      
+      if readabilityAnalysis = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+        @audio.readabilityAnalysisDrag visible if incrementToolCount readabilityAnalysis.paperDisplayed() and not readabilityAnalysis.active()
+        
+      @audio.publicationsDrag visible if incrementToolCount displayedAsset?.constructor.availablePublications?().length and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications)?.active()
+      @audio.rulerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Line) or @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Rectangle) or @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Ellipse
       
       @audio.toolsCount toolsCount
     ,
       toolsDelay
 
   onBackButton: ->
+    # Ask children components if they want to handle the back button.
+    for backButtonHandler in @allChildComponentsWith 'onBackButton'
+      return true if backButtonHandler.onBackButton()
+    
     # Turn off focused mode on back button.
     return super(arguments...) unless @focusedMode()
     
@@ -376,11 +390,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
+        scrollToZoom: animate: duration: 0.2
+
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
       
     views = [
       type: FM.Menu.id()
       items: [
         PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
       ]
     ,
       type: FM.Toolbox.id()
@@ -399,23 +419,20 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         applicationArea:
           type: FM.MultiView.id()
           views: views
-          
-    shortcuts =
-      currentMappingId: 'default'
+  
+    shortcuts = _.defaultsDeep
       default:
-        name: "Default"
         mapping:
-          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
-          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
-          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
-          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
+          "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": [
+            {key: AC.Keys.e}
+            {holdButton: AC.Buttons.fifth}
+          ]
           
-          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-          "#{LOI.Assets.Editor.Actions.Redo.id()}": commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
+          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+          
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+    ,
+      @getShortcuts()
 
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}
@@ -428,7 +445,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
   draggingClass: ->
     return unless @interface.isCreated()
-    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
 
     references = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.References
     pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8
@@ -463,7 +480,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       
     @_updatePan timeScale
     
-  _prepareUpdatePan: ->
+  _prepareUpdatePan: (activeToolId) ->
     @_clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')[0]
     @_canvas = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas .canvas')[0]
     @_colorFillGlass = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-colorfill .glass')[0]
@@ -474,6 +491,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @_zoom = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-zoom')[0]
     @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
     @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
+    @_pixelArtEvaluation = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation')[0]
+    @_readabilityAnalysis = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis')[0]
+    
+    switch activeToolId
+      when LOI.Assets.SpriteEditor.Tools.Line.id() then $('.fatamorgana-toolbox .line')[0]
+      when LOI.Assets.SpriteEditor.Tools.Rectangle.id() then @_ruler = $('.fatamorgana-toolbox .rectangle')[0]
+      when LOI.Assets.SpriteEditor.Tools.Ellipse.id() then @_ruler = $('.fatamorgana-toolbox .ellipse')[0]
+      else @_ruler = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-ruler')[0]
     
   _updatePan: (timeScale = 1) ->
     adjustPan = (pan) => @constructor.compressPan timeScale * pan
@@ -487,3 +512,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @audio.zoomPan adjustPan AEc.getPanForElement @_zoom if @_zoom
     @audio.colorSwatchesPan adjustPan AEc.getPanForElement @_palette if @_palette
     @audio.pico8Pan adjustPan AEc.getPanForElement @_pico8 if @_pico8
+    @audio.pixelArtEvaluationPan adjustPan AEc.getPanForElement @_pixelArtEvaluation if @_pixelArtEvaluation
+    @audio.readabilityAnalysisPan adjustPan AEc.getPanForElement @_readabilityAnalysis if @_readabilityAnalysis
+    @audio.rulerPan adjustPan AEc.getPanForElement @_ruler if @_ruler

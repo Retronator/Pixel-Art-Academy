@@ -49,13 +49,13 @@ export class DirectCollection
     options = {} unless options
     options.w ?= 1
     collection = @_getCollection()
-    result = blocking(collection, collection.updateMany)(selector, modifier, options)
+    result = blocking(collection, collection.update)(selector, modifier, options)
 
     result = result.result if _.isObject(result) and result.result
 
     return result if options._returnObject or not _.isObject result
 
-    result.n
+    result.modifiedCount
 
   remove: (selector, options) =>
     options = {} unless options
@@ -67,7 +67,7 @@ export class DirectCollection
 
     return result if options._returnObject or not _.isObject result
 
-    result.n
+    result.deletedCount
 
   renameCollection: (newName, options) =>
     options = {} unless options

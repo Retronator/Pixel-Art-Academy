@@ -24,3 +24,25 @@ class PAA.Tutorials.Drawing.Instructions.Desktop extends PAA.PixelPad.Systems.In
   
     @headerHeight = 14
     @animationDuration = 0.35
+  
+  interactableClass: ->
+    editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    'interactable' unless editor?.interface.activeTool()?.isEngaged()
+  
+  focusedModeClass: ->
+    # TODO: Only apply focused mode when manually engaged. Right now entering the pixel art evaluation sheet triggers focused mode at which point we need to see instructions.
+    # editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    # 'focused-mode' if editor?.focusedMode()
+    
+  instructionsStyle: ->
+    switch @displayState()
+      when @constructor.DisplayState.Open
+        value = "calc(-#{@contentHeight()}px - #{@headerHeight}rem)"
+      
+      when @constructor.DisplayState.Closed
+        value = "-#{@headerHeight}rem"
+      
+      else
+        value = "#{@hideTop}rem"
+    
+    "#{if @displaySide() is @constructor.DisplaySide.Top then 'bottom' else 'top'}": value

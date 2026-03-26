@@ -3,11 +3,17 @@ AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+_trayContentHeight = 112
+_trayShadeSize = 11
+_trayRampWidth = 15
+_trayCanvasTopMargin = -2
+_trayCanvasLeftMargin = -1
+_trayRampBottomMargin = 6
+_trayRampRightMargin = 3
+
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.SpriteEditor.Palette
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette'
   @register @id()
-  
-  @template: -> @constructor.id()
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
@@ -17,6 +23,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
       
   onCreated: ->
     super arguments...
+    
+    @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
     
     @asset = new ComputedField =>
       @interface.getLoaderForActiveFile()?.asset()
@@ -31,15 +39,38 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     @palette = new ComputedField =>
       return unless palette = paletteField()
 
-      # Go over all shades of all ramps.
+      index = 0
+      
       for ramp in palette.ramps
+        # Randomize palette for the tray.
         ramp.blendOffset = Math.random()
 
         for shade in ramp.shades
+          shade.rampShadesLength = ramp.shades.length
           shade.offset = _.random 0, 2
+          shade.symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[index]
+          index++
 
       palette
+    
+    # Reset display of all hints.
+    @autorun (computation) =>
+      return if @desktop.active()
+      return unless asset = @desktop.activeAsset()
+      return unless asset instanceof PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+      return unless asset.initialized()
+      asset.hintsEngineComponents.overlaid.displayAllColorErrors false
 
+    @colorHelp = new @constructor.ColorHelp @
+    
+  onBackButton: ->
+    return unless @colorHelp.visible()
+    
+    @colorHelp.visible false
+    
+    # Inform that we've handled the back button.
+    true
+    
   trayClass: ->
     'tray' if @customPalette()
 
@@ -51,39 +82,51 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
     _.kebabCase palette.name
 
+  forceSymbolsVisibleClass: ->
+    'force-symbols-visible' if @colorHelp.visible()
+    
+  paletteStyle: ->
+    # We only need to style the custom palette tray.
+    return unless @customPalette()
+    
+    # We only need to show the tray when drawing is active and we're not focused.
+    return unless @desktop.drawingActive() and not @desktop.focusedMode()
+    
+    left: "calc(100% - #{@_trayContentWidth() + 15}rem)"
+    
   colorsStyle: ->
     # We only need to style the custom palette tray.
     return unless @customPalette()
+
+    width: "#{@_trayContentWidth()}rem"
+  
+  _trayContentWidth: ->
     return unless palette = @palette()
 
     # Calculate the width of the palette.
-    height = 120
-    shadeSize = 11
-    rampWidth = 15
-    rampBottomMargin = 6
-    rampRightMargin = 3
-
-    width = rampWidth
+    width = _trayRampWidth
     columnHeight = 0
 
-    for ramp in palette.ramps
-      rampHeight = ramp.shades.length * shadeSize
-      columnHeight += rampHeight + rampBottomMargin
+    for ramp in palette.ramps when ramp.shades.length
+      verticalSeparation = @constructor.TrayRamp.getVerticalShadeSeparation ramp.shades.length
+      rampHeight = (ramp.shades.length - 1) * verticalSeparation + _trayShadeSize
+      columnHeight += rampHeight + _trayRampBottomMargin
 
-      if columnHeight > height
+      if columnHeight > _trayContentHeight
         # We overflow into the new line.
-        width += rampRightMargin + rampWidth
-        columnHeight = rampHeight + rampBottomMargin
+        width += _trayRampRightMargin + _trayRampWidth
+        columnHeight = rampHeight + _trayRampBottomMargin
 
     # Tray should be at least 32 wide.
     width = Math.max 32, width
-
-    width: "#{width}rem"
 
   shadeStyle: ->
     return unless @customPalette()
     shade = @currentData()
 
+    verticalSeparation = @constructor.TrayRamp.getVerticalShadeSeparation shade.rampShadesLength
+
+    height: "#{verticalSeparation + 2}rem"
     marginLeft: "#{shade.offset}rem"
 
   colorStyle: ->
@@ -92,23 +135,50 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
     super arguments...
   
-  onClickColor: ->
+  showColorSymbol: ->
+    PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.hintStyle() is PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.HintStyle.Symbols
+  
+  colorSymbolStyle: ->
+    shade = @currentData()
+    
+    color: "##{shade.accentColor.getHexString()}"
+  
+  showColorHelp: ->
+    asset = @interface.getEditorForActiveFile().desktop.activeAsset()
+    asset instanceof PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+  
+  events: ->
+    super(arguments...).concat
+      'click .color-help-button': @onClickColorHelpButton
+  
+  onClickColor: (event) ->
     super arguments...
     
     @audio.changeColor()
     
+  onClickColorHelpButton: (event) ->
+    @colorHelp.visible not @colorHelp.visible()
+    
   class @TrayRamp extends AM.Component
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp'
+
+    @getVerticalShadeSeparation: (numberOfShades) ->
+      # Fit shades into the tray content height.
+      return _trayShadeSize if numberOfShades is 1
+      
+      Math.min _trayShadeSize, Math.floor (_trayContentHeight - _trayRampBottomMargin - _trayShadeSize) / (numberOfShades - 1)
 
     onRendered: ->
       super arguments...
 
       @autorun (computation) =>
         ramp = @data()
+        
+        verticalSeparation = @constructor.getVerticalShadeSeparation ramp.shades.length
 
         canvas = @$('.canvas')[0]
-        canvas.width = 15
-        canvas.height = ramp.shades.length * 11 + 2
+        canvas.width = _trayRampWidth - _trayCanvasLeftMargin
+        canvas.height = (ramp.shades.length - 1) * verticalSeparation + _trayShadeSize - _trayCanvasTopMargin
 
         context = canvas.getContext '2d', willReadFrequently: true
         imageData = context.getImageData 0, 0, canvas.width, canvas.height
@@ -129,8 +199,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
             for shade, index in ramp.shades
               center =
-                x: shade.offset + 6
-                y: index * 11 + 6
+                x: shade.offset + 7
+                y: index * verticalSeparation + 6
 
               distanceToCenter = Math.sqrt Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2)
               continue if distanceToCenter > 10
@@ -172,4 +242,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
           previousRowTotalPower = rowTotalPower
 
+        # Add cast shadow.
+        for y in [0...canvas.height]
+          for x in [0...canvas.width - 1]
+            pixelOffset = (x + y * canvas.width) * 4
+            
+            continue unless imageData.data[pixelOffset + 7] and not imageData.data[pixelOffset + 3]
+            
+            neighborR = Math.max 0, imageData.data[pixelOffset + 4] - 150
+            neighborG = Math.max 0, imageData.data[pixelOffset + 5] - 150
+            neighborB = Math.max 0, imageData.data[pixelOffset + 6] - 150
+            neighborValue = Math.max neighborR, Math.max neighborG, neighborB
+            
+            imageData.data[pixelOffset] = 178
+            imageData.data[pixelOffset + 1] = 178
+            imageData.data[pixelOffset + 2] = 178
+            imageData.data[pixelOffset + 3] = 255 - neighborValue * 2
+            
         context.putImageData imageData, 0, 0

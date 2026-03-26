@@ -4,7 +4,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ImportArtwork extends PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.FormAsset
+class PAA.PixelPad.Apps.Drawing.Portfolio.ImportArtwork extends PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Asset
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ImportArtwork'
   
   @type: -> @Types.None

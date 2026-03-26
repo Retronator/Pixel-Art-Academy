@@ -1,0 +1,28 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Music.Drawer">
+  <div class="pixelartacademy-pixelpad-apps-music-drawer">
+    <div class="drawer {{openedClass}}">
+      <div class="contents">
+        <ul class="tapes">
+          {{#each tapes}}
+            <li class="tape {{tapeSelectedClass}} {{styleClass}}">
+              <div class="case">
+                <div class="title">{{artist}}</div>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="shadows">
+        <div class="tape-shadows">
+          {{#each tapes}}
+            <div class="tape-shadow {{tapeHoveredClass}} {{tapeSelectedClass}}">
+              <div class="top"></div>
+              <div class="bottom"></div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="table-top"></div>
+  </div>
+</template>

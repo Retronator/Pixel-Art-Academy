@@ -13,7 +13,7 @@ Package.describe({
 Npm.depends({
   'delaunator': '3.0.2',
   'barycentric': '1.0.1',
-  'canvas': '2.6.1',
+  'canvas': '2.11.2',
   'pngjs': '2.3.0',
   's3-streaming-upload': '0.2.3',
   'fast-png': '4.0.1',
@@ -83,13 +83,15 @@ Package.onUse(function(api) {
   api.addFile('state/ephemeralstateobject');
   api.addFile('state/localsavegames');
 
-  api.addServerFile('state/migrations/0000-immersionrevamp');
-  api.addServerFile('state/migrations/0001-renamecollection');
-  api.addServerFile('state/migrations/0002-gametime');
-  api.addServerFile('state/migrations/0003-addinggamestatefields');
-  api.addServerFile('state/migrations/0004-admissionapplication');
-  api.addServerFile('state/migrations/0005-tutorialspritesremove');
-  api.addServerFile('state/migrations/0006-recordfirststudygrouphangout');
+  api.addFile('state/migrations/0000-immersionrevamp');
+  api.addFile('state/migrations/0001-renamecollection');
+  api.addFile('state/migrations/0002-gametime');
+  api.addFile('state/migrations/0003-addinggamestatefields');
+  api.addFile('state/migrations/0004-admissionapplication');
+  api.addFile('state/migrations/0005-tutorialspritesremove');
+  api.addFile('state/migrations/0006-recordfirststudygrouphangout');
+  api.addFile('state/migrations/0007-profileids');
+  api.addFile('state/migrations/0008-activeprojectid');
 
   // Engine
 
@@ -190,19 +192,18 @@ Package.onUse(function(api) {
   api.addFile('character/methods');
   api.addServerFile('character/methods-server-renderavatartextures');
   api.addServerFile('character/subscriptions');
-  api.addServerFile('character/migrations/0000-renamecollection');
-  api.addServerFile('character/migrations/0001-userpublicname');
-  api.addServerFile('character/migrations/0002-ownername');
-  api.addServerFile('character/migrations/0003-migrateavatarfields');
-  api.addServerFile('character/migrations/0004-displayname');
-  api.addServerFile('character/migrations/0005-usercharactersupdate');
-  api.addServerFile('character/migrations/0006-linkpremadecharacters');
-  api.addServerFile('character/migrations/0007-moveneckfield');
-  api.addServerFile('character/migrations/0008-mergehairfields');
-  api.addServerFile('character/migrations/0009-linkshapetemplates');
-  api.addServerFile('character/migrations/0010-designapprovedrevoked');
-  api.addServerFile('character/migrations/0011-usercharactersupdate');
-  api.addClientFile('character/spacebars');
+  api.addFile('character/migrations/0000-renamecollection');
+  api.addFile('character/migrations/0001-userpublicname');
+  api.addFile('character/migrations/0002-ownername');
+  api.addFile('character/migrations/0003-migrateavatarfields');
+  api.addFile('character/migrations/0004-displayname');
+  api.addFile('character/migrations/0005-usercharactersupdate');
+  api.addFile('character/migrations/0006-linkpremadecharacters');
+  api.addFile('character/migrations/0007-moveneckfield');
+  api.addFile('character/migrations/0008-mergehairfields');
+  api.addFile('character/migrations/0009-linkshapetemplates');
+  api.addFile('character/migrations/0010-designapprovedrevoked');
+  api.addFile('character/migrations/0011-usercharactersupdate');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');
 
@@ -215,10 +216,10 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/methods-server');
   api.addServerFile('character/part/subscriptions');
 
-  api.addServerFile('character/part/migrations/0000-embeddedtranslations');
-  api.addServerFile('character/part/migrations/0001-spriteids');
-  api.addServerFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
-  api.addServerFile('character/part/migrations/0003-articlewitharticlepartshapes');
+  api.addFile('character/part/migrations/0000-embeddedtranslations');
+  api.addFile('character/part/migrations/0001-spriteids');
+  api.addFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
+  api.addFile('character/part/migrations/0003-articlewitharticlepartshapes');
 
   api.addFile('character/part/property');
   api.addServerFile('character/part/property-server-databasecontent');
@@ -328,7 +329,7 @@ Package.onUse(function(api) {
   api.addFile('character/premadecharacter/methods');
   api.addServerFile('character/premadecharacter/subscriptions');
 
-  api.addServerFile('character/premadecharacter/migrations/0000-renamecollection');
+  api.addFile('character/premadecharacter/migrations/0000-renamecollection');
 
   // Parser
 
@@ -351,6 +352,7 @@ Package.onUse(function(api) {
   // Adventure
 
   api.addComponent('adventure..');
+  api.addFile('adventure/adventure-audio');
   api.addFile('adventure/adventure-routing');
   api.addFile('adventure/adventure-state');
   api.addFile('adventure/adventure-memories');
@@ -367,6 +369,8 @@ Package.onUse(function(api) {
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFile('adventure/adventure-initialization');
+
+  api.addClientFile('adventure/spacebars');
 
   // Situations
 
@@ -460,11 +464,11 @@ Package.onUse(function(api) {
   api.addFile('memory/methods');
   api.addServerFile('memory/methods-server');
   api.addServerFile('memory/subscriptions');
-  api.addServerFile('memory/migrations/0000-renamecollection');
-  api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
-  api.addServerFile('memory/migrations/0002-renamecollection');
-  api.addServerFile('memory/migrations/0003-changetomemories');
-  api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
+  api.addFile('memory/migrations/0000-renamecollection');
+  api.addFile('memory/migrations/0001-linesreversereferencefieldsupdate');
+  api.addFile('memory/migrations/0002-renamecollection');
+  api.addFile('memory/migrations/0003-changetomemories');
+  api.addFile('memory/migrations/0004-actionsreversereferencefieldadded');
 
   api.addFile('memory/context');
   api.addFile('memory/contexts..');
@@ -477,11 +481,11 @@ Package.onUse(function(api) {
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');
   api.addServerFile('memory/action/subscriptions');
-  api.addServerFile('memory/action/migrations/0000-renamecollection');
-  api.addServerFile('memory/action/migrations/0001-characterreferencefieldsupdate');
-  api.addServerFile('memory/action/migrations/0002-removecharacternamefield');
-  api.addServerFile('memory/action/migrations/0003-renamecollection');
-  api.addServerFile('memory/action/migrations/0004-changetomemories');
+  api.addFile('memory/action/migrations/0000-renamecollection');
+  api.addFile('memory/action/migrations/0001-characterreferencefieldsupdate');
+  api.addFile('memory/action/migrations/0002-removecharacternamefield');
+  api.addFile('memory/action/migrations/0003-renamecollection');
+  api.addFile('memory/action/migrations/0004-changetomemories');
 
   api.addFile('memory/actions..');
   api.addFile('memory/actions/move');
@@ -600,4 +604,9 @@ Package.onUse(function(api) {
   api.addFile('engine/world/navigator..');
   api.addFile('engine/world/navigator/spaceoccupation..');
   api.addFile('engine/world/navigator/spaceoccupation/placeholder');
+
+  // Music
+
+  api.addFile('music..');
+  api.addFile('music/playbackchannel');
 });

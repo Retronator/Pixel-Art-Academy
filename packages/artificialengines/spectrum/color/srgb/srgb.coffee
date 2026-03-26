@@ -1,6 +1,9 @@
 AS = Artificial.Spectrum
 AR = Artificial.Reality
 
+_xyz = new THREE.Vector3
+_rgb = new THREE.Color
+
 class AS.Color.SRGB
   @XYZtoRGBTransform = new THREE.Matrix3().set(
     3.2406, -1.5372, -0.4986,
@@ -23,47 +26,54 @@ class AS.Color.SRGB
 
   # XYZ -> RGB
 
-  @getNormalizedXYZForXYZ: (xyz) ->
-    new THREE.Vector3().copy(xyz).multiplyScalar(@xyzNormalizationFactor)
+  @getNormalizedXYZForXYZ: (xyz, target = new THREE.Vector3) ->
+    target.copy(xyz).multiplyScalar(@xyzNormalizationFactor)
 
-  @getNormalizedRGBForXYZ: (xyz) ->
-    @getRGBForXYZ @getNormalizedXYZForXYZ xyz
+  @getNormalizedRGBForXYZ: (xyz, target = new THREE.Color) ->
+    @getNormalizedXYZForXYZ xyz, _xyz
+    @getRGBForXYZ _xyz, target
 
-  @getRGBForXYZ: (xyz) ->
+  @getRGBForXYZ: (xyz, target = new THREE.Color) ->
     rgbVector = new THREE.Vector3().copy(xyz).applyMatrix3 @XYZtoRGBTransform
-
-    r: rgbVector.x
-    g: rgbVector.y
-    b: rgbVector.z
+    
+    target.r = rgbVector.x
+    target.g = rgbVector.y
+    target.b = rgbVector.z
+    
+    target
 
   # RGB -> XYZ
 
-  @getXYZForNormalizedRGB: (linearRGB) ->
-    @getXYZForNormalizedXYZ @getXYZForRGB linearRGB
+  @getXYZForNormalizedRGB: (linearRGB, target = new THREE.Vector3) ->
+    @getXYZForRGB linearRGB, _xyz
+    @getXYZForNormalizedXYZ _xyz, target
 
-  @getXYZForRGB: (linearRGB) ->
-    new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@RGBToXYZTransform)
+  @getXYZForRGB: (linearRGB, target = new THREE.Vector3) ->
+    target.set(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@RGBToXYZTransform)
 
-  @getXYZForNormalizedXYZ: (xyz) ->
-    new THREE.Vector3().copy(xyz).multiplyScalar(1 / @xyzNormalizationFactor)
+  @getXYZForNormalizedXYZ: (xyz, target = new THREE.Vector3) ->
+   target.copy(xyz).multiplyScalar(1 / @xyzNormalizationFactor)
 
   # Gamma
 
-  @getGammaRGBForNormalizedRGB: (linearRGB) ->
-    r: @gamma linearRGB.r
-    g: @gamma linearRGB.g
-    b: @gamma linearRGB.b
+  @getGammaRGBForNormalizedRGB: (linearRGB, target = new THREE.Color) ->
+    target.r = @gamma linearRGB.r
+    target.g = @gamma linearRGB.g
+    target.b = @gamma linearRGB.b
+    target
 
-  @getGammaRGBForXYZ: (xyz) ->
-    @getGammaRGBForNormalizedRGB @getNormalizedRGBForXYZ xyz
+  @getGammaRGBForXYZ: (xyz, target = new THREE.Color) ->
+    @getNormalizedRGBForXYZ xyz, _rgb
+    @getGammaRGBForNormalizedRGB _rgb, target
 
   @gamma: (value) ->
     if value <= 0.0031308 then 323 * value / 25 else (211 * Math.pow(value, 5 / 12) - 11) / 200
 
-  @getNormalizedRGBForGammaRGB: (rgb) ->
-    r: @gammaInverse rgb.r
-    g: @gammaInverse rgb.g
-    b: @gammaInverse rgb.b
+  @getNormalizedRGBForGammaRGB: (rgb, target = new THREE.Color) ->
+    target.r = @gammaInverse rgb.r
+    target.g = @gammaInverse rgb.g
+    target.b = @gammaInverse rgb.b
+    target
 
   @gammaInverse: (value) ->
     if value <= 0.04045 then 25 * value / 323 else Math.pow((200 * value + 11) / 211, 12 / 5)

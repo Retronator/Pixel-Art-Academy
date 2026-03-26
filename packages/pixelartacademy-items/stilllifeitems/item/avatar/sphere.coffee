@@ -10,7 +10,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Sphere extends PAA.Items.StillLifeIte
   collisionShapeMargin: -> null
 
   createGeometry: ->
-    new THREE.SphereBufferGeometry @avatar.properties.radius, 32, 32
+    new THREE.SphereGeometry @avatar.properties.radius, 32, 32
 
   createCollisionShape: ->
     new Ammo.btSphereShape @avatar.properties.radius

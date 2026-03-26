@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');
   api.use('retronator:pixelartacademy-learning');
+  api.use('retronator:pixelartacademy-pixelpad-notifications');
 
   api.export('PixelArtAcademy');
 

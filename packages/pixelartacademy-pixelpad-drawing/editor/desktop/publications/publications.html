@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Publications">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-publications table-item {{activeClass}}">
+    <ul class="publications">
+      {{#each publications}}
+        <li class="publication" {{style publicationStyle}}>
+          {{> Render this.component}}
+        </li>
+      {{/each}}
+    </ul>
+    {{#if showPublicationSelectButtons}}
+      {{#if canMoveLeft}}
+        <button class="publication-select-button previous-publication-button" {{style publicationSelectButtonStyle}}></button>
+      {{/if}}
+      {{#if canMoveRight}}
+        <button class="publication-select-button next-publication-button" {{style publicationSelectButtonStyle}}></button>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

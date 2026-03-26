@@ -6,24 +6,24 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @create: (profileId, tutorial, assetId) ->
-    @_createBitmapData(profileId)
+  @create: (tutorial) ->
+    @_createBitmapData()
       .then((bitmapData) => @_setBitmapDataReferences bitmapData)
       .then((bitmapData) => @_setBitmapDataPalette bitmapData)
       .then((bitmapData) => @_insertBitmap bitmapData)
-      .then((bitmapId) => @_resetAndAddToTutorial tutorial, assetId, bitmapId)
+      .then((bitmapId) => @_resetAndAddToTutorial tutorial, bitmapId)
       .catch (error) =>
         console.error error
         throw new AE.InvalidOperationException "Could not create tutorial bitmap."
     
-  @_createBitmapData: (profileId) ->
+  @_createBitmapData: ->
     new Promise (resolve, reject) =>
       size = @fixedDimensions()
       creationTime = new Date()
     
       resolve
         versioned: true
-        profileId: profileId
+        profileId: LOI.adventure.profileId()
         creationTime: creationTime
         lastEditTime: creationTime
         bounds:
@@ -35,6 +35,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         name: @displayName()
         pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor', 'directColor'
         layers: []
+        properties: @properties()
       
   @_setBitmapDataReferences: (bitmapData) ->
     new Promise (resolve, reject) =>
@@ -48,14 +49,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         # Allow sending in just the reference URL.
         imageUrl = if _.isString reference then reference else reference.image.url
       
-        # Find the ID of the image with this URL.
-        imagePromises.push new Promise (resolve, reject) =>
-          Tracker.autorun (computation) ->
-            LOI.Assets.Image.forUrl.subscribeContent imageUrl
-            return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
-            computation.stop()
-            
-            resolve image
+        do (imageUrl) =>
+          # Find the ID of the image with this URL.
+          imagePromises.push new Promise (resolve, reject) =>
+            Tracker.autorun (computation) ->
+              LOI.Assets.Image.forUrl.subscribe imageUrl
+              LOI.Assets.Image.forUrl.subscribeContent imageUrl
+              return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
+              computation.stop()
+              
+              resolve image
           
       Promise.all(imagePromises).then (imageResults) =>
         bitmapData.references = []
@@ -65,10 +68,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           # Allow sending in just the reference URL.
           reference = {} if _.isString reference
           
-          bitmapData.references.push _.defaults
+          bitmapData.references.push
             image: _.pick imageResults[index], ['_id', 'url']
-          ,
-            reference
   
         resolve bitmapData
 
@@ -138,6 +139,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       else if customPalette = @customPalette()
         bitmapData.customPalette = customPalette
         resolve bitmapData
+        
+      else
+        resolve bitmapData
 
   @_insertBitmap: (bitmapData) ->
     new Promise (resolve, reject) =>
@@ -147,18 +151,26 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
         computation.stop()
         
-        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
-        AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
+        @_initializeLayers bitmap
         
         resolve bitmapId
 
-  @_resetAndAddToTutorial: (tutorial, assetId, bitmapId) ->
-    @reset assetId, bitmapId
+  @_initializeLayers: (bitmap) ->
+    addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
+    AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
+    AMu.Document.Versioning.clearHistory bitmap
   
+  @_resetAndAddToTutorial: (tutorial, bitmapId) ->
+    # Reset the asset instance.
+    assetId = @id()
+    asset = tutorial.getAsset @id()
+    asset.reset()
+  
+    # Add to tutorial.
     assets = tutorial.assetsData()
     
-    unless tutorialBitmap = _.find assets, (asset) => asset.id is @id()
-      tutorialBitmap = id: @id()
+    unless tutorialBitmap = _.find assets, (asset) => asset.id is assetId
+      tutorialBitmap = id: assetId
       assets.push tutorialBitmap
 
     _.extend tutorialBitmap,

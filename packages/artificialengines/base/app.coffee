@@ -18,7 +18,7 @@ class AB.App extends AM.Component
 
     if Meteor.isClient
       AM.Window.initialize()
-      AC.Keyboard.initialize()
+      AC.initialize()
       
     @components = {}
 

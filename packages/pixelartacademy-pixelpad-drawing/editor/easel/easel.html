@@ -1,0 +1,31 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-easel pixelartacademy-pixelpad-apps-drawing-editor {{drawingActiveClass}} {{displayModeClass}} {{displayedAsset.editorStyleClasses}} {{draggingClass}} {{resizingDirectionClass}}">
+    {{> Render interface}}
+
+    {{#if active}}
+      <style>
+        .pixelartacademy-pixelpad-os-root::before {
+          opacity: 0;
+          transition: opacity 0s;
+          pointer-events: none;
+        }
+      </style>
+    {{else}}
+      <style>
+        .pixelartacademy-pixelpad-os-root::before {
+          opacity: 1;
+          transition: opacity 0.2s 1s;
+        }
+      </style>
+    {{/if}}
+
+    {{#if drawingActive}}
+      <style>
+        html.adventure .build-version {
+          opacity: 0 !important;
+          pointer-events: none;
+        }
+      </style>
+    {{/if}}
+  </div>
+</template>

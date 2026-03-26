@@ -233,7 +233,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
     up = new THREE.Vector3 0, 1, 0
 
     # Find the angle from the center.
-    angleSnap = THREE.Math.degToRad angleSnapDegrees
+    angleSnap = THREE.MathUtils.degToRad angleSnapDegrees
     snapToAngle = (angle) -> angle = Math.round(angle / angleSnap) * angleSnap
 
     verticalAngle = snapToAngle normal.angleTo backward

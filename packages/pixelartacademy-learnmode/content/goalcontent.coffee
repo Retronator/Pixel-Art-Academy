@@ -45,6 +45,8 @@ class LM.Content.GoalContent extends LM.Content
     @type: -> 'TaskContent'
   
     @displayName: -> null # The name will match the task's directive.
+    
+    @tags: -> if @taskClass.completable() then [] else [LM.Content.Tags.Future]
   
     constructor: ->
       super arguments...
@@ -53,7 +55,7 @@ class LM.Content.GoalContent extends LM.Content
         content: @
         taskClass: @constructor.taskClass
     
-    status: -> LM.Content.Status.Unlocked
+    status: -> if @constructor.taskClass.completable() then LM.Content.Status.Unlocked else LM.Content.Status.Unavailable
   
     _task: -> PAA.Learning.Task.getAdventureInstanceForId @constructor.taskClass.id()
   

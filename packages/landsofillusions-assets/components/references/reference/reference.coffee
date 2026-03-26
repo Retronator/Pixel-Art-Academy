@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.References.Reference extends AM.Component
@@ -81,9 +82,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     height: imageSize.height * scale
 
   endDrag: ->
+    @startUpdate()
+    
     @setPosition @draggingPosition()
     @setDisplayed @references.draggingDisplayed()
     @reorderToTop() unless @currentOrder() is @references.highestOrder()
+    
+    @endUpdate()
 
     @draggingPosition null
 
@@ -115,8 +120,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       position = @currentPosition()
 
-    left: "#{position.x}rem"
-    top: "#{position.y}rem"
+    left: "#{position.x - displaySize.width / 2}rem"
+    top: "#{position.y - displaySize.height / 2}rem"
     width: "#{displaySize.width}rem"
     height: "#{displaySize.height}rem"
 
@@ -143,6 +148,17 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   currentDisplayMode: ->
     return unless reference = @data()
     _.propertyValue(reference, 'displayMode') or LOI.Assets.VisualAsset.ReferenceDisplayModes.FloatingInside
+    
+  startUpdate: ->
+    return unless @references.assetClass().versionedDocuments
+    return if @_updateAction
+    
+    @_updateAction = new AMu.Document.Versioning.Action @references.constructor.id()
+    
+  endUpdate: ->
+    assetData = Tracker.nonreactive => @references.options.assetData()
+    assetData.executeAction @_updateAction
+    @_updateAction = null
 
   setPosition: (position) ->
     @_setReferenceProperty 'position', position
@@ -162,8 +178,14 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     if reference.image
       if @references.assetClass().versionedDocuments
         assetData = Tracker.nonreactive => @references.options.assetData()
-        assetData.executeAction new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+        action = new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
           "#{name}": value
+          
+        if @_updateAction
+          @_updateAction.append action
+          
+        else
+          assetData.executeAction action
 
       else
         LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.assetClassName(), @references.assetId(), reference.image._id, value
@@ -171,13 +193,32 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       reference[name] value
 
+  changeDisplayOptions: (value, appendToLastAction) ->
+    return unless reference = @data()
+    
+    assetData = Tracker.nonreactive => @references.options.assetData()
+    action = new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+      displayOptions: value
+    
+    if @_updateAction
+      @_updateAction.append action
+    
+    else
+      assetData.executeAction action, appendToLastAction
+    
   reorderToTop: ->
     return unless reference = @data()
 
     if reference.image
       if @references.assetClass().versionedDocuments
         assetData = Tracker.nonreactive => @references.options.assetData()
-        assetData.executeAction new LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop @references.constructor.id(), assetData, reference.image._id
+        action = new LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop @references.constructor.id(), assetData, reference.image._id
+        
+        if @_updateAction
+          @_updateAction.append action
+        
+        else
+          assetData.executeAction action
         
       else
         LOI.Assets.VisualAsset.reorderReferenceToTop @references.assetClassName(), @references.assetId(), reference.image._id
@@ -192,16 +233,16 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   events: ->
     super(arguments...).concat
       'load .image': @onLoadImage
-      'mousedown': @onMouseDown
-      'mousemove': @onMouseMove
-      'mouseleave': @onMouseLeave
+      'pointerdown': @onPointerDown
+      'pointermove': @onPointerMove
+      'pointerleave': @onPointerLeave
 
   onLoadImage: (event) ->
     @imageSize
       width: event.target.width
       height: event.target.height
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     return unless event.which is 1
 
     # Prevent browser select/dragging behavior
@@ -219,7 +260,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
         referenceCenter:
           x: offset.left + $reference.outerWidth() / 2
           y: offset.top + $reference.outerHeight() / 2
-        mouseCoordinate:
+        pointerCoordinate:
           x: event.clientX
           y: event.clientY
     else
@@ -230,17 +271,18 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       @references.startDrag
         reference: @
         referencePosition: @currentPosition()
-        mouseCoordinate:
+        pointerCoordinate:
           x: event.clientX
           y: event.clientY
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     return if @resizingScale()?
+    return unless firstNode = @firstNode()
 
     draggingScale = @references.draggingScale()
     displayScale = @display.scale() * draggingScale
 
-    offset = $(@firstNode()).offset()
+    offset = $(firstNode).offset()
 
     x = (event.clientX - offset.left) / displayScale
     y = (event.clientY - offset.top) / displayScale
@@ -257,7 +299,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     @resizingDirection direction
 
-  onMouseLeave: (event) ->
+  onPointerLeave: (event) ->
     return if @resizingScale()?
 
     @resizingDirection null

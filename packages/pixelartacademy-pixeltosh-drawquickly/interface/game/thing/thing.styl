@@ -1,0 +1,40 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-drawquickly-interface-game-thing
+  absolute-cover()
+  background-image url("/pixelartacademy/pixeltosh/programs/drawquickly/thing.png")
+
+  .title
+    position absolute
+    left 0
+    right 0
+    top 25rem
+    text-align center
+    chicago-mini()
+    text-transform uppercase
+
+  .things
+    display flex
+    list-style none
+    position absolute
+    inset 40rem 10rem 30rem
+    padding 0
+    margin 0
+    justify-content center
+    flex-wrap wrap
+    align-content center
+
+    .thing-button
+      border none
+      background none
+      padding 2rem 4rem
+      margin 2rem 2rem 1rem
+      geneva-mini()
+
+      &:active
+        background black
+        color white
+
+      &.completed
+        &::after
+          content '✓'

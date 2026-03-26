@@ -1,0 +1,179 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+ambientOcclusionColor = rgba(atariGray(0), 0.15)
+ambientOcclusionColorHover = rgba(atariGray(0), 0.10)
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-sceneobject
+  &.dragging
+    position fixed
+    z-index 101 !important
+
+    &.cartridge
+      .shadow
+        .rest
+          visibility hidden
+          transition-delay 0s
+
+        .hover
+          visibility visible
+          transition visibility 0s 0s
+
+          .cast-shadow
+          .ambient-occlusion
+            transition all referenceMovementDurationLift
+
+          .cast-shadow
+            left -24rem
+            top 9rem
+
+          .ambient-occlusion
+            filter drop-shadow(-12rem 5rem 10rem ambientOcclusionColorHover) drop-shadow(-6rem 3rem 5rem ambientOcclusionColorHover) !important
+
+  &.cartridge
+    .shadow
+      .rest
+        position absolute
+        top 0
+        mix-blend-mode multiply
+        visibility visible
+        transition visibility 0s referenceMovementDurationDrop
+
+      .hover
+        absolute-cover()
+        visibility hidden
+        transition visibility 0s referenceMovementDurationDrop
+
+        .cast-shadow
+        .ambient-occlusion
+          transition all referenceMovementDurationDrop
+
+        .cast-shadow
+          position absolute
+          top 0
+          opacity 0.12
+
+        .ambient-occlusion
+          position absolute
+          width 100%
+          filter drop-shadow(-1rem 1rem 0 ambientOcclusionColor) drop-shadow(-1rem 1rem 0 ambientOcclusionColor)
+
+    &.cartridge-nes
+      .shadow
+        .rest
+        .cast-shadow
+          left -9rem
+          height 135rem
+
+        .rest
+          width 119rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-nes-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 129rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-nes-shadow-hover.png')
+
+          .ambient-occlusion
+            filter drop-shadow(-2rem 1rem 0 ambientOcclusionColor) drop-shadow(-1rem 1rem 0 ambientOcclusionColor)
+
+    &.cartridge-gameboy
+      .shadow
+        .rest
+        .cast-shadow
+          left -6rem
+          height 67rem
+
+        .rest
+          width 60rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-gameboy-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 63rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-gameboy-shadow-hover.png')
+
+    &.cartridge-gameboyadvance
+      .shadow
+        .rest
+        .cast-shadow
+          left -5rem
+          height 37rem
+
+        .rest
+          width 60rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-gameboyadvance-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 65rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-gameboyadvance-shadow-hover.png')
+
+    &.cartridge-neogeopocket
+      .shadow
+        .rest
+        .cast-shadow
+          left -7rem
+          height 48rem
+
+        .rest
+          width 57rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-neogeopocket-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 60rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-neogeopocket-shadow-hover.png')
+
+    &.cartridge-cd
+      .shadow
+        .rest
+        .cast-shadow
+          left -1rem
+          height 120rem
+
+        .rest
+          width 121rem
+          top 1rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-cd-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 120rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-cd-shadow-hover.png')
+
+    &.cartridge-genesis
+      .shadow
+        .rest
+        .cast-shadow
+          left -9rem
+          height 74rem
+
+        .rest
+          width 112rem
+          top 1rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-genesis-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 118rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-genesis-shadow-hover.png')
+
+          .ambient-occlusion
+            filter drop-shadow(-2rem 1rem 0 ambientOcclusionColor) drop-shadow(0 1rem 0 ambientOcclusionColor)
+
+    &.cartridge-floppydisk
+      .shadow
+        .rest
+        .cast-shadow
+          left -5rem
+          height 95rem
+
+        .rest
+          width 91rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-floppydisk-shadow.png')
+
+        .hover
+          .cast-shadow
+            width 94rem
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/references/cartridge-floppydisk-shadow-hover.png')

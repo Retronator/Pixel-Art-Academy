@@ -2,15 +2,15 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+PAG = PAA.Practice.PixelArtEvaluation
+
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.SpriteEditor.PixelCanvas
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas'
   @register @id()
-  
-  template: -> @constructor.id()
 
   onCreated: ->
     super arguments...
-  
+    
     @drawing = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
     @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
   
@@ -37,18 +37,23 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     @autorun (computation) =>
       return unless camera = @camera()
       return unless displayedAsset = @desktop.displayedAsset()
-      return unless displayedAsset.clipboardComponent.isCreated()
-      return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
+      return unless previewInfo = displayedAsset.previewInfo()
     
-      # Dictate camera scale when asset is on clipboard and when setting for the first time.
-      clipboardAssetScale = clipboardAssetSize.scale
-    
-      unless @desktop.active() and displayedAsset is @_previousDisplayedAsset and clipboardAssetScale is @_previousClipboardSpriteScale
-        Tracker.nonreactive => camera.setScale clipboardAssetScale
-    
-      @_previousDisplayedAsset = displayedAsset
-      @_previousClipboardSpriteScale = clipboardAssetScale
-  
+      # Dictate camera scale when not active and when setting for the first time.
+      unless @desktop.active() and @_initialScaleSet
+        Tracker.nonreactive => camera.setScale previewInfo.scale
+        @_initialScaleSet = true
+
+    # Update border width.
+    @autorun (computation) =>
+      borderWidth = @_borderWidth()
+      
+      # Make sure we were able to compute the new border (we don't
+      # want the pixel canvas to update with temporary values).
+      return unless borderWidth?
+
+      Tracker.nonreactive => @borderWidth borderWidth
+      
     # Switch between full and framed display modes.
     @autorun (computation) =>
       desktopActive = @desktop.active()
@@ -72,12 +77,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
         if assetData.bounds
           # The center of the image should be in the origin.
           originDataField.value
-            x: (assetData.bounds.left + assetData.bounds.right) / 2
-            y: (assetData.bounds.top + assetData.bounds.bottom) / 2
+            x: (assetData.bounds.left + assetData.bounds.right + 1) / 2
+            y: (assetData.bounds.top + assetData.bounds.bottom + 1) / 2
           
         else
           originDataField.value x: 0, y: 0
-
+    
   hiddenClass: ->
     # Don't show the asset when clipboard is on the second page.
     'hidden' if @clipboardComponent()?.secondPageActive?()
@@ -94,8 +99,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
 
     # If we don't have size data, don't return anything so transition will start form first value.
     return offScreenStyle unless displayedAsset = @desktop.displayedAsset()
-    return offScreenStyle unless displayedAsset.clipboardComponent.isCreated()
-    return offScreenStyle unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
+    return offScreenStyle unless previewInfo = displayedAsset.previewInfo()
     return offScreenStyle unless assetData = displayedAsset.document()
     
     editorActive = @desktop.active()
@@ -105,65 +109,40 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
       return offScreenStyle unless scale = @camera().scale()
       
     else
-      # When we're on the clipboard, the size depends on the size provided by the asset's clipboard component.
-      scale = clipboardAssetSize.scale
-
-    width = assetData.bounds.width * scale
-    height = assetData.bounds.height * scale
-
-    displayScale = LOI.adventure.interface.display.scale()
-
-    # Resize the border proportionally to its clipboard size
-    borderWidth = clipboardAssetSize.borderWidth / clipboardAssetSize.scale * scale
-
+      # When we're outside the editor, the scale comes from the preview.
+      scale = previewInfo.scale
+    
     if editorActive
       # Let the parent implementation handle positioning.
       style = super arguments...
-      
-      # Remove the border.
-      style.left = "#{style.left.substring(0, style.left.length - 1)} - #{borderWidth}rem)"
-      style.top = "#{style.top.substring(0, style.top.length - 1)} - #{borderWidth}rem)"
 
     else
-      $assetPlaceholder = $('.pixelartacademy-pixelpad-apps-drawing-clipboard .asset-placeholder')
-      unless $assetPlaceholder.length
-        # Force re-measure after the asset placeholder is visible again.
-        Meteor.setTimeout => @assetStyleChangeDependency.changed()
-        return {}
-
-      assetOffset = $assetPlaceholder.offset()
-
-      $clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')
-      positionOrigin = $clipboard.offset()
-
-      # Make these measurements relative to clipboard center.
-      positionOrigin.left += $clipboard.width() / 2
-      left = assetOffset.left - positionOrigin.left
-      left = "calc(50% + #{left}px)"
-
-      # Top is relative to center only when we have an active asset.
-      activeAsset = @desktop.activeAsset()
-
-      positionOrigin.top += $clipboard.height() / 2 if activeAsset
-      top = assetOffset.top - positionOrigin.top
-
-      if activeAsset
-        top = "calc(50% + #{top}px)"
-
-      else
-        # Clipboard is hidden up, so move the asset up and relative to top.
-        top -= 265 * displayScale
+      borderWidth = @_borderWidth() or 0
+      width = (assetData.bounds.width + 2 * borderWidth) * scale
+      height = (assetData.bounds.height + 2 * borderWidth) * scale
   
       style =
         width: "#{width}rem"
         height: "#{height}rem"
-        left: left
-        top: top
+        left: previewInfo.position.left
+        top: previewInfo.position.top
         
-    style.borderWidth = "#{borderWidth}rem"
-
     if backgroundColor = displayedAsset.backgroundColor?()
       style.backgroundColor = "##{backgroundColor.getHexString()}"
       style.borderColor = style.backgroundColor
     
     style
+    
+  _borderWidth: ->
+    return unless displayedAsset = @desktop.displayedAsset()
+    return unless previewInfo = displayedAsset.previewInfo()
+    
+    # Convert from display to asset pixels.
+    previewInfo.borderWidth / previewInfo.scale
+  
+  letterGrade: ->
+    return unless displayedAsset = @desktop.displayedAsset()
+    return unless pixelArtEvaluation = displayedAsset.document()?.properties?.pixelArtEvaluation
+    return if pixelArtEvaluation.displayed is false
+    return unless pixelArtEvaluation.score?
+    PAG.getLetterGrade pixelArtEvaluation.score

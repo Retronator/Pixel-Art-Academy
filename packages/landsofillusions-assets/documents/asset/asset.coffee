@@ -92,7 +92,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     RA.authorizeAdmin()
   
   @toPlainObject: (asset) ->
-    _.pick asset, ['_id', 'profileId', 'name', 'creationTime', 'lastEditTime', 'editor', 'history', 'historyPosition']
+    _.pick asset, ['_id', 'versioned', 'profileId', 'name', 'creationTime', 'lastEditTime', 'editor', 'history', 'historyPosition']
     
   undo: -> @constructor.undo @constructor.className, @_id
   redo: -> @constructor.redo @constructor.className, @_id

@@ -13,6 +13,8 @@ class LOI.Assets.Layout extends BlazeComponent
     @display = new AM.Display
       minScale: 2
       maxScale: 2
+    
+    Meteor.reconnect()
 
   loading: ->
     Meteor.loggingIn()

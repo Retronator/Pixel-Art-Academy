@@ -23,7 +23,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage
       @scene.updated()
 
     material = new @constructor.Material @
-    geometry = new THREE.PlaneBufferGeometry
+    geometry = new THREE.PlaneGeometry
     @image = new THREE.Mesh geometry, material
     scene.add @image
 

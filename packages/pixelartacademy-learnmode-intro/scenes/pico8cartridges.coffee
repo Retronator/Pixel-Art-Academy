@@ -13,5 +13,5 @@ class LM.Intro.Pico8Cartridges extends LOI.Adventure.Scene
     super arguments...
 
   things: -> [
-    PAA.Pico8.Cartridges.Snake if @options.parent.pico8Enabled()
+    PAA.Pico8.Cartridges.Snake if LM.Intro.pico8Enabled()
   ]

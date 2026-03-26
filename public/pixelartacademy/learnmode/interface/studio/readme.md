@@ -1,4 +1,4 @@
-# Pixel Art Academy Learn Mode
+# Pixel Art Academy: Learn Mode
 
 ## Interface Studio
 

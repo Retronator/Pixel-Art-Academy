@@ -40,25 +40,28 @@ class AM.DatabaseContent extends AM.DatabaseContent
 
       @_subscriptions[name][subscription.id] = subscription
       
-      # If we're running in reactive context, stop the subscription if it's not active after a recomputation.
-      if Tracker.active
-        Tracker.onInvalidate =>
-          subscription.active = false
+    # If we're running in reactive context, stop the subscription if it's not active after a recomputation.
+    if Tracker.active
+      Tracker.onInvalidate =>
+        subscription.active = false
 
         Tracker.afterFlush =>
           unless subscription.active
+            # Note: We make sure the subscription hasn't been stopped yet, so we look for it again via name and id.
             @_subscriptions[name][subscriptionId]?.stop()
-    
+      
     # Return a handle that the subscriber can use to stop the subscription.
     stop: =>
+      # Note: We make sure the wrapped subscription hasn't been stopped yet
+      # from another handle, so we look for it again via name and id.
       @_subscriptions[name][subscriptionId]?.stop()
     
   @_subscribeToDocuments: (handler, parameters ...) ->
-    subscribedDocuments = {}
-    
-    cursors = handler parameters...
+    return {} unless cursors = handler parameters...
     cursors = [cursors] unless _.isArray cursors
 
+    subscribedDocuments = {}
+    
     for cursor in cursors
       cursor.forEach (informationDocument) =>
         subscribedDocuments[informationDocument._documentClassId] ?= []
@@ -87,6 +90,11 @@ class AM.DatabaseContent extends AM.DatabaseContent
     
     for documentClassId in documentClassIds
       documentClass = AM.Document.getClassForId documentClassId
+      
+      unless documentClass
+        console.warn "Unknown class #{documentClassId} in database content."
+        continue
+        
       continue unless documentClass.contentDocuments
       
       documentClass.contentDocuments.initialize directory.documents[documentClassId]

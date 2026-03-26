@@ -13,6 +13,14 @@ class LM.Demo.Ending extends AM.Component
 
     @activatable = new LOI.Components.Mixins.Activatable()
     
+  onRendered: ->
+    super arguments...
+
+    # Display the links.
+    @$('.link-area').velocity 'transition.slideUpIn',
+      stagger: 500
+      delay: 500
+    
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
       finishedDeactivatingCallback()

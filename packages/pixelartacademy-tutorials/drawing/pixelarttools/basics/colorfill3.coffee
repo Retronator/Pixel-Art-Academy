@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -12,7 +13,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
     """
 
   @fixedDimensions: -> width: 24, height: 18
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |
@@ -91,13 +92,13 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
       return unless asset = @getActiveAsset()
   
       # Show when there are any extra pixels present and the last operation was a color fill.
-      return unless @assetHasExtraPixels asset
+      return unless asset.hasExtraPixels()
   
       bitmap = asset.bitmap()
-      lastAction = bitmap.partialAction or bitmap.history[bitmap.historyPosition - 1]
+      return unless lastAction = bitmap.partialAction or AM.Document.Versioning.getActionAtPosition bitmap, bitmap.historyPosition - 1
       lastAction.operatorId is @toolId()
 
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the undo.
       asset = @constructor.getActiveAsset()
       asset.unlockUndo true
@@ -107,7 +108,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
     @assetClass: -> Asset
     
     @message: -> """
-      Whoops, the color spilled outside the sprite! Use the undo button to get back on track.
+      Whoops, the color spilled outside the sprite! Use the undo button on the left to get back on track.
     """
     
     @toolId: -> LOI.Assets.SpriteEditor.Tools.ColorFill.id()
@@ -119,7 +120,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
     @assetClass: -> Asset
     
     @message: -> """
-      You've drawn a bit too much! Use the undo button to get back on track.
+      You've drawn a bit too much! Use the undo button on the left to get back on track.
     """
     
     @toolId: -> LOI.Assets.SpriteEditor.Tools.Pencil.id()

@@ -17,7 +17,7 @@ class LOI.Assets.AudioEditor.SoundSelectDialog extends LOI.Assets.Editor.AssetOp
 
   _fileManagerOptions: ->
     adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-    audioContext = adventureViews[0]?.adventure.interface.audioManager.context()
+    audioContext = adventureViews[0]?.adventure.audioManager.context()
     
     documents: LOI.Assets.AudioEditor.PublicDirectory.soundFiles
     defaultOperation: => @_open()

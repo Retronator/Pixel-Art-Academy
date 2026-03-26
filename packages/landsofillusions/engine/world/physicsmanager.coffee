@@ -17,7 +17,7 @@ class LOI.Engine.World.PhysicsManager
       boxShape = new Ammo.btBoxShape halfSize
       boxLocalInertia = new Ammo.btVector3 0, 0, 0
 
-      boxTransform = new Ammo.btTransform Ammo.btQuaternion.identity, position
+      boxTransform = new Ammo.btTransform Ammo.btQuaternion.identity(), position
       boxMotionState = new Ammo.btDefaultMotionState boxTransform
 
       boxInfo = new Ammo.btRigidBodyConstructionInfo 0, boxMotionState, boxShape, boxLocalInertia

@@ -50,9 +50,6 @@ class PADB.Components.Stream extends AM.Component
   onRendered: ->
     super arguments...
     
-    @_$document = $(document)
-    @_$app = $('.retronator-app')
-
     if @options.scrollParentSelector
       @_$scrollParent = $(@options.scrollParentSelector)
 
@@ -124,7 +121,7 @@ class PADB.Components.Stream extends AM.Component
       @_artworksVisibilityData[index].artwork = displayedArtwork.artwork
 
   _updateArtworkAreasVisibility: ->
-    scrollParentTop = @_$scrollParent.offset()?.top or 0
+    scrollParentTop = if @options.scrollParentSelector then @_$scrollParent.offset().top else 0
     viewportTop = scrollParentTop + @_$scrollParent.scrollTop()
     scrollParentHeight = @_$scrollParent.height()
     viewportBottom = viewportTop + scrollParentHeight

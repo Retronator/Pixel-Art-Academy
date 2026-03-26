@@ -23,23 +23,26 @@ class LM.Menu.Progress extends AM.Component
   
   @completionDisplayType: -> @state('completionDisplayType') or @CompletionDisplayTypes.RequiredUnits
   
+  for url in [@inGameUrl(), @inPreviewUrl()]
+    LOI.Adventure.registerDirectRoute "/#{url}", =>
+      # Route to progress unless progress is already shown. Note that a progress instance is created both from the main
+      # adventure menu items as well as from the Learn Mode main menu, which creates a variant of the menu for the
+      # landing page.
+      LOI.adventure.menu.items.progress.show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog instanceof LM.Menu.Progress
+    
   template: -> @constructor.id()
   
   mixins: -> [@activatable]
-  
-  inGame: -> LOI.adventure.profileId()
-  inPreview: -> not @inGame()
-  
-  url: -> if @inGame() then @constructor.inGameUrl() else @constructor.inPreviewUrl()
   
   constructor: ->
     super arguments...
   
     @activatable = new LOI.Components.Mixins.Activatable
   
-    for url in [@constructor.inGameUrl(), @constructor.inPreviewUrl()]
-      LOI.Adventure.registerDirectRoute "/#{url}", =>
-        @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
+  inGame: -> LOI.adventure.profileId()
+  inPreview: -> not @inGame()
+  
+  url: -> if @inGame() then @constructor.inGameUrl() else @constructor.inPreviewUrl()
   
   show: ->
     LOI.adventure.showActivatableModalDialog
@@ -53,7 +56,18 @@ class LM.Menu.Progress extends AM.Component
   
   courses: ->
     return unless LOI.adventureInitialized()
-    _.flatten (chapter.courses for chapter in LOI.adventure.currentChapters())
+    
+    if @inPreview()
+      # Show all courses.
+      courses = for episode in LOI.adventure.episodes()
+        for chapter in episode.chapters
+          chapter.courses
+          
+      _.flattenDeep courses
+      
+    else
+      # Show only accessible courses.
+      _.flatten (chapter.courses for chapter in LOI.adventure.currentChapters())
   
   class @Completionist extends AM.DataInputComponent
     @register 'PixelArtAcademy.LearnMode.Menu.Progress.Completionist'

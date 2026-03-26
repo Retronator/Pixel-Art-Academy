@@ -84,7 +84,7 @@ class LM.Menu.Progress.Content.Component extends AM.Component
   
   completedContentsCountTitleAttribute: ->
     content = @data()
-    return unless contents = content.contents()
+    return unless contents = content.availableContents()
   
     completedContentsCount = @completedContentsCount()
     completedRatio = completedContentsCount / contents.length
@@ -96,6 +96,6 @@ class LM.Menu.Progress.Content.Component extends AM.Component
 
   completedContentsCount: ->
     content = @data()
-    return unless contents = content.contents()
+    return unless contents = content.availableContents()
   
     _.filter(contents, (content) => content.completed()).length

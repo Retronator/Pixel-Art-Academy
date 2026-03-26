@@ -10,12 +10,19 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'stackblur-canvas': '2.4.0',
+  'jszip': '3.10.1'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');
+  api.use('retronator:pixelartacademy-pixelpad-instructions');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-learnmode');
+  api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
@@ -25,12 +32,20 @@ Package.onUse(function(api) {
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
   api.addFile('portfolio/asset');
-  api.addFile('portfolio/formasset');
   api.addServerFile('portfolio/subscriptions');
+
+  api.addFile('portfolio/forms..');
+  api.addFile('portfolio/forms/asset');
+  api.addStyle('portfolio/forms/form');
+  api.addStyleImport('portfolio/forms/form');
+  api.addComponent('portfolio/forms/extras..');
 
   api.addFile('portfolio/artworkasset..');
   api.addComponent('portfolio/artworkasset/portfoliocomponent..');
   api.addComponent('portfolio/artworkasset/clipboardcomponent..');
+  api.addComponent('portfolio/artworkasset/changeartwork..');
+  api.addComponent('portfolio/artworkasset/exportartwork..');
+  api.addComponent('portfolio/artworkasset/artworkcaption..');
 
   api.addFile('portfolio/newartwork..');
   api.addComponent('portfolio/newartwork/portfoliocomponent..');
@@ -42,26 +57,79 @@ Package.onUse(function(api) {
 
   api.addComponent('clipboard..');
 
+  api.addComponent('paletteselection..');
+  api.addFile('paletteselection/paletteselection-paletteglow');
+  api.addFile('paletteselection/page..');
+  api.addComponent('paletteselection/page/cover..');
+  api.addComponent('paletteselection/page/separator..');
+  api.addComponent('paletteselection/page/palette..');
+
   api.addFile('editor..');
+  api.addStyle('editor..');
   api.addFile('editor/editors');
   api.addFile('editor/assetloader');
   api.addFile('editor/pixelcanvascomponents');
+  api.addFile('editor/colorhelp');
+
+  api.addFile('editor/tools..');
+  api.addFile('editor/tools/movecanvas');
+  api.addFile('editor/tools/analyze');
 
   api.addComponent('editor/desktop..');
   api.addComponent('editor/desktop/pixelcanvas..');
   api.addComponent('editor/desktop/testpaper..');
   api.addComponent('editor/desktop/colorfill..');
-  api.addComponent('editor/desktop/palette..');
   api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
+  api.addComponent('editor/desktop/ruler..');
+
+  api.addComponent('editor/desktop/palette..');
+  api.addComponent('editor/desktop/palette/colorhelp..');
+
+  api.addComponent('editor/desktop/pixelartevaluation..');
+  api.addComponent('editor/desktop/pixelartevaluation/overview..');
+  api.addComponent('editor/desktop/pixelartevaluation/pixelperfectlines..');
+  api.addComponent('editor/desktop/pixelartevaluation/evendiagonals..');
+  api.addComponent('editor/desktop/pixelartevaluation/smoothcurves..');
+  api.addComponent('editor/desktop/pixelartevaluation/consistentlinewidth..');
+
+  api.addComponent('editor/desktop/readabilityanalysis..');
+  api.addFile('editor/desktop/readabilityanalysis/readabilityanalysis-recognition');
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
-  api.addComponent('editor/desktop/references/displaycomponent/reference..');
+  api.addFile('editor/desktop/references/displaycomponent/reference..');
 
-  api.addFile('editor/desktop/tools..');
-  api.addFile('editor/desktop/tools/movecanvas');
+  api.addComponent('editor/desktop/references/displaycomponent/reference/default..');
+
+  api.addComponent('editor/desktop/references/displaycomponent/reference/sceneobject..');
+  api.addStyledFile('editor/desktop/references/displaycomponent/reference/sceneobject/cartridge..');
+
+  api.addComponent('editor/desktop/references/displaycomponent/reference/model..');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/cameramanager');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/scenemanager');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/renderermanager');
+  api.addClientFile('editor/desktop/references/displaycomponent/reference/model/loader-client');
+
+  api.addComponent('editor/desktop/publications..');
+  api.addFile('editor/desktop/publications/newpartinstruction');
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
+  api.addFile('editor/desktop/actions/zoom');
+
+  api.addComponent('editor/easel..');
+  api.addComponent('editor/easel/layout..');
+  api.addComponent('editor/easel/pixelcanvas..');
+  api.addComponent('editor/easel/colorfill..');
+
+  api.addFile('editor/easel/tools..');
+  api.addFile('editor/easel/tools/brush..');
+  api.addFile('editor/easel/tools/brush/square');
+  api.addFile('editor/easel/tools/brush/pixel');
+  api.addFile('editor/easel/tools/brush/round');
+
+  api.addFile('editor/easel/actions..');
+  api.addFile('editor/easel/actions/displaymode');
+  api.addFile('editor/easel/actions/clearpaint');
 });

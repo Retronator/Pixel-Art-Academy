@@ -23,48 +23,84 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
 
       Click on the arrow to get back to the tasks.
     """
-  
-    @initialize()
-
-    @completedConditions: ->
-      # Instructions for this task have to be open.
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
-      return unless toDoSystem.isCreated()
-      
-      toDoSystem.selectedTask() instanceof @
-      
-  class @ReceiveDrawingApp extends PAA.Learning.Task.Automatic
-    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.ToDoTasks.ReceiveDrawingApp'
-    @goal: -> Goal
-
-    @directive: -> "Receive the drawing app"
-
+    
+    @studyPlanDirective: -> "Learn about to-do tasks"
+    
     @instructions: -> """
-      You now have access to the main app where you will practice drawing.
+      The notepad on the main screen keeps track of your current tasks.
+      You can always click on a task to learn how to complete it.
     """
-  
-    @predecessors: -> [Goal.OpenInstructions]
     
     @interests: -> ['to-do tasks']
     
+    @studyPlanBuilding: -> 'SimCityResidential1'
+  
     @initialize()
-
-    @completedConditions: ->
-      # Instructions for the previous task have to be closed.
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
-      return unless toDoSystem.isCreated()
+    
+    constructor: ->
+      super arguments...
       
-      not toDoSystem.selectedTask()
+      @_instructionsWereOpened = false
+      @_instructionsWereOpenedAndClosed = new ReactiveField false
+      
+      @startInstructionsAutorun()
+      
+    startInstructionsAutorun: ->
+      @_instructionsAutorun = Tracker.autorun (computation) =>
+        return unless LOI.adventure.ready()
+        return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+        return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
+        return unless toDoSystem.isCreated()
+        
+        selectedTask = toDoSystem.selectedTask()
+        
+        # Wait for instructions to be opened.
+        @_instructionsWereOpened = true if selectedTask
+        
+        # Wait for instructions to close after they've been opened.
+        if @_instructionsWereOpened and not selectedTask
+          @_instructionsWereOpenedAndClosed true
+          computation.stop()
+        
+    destroy: ->
+      super arguments...
+      
+      @_instructionsAutorun.stop()
 
+    completedConditions: ->
+      @_instructionsWereOpenedAndClosed()
+    
+    activeNotificationId: -> @constructor.ActiveNotification.id()
+    
+    reset: ->
+      super arguments...
+      
+      @_instructionsWereOpened = false
+      @_instructionsWereOpenedAndClosed false
+      
+      @startInstructionsAutorun()
+    
+    Task = @
+    
+    class @ActiveNotification extends PAA.PixelPad.Systems.Notifications.Notification
+      @id: -> "#{Task.id()}.ActiveNotification"
+      
+      @message: -> """
+        Click on the notebook below to see your to-do tasks.
+        
+        And click on me anytime to hear my thoughts!
+      """
+      
+      @priority: -> 1
+      
+      @initialize()
+      
   @tasks: -> [
     @OpenInstructions
-    @ReceiveDrawingApp
   ]
 
   @finalTasks: -> [
-    @ReceiveDrawingApp
+    @OpenInstructions
   ]
 
   @initialize()

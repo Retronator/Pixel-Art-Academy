@@ -9,7 +9,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
     # Create the sphere mesh.
     @material = @createMaterial()
-    @sphere = new THREE.Mesh new THREE.SphereBufferGeometry(950, 64, 64), @material
+    @sphere = new THREE.Mesh new THREE.SphereGeometry(950, 64, 64), @material
 
     @add @sphere
 
@@ -25,7 +25,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
       @cubeScene = new THREE.Scene()
       @cubeSceneSphereMaterial = @createMaterial()
-      @cubeScene.add new THREE.Mesh new THREE.SphereBufferGeometry(10, 64, 64), @cubeSceneSphereMaterial
+      @cubeScene.add new THREE.Mesh new THREE.SphereGeometry(10, 64, 64), @cubeSceneSphereMaterial
 
   updateTexture: (renderer) ->
     # Optionally re-render the skydome to a cube texture.

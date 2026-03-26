@@ -11,11 +11,12 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
 
       Shortcut: H (hand)
 
-      Quick shortcut: space
+      Quick shortcuts: space or middle mouse button
     """
 
   @fixedDimensions: -> width: 256, height: 32
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
+  @minClipboardScale: -> 1
 
   @imageUrl: ->
     "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/outrun-hills.png"
@@ -33,8 +34,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     PAA.Practice.Software.Tools.ToolKeys.Zoom
     PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
-
-  minClipboardScale: -> 1
   
   Asset = @
   
@@ -43,14 +42,14 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     @assetClass: -> Asset
     
     @message: -> """
-        Hold down the space bar to temporarily switch to the hand cursor.
+        Hold down the space bar or middle mouse button to temporarily switch to the hand cursor.
       """
     
     @activeConditions: ->
       return unless asset = @getActiveAsset()
       not asset.completed()
       
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @initialize()
@@ -66,15 +65,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     @message: -> """
       Click and drag to move the image around the table.
     """
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      return if asset.completed()
-  
-      editor = @getEditor()
-      editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
-  
-    @resetCompletedCondition: ->
+
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @priority: -> 1
@@ -88,12 +80,30 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       @_initialOrigin = pixelCanvasEditor.camera().origin()
     
+    activeConditions: ->
+      return unless asset = @getActiveAsset()
+      return if asset.completed()
+      
+      drawingEditor = @getEditor()
+      
+      # If the origin has been changed, the instruction needs to keep being active so it can
+      # be completed even if the tool changes (like it does when activated via the hold button).
+      if @_initialOrigin
+        pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+        return true unless EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
+      
+      drawingEditor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+    
     completedConditions: ->
       # Wait until the origin has been changed.
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       return if EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
   
       # Wait until the move has finished so the text doesn't disappear immediately.
-      moveCanvas = drawingEditor.interface.activeTool()
-      not moveCanvas.moving()
+      if drawingEditor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+        moveCanvas = drawingEditor.interface.activeTool()
+        not moveCanvas.moving()
+        
+      else
+        true

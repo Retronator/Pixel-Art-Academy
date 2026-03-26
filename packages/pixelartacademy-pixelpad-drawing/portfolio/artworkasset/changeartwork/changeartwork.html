@@ -1,0 +1,28 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ChangeArtwork">
+  <form class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-changeartwork pixelartacademy-pixelpad-apps-drawing-portfolio-forms-form change-artwork-form">
+    <div class="form-title">Change artwork form</div>
+    <div class="properties">
+      <label class="property title">
+        <span class="name">For artwork:</span>
+        <span class="value">{{artworkAsset.artwork.title}}</span>
+      </label>
+    </div>
+    {{> Render extras}}
+    <div class="submit-area">
+      <div class="title">Signature</div>
+      <div class="button-area">
+        <button class="submit-button">
+          {{#if adventure.isAdventureMode}}
+            {{currentCharacter.avatar.fullName}}
+          {{else}}
+            {{currentProfile.displayName}}
+          {{/if}}
+        </button>
+        <div class="prompt">
+          Click on the line<br/>
+          above to change
+        </div>
+      </div>
+    </div>
+  </form>
+</template>

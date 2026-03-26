@@ -8,21 +8,21 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
 
   @initialize()
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
     @pickColor()
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     super arguments...
 
     @pickColor()
 
   pickColor: ->
-    return unless @constructor.mouseState.leftButton
+    return unless @constructor.pointerState.mainButton
     
     return unless editor = @editor()
-    return unless pixelCoordinate = editor.mouse().pixelCoordinate()
+    return unless pixelCoordinate = editor.pointer().pixelCoordinate()
     
     assetData = editor.assetData()
     topPixel = assetData.findPixelAtAbsoluteCoordinates pixelCoordinate.x, pixelCoordinate.y
@@ -34,7 +34,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
         z: layer.origin?.z or 0
 
       for pixel in layer.pixels
-        if pixel.x + layerOrigin.x is @constructor.mouseState.x and pixel.y + layerOrigin.y is @constructor.mouseState.y
+        if pixel.x + layerOrigin.x is @constructor.pointerState.x and pixel.y + layerOrigin.y is @constructor.pointerState.y
           pixelDepth = (pixel.z or 0) + layerOrigin.z
 
           if not topPixel or pixelDepth >= topPixelDepth
@@ -49,7 +49,15 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
       paintHelper.setPaletteColor topPixel.paletteColor
 
     else if topPixel.directColor
-      paintHelper.setDirectColor topPixel.directColor
+      # Try to match the color to a palette color first.
+      if palette = assetData.getRestrictedPalette()
+        paletteColor = LOI.Assets.ColorHelper.exactPaletteColor palette, topPixel.directColor
+    
+      if paletteColor
+        paintHelper.setPaletteColor paletteColor
+        
+      else
+        paintHelper.setDirectColor topPixel.directColor
 
     else if topPixel.materialIndex?
       paintHelper.setMaterialIndex topPixel.materialIndex

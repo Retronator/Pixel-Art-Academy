@@ -10,14 +10,13 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       One of the biggest advantages of digital art is the ability to undo our actions.
       
       Shortcuts:
-
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
 
   @fixedDimensions: -> width: 59, height: 59
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-  @maxClipboardScale: -> 1
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @imageUrl: ->
     "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/codemasters.png"
@@ -36,8 +35,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
     PAA.Practice.Software.Tools.ToolKeys.Undo
     PAA.Practice.Software.Tools.ToolKeys.Redo
   ]
-
-  minClipboardScale: -> 1
   
   Asset = @
   
@@ -60,6 +57,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       
       Shortcuts:
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
     
@@ -67,7 +65,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
     
     @priority: -> 1
     

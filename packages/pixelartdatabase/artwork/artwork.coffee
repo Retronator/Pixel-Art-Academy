@@ -79,3 +79,6 @@ class PADB.Artwork extends AM.Document
   # Returns the first image representation.
   firstImageRepresentation: ->
     _.find @representations, type: PADB.Artwork.RepresentationTypes.Image
+
+  firstDocumentRepresentation: ->
+    _.find @representations, type: PADB.Artwork.RepresentationTypes.Document

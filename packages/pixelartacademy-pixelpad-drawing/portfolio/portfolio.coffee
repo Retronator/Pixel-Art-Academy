@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
 AEc = Artificial.Echo
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -34,15 +35,38 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       assetHover:
         valueType: AEc.ValueTypes.Trigger
         throttle: 100
+      assetPan:
+        valueType: AEc.ValueTypes.Number
         
   constructor: (@drawing) ->
     super arguments...
 
     @sectionHeight = 25
-    @initialGroupHeight = 19
-    @inactiveGroupHeight = 5
+    @maxInitialGroupHeight = 19
+    @maxInactiveGroupHeight = 5
     @activeGroupHeight = 150
+    @groupsMaxTotalHeight = 180
     @settingsHeight = 118
+    @sectionsMargin = 13
+    @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
+    
+  getInitialGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor @groupsMaxTotalHeight / groupCount
+    Math.min heightPerGroup, @maxInitialGroupHeight
+    
+  getInactiveGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor (@groupsMaxTotalHeight - @activeGroupHeight) / (groupCount - 1)
+    Math.min heightPerGroup, @maxInactiveGroupHeight
+  
+  defaultGroupHeightInActiveSection: ->
+    return @maxInitialGroupHeight unless activeSection = @activeSection()
+
+    @getInitialGroupHeight activeSection.groups().length
+  
+  defaultInactiveGroupHeightInActiveSection: ->
+    return @maxInactiveGroupHeight unless activeSection = @activeSection()
+    
+    @getInactiveGroupHeight activeSection.groups().length
 
   sectionActiveClass: ->
     section = @currentData()
@@ -57,30 +81,40 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   sectionStyle: ->
     section = @currentData()
     groups = section.groups()
-    active = @activeSection() is section
-    sections = @sections()
-
-    width = 292 - 4 * (sections.length - section.index)
-
+    
+    activeSection = @activeSection()
+    activeGroup = @activeGroup()
+    
+    width = @sectionWidth section
+    
+    if section is activeSection
+      if activeGroup
+        activeSectionHeight = @sectionHeight + (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
+      
+      else
+        activeSectionHeight = @sectionHeight + groups.length * @getInitialGroupHeight groups.length
+        
+      height = activeSectionHeight
+      
+    else
+      height = @inactiveSectionHeight()
+      
     style =
       width: "#{width}rem"
-
-    if active
-      if @activeGroup()
-        height = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
-
-      else
-        height = @sectionHeight + groups.length * @initialGroupHeight
-
-      style.height = "#{height}rem"
-
+      height: "#{height}rem"
+    
     style
+    
+  sectionWidth: (section) ->
+    292 - 4 * (@sections().length - section.index)
 
   groupStyle: ->
     group = @currentData()
     section = @parentDataWith 'groups'
+    
+    sectionWidth = @sectionWidth section
 
-    width: "#{270 - 3 * (section.groups().length - group.index - 1)}rem"
+    width: "#{sectionWidth - 18 - 3 * (section.groups().length - group.index - 1)}rem"
 
   groupActiveClass: ->
     group = @currentData()
@@ -105,17 +139,24 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     width: "#{assetData.asset.width() * assetData.scale() + assetData.asset.portfolioBorderWidth() * 2}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible (up to 6) while remaining under 84px.
+    maxSize = 70
     size = Math.max asset.width(), asset.height()
+    displayScale = LOI.adventure.interface.display.scale()
+
+    unless asset.pixelArtScaling()
+      # Without pixel art scaling, make the image fit into the 70px.
+      maxWindowPixelSize = 70 * displayScale
+      displaySize = Math.min size, maxWindowPixelSize
+      return displaySize / size / displayScale
+    
+    # with pixel art scaling, scale the image as much as possible (up to 6) while remaining under 70px.
     return 1 if _.isNaN size
     
     scale = 1
-    maxSize = 84
 
     if size > maxSize
       # The asset is bigger than our maximum size, so we will need to scale downwards. We start
       # operating in effective scale to still have integer magnification compared to window pixels.
-      displayScale = LOI.adventure.interface.display.scale()
       maxEffectiveSize = maxSize * displayScale
       
       effectiveScale = displayScale
@@ -130,7 +171,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       effectiveScale = 1 / divisor
       return effectiveScale / displayScale
 
-    scale++ while scale < 6 and (scale + 1) * size < 84
+    scale++ while scale < 6 and (scale + 1) * size < maxSize
 
     scale
 
@@ -139,26 +180,40 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     sectionsCount = sections.length
     sectionsCount++ if @showSettingsSection()
-
-    top = 14 + sectionsCount * @sectionHeight
+    
+    inactiveSectionHeight = @inactiveSectionHeight()
 
     if section = @activeSection()
+      top = @sectionsMargin + (sectionsCount - 1) * inactiveSectionHeight + @sectionHeight
+  
       if groups = section.groups?()
         if @activeGroup()
-          top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+          top += (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
 
         else
-          top += groups.length * @initialGroupHeight
+          top += groups.length * @getInitialGroupHeight groups.length
 
       else
         top += @settingsHeight
+        
+    else
+      top = @sectionsMargin + sectionsCount * inactiveSectionHeight
 
     top: "#{top}rem"
+  
+  sectionsVisible: ->
+    # Only show sections when not in the editor to prevent updates while editing.
+    not @drawing.editor().active()
 
   assetHoveredClass: ->
     assetData = @currentData()
 
     'hovered' if assetData is @hoveredAsset()
+    
+  assetLastHoveredClass: ->
+    assetData = @currentData()
+    
+    'last-hovered' if assetData is @lastHoveredAsset()
 
   assetActiveClass: ->
     assetData = @currentData()
@@ -187,7 +242,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   events: ->
     super(arguments...).concat
       'click .section': @onClickSection
-      'click .group-name': @onClickGroupName
+      'click .group-header': @onClickGroupHeader
       'click': @onClick
       'mouseenter .section': @onMouseEnterSection
       'mouseenter .group-name': @onMouseEnterGroupName
@@ -213,7 +268,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       # In that case the group handler will activate a new group in this new section.
       @activeGroup null unless clickInsideContent
 
-  onClickGroupName: (event) ->
+  onClickGroupHeader: (event) ->
     group = @currentData()
     section = @parentDataWith 'groups'
     
@@ -263,6 +318,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onMouseEnterAsset: (event) ->
     assetData = @currentData()
     @hoveredAsset assetData
+    @lastHoveredAsset assetData
+    
+    @audio.assetPan AEc.getPanForElement event.target
     @_assetHoverUnlessFirst assetData
 
   onMouseLeaveAsset: (event) ->
@@ -285,8 +343,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
   _goToClickedAsset: ->
     assetData = @currentData()
+    
+    # Check if there is a custom click handler.
+    if assetData.asset.onClick
+      assetData.asset.onClick()
+      return
 
-    # Set active sprite ID.
+    # Set active asset URL.
     AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelPadEditor: (event) ->
@@ -296,3 +359,56 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onClickExternalEditor: (event) ->
     program = @currentData()
     @drawing.state 'externalSoftware', program.value
+  
+  onKeyDown: (event) ->
+    # To get into cheating mode, you have to have shift pressed (and alt released),
+    # to prevent accidental cheating when quitting on windows with alf-F4.
+    if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f2, shift: true}
+      return unless asset = @activeAsset()?.asset
+      
+      return unless stepAreas = asset.stepAreas?()
+      
+      for stepArea in stepAreas when not stepArea.completed()
+        activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+        
+        activeStep.solve()
+        event.preventDefault()
+        break
+      
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f3, shift: true}
+      return unless asset = @activeAsset()?.asset
+      
+      asset.solveAndComplete?()
+      event.preventDefault()
+    
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f4, shift: true}
+      console.log "Cheating commences …"
+      
+      return unless activeGroup = @activeGroup()
+      return unless activeGroup.thing.assets() and activeGroup.thing.state 'assets'
+      
+      cheating = =>
+        assets = activeGroup.thing.assets()
+        assetsData = activeGroup.thing.state 'assets'
+        
+        cheatMore = false
+        
+        while uncompletedAssetData = _.find assetsData, (assetData) => not assetData.completed and _.find assets, (asset) => asset.id() is assetData.id
+          console.log "Completing", uncompletedAssetData.id
+          
+          uncompletedAsset = _.find assets, (asset) => asset.id() is uncompletedAssetData.id
+          uncompletedAsset.solve()
+          uncompletedAssetData.completed = true
+          
+          cheatMore = true
+        
+        if cheatMore
+          activeGroup.thing.state 'assets', assetsData
+          Meteor.setTimeout cheating, 100
+        
+        else
+          console.log "Cheating commenced!"
+      
+      cheating()
+      
+      event.preventDefault()

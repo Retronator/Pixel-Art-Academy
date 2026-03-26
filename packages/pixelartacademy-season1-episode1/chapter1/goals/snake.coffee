@@ -38,7 +38,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       Score at least 5 points to continue.
     """
 
-    @interests: -> ['pico-8', 'gaming']
+    @interests: -> ['pico-8', 'video game']
 
     @predecessors: -> [Goal.Talk]
 

@@ -7,13 +7,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ColorFill extends FM.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.ColorFill'
   @register @id()
   
-  @template: -> @constructor.id()
-  
   onCreated: ->
     super arguments...
   
     @paletteData = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.palette()
+      @interface.getLoaderForActiveFile()?.asset()?.getRestrictedPalette()
   
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
   

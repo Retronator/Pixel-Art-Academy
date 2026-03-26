@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
     """
 
   @fixedDimensions: -> width: 13, height: 9
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |      0
@@ -97,20 +97,20 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
     @assetClass: -> Asset
     
     @message: -> """
-      Whoops, you filled the area outside the lines! Use the undo button to get back on track.
+      Whoops, you filled the area outside the lines! Use the undo button on the left to get back on track.
     """
     
     @activeConditions: ->
       return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
 
     @priority: -> 1
     
     @initialize()
   
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the undo.
       asset = @constructor.getActiveAsset()
       asset.unlockUndo true

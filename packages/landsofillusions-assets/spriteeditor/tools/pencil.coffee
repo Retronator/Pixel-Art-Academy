@@ -3,39 +3,16 @@ AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
   # paintNormals: boolean whether only normals are being painted
   # ignoreNormals: boolean whether normals are not painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
   @displayName: -> "Pencil"
 
   @initialize()
-
-  createPixelsFromCoordinates: (coordinates) ->
-    # Make sure we have paint at all.
-    paint =
-      directColor: @paintHelper.directColor()
-      paletteColor: @paintHelper.paletteColor()
-      materialIndex: @paintHelper.materialIndex()
-    
-    return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
-
-    paint.normal = @paintHelper.normal().toObject()
-
-    for coordinate in coordinates
-      pixel = _.clone coordinate
-
-      for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
-        pixel[property] = paint[property] if paint[property]?
-        
-      pixel
-
-  applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
-    # See if we're only painting normals.
-    paintNormals = @data.get 'paintNormals'
-    ignoreNormals = @data.get 'ignoreNormals'
-
-    changedPixels = _.filter relativePixels, (pixel) =>
+  
+  @calculateChangedPixels: (assetData, layerIndex, relativePixels, paintNormals, ignoreNormals) ->
+    _.filter relativePixels, (pixel) =>
       return true unless existingPixel = assetData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
   
       if paintNormals and existingPixel
@@ -54,36 +31,71 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         return true unless EJSON.equals pixel[property], existingPixel[property]
         
       false
-
+  
+  # Adds and executes partial actions that will apply the relative pixels to the asset.
+  @applyPixels: (assetData, action, layerIndex, relativePixels, paintNormals, ignoreNormals) ->
+    changedPixels = @calculateChangedPixels assetData, layerIndex, relativePixels, paintNormals, ignoreNormals
     return unless changedPixels.length
 
+    layerAddress = [layerIndex]
+
+    # If the image has no layer, we first have to add it as a partial action.
+    unless assetData.getLayer layerAddress
+      addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer action.operatorId, assetData, []
+      AM.Document.Versioning.executePartialAction assetData, addLayerAction
+      action.append addLayerAction
+
+    # Create the stroke action.
+    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke action.operatorId, assetData, layerAddress, changedPixels, true
+    AM.Document.Versioning.executePartialAction assetData, strokeAction
+    action.append strokeAction
+
+    # Optimize the partial stroke operations.
+    action.optimizeOperations assetData
+
+  @createPixelsFromStrokeMask: (assetData, strokeMask) ->
+    pixels = []
+    
+    for x in [0...assetData.bounds.width]
+      for y in [0...assetData.bounds.height]
+        continue unless strokeMask.isPixelInMask x, y
+        
+        pixel =
+          x: x + assetData.bounds.left
+          y: y + assetData.bounds.top
+  
+        pixels.push pixel
+      
+    pixels
+
+  createPixelsFromStrokeMask: (assetData, strokeMask) ->
+    # Make sure we have paint at all.
+    return [] unless @paintHelper.isPaintSet()
+    
+    pixels = @constructor.createPixelsFromStrokeMask assetData, strokeMask
+    @paintHelper.applyPaintToPixels pixels
+    
+    pixels
+
+  applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
+    # See if we're only painting normals.
+    paintNormals = @data.get 'paintNormals'
+    ignoreNormals = @data.get 'ignoreNormals'
+
     if assetData instanceof LOI.Assets.Sprite
+      changedPixels = @constructor.calculateChangedPixels assetData, layerIndex, relativePixels, paintNormals, ignoreNormals
       LOI.Assets.Sprite.addPixels assetData._id, layerIndex, changedPixels, not strokeStarted
 
       # Register that we've processed the start of the stroke.
       @startOfStrokeProcessed()
 
     else if assetData instanceof LOI.Assets.Bitmap
-      layerAddress = [layerIndex]
-
       # When the stroke starts, we need to prepare the final action, since it will be executed partially.
       if strokeStarted
         @_action = new AM.Document.Versioning.Action @constructor.id()
         @startOfStrokeProcessed()
 
-      # If the image has no layer, we first have to add it as a partial action.
-      unless assetData.getLayer layerAddress
-        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @constructor.id(), assetData, []
-        LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, addLayerAction
-        @_action.append addLayerAction
-
-      # Create the stroke action.
-      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels
-      LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, action
-      @_action.append action
-  
-      # Optimize the partial stroke operations.
-      @_action.optimizeOperations assetData
+      @constructor.applyPixels assetData, @_action, layerIndex, relativePixels, paintNormals, ignoreNormals
       
   endStroke: (assetData) ->
     # When the stroke ends, we need to execute the whole action as well.

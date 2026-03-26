@@ -9,7 +9,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Cone extends PAA.Items.StillLifeItems
 
   createGeometry: ->
     properties = @avatar.properties
-    new THREE.ConeBufferGeometry properties.radius, properties.height, 32, 32
+    new THREE.ConeGeometry properties.radius, properties.height, 32, 32
 
   createCollisionShape: ->
     properties = @avatar.properties

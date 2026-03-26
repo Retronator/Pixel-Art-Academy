@@ -1,11 +1,14 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint">
-  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint {{draggingClass}} {{draggedClass}} {{connectingClass}}">
-    <canvas class="canvas"></canvas>
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint {{animatingClass}} {{draggingClass}} {{goalSelectedClass}} {{taskSelectedClass}}">
     <div class="origin" {{style originStyle}}>
+      {{#if displayedGoalHierarchy}}
+        <div class="road-tile-map">
+          {{> renderRoadTileMapComponent displayedGoalHierarchy.roadTileMap}}
+        </div>
+      {{/if}}
       {{#each goalComponents}}
-        {{> Render this}}
+        {{> renderGoalComponent goalNodeForGoalComponent}}
       {{/each}}
     </div>
-    <div class="trash {{trashActiveClass}}">Delete</div>
   </div>
 </template>

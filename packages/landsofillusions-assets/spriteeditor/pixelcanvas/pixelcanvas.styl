@@ -3,8 +3,19 @@
 .landsofillusions-assets-spriteeditor-pixelcanvas
   absolute-cover()
   user-select none
+  touch-action none
   background blend(rgba(atariGray(1), 0.5) atariGray(2))
 
   .canvas
     position absolute
     user-select none
+    touch-action none
+
+  .tool-info
+    position absolute
+    pointer-events none
+    adventure()
+    color rgb(25,25,25)
+
+    &.invert-colors
+      color rgb(230,230,230)

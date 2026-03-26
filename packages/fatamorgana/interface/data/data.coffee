@@ -37,6 +37,10 @@ class FM.Interface.Data
   set: (field, value) ->
     child = @child field
     child.value value
+    
+  lazySet: (field, value) ->
+    child = @child field
+    child.value value, true
 
   # Returns the raw value for children nodes of desired type.
   findValuesOfChildrenOfType: (classOrId) ->
