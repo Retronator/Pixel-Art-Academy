@@ -75,7 +75,7 @@ class LM.Notifications
     @message: -> """
       You completed all the tasks there are in the demo, thank you for playing!
       
-      I hope you liked the experience. If you did, you can continue playing in the Early Access version, or wishlist the game to be notified when it goes on sale.
+      I hope you liked the experience. If you did, you can continue playing in the Early Access version on Steam, or wishlist the game to be notified when it goes on sale.
     """
     
     @priority: -> 2
