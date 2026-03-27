@@ -298,12 +298,15 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     Meteor.clearTimeout @_animateCloseTimeout
     
     # Determine how long to wait before closing the notebook.
-    unless @activeTasks().length or LM.Notifications.TheEnd.condition()
-      # We don't have any more active tasks and the final "all done" message is not active yet either.
-      # Delay closing for longer so that the player can see the instructions for adding new tasks.
+    if LM.Notifications.TheEnd.condition()
+      closeDelay = 1500
+      
+    else unless @activeTasks().length
+      # We don't have any more active tasks. Delay closing for longer so
+      # that the player can see the instructions for adding new tasks.
       closeDelay = 4000
       
-    else if @notifications().displayAlwaysNotifications().length
+    else if @notifications().displayAlwaysNotifications().length and not LM.Notifications.TheEnd.condition()
       # There are notifications waiting to be displayed that will always be shown, so close quickly.
       closeDelay = 500
       
