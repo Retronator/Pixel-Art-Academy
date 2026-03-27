@@ -34,6 +34,9 @@ class LM.Locations.MainMenu extends LOI.Adventure.Location
     
     @visible = new ReactiveField false
   
+    # Kiosk mode has no music in the menu.
+    LOI.settings.audio.musicVolume.value 0
+  
   onRendered: ->
     super arguments...
   
@@ -44,6 +47,9 @@ class LM.Locations.MainMenu extends LOI.Adventure.Location
     super arguments...
   
     LOI.adventure.menu.customShowMenu null
+    
+    # Resume music for gameplay.
+    LOI.settings.audio.musicVolume.value 1
 
   fadeOut: ->
     @visible false
