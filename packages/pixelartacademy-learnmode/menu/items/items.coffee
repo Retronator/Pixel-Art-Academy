@@ -31,6 +31,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       Desktop.send 'window', 'isFullscreen'
     
   continueVisible: ->
+    # In kiosk mode, continue is visible only when we're not on the landing page.
+    return not @options.landingPage
+    
     # Continue is visible when we're not on the landing page and if there is a last loaded game.
     return true unless @options.landingPage
     
@@ -38,7 +41,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     Persistence.Profile.documents.findOne profileId
   
   loadVisible: ->
-    # TODO: You can't load in the kiosk demo.
+    # You can't load in the kiosk demo.
     return false
     
     # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.

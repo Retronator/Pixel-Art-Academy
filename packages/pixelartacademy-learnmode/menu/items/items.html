@@ -12,18 +12,18 @@
           <li class="menu-item"><span class="load actionable">Load game</span></li>
         {{/if}}
         {{#if isBrowser}}
-          {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
+          {{! Can't change fullscreen in kiosk mode. > LandsOfIllusions.Components.Menu.Items.Fullscreen}}
         {{/if}}
         {{#if progressVisible}}
           <li class="menu-item"><span class="progress actionable">Progress</span></li>
         {{/if}}
-        <li class="menu-item"><span class="settings actionable">Settings</span></li>
-        <li class="menu-item"><span class="ending actionable">Join Discord</span></li>
+        <!-- Don't allow changing settings in kiosk mode. li class="menu-item"><span class="settings actionable">Settings</span></li-->
+        <li class="menu-item"><span class="ending actionable">Early Access on Steam</span></li>
         {{#if quitToMenuVisible}}
           <li class="menu-item"><span class="quit-to-menu actionable">Quit to menu</span></li>
         {{else}}
           {{#if isElectron}}
-            <!-- TODO: No quit in kiosk mode. li class="menu-item"><span class="quit actionable">Quit</span></li -->
+            <!--No quit in kiosk mode. li class="menu-item"><span class="quit actionable">Quit</span></li-->
           {{/if}}
         {{/if}}
       </ul>
@@ -58,12 +58,12 @@
 
     {{#if inAudio}}
       <ul class="audio menu">
-        <!-- Can't disable audio  class="menu-item"><span class="enabled actionable">
+        <li class="menu-item"><span class="enabled actionable">
           Audio:
           {{#if $is audioEnabled 'On'}}on{{/if}}
           {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
           {{#if $is audioEnabled 'Off'}}off{{/if}}
-        </span></li-->
+        </span></li>
         {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
         <li class="menu-item"><span class="in-game-music actionable">
           Music effects:

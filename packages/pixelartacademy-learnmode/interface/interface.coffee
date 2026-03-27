@@ -138,8 +138,8 @@ class LM.Interface extends LOI.Interface
         await LOI.adventure.menu.loadGame.show loadProfileId, false
 
       else
-        # We are starting a new game, show the save dialog.
-        await LOI.adventure.menu.saveGame.show()
+        # In kiosk mode, automatically create a new profile.
+        LOI.adventure.saveGame local: true
       
       # If the player decided to cancel or the load didn't succeed, send them back to the menu.
       unless LOI.adventure.profile().hasSyncing()
@@ -223,7 +223,9 @@ class LM.Interface extends LOI.Interface
   onKeyDown: (event) ->
     key = event.which
   
-    @_reset() if key is AC.Keys.f12
+    if key is AC.Keys.f12
+      @_reset()
+      event.preventDefault()
     
     @_scheduleReset()
     
@@ -233,7 +235,7 @@ class LM.Interface extends LOI.Interface
   _scheduleReset: ->
     Meteor.clearTimeout @_resetTimeout
     
-    @_resetTimeout = Meteor.setTimeout @_reset, 3 * 60 * 1000
+    @_resetTimeout = Meteor.setTimeout @_reset, 60 * 1000
 
   _reset: ->
     LOI.adventure._clearStoredProfileId()
