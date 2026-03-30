@@ -29,7 +29,6 @@ Package.onUse(function(api) {
 
   api.addFile('pages..');
   api.addComponent('pages/imageclassification..');
-  api.addFile('pages/imageclassification/classifier');
 
   api.addFile('adventure..');
   api.addFile('chapter..');
