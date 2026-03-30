@@ -17,6 +17,7 @@ class Artificial.Pages
     Artificial.Pages.addPublicPage '/artificial/reality/optics/sky', Artificial.Reality.Pages.Optics.Sky
     Artificial.Pages.addPublicPage '/artificial/reality/ammo', Artificial.Reality.Pages.Ammo
     Artificial.Pages.addPublicPage '/artificial/spectrum/color/chromaticity', Artificial.Spectrum.Pages.Color.Chromaticity
+    Artificial.Pages.addPublicPage '/artificial/spectrum/pixelart/upscaling', Artificial.Spectrum.Pages.PixelArt.Upscaling
   
     Artificial.Pages.addAdminPage '/admin/artificial/babel', Artificial.Babel.Pages.Admin
     Artificial.Pages.addAdminPage '/admin/artificial/babel/scripts', Artificial.Babel.Pages.Admin.Scripts

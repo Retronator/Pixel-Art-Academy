@@ -1,0 +1,23 @@
+.artificial-spectrum-pages-pixelart-upscaling
+  max-width 1200px
+
+  .previews
+    display flex
+    gap 24px
+    align-items flex-start
+    flex-wrap wrap
+
+    .preview
+      flex 1 1 320px
+
+      h3
+        margin-top 0
+
+      .preview-canvas
+        display block
+        max-width 100%
+        image-rendering pixelated
+
+        &.source
+          cursor crosshair
+          max-width 48vw

@@ -100,4 +100,6 @@ Package.onUse(function(api) {
   api.addComponent('spectrum/color/chromaticity..');
   api.addFile('spectrum/color/chromaticity/chromaticity-spectrum');
   api.addFile('spectrum/color/chromaticity/chromaticity-chromaticitydiagram');
+  api.addFile('spectrum/pixelart..');
+  api.addComponent('spectrum/pixelart/upscaling..');
 });
