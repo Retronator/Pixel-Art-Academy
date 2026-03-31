@@ -480,12 +480,12 @@ Package.onUse(function(api) {
   api.addClientJavascript('spectrum/creature/creaturemeshbone');
   api.addClientJavascript('spectrum/creature/creaturerenderer');
 
-  api.addFile('spectrum/hqx..');
-  api.addJavascript('spectrum/hqx..');
-
   api.addClientJavascript('spectrum/previewgif-client/previewgif');
 
   api.addFile('spectrum/pixelart..');
+  api.addFile('spectrum/pixelart/upscaling..');
+  api.addFile('spectrum/pixelart/upscaling/hqx..');
+  api.addJavascript('spectrum/pixelart/upscaling/hqx..');
   api.addFile('spectrum/pixelart/pixelart-detectpixelscale');
   api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
   api.addFile('spectrum/pixelart/circle');

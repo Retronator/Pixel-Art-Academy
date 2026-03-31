@@ -47,7 +47,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
       surfaceUpscaleFactor = @surfaceUpscaleFactor()
 
       if surfaceUpscaleFactor > 1
-        AS.Hqx.scale surfaceCanvas, surfaceUpscaleFactor
+        AS.PixelArt.Upscaling.Hqx.scale surfaceCanvas, surfaceUpscaleFactor
 
       else
         surfaceCanvas

@@ -31,7 +31,7 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
 
       switch @algorithm()
         when @constructor.Algorithms.Hqx
-          AS.Hqx.scale sourceCanvas, @upscaleFactor(), AS.Hqx.Modes.Default, false, true
+          AS.PixelArt.Upscaling.Hqx.scale sourceCanvas, @upscaleFactor(), AS.PixelArt.Upscaling.Hqx.Modes.Default, false, true
 
   onRendered: ->
     super arguments...
