@@ -8,6 +8,7 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
   @sourcePreviewMaximumViewportRatio = 0.48
 
   @Algorithms:
+    Depixelizer: 'Depixelizer'
     Hqx: 'Hqx'
 
   @initializeDataComponent()
@@ -21,17 +22,21 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
     @sourceWidth = new ReactiveField 16
     @sourceHeight = new ReactiveField 16
     @algorithm = new ReactiveField @constructor.Algorithms.Hqx
-    @upscaleFactor = new ReactiveField 4
+    @depixelizerScale = new ReactiveField 4
+    @hqxScale = new ReactiveField 4
     @sourceCanvas = new ReactiveField @_createSourceCanvas @sourceWidth(), @sourceHeight()
     @strokePixelValue = null
 
-    # Always keep the HQX output ready so UI redraws stay simple.
+    # Always keep the selected output ready so UI redraws stay simple.
     @upscaledCanvas = new ComputedField =>
       return unless sourceCanvas = @sourceCanvas()
 
       switch @algorithm()
+        when @constructor.Algorithms.Depixelizer
+          AS.PixelArt.Upscaling.Depixelizer.scale sourceCanvas, @depixelizerScale()
+
         when @constructor.Algorithms.Hqx
-          AS.PixelArt.Upscaling.Hqx.scale sourceCanvas, @upscaleFactor(), AS.PixelArt.Upscaling.Hqx.Modes.Default, false, true
+          AS.PixelArt.Upscaling.Hqx.scale sourceCanvas, @hqxScale(), AS.PixelArt.Upscaling.Hqx.Modes.Default, true, false
 
   onRendered: ->
     super arguments...
@@ -268,21 +273,41 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
 
     options: ->
       [
+        value: AS.Pages.PixelArt.Upscaling.Algorithms.Depixelizer
+        name: 'Depixelizer'
+      ,
         value: AS.Pages.PixelArt.Upscaling.Algorithms.Hqx
         name: 'hqx'
       ]
 
-  class @UpscaleFactor extends @DataInputComponent
-    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.UpscaleFactor'
+  class @HqxScale extends @DataInputComponent
+    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.HqxScale'
 
     constructor: ->
       super arguments...
 
-      @propertyName = 'upscaleFactor'
+      @propertyName = 'hqxScale'
       @type = AM.DataInputComponent.Types.Range
       @customAttributes =
         min: 2
         max: 4
+        step: 1
+
+    save: (value) ->
+      return unless _.isFinite value
+      super value
+
+  class @DepixelizerScale extends @DataInputComponent
+    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerScale'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'depixelizerScale'
+      @type = AM.DataInputComponent.Types.Range
+      @customAttributes =
+        min: 2
+        max: 8
         step: 1
 
     save: (value) ->

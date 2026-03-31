@@ -7,8 +7,11 @@
       Width: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.SourceWidth}}
       Height: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.SourceHeight}}<br/>
       Upscale algorithm: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.Algorithm}}<br/>
+      {{#if $is algorithm 'Depixelizer'}}
+        depixelizer scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerScale}} {{depixelizerScale}}x
+      {{/if}}
       {{#if $is algorithm 'Hqx'}}
-        hxq scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.UpscaleFactor}} {{upscaleFactor}}x
+        hxq scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.HqxScale}} {{hqxScale}}x
       {{/if}}
     </p>
     <div class="previews">
