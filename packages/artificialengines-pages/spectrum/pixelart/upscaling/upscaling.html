@@ -8,7 +8,10 @@
       Height: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.SourceHeight}}<br/>
       Upscale algorithm: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.Algorithm}}<br/>
       {{#if $is algorithm 'Depixelizer'}}
-        depixelizer scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerScale}} {{depixelizerScale}}x
+        Depixelizer scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerScale}} {{depixelizerScale}}x<br/>
+        Depixelizer color similarity threshold: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerColorSimilarityThreshold}} {{depixelizerColorSimilarityThreshold}}<br/>
+        Depixelizer border width: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerBorderWidth}} {{depixelizerBorderWidth}} px<br/>
+        Depixelizer render mode: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerRenderMode}}
       {{/if}}
       {{#if $is algorithm 'Hqx'}}
         hxq scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.HqxScale}} {{hqxScale}}x

@@ -485,6 +485,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum/pixelart..');
   api.addFile('spectrum/pixelart/upscaling..');
   api.addFile('spectrum/pixelart/upscaling/depixelizer..');
+  api.addJavascript('spectrum/pixelart/upscaling/depixelizer..');
   api.addFile('spectrum/pixelart/upscaling/hqx..');
   api.addJavascript('spectrum/pixelart/upscaling/hqx..');
   api.addFile('spectrum/pixelart/pixelart-detectpixelscale');

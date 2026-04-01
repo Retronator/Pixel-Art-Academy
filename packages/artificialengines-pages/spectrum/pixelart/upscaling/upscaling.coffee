@@ -21,9 +21,16 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
 
     @sourceWidth = new ReactiveField 16
     @sourceHeight = new ReactiveField 16
-    @algorithm = new ReactiveField @constructor.Algorithms.Hqx
-    @depixelizerScale = new ReactiveField 4
+    
+    @algorithm = new ReactiveField @constructor.Algorithms.Depixelizer
+    
+    @depixelizerScale = new ReactiveField 16
+    @depixelizerColorSimilarityThreshold = new ReactiveField 255
+    @depixelizerBorderWidth = new ReactiveField 0
+    @depixelizerRenderMode = new ReactiveField AS.PixelArt.Upscaling.Depixelizer.RenderModes.Default
+    
     @hqxScale = new ReactiveField 4
+    
     @sourceCanvas = new ReactiveField @_createSourceCanvas @sourceWidth(), @sourceHeight()
     @strokePixelValue = null
 
@@ -33,7 +40,10 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
 
       switch @algorithm()
         when @constructor.Algorithms.Depixelizer
-          AS.PixelArt.Upscaling.Depixelizer.scale sourceCanvas, @depixelizerScale()
+          AS.PixelArt.Upscaling.Depixelizer.scale sourceCanvas, @depixelizerScale(),
+            colorSimilarityThreshold: @depixelizerColorSimilarityThreshold(),
+            borderWidth: @depixelizerBorderWidth()
+            renderMode: @depixelizerRenderMode()
 
         when @constructor.Algorithms.Hqx
           AS.PixelArt.Upscaling.Hqx.scale sourceCanvas, @hqxScale(), AS.PixelArt.Upscaling.Hqx.Modes.Default, true, false
@@ -307,9 +317,45 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
       @type = AM.DataInputComponent.Types.Range
       @customAttributes =
         min: 2
-        max: 8
+        max: 32
         step: 1
 
-    save: (value) ->
-      return unless _.isFinite value
-      super value
+  class @DepixelizerColorSimilarityThreshold extends @DataInputComponent
+    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerColorSimilarityThreshold'
+    
+    constructor: ->
+      super arguments...
+      
+      @propertyName = 'depixelizerColorSimilarityThreshold'
+      @type = AM.DataInputComponent.Types.Range
+      @customAttributes =
+        min: 0
+        max: 255
+        step: 1
+  
+  class @DepixelizerBorderWidth extends @DataInputComponent
+    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerBorderWidth'
+    
+    constructor: ->
+      super arguments...
+      
+      @propertyName = 'depixelizerBorderWidth'
+      @type = AM.DataInputComponent.Types.Range
+      @customAttributes =
+        min: 0
+        max: 2
+        step: 1
+  
+  
+  class @DepixelizerRenderMode extends @DataInputComponent
+    @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerRenderMode'
+    constructor: ->
+      super arguments...
+      
+      @propertyName = 'depixelizerRenderMode'
+      @type = AM.DataInputComponent.Types.Select
+    
+    options: ->
+      for mode, value of AS.PixelArt.Upscaling.Depixelizer.RenderModes
+        value: value
+        name: _.upperFirst mode
