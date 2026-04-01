@@ -98,12 +98,11 @@ class PAA.Pages.ImageClassification extends AM.Component
       strokes.push @_stroke.getDecimatedPolygonalChain 1 if @_stroke?.vertices.length
       
       return unless PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData strokes, @_classificationInputData
-      @classificationInputData @_classificationInputData
       
       promises = for classifierName, classifier of @classifiers
         do (classifierName, classifier) =>
           new Promise (resolve, reject) =>
-            labelProbabilities = await classifier.classify @classificationInputData()
+            labelProbabilities = await classifier.classify @_classificationInputData
             resolve {classifierName, labelProbabilities}
       
       Promise.all(promises).then (allResults) =>

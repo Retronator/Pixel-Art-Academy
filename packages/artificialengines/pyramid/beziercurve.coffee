@@ -13,3 +13,5 @@ class AP.BezierCurve
       result[coordinate] = (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
       
     result
+
+  constructor: (@points) ->

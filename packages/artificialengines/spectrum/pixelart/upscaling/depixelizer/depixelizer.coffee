@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 AS = Artificial.Spectrum
+AP = Artificial.Pyramid
 
 class AS.PixelArt.Upscaling.Depixelizer
   @RenderModes:
@@ -23,3 +24,16 @@ class AS.PixelArt.Upscaling.Depixelizer
     
     # Return the upscaled version.
     targetCanvas
+
+  @getBezierCurves: (image, options = {}) ->
+    sourceCanvas = new AM.ReadableCanvas image
+    sourceImageData = sourceCanvas.getFullImageData()
+    
+    scaledResult = @_scaleImage sourceImageData,
+      height: sourceCanvas.height
+      threshold: options.colorSimilarityThreshold
+      borderPx: options.borderWidth
+      renderMode: AS.PixelArt.Upscaling.Depixelizer.RenderModes.Splines
+
+    for spline in scaledResult.allSplines
+      new AP.BezierCurve (new THREE.Vector2 point[0], point[1] for point in spline)
