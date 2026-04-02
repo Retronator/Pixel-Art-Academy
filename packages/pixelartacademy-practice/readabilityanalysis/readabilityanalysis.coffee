@@ -21,12 +21,6 @@ class PAA.Practice.ReadabilityAnalysis
   #       label: string with the name
   #       probability: number between 0 and 1 how likely this label is drawn, not stored in the asset
   #       probabilityPercentage: integer between 1 and 100
-  #   strokes: an array of analyses for each stroke's importance, not stored in the asset
-  #     vertices: the points that make this stroke
-  #     labels: the analysis of which labels get recognized in the image when this line is omitted
-  #       symbolic, realistic: arrays of label probabilities sorted by probability descending
-  #     probabilityChange: the analysis how much the target label's probability changes when this line is omitted
-  #       symbolic, realistic: the probability difference between the image without and with this line
   constructor: (@bitmap, @options = {}) ->
     @options.preserveNoisyFeatures ?= true
 
@@ -129,7 +123,7 @@ class PAA.Practice.ReadabilityAnalysis
             continue unless pixelArtEvaluationStrokes.length
             
             # Convert strokes into input data for the classifiers.
-            @_classificationInputData[regionIndex] ?= []
+            @_classificationInputData[regionIndex] ?= {}
             @_classificationInputData[regionIndex].pixelArtEvaluation ?= new Float32Array inputSize * inputSize
             PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData pixelArtEvaluationStrokes, @_classificationInputData[regionIndex].pixelArtEvaluation
 
@@ -187,43 +181,6 @@ class PAA.Practice.ReadabilityAnalysis
             for spline in splines
               depixelizerStrokes.push spline.getPolygonalChain 4
             
-            # Keep merging strokes that share endpoints until no more joins are possible.
-            mergeOccurred = true
-            
-            while mergeOccurred
-              mergeOccurred = false
-              
-              for strokeA, strokeIndexA in depixelizerStrokes
-                break if mergeOccurred
-                
-                firstA = _.first strokeA.vertices
-                lastA = _.last strokeA.vertices
-                
-                for strokeB, strokeIndexB in depixelizerStrokes
-                  continue if strokeIndexB <= strokeIndexA
-                  
-                  firstB = _.first strokeB.vertices
-                  lastB = _.last strokeB.vertices
-                  
-                  if lastA.equals firstB
-                    strokeA.vertices.push strokeB.vertices[1..]...
-                    
-                  else if firstA.equals lastB
-                    strokeA.vertices.unshift strokeB.vertices[0..-2]...
-                    
-                  else if lastA.equals lastB
-                    strokeA.vertices.push strokeB.vertices[0..-2].reverse()...
-                    
-                  else if firstA.equals firstB
-                    strokeA.vertices.unshift strokeB.vertices[1..].reverse()...
-                    
-                  else
-                    continue
-                  
-                  depixelizerStrokes.splice strokeIndexB, 1
-                  mergeOccurred = true
-                  break
-              
             @_classificationInputData[regionIndex].depixelizer ?= new Float32Array inputSize * inputSize
             PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData depixelizerStrokes, @_classificationInputData[regionIndex].depixelizer
 
@@ -249,75 +206,18 @@ class PAA.Practice.ReadabilityAnalysis
             depixelizerResultIsBetter = maxTargetProbability(depixelizerClassifierResults) > maxTargetProbability(pixelArtEvaluationClassifierResults)
             
             if depixelizerResultIsBetter
-              strokes = depixelizerStrokes
               classifierResults = depixelizerClassifierResults
-              @_classificationInputData[regionIndex][0] = @_classificationInputData[regionIndex].depixelizer
+              @_classificationInputData[regionIndex].better = @_classificationInputData[regionIndex].depixelizer
               
             else
-              strokes = pixelArtEvaluationStrokes
               classifierResults = pixelArtEvaluationClassifierResults
-              @_classificationInputData[regionIndex][0] = @_classificationInputData[regionIndex].pixelArtEvaluation
+              @_classificationInputData[regionIndex].better = @_classificationInputData[regionIndex].pixelArtEvaluation
             
             # Store label probabilities into the region.
             region.labels = {}
             
             for classifierResult in classifierResults
               region.labels[classifierResult.classifierType] = classifierResult.labelProbabilities
-              
-            # Analyze the importance of each stroke, by running classification again without that stroke.
-            strokesWithoutOmittedStroke = strokes[1..]
-            
-            # We need to calculate the probability change for the target class,
-            # so first find what the probability is with all the strokes.
-            targetClassProbability = {}
-            
-            for classifierType, labelProbabilities of region.labels
-              labelProbabilityWithLine = _.find labelProbabilities, (labelProbability) => labelProbability.label is region.targetLabel
-              targetClassProbability[classifierType] = labelProbabilityWithLine.probability
-
-            # Analyze each stroke.
-            region.strokes = []
-            
-            for stroke, omittedStrokeIndex in strokes
-              inputDataIndex = 1
-              
-              # When debugging, store each individual input data so we can see them for debugging purposes.
-              inputDataIndex += omittedStrokeIndex if PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis.debug
-              @_classificationInputData[regionIndex][inputDataIndex] ?= new Float32Array inputSize * inputSize
-              PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData strokesWithoutOmittedStroke, @_classificationInputData[regionIndex][inputDataIndex]
-              
-              # Run classification.
-              classificationPromises = for classifierType, classifier of @classifiers
-                do (classifierType, classifier) =>
-                  new Promise (resolve, reject) =>
-                    labelProbabilities = await classifier.classify @_classificationInputData[regionIndex][inputDataIndex]
-                    resolve {classifierType, labelProbabilities}
-            
-              classifierResults = await Promise.all classificationPromises
-              return unless classificationCounter is @_classificationCounter
-              
-              # Store stroke analysis into the region.
-              displayVertexOffset = if depixelizerResultIsBetter then -1 else 0.5
-              
-              strokeAnalysis =
-                vertices: for vertex in stroke.vertices
-                  x: vertex.x + displayVertexOffset
-                  y: vertex.y + displayVertexOffset
-                labels: {}
-                probabilityChange: {}
-
-              region.strokes[omittedStrokeIndex] = strokeAnalysis
-              
-              for classifierResult in classifierResults
-                # Store all label probabilities.
-                strokeAnalysis.labels[classifierResult.classifierType] = classifierResult.labelProbabilities
-                
-                # Calculate the probability change for the target class.
-                labelProbabilityWithoutLine = _.find classifierResult.labelProbabilities, (labelProbability) => labelProbability.label is region.targetLabel
-                strokeAnalysis.probabilityChange[classifierResult.classifierType] = targetClassProbability[classifierResult.classifierType] - labelProbabilityWithoutLine.probability
-
-              # Put back the stroke that was omitted, in place of the next omitted stroke.
-              strokesWithoutOmittedStroke[omittedStrokeIndex] = strokes[omittedStrokeIndex]
               
           # The analysis completed without being cancelled due to a re-run so save new results.
           @regions = regions
