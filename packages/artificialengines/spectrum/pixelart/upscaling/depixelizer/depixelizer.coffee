@@ -25,7 +25,7 @@ class AS.PixelArt.Upscaling.Depixelizer
     # Return the upscaled version.
     targetCanvas
 
-  @getBezierCurves: (image, options = {}) ->
+  @getBSplines: (image, options = {}) ->
     sourceCanvas = new AM.ReadableCanvas image
     sourceImageData = sourceCanvas.getFullImageData()
     
@@ -35,5 +35,5 @@ class AS.PixelArt.Upscaling.Depixelizer
       borderPx: options.borderWidth
       renderMode: AS.PixelArt.Upscaling.Depixelizer.RenderModes.Splines
 
-    for spline in scaledResult.allSplines
-      new AP.BezierCurve (new THREE.Vector2 point[0], point[1] for point in spline)
+    for spline in scaledResult.splines
+      new AP.BSpline (new THREE.Vector2 point[0], point[1] for point in spline)

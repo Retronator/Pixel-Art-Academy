@@ -10,7 +10,9 @@ class PAA.Pages.PixelImageClassification extends AM.Component
   @sourcePreviewScale = 16
   @sourcePreviewMaximumViewportRatio = 0.48
 
-  @curvesPreviewScale = 8
+  @splinesPreviewScale = 16
+
+  @initializeDataComponent()
 
   onCreated: ->
     super arguments...
@@ -18,13 +20,16 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     sourceSize = @constructor.sourceSize
 
     @isDrawing = new ReactiveField false
+    @sourceWidth = new ReactiveField sourceSize
+    @sourceHeight = new ReactiveField sourceSize
     @sourceCanvas = new ReactiveField @_createSourceCanvas sourceSize, sourceSize
     @strokePixelValue = null
 
-    @curves = new ComputedField =>
+    @splines = new ComputedField =>
       return unless sourceCanvas = @sourceCanvas()
 
-      AS.PixelArt.Upscaling.Depixelizer.getBezierCurves sourceCanvas
+      AS.PixelArt.Upscaling.Depixelizer.getBSplines sourceCanvas,
+        borderWidth: 2
 
     @classifiers =
       symbolic: new PAA.ImageClassification.SimpleClassifier.Symbolic
@@ -44,14 +49,14 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     super arguments...
 
     @sourcePreviewCanvas = @$('.source.preview-canvas')[0]
-    @curvesPreviewCanvas = @$('.curves.preview-canvas')[0]
-    @curvesPreviewContext = @curvesPreviewCanvas.getContext '2d'
+    @splinesPreviewCanvas = @$('.splines.preview-canvas')[0]
+    @splinesPreviewContext = @splinesPreviewCanvas.getContext '2d'
     
-    sourceSize = @constructor.sourceSize
-    previewSize = sourceSize * @constructor.curvesPreviewScale
-    @curvesPreviewCanvas.width = previewSize
-    @curvesPreviewCanvas.height = previewSize
-
+    inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
+    @inputDataPreviewCanvas = new AM.ReadableCanvas inputSize, inputSize
+    @inputDataPreviewCanvas.classList.add 'input-data', 'preview-canvas'
+    @$('.input-area').append @inputDataPreviewCanvas
+    
     @_sourcePreviewMagnification = new ComputedField =>
       return 1 unless sourceCanvas = @sourceCanvas()
 
@@ -68,6 +73,14 @@ class PAA.Pages.PixelImageClassification extends AM.Component
 
     @_throttledClassify ?= _.throttle =>
       return unless PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData @_strokes, @_classificationInputData
+      
+      inputDataPreviewImageData = @inputDataPreviewCanvas.getFullImageData()
+      inputDataPreviewImageData.data.fill 255
+      
+      for i in [0...@_classificationInputData.length]
+        inputDataPreviewImageData.data[i * 4 + 3] = @_classificationInputData[i]
+        
+      @inputDataPreviewCanvas.putFullImageData inputDataPreviewImageData
       
       promises = for classifierName, classifier of @classifiers
         do (classifierName, classifier) =>
@@ -101,28 +114,34 @@ class PAA.Pages.PixelImageClassification extends AM.Component
       100
       
     @autorun (computation) =>
-      return unless curves = @curves()
-      
-      sourceSize = @constructor.sourceSize
-      scale = @constructor.curvesPreviewScale
-      previewSize = sourceSize * scale
+      return unless sourceCanvas = @sourceCanvas()
+      return unless splines = @splines()
 
-      @curvesPreviewContext.clearRect 0, 0, previewSize, previewSize
-      @curvesPreviewContext.strokeStyle = 'white'
-      @curvesPreviewContext.lineWidth = 2
+      scale = @constructor.splinesPreviewScale
+      previewWidth = sourceCanvas.width * scale
+      previewHeight = sourceCanvas.height * scale
+
+      @splinesPreviewCanvas.width = previewWidth
+      @splinesPreviewCanvas.height = previewHeight
+      @splinesPreviewContext.clearRect 0, 0, previewWidth, previewHeight
+      @splinesPreviewContext.strokeStyle = 'white'
+      @splinesPreviewContext.lineWidth = 2
       
-      @curvesPreviewContext.beginPath()
+      @splinesPreviewContext.beginPath()
       
       @_strokes = []
 
-      for curve in curves
-        @curvesPreviewContext.moveTo curve.points[0].x * scale, curve.points[0].y * scale
-        #@curvesPreviewContext.quadraticCurveTo curve.points[1].x * scale, curve.points[1].y * scale, curve.points[2].x * scale, curve.points[2].y * scale
-        @curvesPreviewContext.lineTo curve.points[2].x * scale, curve.points[2].y * scale
-        
-        @_strokes.push new AP.PolygonalChain curve.points
+      for spline in splines
+        polygonalChain = spline.getPolygonalChain 6
 
-      @curvesPreviewContext.stroke()
+        @splinesPreviewContext.moveTo polygonalChain.vertices[0].x * scale, polygonalChain.vertices[0].y * scale
+
+        for vertex in polygonalChain.vertices[1..]
+          @splinesPreviewContext.lineTo vertex.x * scale, vertex.y * scale
+        
+        @_strokes.push polygonalChain
+
+      @splinesPreviewContext.stroke()
       
       for classifierName, classifier of @classifiers
         return unless classifier.ready()
@@ -147,8 +166,29 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     for pixelOffset in [0...targetImageData.data.length] by 4
       targetImageData.data[pixelOffset + offset] = 255 for offset in [0..3]
 
+    if sourceCanvas = @sourceCanvas?()
+      sourceImageData = sourceCanvas.getFullImageData()
+
+      # Preserve the overlapping area when the user changes the source dimensions.
+      for x in [0...Math.min sourceWidth, sourceCanvas.width]
+        for y in [0...Math.min sourceHeight, sourceCanvas.height]
+          sourcePixelOffset = (x + y * sourceCanvas.width) * 4
+          targetPixelOffset = (x + y * sourceWidth) * 4
+
+          targetImageData.data[targetPixelOffset + offset] = sourceImageData.data[sourcePixelOffset + offset] for offset in [0..3]
+
     targetCanvas.putFullImageData targetImageData
     targetCanvas
+
+  setSourceSize: (width, height) ->
+    width = Math.max 1, Math.round width
+    height = Math.max 1, Math.round height
+
+    return if width is @sourceWidth() and height is @sourceHeight()
+
+    @sourceWidth width
+    @sourceHeight height
+    @sourceCanvas @_createSourceCanvas width, height
 
   _drawScaledCanvas: (targetCanvas, sourceCanvas, magnification, showPixelGrid = false) ->
     targetCanvas.width = sourceCanvas.width * magnification
@@ -191,6 +231,7 @@ class PAA.Pages.PixelImageClassification extends AM.Component
       'mousedown .source': @onMouseDownSource
       'mousemove .source': @onMouseMoveSource
       'mouseleave .source': @onMouseLeaveSource
+      'change .source-file-input': @onChangeSourceFileInput
       'click .clear-canvas-button': @onClickClearButton
 
   onMouseDownSource: (event) ->
@@ -261,12 +302,64 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     updatedSourceCanvas.putFullImageData updatedImageData
     @sourceCanvas updatedSourceCanvas
 
-  onClickClearButton: (event) ->
-    size = @constructor.sourceSize
+  onChangeSourceFileInput: (event) ->
+    file = event.currentTarget.files?[0]
+    return unless file
 
-    @sourceCanvas @_createSourceCanvas size, size
+    imageUrl = URL.createObjectURL file
+    image = new Image
+
+    image.onload = =>
+      @sourceWidth image.width
+      @sourceHeight image.height
+      @sourceCanvas new AM.ReadableCanvas image
+
+      URL.revokeObjectURL imageUrl
+      event.currentTarget.value = null
+
+    image.onerror = =>
+      URL.revokeObjectURL imageUrl
+
+    image.src = imageUrl
+
+  onClickClearButton: (event) ->
+    @sourceCanvas null
+    @sourceCanvas @_createSourceCanvas @sourceWidth(), @sourceHeight()
     @strokePixelValue = null
     @isDrawing false
 
-    @_strokes = []
     @$('.results-area').html ""
+
+  class @SourceWidth extends @DataInputComponent
+    @register 'PixelArtAcademy.Pages.PixelImageClassification.SourceWidth'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'sourceWidth'
+      @type = AM.DataInputComponent.Types.Number
+      @realtime = false
+      @customAttributes =
+        min: 1
+        step: 1
+
+    save: (value) ->
+      return unless _.isFinite value
+      @dataProviderComponent.setSourceSize value, @dataProviderComponent.sourceHeight()
+
+  class @SourceHeight extends @DataInputComponent
+    @register 'PixelArtAcademy.Pages.PixelImageClassification.SourceHeight'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'sourceHeight'
+      @type = AM.DataInputComponent.Types.Number
+      @realtime = false
+      @customAttributes =
+        min: 1
+        step: 1
+
+    save: (value) ->
+      return unless _.isFinite value
+      @dataProviderComponent.setSourceSize @dataProviderComponent.sourceWidth(), value

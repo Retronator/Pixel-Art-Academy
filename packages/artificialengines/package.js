@@ -360,6 +360,7 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygonalchain');
 
   api.addFile('pyramid/beziercurve');
+  api.addFile('pyramid/bspline');
 
   api.addFile('pyramid/triangulatedsurface..');
   api.addFile('pyramid/triangulatedsurface/triangulatedsurface-getsilhouette');

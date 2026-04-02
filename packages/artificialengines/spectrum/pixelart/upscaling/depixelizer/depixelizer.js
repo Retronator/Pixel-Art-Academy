@@ -2041,21 +2041,31 @@ function scaleImage(src, opts) {
       }
     }
 
+    const croppedSplines = padded.allSplines.map(spline =>
+      spline.map(([x, y]) => [x - padOut + 0.5, y - padOut + 0.5])
+    );
+
     return {
       data: cropped,
       width: outW,
       height: outH,
       similarityData: croppedSimilarity,
+      splines: croppedSplines
     };
   }
 
   const result = runPipeline(src, outH, threshold, similarity, renderMode, doOpt, outputSimilarityMask);
+
+  const splines = result.allSplines.map(spline =>
+    spline.map(([x, y]) => [x + 0.5, y + 0.5])
+  );
+
   return {
     data: result.data,
     width: result.width,
     height: result.height,
     similarityData: result.similarityData,
-    allSplines: result.allSplines
+    splines: splines
   };
 }
 

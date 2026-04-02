@@ -42,6 +42,7 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/pages');
   api.addComponent('pyramid/interpolation..');
+  api.addComponent('pyramid/bspline..');
   api.addFile('pyramid/polygonalchain..')
   api.addComponent('pyramid/polygonalchain/decimate..');
 
