@@ -6,11 +6,13 @@ PAA = PixelArtAcademy
 class PAA.Pages.PixelImageClassification extends AM.Component
   @register 'PixelArtAcademy.Pages.PixelImageClassification'
 
+  @VectorizationAlgorithms:
+    Depixelizer: 'Depixelizer'
+    PixelArtEvaluation: 'PixelArtEvaluation'
+
   @sourceSize = 16
   @sourcePreviewScale = 16
   @sourcePreviewMaximumViewportRatio = 0.48
-
-  @splinesPreviewScale = 16
 
   @initializeDataComponent()
 
@@ -22,14 +24,9 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     @isDrawing = new ReactiveField false
     @sourceWidth = new ReactiveField sourceSize
     @sourceHeight = new ReactiveField sourceSize
+    @vectorizationAlgorithm = new ReactiveField @constructor.VectorizationAlgorithms.Depixelizer
     @sourceCanvas = new ReactiveField @_createSourceCanvas sourceSize, sourceSize
     @strokePixelValue = null
-
-    @splines = new ComputedField =>
-      return unless sourceCanvas = @sourceCanvas()
-
-      AS.PixelArt.Upscaling.Depixelizer.getBSplines sourceCanvas,
-        borderWidth: 2
 
     @classifiers =
       symbolic: new PAA.ImageClassification.SimpleClassifier.Symbolic
@@ -38,19 +35,13 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     for classifierName, classifier of @classifiers
       await classifier.createInferenceSession()
     
-    @_strokes = []
-    
     inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
     @_classificationInputData = new Float32Array inputSize * inputSize
-    
-    @_strokes = []
-
+  
   onRendered: ->
     super arguments...
 
     @sourcePreviewCanvas = @$('.source.preview-canvas')[0]
-    @splinesPreviewCanvas = @$('.splines.preview-canvas')[0]
-    @splinesPreviewContext = @splinesPreviewCanvas.getContext '2d'
     
     inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
     @inputDataPreviewCanvas = new AM.ReadableCanvas inputSize, inputSize
@@ -113,38 +104,94 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     ,
       100
       
-    @autorun (computation) =>
-      return unless sourceCanvas = @sourceCanvas()
-      return unless splines = @splines()
-
-      scale = @constructor.splinesPreviewScale
-      previewWidth = sourceCanvas.width * scale
-      previewHeight = sourceCanvas.height * scale
-
-      @splinesPreviewCanvas.width = previewWidth
-      @splinesPreviewCanvas.height = previewHeight
-      @splinesPreviewContext.clearRect 0, 0, previewWidth, previewHeight
-      @splinesPreviewContext.strokeStyle = 'white'
-      @splinesPreviewContext.lineWidth = 2
-      
-      @splinesPreviewContext.beginPath()
-      
+    @autorun =>
       @_strokes = []
-
-      for spline in splines
-        polygonalChain = spline.getPolygonalChain 6
-
-        @splinesPreviewContext.moveTo polygonalChain.vertices[0].x * scale, polygonalChain.vertices[0].y * scale
-
-        for vertex in polygonalChain.vertices[1..]
-          @splinesPreviewContext.lineTo vertex.x * scale, vertex.y * scale
-        
-        @_strokes.push polygonalChain
-
-      @splinesPreviewContext.stroke()
       
       for classifierName, classifier of @classifiers
         return unless classifier.ready()
+      
+      return unless sourceCanvas = @sourceCanvas()
+      
+      switch @vectorizationAlgorithm()
+        when @constructor.VectorizationAlgorithms.Depixelizer
+          splines = AS.PixelArt.Upscaling.Depixelizer.getBSplines sourceCanvas
+
+          for spline in splines
+            polygonalChain = spline.getPolygonalChain 6
+            @_strokes.push polygonalChain
+
+        when @constructor.VectorizationAlgorithms.PixelArtEvaluation
+          Tracker.nonreactive =>
+            bitmap = new LOI.Assets.Bitmap
+              bounds:
+                fixed: true
+                left: 0
+                top: 0
+                right: sourceCanvas.width - 1
+                bottom: sourceCanvas.height - 1
+              pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'directColor'
+               
+            bitmap.initialize()
+            bitmap.addLayer()
+            layer = bitmap.layers[0]
+          
+            flagsAttribute = layer.attributes[LOI.Assets.Bitmap.Attribute.Ids.Flags]
+            directColorAttribute = layer.attributes[LOI.Assets.Bitmap.Attribute.Ids.DirectColor]
+            
+            directColor = r: 0, g: 0, b: 0
+            alpha = 0
+            
+            imageData = sourceCanvas.getFullImageData()
+            
+            for x in [0...layer.width]
+              continue unless x < imageData.width
+        
+              for y in [0...layer.height]
+                continue unless y < imageData.height
+                
+                imagePixelIndex = y * imageData.width + x
+                imagePixelOffset = imagePixelIndex * 4
+                directColor.r = imageData.data[imagePixelOffset] / 255
+                directColor.g = imageData.data[imagePixelOffset + 1] / 255
+                directColor.b = imageData.data[imagePixelOffset + 2] / 255
+                alpha = imageData.data[imagePixelOffset + 3] / 255
+                alpha = 0 if directColor.r is 1 and directColor.g is 1 and directColor.b is 1
+                
+                if alpha
+                  flagsAttribute.setPixelFlag x, y, LOI.Assets.Bitmap.Attribute.DirectColor.flagValue
+                  directColorAttribute.setPixel x, y, directColor
+            
+            PAE = PAA.Practice.PixelArtEvaluation
+            pixelArtEvaluation = new PAE bitmap,
+              preserveNoisyFeatures: true
+            
+            for layer in pixelArtEvaluation.layers
+              # Convert lines into polygonal chains.
+              for line in layer.lines
+                vertices = []
+                
+                for part in line.parts
+                  if part instanceof PAE.Line.Part.StraightLine
+                    vertices.push part.displayLine2.start, part.displayLine2.end
+                    
+                  else if part instanceof PAE.Line.Part.Curve
+                    points = part.displayPoints
+                    getPoint = (index) => if part.isClosed then points[_.modulo index, points.length] else points[index]
+                    
+                    vertices.push points[0].position
+                    
+                    endIndex = if part.isClosed then points.length - 1 else points.length - 2
+                    
+                    for pointIndex in [0..endIndex]
+                      end = getPoint pointIndex + 1
+                      vertices.push end.position
+                
+                @_strokes.push new AP.PolygonalChain vertices
+              
+              # Convert points into (dummy) polygonal chains.
+              for point in layer.points when not point.lines.length
+                vertex = new THREE.Vector2 point.pixels[0].x, point.pixels[0].y
+                @_strokes.push new AP.PolygonalChain [vertex, vertex]
       
       @_throttledClassify()
 
@@ -202,7 +249,6 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     @_drawPixelGrid context, targetCanvas, sourceCanvas, magnification if showPixelGrid
 
   _drawPixelGrid: (context, targetCanvas, sourceCanvas, magnification) ->
-    # Use the same subtle grid approach as the upscaling editor when pixels are large enough.
     gridOpacity = (magnification - 2) / 100
     gridOpacity = _.clamp gridOpacity, 0, 0.3
 
@@ -363,3 +409,17 @@ class PAA.Pages.PixelImageClassification extends AM.Component
     save: (value) ->
       return unless _.isFinite value
       @dataProviderComponent.setSourceSize @dataProviderComponent.sourceWidth(), value
+
+  class @VectorizationAlgorithm extends @DataInputComponent
+    @register 'PixelArtAcademy.Pages.PixelImageClassification.VectorizationAlgorithm'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'vectorizationAlgorithm'
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      for mode, value of @dataProviderComponent.constructor.VectorizationAlgorithms
+        value: value
+        name: _.upperFirst _.lowerCase mode

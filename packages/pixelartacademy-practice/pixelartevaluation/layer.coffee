@@ -257,7 +257,7 @@ class PAE.Layer
       
     # Connect points.
     point.connectNeighbors() for point in newPoints
-    PAE.Point.optimizeNeighbors newPoints
+    PAE.Point.optimizeNeighbors newPoints, @pixelArtEvaluation.options.preserveNoisyFeatures
     
     # Now that we have point connections, finish creating outlines.
     newLines = []
@@ -285,8 +285,9 @@ class PAE.Layer
             
         continue if lineFound
         
-        # Ignore lines that connect outlines to double points.
-        continue if 1 in [point.radius, neighbor.radius] and (point.getOutlines().length or neighbor.getOutlines().length)
+        unless @pixelArtEvaluation.options.preserveNoisyFeatures
+          # Ignore lines that connect outlines to double points.
+          continue if 1 in [point.radius, neighbor.radius] and (point.getOutlines().length or neighbor.getOutlines().length)
         
         # We need a line going from this point through the neighbor.
         line = @_addLine()

@@ -7,15 +7,14 @@
       Upload file: <input class="source-file-input" type="file" accept="image/png"/><br/>
       Width: {{> PixelArtAcademy.Pages.PixelImageClassification.SourceWidth}}
       Height: {{> PixelArtAcademy.Pages.PixelImageClassification.SourceHeight}}<br/>
+      Vectorization algorithm: {{> PixelArtAcademy.Pages.PixelImageClassification.VectorizationAlgorithm}}<br/>
       <button class="clear-canvas-button">Clear</button>
     </div>
     <div class="main-area">
       <div class="canvas-area">
         <canvas class="source preview-canvas"></canvas>
       </div>
-      <div class="input-area">
-        <canvas class="splines preview-canvas"></canvas>
-      </div>
+      <div class="input-area"></div>
       <div class="results-area"></div>
     </div>
   </div>

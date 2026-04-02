@@ -5,7 +5,7 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
   @register 'Artificial.Spectrum.Pages.PixelArt.Upscaling'
 
   @sourcePreviewScaleMultiplier = 16
-  @sourcePreviewMaximumViewportRatio = 0.48
+  @sourcePreviewMaximumWidth = 550
 
   @Algorithms:
     Depixelizer: 'Depixelizer'
@@ -59,7 +59,7 @@ class AS.Pages.PixelArt.Upscaling extends AM.Component
       
       # Keep the editing surface much larger than the rendered result while still fitting roughly half the viewport.
       preferredMagnification = @constructor.sourcePreviewScaleMultiplier
-      maximumCanvasWidth = Math.floor window.innerWidth * @constructor.sourcePreviewMaximumViewportRatio
+      maximumCanvasWidth = @constructor.sourcePreviewMaximumWidth
       maximumMagnification = Math.floor maximumCanvasWidth / sourceCanvas.width
       
       Math.max 1, Math.min preferredMagnification, maximumMagnification

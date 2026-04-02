@@ -24,6 +24,8 @@ class PAA.Practice.ReadabilityAnalysis
   #     probabilityChange: the analysis how much the target label's probability changes when this line is omitted
   #       symbolic, realistic: the probability difference between the image without and with this line
   constructor: (@bitmap, @options = {}) ->
+    @options.preserveNoisyFeatures ?= true
+
     @regions = null
     
     @pixelArtEvaluation = new PAE @bitmap, @options
@@ -117,7 +119,7 @@ class PAA.Practice.ReadabilityAnalysis
                   continue unless 0 <= point.x - region.bounds.x < region.bounds.width
                   continue unless 0 <= point.y - region.bounds.y < region.bounds.width
                 
-                vertex = {x: point.pixels[0].x, y: point.pixels[0].y}
+                vertex = new THREE.Vector2 point.pixels[0].x, point.pixels[0].y
                 strokes.push new AP.PolygonalChain [vertex, vertex]
                 elements.push point
             
