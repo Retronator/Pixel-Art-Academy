@@ -156,8 +156,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
           # Run the analysis criteria.
           recognition = []
           
-          for region in readabilityAnalysisProperty.regions
-            regionRecognition = @_regionRecognitionResult region
+          for region, regionIndex in readabilityAnalysisProperty.regions
+            regionRecognition = @_regionRecognitionResult region, readabilityAnalysis.regions[regionIndex]
             recognition.push regionRecognition
             region.recognition = passes: regionRecognition.passes if regionRecognition
             

@@ -32,7 +32,6 @@ class RA.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineCompo
     return unless @options.displayed()
     
     readabilityAnalysis = @options.readabilityAnalysis()
-    pixelArtEvaluation = readabilityAnalysis.pixelArtEvaluation
 
     palette = LOI.palette()
     bestColor = palette.color Atari2600.hues.green, 4
@@ -43,55 +42,31 @@ class RA.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineCompo
     
     markup = []
 
-    # Prepare lines and line parts for markup.
-    focusedPixel = @options.focusedPixel()
-    focusedLines = if focusedPixel then pixelArtEvaluation.getLinesAt focusedPixel.x, focusedPixel.y else []
-    focusedPoints = if focusedPixel then pixelArtEvaluation.getPointsAt focusedPixel.x, focusedPixel.y else []
-    focusedElements = [focusedLines..., focusedPoints...]
-    
     for region in readabilityAnalysis.regions
       for strokeAnalysis in region.strokes
-        if strokeAnalysis.element instanceof PAE.Line
-          line = strokeAnalysis.element
-          continue if focusedElements.length and line not in focusedElements
-          
-        if strokeAnalysis.element instanceof PAE.Point
-          point = strokeAnalysis.element
-          continue if focusedElements.length and point not in focusedElements
+        probabilityChange = Math.max strokeAnalysis.probabilityChange.symbolic, strokeAnalysis.probabilityChange.realistic
         
-        if strokeAnalysis.probabilityChange.symbolic > 0.1
+        if probabilityChange > 0.1
           _lineColor.copy bestColor
           
-        else if strokeAnalysis.probabilityChange.symbolic > 0.01
+        else if probabilityChange > 0.01
           _lineColor.copy betterColor
           
-        else if strokeAnalysis.probabilityChange.symbolic < -0.1
+        else if probabilityChange < -0.1
           _lineColor.copy worstColor
           
-        else if strokeAnalysis.probabilityChange.symbolic < -0.01
+        else if probabilityChange < -0.01
           _lineColor.copy worseColor
           
         else
           _lineColor.copy neutralColor
           
-        style = "##{_lineColor.getHexString()}"
-        
-        if line
-          lineMarkup = Markup.PixelArt.perceivedLine line
-          
-          for element in lineMarkup
-            element.line.style = style
-            element.line.width = 2
-            
-          markup.push lineMarkup...
-        
-        if point
-          markup.push
-            circle:
-              x: point.x + 0.5
-              y: point.y + 0.5
-              radius: point.radius * 0.5
-              style: style
+        markup.push
+          line:
+            style: "##{_lineColor.getHexString()}"
+            width: 2
+            cap: 'round'
+            points: strokeAnalysis.vertices
           
     @drawMarkup markup, context,
       pixelSize: 1 / renderOptions.camera.effectiveScale() * devicePixelRatio

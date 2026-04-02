@@ -117,7 +117,7 @@ class PAA.Pages.PixelImageClassification extends AM.Component
           splines = AS.PixelArt.Upscaling.Depixelizer.getBSplines sourceCanvas
 
           for spline in splines
-            polygonalChain = spline.getPolygonalChain 6
+            polygonalChain = spline.getPolygonalChain 4
             @_strokes.push polygonalChain
 
         when @constructor.VectorizationAlgorithms.PixelArtEvaluation

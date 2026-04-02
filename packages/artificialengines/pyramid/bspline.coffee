@@ -5,7 +5,7 @@ class AP.BSpline
     t = parameter
     result ?= {}
     
-    for coordinate of point0
+    for own coordinate of point0
       p0 = point0[coordinate]
       p1 = point1[coordinate]
       p2 = point2[coordinate]
@@ -17,7 +17,7 @@ class AP.BSpline
     t = parameter
     result ?= {}
 
-    for coordinate of point0
+    for own coordinate of point0
       p0 = point0[coordinate]
       p1 = point1[coordinate]
       p2 = point2[coordinate]

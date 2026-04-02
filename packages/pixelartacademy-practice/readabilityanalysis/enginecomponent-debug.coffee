@@ -43,7 +43,7 @@ class RA.EngineComponent extends RA.EngineComponent
     bitmapBounds = @options.bitmapBounds()
 
     if @drawInput()
-      for region, regionIndex in readabilityAnalysis.regions
+      for region, regionIndex in readabilityAnalysis.regions when readabilityAnalysis._classificationInputData[regionIndex]
         bounds = region.bounds or bitmapBounds
         
         if focusedElements.length
