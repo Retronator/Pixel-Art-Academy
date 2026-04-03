@@ -89,14 +89,11 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     console.log "Documents successfully parsed." if Persistence.debug
     documents
 
-  addedInternal: (document) -> @_add document
-  changedInternal: (document) -> @_update document
+  addedInternal: (document) -> @_save document
+  changedInternal: (document) -> @_save document
   removedInternal: (document) -> @_delete document
 
-  _add: (document) ->
-    @_update document
-
-  _update: (document) ->
+  _save: (document) ->
     # Check if this is a different version than the one we have.
     documentClassId = document.constructor.id()
     return if EJSON.equals document.lastEditTime, @lastEditTimes[documentClassId]?[document._id]
