@@ -10,6 +10,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
     
     labelString = AB.Rules.English.addIndefinitePronoun region.targetLabel
     
+    # Create recognition results.
+    perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt this is #{labelString}."
+    greatResult = passes: true, summary: "Great", explanation: "This is easily recognized as #{labelString}."
+    goodResult = passes: true, summary: "Good", explanation: "This is likely #{labelString}."
+    adequateResult = passes: true, summary: "Adequate", explanation: "This could be #{labelString}."
+    
+    # For results that don't pass, try to create some useful feedback, based on probabilities of other labels.
+    
     # Determine target label probability, by classifier.
     targetProbabilityPercentages = {}
     
@@ -47,10 +55,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
     # Certain thresholds depend on the size of the drawing since
     # smaller drawings are harder to draw and should be more forgiving.
     drawingSize = Math.min fullRegionInfo.drawnBounds.width, fullRegionInfo.drawnBounds.height
-    clampedDrawingSize = _.clamp drawingSize, 8, 32
-    drawingSizeWeight = THREE.MathUtils.inverseLerp 8,32, clampedDrawingSize
+    clampedDrawingSize = _.clamp drawingSize, 8, 16
+    drawingSizeWeight = THREE.MathUtils.inverseLerp 8,16, clampedDrawingSize
     
-    adaptiveThreshold = (threshold8, threshold32) => THREE.MathUtils.lerp threshold8, threshold32, drawingSizeWeight
+    adaptiveThreshold = (threshold8, threshold16) => THREE.MathUtils.lerp threshold8, threshold16, drawingSizeWeight
     
     # Use the best other list to determine which other labels this drawing could be confused with, if their (weighted)
     # percentage is high enough. At smaller sizes, we want the system to have to be more confident since it's much
@@ -63,20 +71,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
     else if bestOtherLabelProbabilities.length >= 1 and bestOtherLabelProbabilities[0].probabilityPercentage > confidenceThreshold
       unrecognizableExplanation = "This could maybe be confused with #{AB.Rules.English.addIndefinitePronoun bestOtherLabelProbabilities[0].label}."
       
-    else if drawingSize < 16
-      unrecognizableExplanation = "I'm having trouble distinguish the subject at this small size."
-      
     else
-      unrecognizableExplanation = "Draw more details to distinguish the subject."
-    
-    # Create recognition results.
-    perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt this is #{labelString}."
-    greatResult = passes: true, summary: "Great", explanation: "This is easily recognized as #{labelString}."
-    goodResult = passes: true, summary: "Good", explanation: "This is likely #{labelString}."
-    adequateResult = passes: true, summary: "Adequate", explanation: "This could be #{labelString}."
-    poorResult = passes: false, summary: "Poor", explanation: unrecognizableExplanation
-    problematicResult = passes: false, summary: "Problematic", explanation: unrecognizableExplanation
-    
+      if drawingSize >= 16
+        unrecognizableExplanation = "Draw more details to distinguish the subject."
+        poorResult = passes: false, summary: "Poor", explanation: unrecognizableExplanation
+        problematicResult = passes: false, summary: "Problematic", explanation: unrecognizableExplanation
+      
+      else
+        poorResult = passes: false, summary: "Inconclusive", explanation: "I'm having trouble distinguish the subject at this small size."
+        problematicResult = poorResult
+        
     bothFailingThreshold = adaptiveThreshold 1, 10
     
     # If both classifiers recognize the subject, this gives good–perfect results.

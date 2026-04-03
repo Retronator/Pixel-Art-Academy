@@ -21,6 +21,66 @@ class PAA.Practice.ReadabilityAnalysis
   #       label: string with the name
   #       probability: number between 0 and 1 how likely this label is drawn, not stored in the asset
   #       probabilityPercentage: integer between 1 and 100
+  @getStrokesFromPixelArtEvaluation: (pixelArtEvaluation, bounds) ->
+    strokes = []
+    
+    for layer in pixelArtEvaluation.layers
+      # Convert lines into polygonal chains.
+      for line in layer.lines
+        if bounds
+          lineBounds = line.getPixelBounds()
+          
+          # Skip line if it doesn't intersect with region bounds
+          continue if lineBounds.maxX < bounds.x
+          continue if lineBounds.maxY < bounds.y
+          continue if lineBounds.minX >= bounds.x + bounds.width
+          continue if lineBounds.minY >= bounds.y + bounds.height
+        
+        vertices = []
+        
+        for part in line.parts
+          if part instanceof PAE.Line.Part.StraightLine
+            vertices.push part.displayLine2.start, part.displayLine2.end
+            
+          else if part instanceof PAE.Line.Part.Curve
+            points = part.displayPoints
+            getPoint = (index) => if part.isClosed then points[_.modulo index, points.length] else points[index]
+            
+            vertices.push points[0].position
+            
+            endIndex = if part.isClosed then points.length - 1 else points.length - 2
+            
+            for pointIndex in [0..endIndex]
+              end = getPoint pointIndex + 1
+              vertices.push end.position
+        
+        strokes.push new AP.PolygonalChain vertices
+      
+      # Add extra connections based on points.
+      for point in layer.points
+        if bounds
+          # Skip point if it doesn't lie in region bounds
+          continue unless 0 <= point.x - bounds.x < bounds.width
+          continue unless 0 <= point.y - bounds.y < bounds.width
+          
+        extraConnectionCreated = false
+        
+        # Add lines between extra neighbors that haven't been connected with lines.
+        extraNeighbors = _.difference point.allNeighbors, point.neighbors
+
+        for neighbor in extraNeighbors
+          strokes.push new AP.PolygonalChain [
+            new THREE.Vector2 point.x, point.y
+            new THREE.Vector2 neighbor.x, neighbor.y
+          ]
+          
+        # Create a (dummy) line if no other connection was found.
+        unless extraConnectionCreated or point.lines.length
+          vertex = new THREE.Vector2 point.x, point.y
+          strokes.push new AP.PolygonalChain [vertex, vertex]
+  
+    strokes        
+  
   constructor: (@bitmap, @options = {}) ->
     @options.preserveNoisyFeatures ?= true
 
@@ -76,50 +136,7 @@ class PAA.Practice.ReadabilityAnalysis
             regions.push region
             
             # Generate strokes from detected elements.
-            pixelArtEvaluationStrokes = []
-            
-            for layer in @pixelArtEvaluation.layers
-              # Convert lines into polygonal chains.
-              for line in layer.lines
-                if region.bounds
-                  lineBounds = line.getPixelBounds()
-                  
-                  # Skip line if it doesn't intersect with region bounds
-                  continue if lineBounds.maxX < region.bounds.x
-                  continue if lineBounds.maxY < region.bounds.y
-                  continue if lineBounds.minX >= region.bounds.x + region.bounds.width
-                  continue if lineBounds.minY >= region.bounds.y + region.bounds.height
-                
-                vertices = []
-                
-                for part in line.parts
-                  if part instanceof PAE.Line.Part.StraightLine
-                    vertices.push part.displayLine2.start, part.displayLine2.end
-                    
-                  else if part instanceof PAE.Line.Part.Curve
-                    points = part.displayPoints
-                    getPoint = (index) => if part.isClosed then points[_.modulo index, points.length] else points[index]
-                    
-                    vertices.push points[0].position
-                    
-                    endIndex = if part.isClosed then points.length - 1 else points.length - 2
-                    
-                    for pointIndex in [0..endIndex]
-                      end = getPoint pointIndex + 1
-                      vertices.push end.position
-                
-                pixelArtEvaluationStrokes.push new AP.PolygonalChain vertices
-              
-              # Convert points into (dummy) polygonal chains.
-              for point in layer.points when not point.lines.length
-                if region.bounds
-                  # Skip point if it doesn't lie in region bounds
-                  continue unless 0 <= point.x - region.bounds.x < region.bounds.width
-                  continue unless 0 <= point.y - region.bounds.y < region.bounds.width
-                
-                vertex = new THREE.Vector2 point.pixels[0].x, point.pixels[0].y
-                pixelArtEvaluationStrokes.push new AP.PolygonalChain [vertex, vertex]
-            
+            pixelArtEvaluationStrokes = @constructor.getStrokesFromPixelArtEvaluation @pixelArtEvaluation, region.bounds
             continue unless pixelArtEvaluationStrokes.length
             
             # Convert strokes into input data for the classifiers.

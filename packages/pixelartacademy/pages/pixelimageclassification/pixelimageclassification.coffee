@@ -161,37 +161,9 @@ class PAA.Pages.PixelImageClassification extends AM.Component
                   flagsAttribute.setPixelFlag x, y, LOI.Assets.Bitmap.Attribute.DirectColor.flagValue
                   directColorAttribute.setPixel x, y, directColor
             
-            PAE = PAA.Practice.PixelArtEvaluation
-            pixelArtEvaluation = new PAE bitmap,
-              preserveNoisyFeatures: true
-            
-            for layer in pixelArtEvaluation.layers
-              # Convert lines into polygonal chains.
-              for line in layer.lines
-                vertices = []
-                
-                for part in line.parts
-                  if part instanceof PAE.Line.Part.StraightLine
-                    vertices.push part.displayLine2.start, part.displayLine2.end
-                    
-                  else if part instanceof PAE.Line.Part.Curve
-                    points = part.displayPoints
-                    getPoint = (index) => if part.isClosed then points[_.modulo index, points.length] else points[index]
-                    
-                    vertices.push points[0].position
-                    
-                    endIndex = if part.isClosed then points.length - 1 else points.length - 2
-                    
-                    for pointIndex in [0..endIndex]
-                      end = getPoint pointIndex + 1
-                      vertices.push end.position
-                
-                @_strokes.push new AP.PolygonalChain vertices
-              
-              # Convert points into (dummy) polygonal chains.
-              for point in layer.points when not point.lines.length
-                vertex = new THREE.Vector2 point.pixels[0].x, point.pixels[0].y
-                @_strokes.push new AP.PolygonalChain [vertex, vertex]
+            pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
+            @_strokes = PAA.Practice.ReadabilityAnalysis.getStrokesFromPixelArtEvaluation pixelArtEvaluation
+            pixelArtEvaluation.destroy()
       
       @_throttledClassify()
 
