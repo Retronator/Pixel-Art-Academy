@@ -48,7 +48,7 @@ class LOI.HumanAvatar.TextureRenderer
 
       @paletteDataContext.restore()
 
-    @scaledPaletteDataCanvas = AS.Hqx.scale @paletteDataCanvas, @constructor.textureMagnification, AS.Hqx.Modes.NoBlending, false
+    @scaledPaletteDataCanvas = AS.PixelArt.Upscaling.Hqx.scale @paletteDataCanvas, @constructor.textureMagnification, AS.PixelArt.Upscaling.Hqx.Modes.NoBlending, false
 
     # Render normal map.
     @normalsContext.setTransform 1, 0, 0, 1, 0, 0
@@ -66,7 +66,7 @@ class LOI.HumanAvatar.TextureRenderer
     AS.ImageDataHelpers.expandPixels normalImageData, 1
     @normalsContext.putImageData normalImageData, 0, 0
 
-    @scaledNormalsCanvas = AS.Hqx.scale @normalsCanvas, @constructor.textureMagnification, AS.Hqx.Modes.Default, true
+    @scaledNormalsCanvas = AS.PixelArt.Upscaling.Hqx.scale @normalsCanvas, @constructor.textureMagnification, AS.PixelArt.Upscaling.Hqx.Modes.Default, true
 
     # Notify that rendering has completed.
     true

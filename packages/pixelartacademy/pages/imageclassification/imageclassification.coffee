@@ -8,12 +8,14 @@ class PAA.Pages.ImageClassification extends AM.Component
   onCreated: ->
     super arguments...
 
-    @brushSize = new ReactiveField 5
     @isDrawing = new ReactiveField false
+    @classificationInputData = new ReactiveField null
 
-    @classifiers = [new @constructor.Classifier.QuickDraw, new @constructor.Classifier.Sketchy]
+    @classifiers =
+      symbolic: new PAA.ImageClassification.SimpleClassifier.Symbolic
+      realistic: new PAA.ImageClassification.SimpleClassifier.Realistic
     
-    for classifier in @classifiers
+    for classifierName, classifier of @classifiers
       await classifier.createInferenceSession()
       
     @_strokes = []
@@ -21,14 +23,17 @@ class PAA.Pages.ImageClassification extends AM.Component
   onRendered: ->
     super arguments...
 
-    @canvas = new AM.ReadableCanvas 200, 200
+    @canvasSize = 600
+    @strokeWidth = 10
+
+    @canvas = new AM.ReadableCanvas @canvasSize, @canvasSize
     @canvas.classList.add 'canvas'
     @$('.canvas-area').append @canvas
 
     @context = @canvas.context
-    @context.fillStyle = '#000000'
-    
-    @$('.canvas-area').append classifier.inputCanvas for classifier in @classifiers
+
+    inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
+    @_classificationInputData = new Float32Array inputSize * inputSize
 
   events: ->
     super(arguments...).concat
@@ -36,7 +41,6 @@ class PAA.Pages.ImageClassification extends AM.Component
       'mousemove .canvas': @onMouseMoveCanvas
       'mouseup .canvas': @onMouseUpCanvas
       'mouseleave .canvas': @onMouseLeaveCanvas
-      'click .brush-size-button': @onClickBrushSizeButton
       'click .clear-canvas-button': @onClickClearButton
   
   onMouseDownCanvas: (event) ->
@@ -59,9 +63,7 @@ class PAA.Pages.ImageClassification extends AM.Component
     @isDrawing true
     @_previousX = null
     @_previousY = null
-    @_rawStroke = new AP.PolygonalChain []
-    @_smoothStroke = []
-    @_strokes.push @_smoothStroke
+    @_stroke = new AP.PolygonalChain []
     
     @_draw event
   
@@ -73,12 +75,10 @@ class PAA.Pages.ImageClassification extends AM.Component
     @_previousX ?= x
     @_previousY ?= y
     
-    @_rawStroke.vertices.push new THREE.Vector2 x, y
-    
-    size = @brushSize()
+    @_stroke.vertices.push new THREE.Vector2 x, y
     
     @context.beginPath()
-    @context.lineWidth = size
+    @context.lineWidth = @strokeWidth
     @context.lineCap = 'round'
     @context.lineJoin = 'round'
     @context.moveTo @_previousX, @_previousY
@@ -88,27 +88,43 @@ class PAA.Pages.ImageClassification extends AM.Component
     @_previousX = x
     @_previousY = y
     
-    for classifier in @classifiers
+    for classifierName, classifier of @classifiers
       return unless classifier.ready()
       
     @_throttledClassify ?= _.throttle =>
-      @_smoothStroke.splice 0, @_smoothStroke.length, @_rawStroke.getDecimatedPolygonalChain(1).vertices...
+      return unless @_strokes.length or @_stroke?.vertices.length
+
+      strokes = @_strokes.slice()
+      strokes.push @_stroke.getDecimatedPolygonalChain 1 if @_stroke?.vertices.length
       
-      promises = for classifier in @classifiers
-        do (classifier) =>
+      return unless PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData strokes, @_classificationInputData
+      
+      promises = for classifierName, classifier of @classifiers
+        do (classifierName, classifier) =>
           new Promise (resolve, reject) =>
-            labelProbabilities = await classifier.classify @_strokes
-            resolve labelProbabilities
+            labelProbabilities = await classifier.classify @_classificationInputData
+            resolve {classifierName, labelProbabilities}
       
       Promise.all(promises).then (allResults) =>
         html = ""
-        for result in allResults
+        for {classifierName, labelProbabilities} in allResults
+          filteredProbabilities = _.filter labelProbabilities, (labelProbability) ->
+            labelProbability.probability >= 0.01
+
+          classifierTitle = switch classifierName
+            when 'symbolic' then 'Symbolic'
+            when 'realistic' then 'Realistic'
+            else classifierName
+
+          html += "<div class='classifier-results'>"
+          html += "<h3>#{classifierTitle}</h3>"
           html += "<ol class='results'>"
           html += (
-            for labelProbability in result[0...10]
+            for labelProbability in filteredProbabilities[0...10]
               "<li>#{labelProbability.label}: #{Math.round labelProbability.probability * 100}%</li>"
           ).join("")
           html += "</ol>"
+          html += "</div>"
         
         @$('.results-area').html html
     ,
@@ -117,14 +133,16 @@ class PAA.Pages.ImageClassification extends AM.Component
     @_throttledClassify()
     
   _endDraw: ->
+    return unless @_stroke
+
+    @_strokes.push @_stroke.getDecimatedPolygonalChain 1
+    @_stroke = null
     @isDrawing false
 
-  onClickBrushSizeButton: (event) ->
-    size = parseInt event.currentTarget.getAttribute 'data-size'
-    @brushSize size
-  
   onClickClearButton: (event) ->
     @context.clearRect 0, 0, @canvas.width, @canvas.height
     
     @_strokes = []
+    @_stroke = null
+    @classificationInputData null
     @$('.results-area').html ""

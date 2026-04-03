@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AS = Artificial.Spectrum
 
-class AS.Hqx
+class AS.PixelArt.Upscaling.Hqx
   @Modes:
     Default: 'Default'
     NoBlending: 'NoBlending'

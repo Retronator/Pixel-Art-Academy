@@ -50,7 +50,7 @@ class LM.Adventure extends PAA.Adventure
 
   usesLocalState: -> true
   
-  getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage storageKey: "Retronator"
+  getLocalSyncedStorage: -> new Persistence.SyncedStorages.IndexedDB databaseName: "Retronator"
   
   globalClasses: -> [
   

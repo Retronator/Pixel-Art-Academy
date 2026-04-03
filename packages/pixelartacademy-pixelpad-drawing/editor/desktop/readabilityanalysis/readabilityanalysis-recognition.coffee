@@ -5,10 +5,18 @@ RA = PAA.Practice.ReadabilityAnalysis
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
   @register @id()
   
-  _regionRecognitionResult: (region) ->
+  _regionRecognitionResult: (region, fullRegionInfo) ->
     return unless region.labels
     
     labelString = AB.Rules.English.addIndefinitePronoun region.targetLabel
+    
+    # Create recognition results.
+    perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt this is #{labelString}."
+    greatResult = passes: true, summary: "Great", explanation: "This is easily recognized as #{labelString}."
+    goodResult = passes: true, summary: "Good", explanation: "This is likely #{labelString}."
+    adequateResult = passes: true, summary: "Adequate", explanation: "This could be #{labelString}."
+    
+    # For results that don't pass, try to create some useful feedback, based on probabilities of other labels.
     
     # Determine target label probability, by classifier.
     targetProbabilityPercentages = {}
@@ -44,24 +52,36 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
     # Remove the target labels.
     _.remove bestOtherLabelProbabilities, (labelProbability) => labelProbability.label is region.targetLabel
     
-    # Use the best other list to determine which other labels this drawing
-    # could be confused with, if their (weighted) percentage is above 50%.
-    if bestOtherLabelProbabilities.length >= 2 and bestOtherLabelProbabilities[1].probabilityPercentage > 50
+    # Certain thresholds depend on the size of the drawing since
+    # smaller drawings are harder to draw and should be more forgiving.
+    drawingSize = Math.min fullRegionInfo.drawnBounds.width, fullRegionInfo.drawnBounds.height
+    clampedDrawingSize = _.clamp drawingSize, 8, 16
+    drawingSizeWeight = THREE.MathUtils.inverseLerp 8,16, clampedDrawingSize
+    
+    adaptiveThreshold = (threshold8, threshold16) => THREE.MathUtils.lerp threshold8, threshold16, drawingSizeWeight
+    
+    # Use the best other list to determine which other labels this drawing could be confused with, if their (weighted)
+    # percentage is high enough. At smaller sizes, we want the system to have to be more confident since it's much
+    # easier to misinterpret things.
+    confidenceThreshold = adaptiveThreshold 90, 50
+    
+    if bestOtherLabelProbabilities.length >= 2 and bestOtherLabelProbabilities[1].probabilityPercentage > confidenceThreshold
       unrecognizableExplanation = "This could maybe be confused with #{AB.Rules.English.addIndefinitePronoun bestOtherLabelProbabilities[0].label} or #{AB.Rules.English.addIndefinitePronoun bestOtherLabelProbabilities[1].label}."
       
-    else if bestOtherLabelProbabilities.length >= 1 and bestOtherLabelProbabilities[0].probabilityPercentage > 50
+    else if bestOtherLabelProbabilities.length >= 1 and bestOtherLabelProbabilities[0].probabilityPercentage > confidenceThreshold
       unrecognizableExplanation = "This could maybe be confused with #{AB.Rules.English.addIndefinitePronoun bestOtherLabelProbabilities[0].label}."
       
     else
-      unrecognizableExplanation = "Draw more details to distinguish the subject."
-    
-    # Create recognition results.
-    perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt this is #{labelString}."
-    greatResult = passes: true, summary: "Great", explanation: "This is easily recognized as #{labelString}."
-    goodResult = passes: true, summary: "Good", explanation: "This is likely #{labelString}."
-    adequateResult = passes: true, summary: "Adequate", explanation: "This could be #{labelString}."
-    poorResult = passes: false, summary: "Poor", explanation: unrecognizableExplanation
-    problematicResult = passes: false, summary: "Problematic", explanation: unrecognizableExplanation
+      if drawingSize >= 16
+        unrecognizableExplanation = "Draw more details to distinguish the subject."
+        poorResult = passes: false, summary: "Poor", explanation: unrecognizableExplanation
+        problematicResult = passes: false, summary: "Problematic", explanation: unrecognizableExplanation
+      
+      else
+        poorResult = passes: false, summary: "Inconclusive", explanation: "I'm having trouble distinguish the subject at this small size."
+        problematicResult = poorResult
+        
+    bothFailingThreshold = adaptiveThreshold 1, 10
     
     # If both classifiers recognize the subject, this gives good–perfect results.
     if targetProbabilityPercentages.symbolic >= 95 and targetProbabilityPercentages.realistic >= 95
@@ -74,25 +94,27 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
       return goodResult
     
     # If both classifiers fail to recognize the subject, we do not pass recognition.
-    else if targetProbabilityPercentages.symbolic < 10 and targetProbabilityPercentages.realistic < 10
+    else if targetProbabilityPercentages.symbolic < bothFailingThreshold and targetProbabilityPercentages.realistic < bothFailingThreshold
       return problematicResult
       
     # If one of the classifiers doesn't recognize the subject at all
-    # (under 1%), only pass in case symbolic is really confident.
+    # (under 1%), pass in case the other is confident enough.
     else if targetProbabilityPercentages.symbolic < 1 or targetProbabilityPercentages.realistic < 1
-      if targetProbabilityPercentages.symbolic >= 95
+      confidenceThreshold = adaptiveThreshold 5, 95
+      
+      if targetProbabilityPercentages.symbolic >= confidenceThreshold or targetProbabilityPercentages.realistic >= confidenceThreshold
         return adequateResult
         
       else
         return poorResult
       
     # If the realistic classifier can at least vaguely recognize the
-    # subject, the symbolic one can give adequate–good results .
+    # subject, the symbolic one can give adequate–good results.
     if targetProbabilityPercentages.realistic > 10
-      if targetProbabilityPercentages.symbolic >= 95
+      if targetProbabilityPercentages.symbolic >= adaptiveThreshold 50, 95
         return goodResult
         
-      else if targetProbabilityPercentages.symbolic >= 75
+      else if targetProbabilityPercentages.symbolic >= adaptiveThreshold 30, 75
         return adequateResult
     
     # None of the classifiers recognized the subject confidently (75% or more),
@@ -102,10 +124,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends PAA.P
     highestDifference = Math.max symbolicDifference, realisticDifference
     
     # Big enough margin gives adequate–good results.
-    if highestDifference >= 50
+    if highestDifference >= adaptiveThreshold 20, 50
       return goodResult
       
-    else if highestDifference >= 25
+    else if highestDifference >= adaptiveThreshold 10, 25
       return adequateResult
       
     # If both classifiers recognized the subject as the most probable, this is good.

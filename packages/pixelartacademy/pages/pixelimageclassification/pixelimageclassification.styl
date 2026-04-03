@@ -1,17 +1,16 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-pages-imageclassification
+.pixelartacademy-pages-pixelimageclassification
   .main-area
     display flex
+    align-items flex-start
+    gap 24px
 
     .canvas-area
-      width 600px
-      height 600px
-      background white
+      max-width 600px
 
-      .canvas
+      .preview-canvas
         width 100%
-        height 100%
         pixel-image-rendering()
         cursor crosshair
 

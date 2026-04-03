@@ -268,7 +268,7 @@ class AM.Document.Persistence
     profile = @activeProfile()
     throw new AE.InvalidOperationException "There is no loaded profile to add syncing to." unless profile
   
-    throw new AE.ArgumentException "The profile is already syncing with this synced storage." if profile.syncedStorages.syncedStorageId
+    throw new AE.ArgumentException "The profile is already syncing with this synced storage." if profile.syncedStorages[syncedStorageId]
 
     Persistence.Profile.documents.update profile._id,
       $set:
@@ -280,6 +280,18 @@ class AM.Document.Persistence
   
     for documentClassId, documentClass of @_persistentDocumentClassesById
       documentClass.documents.find(profileId: profile._id).forEach (document) => syncedStorage.added document
+      
+  @removeSyncingFromProfile: (syncedStorageId) ->
+    profile = @activeProfile()
+    throw new AE.InvalidOperationException "There is no loaded profile to remove syncing from." unless profile
+  
+    throw new AE.ArgumentException "The profile is not syncing with this synced storage." unless profile.syncedStorages[syncedStorageId]
+    
+    Persistence.Profile.documents.update profile._id,
+      $unset:
+        "syncedStorages.#{syncedStorageId}": true
+      $set:
+        lastEditTime: new Date
     
   # Methods for internal use by synced storages
   

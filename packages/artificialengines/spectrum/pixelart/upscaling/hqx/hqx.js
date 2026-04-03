@@ -220,7 +220,7 @@ var getImagePixels = function( image, x, y, width, height ) {
 };
 
 
-Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, trY, trU, trV ) {
+Artificial.Spectrum.PixelArt.Upscaling.Hqx._hqx = function( img, scale, useAntialiasing, trY, trU, trV ) {
 	// We can only scale with a factor of 2, 3 or 4
 	if( [2,3,4].indexOf(scale) === -1 ) {
 		return img;

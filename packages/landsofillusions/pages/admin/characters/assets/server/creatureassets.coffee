@@ -147,7 +147,7 @@ createTextures = (humanAvatar) ->
 
     characterContext.restore()
 
-  characterCanvas = AS.Hqx.scale characterCanvas, 4, AS.Hqx.Modes.NoBlending, false
+  characterCanvas = AS.PixelArt.Upscaling.Hqx.scale characterCanvas, 4, AS.PixelArt.Upscaling.Hqx.Modes.NoBlending, false
 
   layoutContext.drawImage characterCanvas, 0, 0
 

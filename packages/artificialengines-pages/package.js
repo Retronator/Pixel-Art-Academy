@@ -42,6 +42,7 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/pages');
   api.addComponent('pyramid/interpolation..');
+  api.addComponent('pyramid/bspline..');
   api.addFile('pyramid/polygonalchain..')
   api.addComponent('pyramid/polygonalchain/decimate..');
 
@@ -100,4 +101,6 @@ Package.onUse(function(api) {
   api.addComponent('spectrum/color/chromaticity..');
   api.addFile('spectrum/color/chromaticity/chromaticity-spectrum');
   api.addFile('spectrum/color/chromaticity/chromaticity-chromaticitydiagram');
+  api.addFile('spectrum/pixelart..');
+  api.addComponent('spectrum/pixelart/upscaling..');
 });
