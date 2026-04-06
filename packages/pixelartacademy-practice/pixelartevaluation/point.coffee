@@ -53,6 +53,7 @@ class PAE.Point
   destroy: ->
     pixel.unassignPoint @ for pixel in @pixels
     line.unassignPoint @ for line in @lines
+    neighbor._disconnectNeighbor @ for neighbor in @neighbors
     neighbor._destroyNeighbor @ for neighbor in @allNeighbors
 
   getOutlines: ->
@@ -114,7 +115,6 @@ class PAE.Point
     _.pull @neighbors, neighbor
   
   _destroyNeighbor: (neighbor) ->
-    _.pull @neighbors, neighbor
     _.pull @allNeighbors, neighbor
     
   _distanceTo: (point) ->

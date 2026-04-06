@@ -17,7 +17,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.Volume1 extends P
   
   @defaultUrl: -> 'the-graphics-book-of-icons'
 
-  @coverIconsCounts: -> 8: 4, 16: 9, 32: 2
+  @coverIconsCounts: -> 8: 5, 16: 9, 32: 2
   
   @initialize()
   

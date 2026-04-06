@@ -9,6 +9,7 @@ RA = PAA.Practice.ReadabilityAnalysis
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis'
+  @register @id()
   
   @debug = false
   
@@ -98,10 +99,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         return unless readabilityAnalysis = @readabilityAnalysis()
         readabilityAnalysis.depend()
         readabilityAnalysis
-        
-      displayed: => false # TODO: Enable when stroke analysis is provided @displayed()
-      focusedPixel: => if @displayed() then @hoveredPixel() else null
-      bitmapBounds: => @bitmap()?.bounds
       
     # Automatically enter focused mode when active.
     @autorun (computation) =>
@@ -157,7 +154,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
           recognition = []
           
           for region, regionIndex in readabilityAnalysisProperty.regions
-            regionRecognition = @_regionRecognitionResult region, readabilityAnalysis.regions[regionIndex]
+            regionRecognition = @_regionRecognitionResult region, region.bounds or readabilityAnalysis.bitmap.bounds
             recognition.push regionRecognition
             region.recognition = passes: regionRecognition.passes if regionRecognition
             
@@ -269,8 +266,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
     height: "#{@contentHeight()}rem"
     
   pixeltoshClass: ->
-    return 'wait' if @displayed() and @readabilityAnalysis()?.analyzing()
-    
     return unless readabilityAnalysisProperty = @readabilityAnalysisProperty()
     return unless readabilityAnalysisProperty.passes?
     

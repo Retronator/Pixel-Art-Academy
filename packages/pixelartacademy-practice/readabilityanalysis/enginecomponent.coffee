@@ -8,8 +8,6 @@ Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class RA.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
-  @debug = true
-
   constructor: (@options) ->
     super arguments...
     

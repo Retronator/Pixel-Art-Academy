@@ -41,11 +41,9 @@ class RA.EngineComponent extends RA.EngineComponent
     
     context.save()
     
-    bitmapBounds = @options.bitmapBounds()
-
     if inputProperty = @drawInputProperty()
       for region, regionIndex in readabilityAnalysis.regions when readabilityAnalysis._classificationInputData[regionIndex]
-        bounds = region.bounds or bitmapBounds
+        bounds = region.bounds or readabilityAnalysis.bitmap.bounds
         
         @_drawInput context, readabilityAnalysis._classificationInputData[regionIndex][inputProperty], bounds
       

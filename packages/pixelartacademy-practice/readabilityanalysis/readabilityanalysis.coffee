@@ -5,6 +5,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
+_bezierVertex = new THREE.Vector2
+
 class PAA.Practice.ReadabilityAnalysis
   # passes: boolean if all regions are readable
   # regions: an array of parts of the bitmap on which to do the analysis
@@ -13,8 +15,6 @@ class PAA.Practice.ReadabilityAnalysis
   #   recognition:
   #     passes: boolean if the target label is recognized correctly
   #   bounds: the bounds of the region in the bitmap, if not covering the whole bitmap
-  #     x, y, width, height
-  #   drawnBounds: the bounds inside the region where pixels have been placed, not stored in the asset
   #     x, y, width, height
   #   labels: the analysis of which labels get recognized in the image
   #     symbolic, realistic: arrays of label probabilities sorted by probability descending (only labels with 1% and up probability stored in the asset)
@@ -51,8 +51,12 @@ class PAA.Practice.ReadabilityAnalysis
             endIndex = if part.isClosed then points.length - 1 else points.length - 2
             
             for pointIndex in [0..endIndex]
+              start = getPoint pointIndex
               end = getPoint pointIndex + 1
-              vertices.push end.position
+              vertexCount = Math.max 2, Math.abs(start.position.x - end.position.x), Math.abs(start.position.y - end.position.y)
+
+              for vertexIndex in [1...vertexCount]
+                vertices.push AP.BezierCurve.getPointOnCubicBezierCurve start.position, start.controlPoints.after, end.controlPoints.before, end.position, vertexIndex / (vertexCount - 1)
         
         strokes.push new AP.PolygonalChain vertices
       
@@ -67,8 +71,15 @@ class PAA.Practice.ReadabilityAnalysis
         
         # Add lines between extra neighbors that haven't been connected with lines.
         extraNeighbors = _.difference point.allNeighbors, point.neighbors
+        
+        pointOutlines = point.getOutlines()
 
         for neighbor in extraNeighbors
+          # Skip lines between outline points of the same outline.
+          if pointOutlines
+            neighborOutlines = neighbor.getOutlines()
+            continue if _.intersection(pointOutlines, neighborOutlines).length > 0
+          
           strokes.push new AP.PolygonalChain [
             new THREE.Vector2 point.x, point.y
             new THREE.Vector2 neighbor.x, neighbor.y
@@ -159,17 +170,12 @@ class PAA.Practice.ReadabilityAnalysis
             
             imageData = @_depixelizerSourceCanvas.getFullImageData()
             
-            drawnMinX = Number.POSITIVE_INFINITY
-            drawnMaxX = Number.NEGATIVE_INFINITY
-            drawnMinY = Number.POSITIVE_INFINITY
-            drawnMaxY = Number.NEGATIVE_INFINITY
-            
             for x in [@bitmap.bounds.left..@bitmap.bounds.right]
               for y in [@bitmap.bounds.top..@bitmap.bounds.bottom]
-                bitmapX = x - @bitmap.bounds.left + 1
-                bitmapY = y - @bitmap.bounds.top + 1
+                canvasX = x - @bitmap.bounds.left + 1
+                canvasY = y - @bitmap.bounds.top + 1
                 
-                dataIndex = ((x + 1) + (y + 1) * imageData.width) * 4 + 3
+                dataIndex = (canvasX + canvasY * imageData.width) * 4 + 3
                 imageData.data[dataIndex] = 0
                 
                 if region.bounds
@@ -180,17 +186,6 @@ class PAA.Practice.ReadabilityAnalysis
                 if @bitmap.findPixelAtAbsoluteCoordinates x, y
                   imageData.data[dataIndex] = 255
 
-                  drawnMinX = Math.min drawnMinX, bitmapX
-                  drawnMaxX = Math.max drawnMaxX, bitmapX
-                  drawnMinY = Math.min drawnMinY, bitmapY
-                  drawnMaxY = Math.max drawnMaxY, bitmapY
-                  
-            region.drawnBounds =
-              x: drawnMinX
-              y: drawnMinY
-              width: drawnMaxX - drawnMinX + 1
-              height: drawnMaxY - drawnMinY + 1
-            
             @_depixelizerSourceCanvas.putFullImageData imageData
             
             splines = AS.PixelArt.Upscaling.Depixelizer.getBSplines @_depixelizerSourceCanvas

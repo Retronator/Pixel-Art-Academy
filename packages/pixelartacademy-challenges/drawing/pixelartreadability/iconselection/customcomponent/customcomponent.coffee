@@ -251,7 +251,7 @@ class IconSelection.CustomComponent extends LOI.Component
   
     for number in [1..count]
       number: number
-      imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{size}-#{number}.png"
+      imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{@volumeNumber()}-#{size}-#{number}.png"
     
   onTableOfContents: -> @currentPage() <= 3
   
