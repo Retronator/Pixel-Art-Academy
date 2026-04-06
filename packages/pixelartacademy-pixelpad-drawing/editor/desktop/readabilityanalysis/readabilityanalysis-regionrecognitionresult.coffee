@@ -96,17 +96,6 @@ PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis::_regionRecognition
   else if targetProbabilityPercentages.symbolic < bothFailingThreshold and targetProbabilityPercentages.realistic < bothFailingThreshold
     return problematicResult
     
-  # If one of the classifiers doesn't recognize the subject at all
-  # (under 1%), pass in case the other is confident enough.
-  else if targetProbabilityPercentages.symbolic < 1 or targetProbabilityPercentages.realistic < 1
-    confidenceThreshold = adaptiveThreshold 5, 95
-    
-    if targetProbabilityPercentages.symbolic >= confidenceThreshold or targetProbabilityPercentages.realistic >= confidenceThreshold
-      return adequateResult
-      
-    else
-      return poorResult
-    
   # If the realistic classifier can at least vaguely recognize the
   # subject, the symbolic one can give adequate–good results.
   if targetProbabilityPercentages.realistic > 10
@@ -122,16 +111,16 @@ PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis::_regionRecognition
   realisticDifference = targetProbabilityPercentages.realistic - (highestOtherLabelProbabilities.realistic?.probabilityPercentage or 0)
   highestDifference = Math.max symbolicDifference, realisticDifference
   
+  # If both classifiers recognized the subject as the most probable, this is good.
+  if symbolicDifference > 0 and realisticDifference > 0
+    return goodResult
+  
   # Big enough margin gives adequate–good results.
   if highestDifference >= adaptiveThreshold 20, 50
     return goodResult
     
   else if highestDifference >= adaptiveThreshold 10, 25
     return adequateResult
-    
-  # If both classifiers recognized the subject as the most probable, this is good.
-  if symbolicDifference > 0 and realisticDifference > 0
-    return goodResult
 
   # If at least one of the classifiers recognized the subject, this is adequate.
   else if symbolicDifference > 0 or realisticDifference > 0

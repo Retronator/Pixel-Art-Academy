@@ -3,9 +3,8 @@ AC = Artificial.Control
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-deepCoreColor = "hsl(100deg 50% 50% / 60%)"
-shallowCoreColor = "hsl(60deg 50% 50% / 50%)"
-coreAdjacentColor = "hsl(20deg 50% 50% / 40%)"
+deepCoreColor = "hsl(100deg 50% 50% / 50%)"
+shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
 potentialEdgeColor = "hsl(200deg 25% 25% / 50%)"
@@ -62,11 +61,6 @@ class PAE.EngineComponent extends PAE.EngineComponent
         context.beginPath()
         @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
         @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
-      
-        # Draw core adjacent pixels.
-        context.beginPath()
-        @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isCoreAdjacent
-        @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, coreAdjacentColor
         
       if @drawPoints()
         # Draw point network.
