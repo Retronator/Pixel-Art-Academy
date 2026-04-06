@@ -20,7 +20,7 @@ class StudyPlan.ActiveGoals extends StudyPlan.BottomPanel
       goals = []
 
       for goalId, goalData of goalsData
-        goal = PAA.Learning.Goal.getAdventureInstanceForId goalId
+        continue unless goal = PAA.Learning.Goal.getAdventureInstanceForId goalId
         goals.push goal if goal.activeAndAvailable()
       
       _.sortBy goals, (goal) => _.lowerCase goal.displayName()
