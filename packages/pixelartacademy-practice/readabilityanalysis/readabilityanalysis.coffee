@@ -5,8 +5,6 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-_bezierVertex = new THREE.Vector2
-
 class PAA.Practice.ReadabilityAnalysis
   # passes: boolean if all regions are readable
   # regions: an array of parts of the bitmap on which to do the analysis
@@ -53,7 +51,7 @@ class PAA.Practice.ReadabilityAnalysis
             for pointIndex in [0..endIndex]
               start = getPoint pointIndex
               end = getPoint pointIndex + 1
-              vertexCount = Math.max 2, Math.abs(start.position.x - end.position.x), Math.abs(start.position.y - end.position.y)
+              vertexCount = 2 * Math.ceil Math.max 2, Math.abs(start.position.x - end.position.x), Math.abs(start.position.y - end.position.y)
 
               for vertexIndex in [1...vertexCount]
                 vertices.push AP.BezierCurve.getPointOnCubicBezierCurve start.position, start.controlPoints.after, end.controlPoints.before, end.position, vertexIndex / (vertexCount - 1)

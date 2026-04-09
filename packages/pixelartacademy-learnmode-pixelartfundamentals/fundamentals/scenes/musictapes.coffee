@@ -121,8 +121,6 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
 
       In the Music app, you'll find some good DOS chiptunes from Extent of the Jam as well as Shnabubula's piano improvisations that take me straight back to The Sims build mode.
     """
-
-    @displayStyle: -> @DisplayStyles.Always
     
     @initialize()
   

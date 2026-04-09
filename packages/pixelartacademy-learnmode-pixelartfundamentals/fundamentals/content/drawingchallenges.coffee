@@ -45,6 +45,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       @progress = new LM.Content.Progress.ContentProgress
         content: @
+        weight: 3
         units: "evaluation criteria"
   
     status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
@@ -155,6 +156,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
         @progress = new LM.Content.Progress.ManualProgress
           content: @
+          weight: 3
           units: "combined score"
           
           completed: => @progress.completedUnitsCount() >= 1
@@ -309,9 +311,13 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
     constructor: ->
       super arguments...
     
-      @progress = new LM.Content.Progress.ContentProgress
+      @progress = new LM.Content.Progress.ManualProgress
         content: @
-        units: "sizes"
+        units: "started icons"
+        completedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.startedTotalCount()
+        unitsCount: => 94 * 3
+        requiredUnitsCount: => 5
+        completed: => @progress.completedUnitsCount() >= @progress.requiredUnitsCount()
         
     class @Icon extends LM.Content
       @size: -> throw new AE.NotImplementedException "Icon content must define the size of the icon."
@@ -336,7 +342,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
           requiredCompletedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.state('completedCounts')?[@constructor.size()] or 0
           requiredUnitsCount: => 1
 
-          completed: => @progress.requiredCompletedUnitsCount() >= 1
+          completed: => @progress.requiredCompletedUnitsCount() >= @progress.requiredUnitsCount()
           
       status: -> LM.Content.Status.Unlocked
 

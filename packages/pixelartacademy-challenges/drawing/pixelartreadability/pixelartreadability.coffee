@@ -20,10 +20,9 @@ class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Th
 
   @initialize()
 
-  @completed: ->
-    # To complete the challenge, you have to have completed at least one 16x16 icon.
-    completedCounts = @state 'completedCounts'
-    completedCounts?[16]
+  @startedTotalCount: ->
+    return 0 unless startedCounts = @state 'startedCounts'
+    startedCounts[8] + startedCounts[16] + startedCounts[32]
     
   @addIcon: (label, size) ->
     icons = @state 'icons'

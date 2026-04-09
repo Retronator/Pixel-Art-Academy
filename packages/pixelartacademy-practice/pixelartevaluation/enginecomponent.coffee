@@ -81,7 +81,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     if PAE.Criteria.EvenDiagonals in displayedCriteria
       for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine
         # Filter to evaluated property if needed.
-        continue if filterValue and linePart.evaluate()[filterValue.property].type isnt filterValue.value
+        continue if filterValue?.property and linePart.evaluate()[filterValue.property].type isnt filterValue.value
         
         if linePart in focusedLineParts
           markup.push Markup.PixelArt.straightLineBreakdown(linePart, pixelArtEvaluationProperty)...

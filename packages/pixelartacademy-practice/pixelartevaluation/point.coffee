@@ -106,8 +106,8 @@ class PAE.Point
           point._connectNeighbor @
   
   saveAllNeighbors: ->
-    @allNeighbors = _.clone @neighbors
-          
+    @allNeighbors.push neighbor for neighbor in @neighbors when neighbor not in @allNeighbors
+    
   _connectNeighbor: (neighbor) ->
     @neighbors.push neighbor unless neighbor in @neighbors
     
@@ -117,5 +117,5 @@ class PAE.Point
   _destroyNeighbor: (neighbor) ->
     _.pull @allNeighbors, neighbor
     
-  _distanceTo: (point) ->
+  _distanceSquaredTo: (point) ->
     (point.x - @x) ** 2 + (point.y - @y) ** 2

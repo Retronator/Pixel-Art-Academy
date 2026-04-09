@@ -283,34 +283,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         recognition: recognition[regionIndex]
         classifierResults: ({classifierName, labelProbabilities: labelProbabilities[...5]} for classifierName, labelProbabilities of region.labels)
   
-  liveClassifierResults: ->
-    region = @currentData()
-    regionIndex = region.index
-    
-    return unless readabilityAnalysis = @readabilityAnalysis()
-    readabilityAnalysis.depend()
-    return unless regions = readabilityAnalysis.regions
-    
-    region = regions[regionIndex]
-    
-    hoveredPixel = if @displayed() then @hoveredPixel() else null
-    hoveredLines = if hoveredPixel then readabilityAnalysis.pixelArtEvaluation.getLinesAt hoveredPixel.x, hoveredPixel.y else []
-    hoveredPoints = if hoveredPixel then readabilityAnalysis.pixelArtEvaluation.getPointsAt hoveredPixel.x, hoveredPixel.y else []
-    hoveredElements = [hoveredLines..., hoveredPoints...]
-    
-    if hoveredElements.length
-      strokeAnalysis = _.find regions[regionIndex].strokes, (strokeAnalysis) => strokeAnalysis.element is hoveredElements[0]
-      labels = strokeAnalysis?.labels
-      
-    labels ?= region.labels
-    
-    for classifierName, labelProbabilities of labels
-      labelProbabilityPercentages = for labelProbability in labelProbabilities when labelProbability.probability >= 0.01
-        label: labelProbability.label
-        probabilityPercentage: Math.round labelProbability.probability * 100
-      
-      {classifierName, labelProbabilities: labelProbabilityPercentages[...5]}
-  
   resultPassesClass: (result) ->
     'passes' if result?.passes
   
