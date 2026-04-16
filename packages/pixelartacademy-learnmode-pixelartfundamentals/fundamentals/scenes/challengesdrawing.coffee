@@ -37,13 +37,13 @@ class LM.PixelArtFundamentals.Fundamentals.ChallengesDrawing extends LOI.Adventu
   things: ->
     things = []
     
-    if LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.activeAndAvailable()
+    if LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.available()
       if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed()
         @_pixelArtLineArt ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtLineArt
   
         things.push @_pixelArtLineArt
 
-    if LM.PixelArtFundamentals.Fundamentals.Goals.Size.activeAndAvailable()
+    if LM.PixelArtFundamentals.Fundamentals.Goals.Size.available()
       if PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed()
         @_pixelArtReadability ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtReadability
         

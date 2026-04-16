@@ -211,8 +211,10 @@ class PAA.Learning.Goal
   
   @completed: -> @getAdventureInstance().completed()
   @allCompleted: -> @getAdventureInstance().allCompleted()
+  @added: -> @getAdventureInstance().added()
   @active: -> @getAdventureInstance().active()
   @available: -> @getAdventureInstance().available()
+  @addedAndAvailable: -> @getAdventureInstance().addedAndAvailable()
   @activeAndAvailable: -> @getAdventureInstance().activeAndAvailable()
   @activeOrCompleted: -> @getAdventureInstance().activeOrCompleted()
   @activeAndAvailableOrCompleted: -> @getAdventureInstance().activeAndAvailableOrCompleted()
@@ -266,12 +268,16 @@ class PAA.Learning.Goal
   allCompleted: ->
     _.every (task.completed() for task in @tasks())
 
+  # A goal is added when it has been added to the study plan.
+  added: -> PAA.PixelPad.Apps.StudyPlan.hasGoal @
+  
   # A goal is active when it has been added to the study plan and not marked complete.
   active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
   
   # A goal is available when one of its initial tasks is available or completed.
   available: -> _.some (task.availableOrCompleted() for task in @initialTasks())
 
+  addedAndAvailable: -> @available() and @added()
   activeAndAvailable: -> @active() and @available()
   activeOrCompleted: -> @active() or @completed()
   activeAndAvailableOrCompleted: -> @activeAndAvailable() or @completed()

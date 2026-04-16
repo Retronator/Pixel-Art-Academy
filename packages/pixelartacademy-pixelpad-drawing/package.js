@@ -32,6 +32,8 @@ Package.onUse(function(api) {
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
   api.addFile('portfolio/asset');
+  api.addFile('portfolio/folder');
+  api.addFile('portfolio/archive');
   api.addServerFile('portfolio/subscriptions');
 
   api.addFile('portfolio/forms..');

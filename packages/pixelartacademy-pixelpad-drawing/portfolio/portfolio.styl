@@ -64,6 +64,15 @@
       padding 0
 
       .section
+      .group
+        & .subgroup-active
+          .groups
+            .group
+              &:hover:not(.active)
+                height 15rem !important
+                margin-top -1rem
+
+      .section
         position relative
         z-index 100
         background-color atariGray(5)
@@ -82,80 +91,26 @@
 
           .groups
             .group
-              height 19rem
               margin-top 0
 
               &:hover:not(.active)
                 height 21rem !important
                 margin-top -1rem
 
-          &.group-in-section-active
-            .groups
-              .group
-                height 5rem
+        &.asset-group-active
+          .group.subgroup-active
+            > .group-header
+              height 10rem
 
-                &.active
-                  height 150rem
+            &:has(> .group-header:hover)
+              margin-top -1rem
 
-                &:hover:not(.active)
-                  height 15rem
-                  margin-top -1rem
-
-        &.settings
-          width 292rem
-
-          &.active
-            height 139rem
-
-          .content
-            height 100rem
-            padding 3rem 11rem
-            color atariGray(1)
-
-            .instructions
-              margin-bottom 6rem
-
-            .settings-sections
-              display flex
-              justify-content space-between
-
-              .settings-section
-                width 130rem
-
-                .title
-                  daily()
-                  text-transform uppercase
-                  margin-bottom 2rem
-
-                .editors
-                .no-editors
-                  border 1rem solid atariCyan(2)
-                  height 80rem
-
-                .editors
-                  list-style none
-                  padding 0
-                  overflow auto
-
-                  .editor
-                    height 14rem
-                    padding 2rem 4rem
-                    cursor pointer
-
-                    &:hover
-                      background atariGray(4)
-
-                    &.selected
-                      background atariGray(4)
-                      cursor default
-
-                .no-editors
-                  padding 10rem 8rem
-                  text-align center
+              > .group-header
+                height 19rem
 
         .section-name
-          height 25rem
-          padding 5rem 10rem
+          height 23rem
+          padding 4rem 10rem
           acme-7()
           color atariCyan(1)
           cursor pointer
@@ -168,15 +123,11 @@
           .group
             position relative
             z-index 0
-            height 4rem
             margin 0 auto
             background-color atariBrown(4)
             box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
             transition all 0.2s
             overflow hidden
-
-            &:last-child
-              height 19rem
 
             &.active
               overflow initial
@@ -184,11 +135,12 @@
             .group-header
               display flex
               height 19rem
-              padding 6rem 9rem
+              padding 6rem 9rem 0
               adventure()
               color atariGray(1)
               cursor pointer
               justify-content space-between
+              transition height 0.2s
 
               .completed
                 color atariGreen(2)
