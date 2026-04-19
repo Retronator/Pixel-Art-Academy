@@ -10,41 +10,46 @@
             <div class="title">Pixeltosh Readability Analysis</div>
           </div>
           <div class="analysis">
-            {{#each regions}}
-              <div class="region">
-                <div class="image">
-                  <span class="title">Image {{number}}</span>: {{label}}
-                </div>
-                {{#with this.recognition}}
-                  <div class="recognition result {{resultPassesClass this}}">
-                    <div class="summary">
-                      <span class="title">Recognition</span>: {{summary}}
-                    </div>
-                    <div class="exlpanation">
-                      {{explanation}}
-                    </div>
+            {{#if regions.length}}
+              {{#each regions}}
+                <div class="region">
+                  <div class="image">
+                    <span class="title">Image {{number}}</span>: {{label}}
                   </div>
-                {{else}}
-                  <div class="result">Draw the subject to see the analysis of its readability.</div>
-                {{/with}}
-                {{#if debug}}
-                  <div class="classification">
-                    {{#each classifierResults}}
-                      <div class="classifier">
-                        <div class="name">{{classifierName}} classifier</div>
-                        <ol class="labels">
-                          {{#each labelProbabilities}}
-                            <li>{{label}}: {{probabilityPercentage}}%</li>
-                          {{/each}}
-                        </ol>
+                  {{#with this.recognition}}
+                    <div class="recognition result {{resultPassesClass this}}">
+                      <div class="summary">
+                        <span class="title">Recognition</span>: {{summary}}
                       </div>
-                    {{/each}}
-                  </div>
-                {{/if}}
-              </div>
+                      <div class="exlpanation">
+                        {{explanation}}
+                      </div>
+                    </div>
+                  {{else}}
+                    <div class="result">Draw the subject to see the analysis of its readability.</div>
+                  {{/with}}
+                  {{#if debug}}
+                    <div class="classification">
+                      {{#each classifierResults}}
+                        <div class="classifier">
+                          <div class="name">{{classifierName}} classifier</div>
+                          <ol class="labels">
+                            {{#each labelProbabilities}}
+                              <li>{{label}}: {{probabilityPercentage}}%</li>
+                            {{/each}}
+                          </ol>
+                        </div>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
+              {{/each}}
+              {{#if confidencePercentage}}
+                <div class="confidence">Analysis confidence: {{confidencePercentage}}%</div>
+              {{/if}}
             {{else}}
               <div class="result">Decide which subjects you wish to draw to see the analysis of their readability.</div>
-            {{/each}}
+            {{/if}}
           </div>
         </div>
       </div>

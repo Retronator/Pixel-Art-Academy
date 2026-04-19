@@ -59,7 +59,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @directive: -> "Draw an #{@sizeString()} icon"
     
-    @groupNumber: -> -1
+    @groupNumber: -> 1
     
     @studyPlanBuilding: -> 'SimCityResidential1'
     
@@ -81,7 +81,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @directive: -> "Draw a #{@sizeString()} icon"
     
-    @groupNumber: -> 1
+    @groupNumber: -> -1
     
     @studyPlanBuilding: -> 'SimCityOffice3'
     
@@ -117,9 +117,9 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
   @tasks: -> [
     @Learn
-    @Icon8
-    @Icon16
     @Icon32
+    @Icon16
+    @Icon8
     @Icons
   ]
 

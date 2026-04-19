@@ -598,7 +598,7 @@ Document.startup ->
       ,
         title: "Let's Stay"
         duration: duration 1, 18
-        url: "/pixelartacademy/music/Joseph Sacco - Shortwave/02 Joseph Sacco - Let's Stay.mp3"
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/02 Joseph Sacco - Lets Stay.mp3'
       ,
         title: 'On My Way'
         duration: duration 1, 26
@@ -669,7 +669,7 @@ Document.startup ->
       ,
         title: "Please Don't Go"
         duration: duration 3, 59
-        url: "/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/10 HoliznaCC0 - Please Don't Go.mp3"
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/10 HoliznaCC0 - Please Dont Go.mp3'
       ,
         title: 'City Lights'
         duration: duration 4, 37

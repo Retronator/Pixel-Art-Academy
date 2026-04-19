@@ -255,6 +255,8 @@ class IconSelection.CustomComponent extends LOI.Component
     
   onTableOfContents: -> @currentPage() <= 3
   
+  tableOfContentsFullSpreadClass: -> 'full-spread' if @currentPage() is 1
+  
   tableOfContentsPagesStyle: ->
     left: "#{-(145 + 18) * (@currentPage() - 1)}rem"
   
