@@ -122,6 +122,11 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
     return unless bitmap = @document()
     
     @constructor.getIconStatus(bitmap).completed
+    
+  started: ->
+    return unless bitmap = @document()
+    
+    @constructor.getIconStatus(bitmap).started
   
   width: -> 56
   height: -> 82

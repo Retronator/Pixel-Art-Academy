@@ -8,6 +8,10 @@
           {{else}}
             <span class="completed"></span>
           {{/if}}
+        {{else}}
+          {{#if desktop.displayedAsset.started}}
+            <span class="started"></span>
+          {{/if}}
         {{/if}}
       </div>
       <canvas class="canvas" {{style canvasStyle}}></canvas>

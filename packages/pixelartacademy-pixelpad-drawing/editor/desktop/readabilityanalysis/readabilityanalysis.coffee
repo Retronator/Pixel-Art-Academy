@@ -289,23 +289,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
   resultPassesClass: (result) ->
     'passes' if result?.passes
   
-  confidencePercentage: ->
-    return 0 unless readabilityAnalysis = @readabilityAnalysis()
-    readabilityAnalysis.depend()
-    return 0 unless readabilityAnalysis.regions
-    
-    confidences = for region in readabilityAnalysis.regions when region.labels
-      @_calculateConfidence(region.labels.symbolic[...20]) * 0.6 + @_calculateConfidence(region.labels.realistic[...20]) * 0.4
-    
-    averageConfidence = _.sum(confidences) / confidences.length
-    
-    Math.floor averageConfidence * 100
-
-  _calculateConfidence: (labelProbabilities) ->
-    entropy = _.sumBy labelProbabilities, (labelProbability) => -labelProbability.probability * Math.log2 labelProbability.probability
-    maxEntropy = Math.log2 labelProbabilities.length
-    1 - entropy / maxEntropy
-    
   events: ->
     super(arguments...).concat
       'click .paper': @onClickPaper
