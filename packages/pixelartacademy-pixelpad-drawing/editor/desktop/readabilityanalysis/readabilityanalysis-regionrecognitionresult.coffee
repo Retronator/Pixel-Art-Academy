@@ -5,13 +5,21 @@ RA = PAA.Practice.ReadabilityAnalysis
 PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis::_regionRecognitionResult = (region, bounds) ->
   return unless region.labels
   
-  labelString = AB.Rules.English.addIndefinitePronoun region.targetLabel
+  if region.targetLabel in PAA.ImageClassification.SimpleClassifier.pluralLabels
+    demonstrative = "these"
+    copula = "are"
+    labelString = region.targetLabel
+    
+  else
+    demonstrative = "this"
+    copula = "is"
+    labelString = AB.Rules.English.addIndefinitePronoun region.targetLabel
   
   # Create recognition results.
-  perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt this is #{labelString}."
-  greatResult = passes: true, summary: "Great", explanation: "This is easily recognized as #{labelString}."
-  goodResult = passes: true, summary: "Good", explanation: "This is likely #{labelString}."
-  adequateResult = passes: true, summary: "Adequate", explanation: "This could be #{labelString}."
+  perfectResult = passes: true, summary: "Perfect", explanation: "There is no doubt #{demonstrative} #{copula} #{labelString}."
+  greatResult = passes: true, summary: "Great", explanation: "#{_.upperFirst demonstrative} #{copula} easily recognized as #{labelString}."
+  goodResult = passes: true, summary: "Good", explanation: "#{_.upperFirst demonstrative} #{copula} likely #{labelString}."
+  adequateResult = passes: true, summary: "Adequate", explanation: "#{_.upperFirst demonstrative} could be #{labelString}."
   
   # For results that don't pass, try to create some useful feedback, based on probabilities of other labels.
   

@@ -21,6 +21,8 @@ class PAA.ImageClassification.SimpleClassifier
     'rabbit','raccoon','rhinoceros','rifle','sailboat','saw','saxophone','scissors','scorpion','turtle','shark',
     'sheep','shoe','skyscraper','snail','snake','spider','spoon','squirrel','strawberry','swan','sword','table',
     'teapot','teddy bear','tiger','tree','trumpet','umbrella','violin','windmill','bottle','zebra']
+  
+  @pluralLabels = ['eyeglasses', 'scissors']
 
   @convertStrokesToInputData: (strokes, inputData) ->
     # Find bounds of the drawn area.
