@@ -41,6 +41,8 @@ class PAE.Point
     @id = PAE.nextId()
     
     @neighbors = []
+    @allNeighbors = []
+    
     @lines = []
     @pixels = []
     
@@ -52,6 +54,7 @@ class PAE.Point
     pixel.unassignPoint @ for pixel in @pixels
     line.unassignPoint @ for line in @lines
     neighbor._disconnectNeighbor @ for neighbor in @neighbors
+    neighbor._destroyNeighbor @ for neighbor in @allNeighbors
 
   getOutlines: ->
     line for line in @lines when line.core
@@ -101,12 +104,18 @@ class PAE.Point
         for point in neighborPixel.points when point isnt @
           @_connectNeighbor point
           point._connectNeighbor @
-          
+  
+  saveAllNeighbors: ->
+    @allNeighbors.push neighbor for neighbor in @neighbors when neighbor not in @allNeighbors
+    
   _connectNeighbor: (neighbor) ->
     @neighbors.push neighbor unless neighbor in @neighbors
     
   _disconnectNeighbor: (neighbor) ->
     _.pull @neighbors, neighbor
+  
+  _destroyNeighbor: (neighbor) ->
+    _.pull @allNeighbors, neighbor
     
-  _distanceTo: (point) ->
+  _distanceSquaredTo: (point) ->
     (point.x - @x) ** 2 + (point.y - @y) ** 2

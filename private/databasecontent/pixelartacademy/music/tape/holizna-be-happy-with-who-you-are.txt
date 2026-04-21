@@ -1,0 +1,20 @@
+Be Happy With Who You Are by Holizna
+
+SIDE A
+Life On Cassette
+Relax A While
+Decent Person
+I Need You
+The Good Times
+Self Care
+No One Is Perfect
+
+SIDE B
+Finding Yourself
+Find Your Peace
+Please Don't Go
+City Lights
+Timelines
+Falling In Love With Yourself
+
+{"_id":"KtvZbCFwnXvxQRn6h","title":"Be Happy With Who You Are","artist":"Holizna","gain":0.8,"sides":[{"tracks":[{"title":"Life On Cassette","duration":135,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/01 HoliznaCC0 - Life On Cassette.mp3"},{"title":"Relax A While","duration":130,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/02 HoliznaCC0 - Relax A While.mp3"},{"title":"Decent Person","duration":122,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/03 HoliznaCC0 - Decent Person.mp3"},{"title":"I Need You","duration":205,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/04 HoliznaCC0 - I Need You.mp3"},{"title":"The Good Times","duration":141,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/05 HoliznaCC0 - The Good Times.mp3"},{"title":"Self Care","duration":140,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/06 HoliznaCC0 - Self Care.mp3"},{"title":"No One Is Perfect","duration":183,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/07 HoliznaCC0 - No One Is Perfect.mp3"}]},{"tracks":[{"title":"Finding Yourself","duration":154,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/08 HoliznaCC0 - Finding Yourself.mp3"},{"title":"Find Your Peace","duration":139,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/09 HoliznaCC0 - Find Your Peace.mp3"},{"title":"Please Don't Go","duration":239,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/10 HoliznaCC0 - Please Dont Go.mp3"},{"title":"City Lights","duration":277,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/11 HoliznaCC0 - City Lights.mp3"},{"title":"Timelines","duration":181,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/12 HoliznaCC0 - Timelines.mp3"},{"title":"Falling In Love With Yourself","duration":163,"url":"/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/14 HoliznaCC0 - Falling In Love With Yourself.mp3"}]}],"styleClass":"c60","_schema":"1.0.0","slug":"holizna-be-happy-with-who-you-are","lastEditTime":{"$date":1776518794742}}

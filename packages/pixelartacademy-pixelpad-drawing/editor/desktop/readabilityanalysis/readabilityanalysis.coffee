@@ -9,6 +9,7 @@ RA = PAA.Practice.ReadabilityAnalysis
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis'
+  @register @id()
   
   @debug = false
   
@@ -98,9 +99,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         return unless readabilityAnalysis = @readabilityAnalysis()
         readabilityAnalysis.depend()
         readabilityAnalysis
-        
-      displayed: => false # TODO: Enable when stroke analysis is provided @displayed()
-      focusedPixel: => if @displayed() then @hoveredPixel() else null
       
     # Automatically enter focused mode when active.
     @autorun (computation) =>
@@ -116,13 +114,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
       Tracker.nonreactive => @interface.deactivateTool()
       
     # Update analysis where requested.
-    @readabilityAnalysisPropertyExists = new ComputedField =>
-      @readabilityAnalysisProperty()?
+    @readabilityAnalysisShouldBePerformed = new ComputedField =>
+      return false unless readabilityAnalysisProperty = @readabilityAnalysisProperty()
+
+      # Do the first report only when the analysis is open (revealed).
+      readabilityAnalysisProperty.passes? or @revealed()
       
     @recognition = new ReactiveField null
     
     @autorun (computation) =>
-      return unless @readabilityAnalysisPropertyExists()
+      return unless @readabilityAnalysisShouldBePerformed()
       return unless readabilityAnalysis = @readabilityAnalysis()
       readabilityAnalysis.depend()
       return unless readabilityAnalysis.regions
@@ -136,8 +137,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
           readabilityAnalysisProperty.regions = []
         
           for region, regionIndex in readabilityAnalysis.regions
-            regionAnalysis =
-              targetLabel: region.targetLabel
+            regionAnalysis = _.pick region, 'targetLabel', 'bounds'
             
             readabilityAnalysisProperty.regions[regionIndex] = regionAnalysis
           
@@ -156,8 +156,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
           # Run the analysis criteria.
           recognition = []
           
-          for region in readabilityAnalysisProperty.regions
-            regionRecognition = @_regionRecognitionResult region
+          for region, regionIndex in readabilityAnalysisProperty.regions
+            regionRecognition = @_regionRecognitionResult region, region.bounds or readabilityAnalysis.bitmap.bounds
             recognition.push regionRecognition
             region.recognition = passes: regionRecognition.passes if regionRecognition
             
@@ -269,8 +269,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
     height: "#{@contentHeight()}rem"
     
   pixeltoshClass: ->
-    return 'wait' if @displayed() and @readabilityAnalysis()?.analyzing()
-    
     return unless readabilityAnalysisProperty = @readabilityAnalysisProperty()
     return unless readabilityAnalysisProperty.passes?
     
@@ -287,34 +285,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         label: region.targetLabel
         recognition: recognition[regionIndex]
         classifierResults: ({classifierName, labelProbabilities: labelProbabilities[...5]} for classifierName, labelProbabilities of region.labels)
-  
-  liveClassifierResults: ->
-    region = @currentData()
-    regionIndex = region.index
-    
-    return unless readabilityAnalysis = @readabilityAnalysis()
-    readabilityAnalysis.depend()
-    return unless regions = readabilityAnalysis.regions
-    
-    region = regions[regionIndex]
-    
-    hoveredPixel = if @displayed() then @hoveredPixel() else null
-    hoveredLines = if hoveredPixel then readabilityAnalysis.pixelArtEvaluation.getLinesAt hoveredPixel.x, hoveredPixel.y else []
-    hoveredPoints = if hoveredPixel then readabilityAnalysis.pixelArtEvaluation.getPointsAt hoveredPixel.x, hoveredPixel.y else []
-    hoveredElements = [hoveredLines..., hoveredPoints...]
-    
-    if hoveredElements.length
-      strokeAnalysis = _.find regions[regionIndex].strokes, (strokeAnalysis) => strokeAnalysis.element is hoveredElements[0]
-      labels = strokeAnalysis?.labels
-      
-    labels ?= region.labels
-    
-    for classifierName, labelProbabilities of labels
-      labelProbabilityPercentages = for labelProbability in labelProbabilities when labelProbability.probability >= 0.01
-        label: labelProbability.label
-        probabilityPercentage: Math.round labelProbability.probability * 100
-      
-      {classifierName, labelProbabilities: labelProbabilityPercentages[...5]}
   
   resultPassesClass: (result) ->
     'passes' if result?.passes

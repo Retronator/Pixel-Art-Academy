@@ -25,8 +25,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
   onCreated: ->
     super arguments...
 
-    profileId = LOI.adventure.profileId()
-
     sectionLocations =
       tutorial: new PAA.Practice.Tutorials.Drawing
       challenge: new PAA.Practice.Challenges.Drawing
@@ -45,27 +43,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
           (a, b) =>
             _.isArray(a) and _.isArray(b) and a.length is b.length and _.intersection(a, b).length is a.length
         
-        groups = new ComputedField =>
-          for sectionThing, index in sectionThings()
-            do (sectionThing, index) =>
-              assets = new ComputedField =>
-                for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
-                  do (asset, assetIndex) =>
-                    _id: asset.urlParameter()
-                    index: assetIndex
-                    asset: asset
-                    scale: => @_assetScale asset
-
-              thing: sectionThing
-              index: index
-              name: => sectionThing.fullName()
-              noAssetsInstructions: => sectionThing.noAssetsInstructions?()
-              assets: assets
-              content: => sectionThing.content?()
-
         section =
           nameKey: @constructor.Sections["#{_.upperFirst sectionThingName}s"]
-          groups: groups
+          groups: @_createGroupsField sectionThings, 0
+          isSection: true
 
         @["#{sectionThingName}sSection"] = section
   
@@ -147,6 +128,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         
     @artworksSection =
       nameKey: @constructor.Sections.Artworks
+      isSection: true
       groups: =>
         groups = []
   
@@ -177,48 +159,64 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
 
       sections
 
-    @settingsSection =
-      nameKey: @constructor.Sections.Settings
-
-    @autorun (computation) =>
-      sections = @sections()
-      @settingsSection.index = sections.length
-
     @activeSection = new ReactiveField null, (a, b) => a is b
-    @activeGroup = new ReactiveField null, (a, b) => a is b
+    @activeGroups = new ReactiveField [], (a, b) =>
+      return false if a.length isnt b.length
+      return false for group, index in a when group isnt b[index]
+      true
 
     # Clear stale active groups.
     @autorun (computation) =>
       return unless activeSection = @activeSection()
-      return unless activeGroup = @activeGroup()
+      return unless activeGroups = @activeGroups()
+      
+      refreshedActiveGroups = _.clone activeGroups
+      groupsWereRefreshed = false
+      
       newGroups = activeSection.groups()
-      return if activeGroup in newGroups
-
-      # See if we can find a group with the same name.
-      name = activeGroup.name()
-      sameNamedGroup = _.find newGroups, (group) => group.name() is name
-
-      if sameNamedGroup
-        # We found the same group so it must have just re-created.
-        @activeGroup sameNamedGroup
-        return
-
-      # Seems like the active group is not valid anymore.
-      @activeGroup null
+      
+      for activeGroup, activeGroupIndex in activeGroups
+        currentGroups = newGroups
+        newGroups = newGroups[activeGroup.index].groups?()
+      
+        if activeGroup in currentGroups
+          continue
+  
+        # See if we can find a group with the same name.
+        name = activeGroup.name()
+        sameNamedGroup = _.find currentGroups, (group) => group.name() is name
+  
+        if sameNamedGroup
+          # We found the same group so it must have just re-created.
+          refreshedActiveGroups[activeGroupIndex] = sameNamedGroup
+          groupsWereRefreshed = true
+          continue
+  
+        # Seems like the active group is not valid anymore. Return to highest valid level.
+        refreshedActiveGroups = refreshedActiveGroups[0...activeGroupIndex]
+        groupsWereRefreshed = true
+        break
+        
+      @activeGroups refreshedActiveGroups if groupsWereRefreshed
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @lastHoveredAsset = new ReactiveField null, (a, b) => a is b
-    @activeAsset = new ComputedField =>
-      return unless parameter = AB.Router.getParameter 'parameter3'
+    @activeAsset = new ReactiveField null, (a, b) => a is b
+
+    # Determine the active section, group, and asset based on the URL.
+    @autorun (computation) =>
+      unless urlParameter = AB.Router.getParameter 'parameter3'
+        @activeAsset null
+        return
 
       # Find the asset that uses this parameter.
       for section in @sections()
         for group in section.groups()
-          for assetData in group.assets()
-            if assetData.asset.urlParameter() is parameter
-              @activeSection section
-              @activeGroup group
-              return assetData
+          if result = @_searchGroupForAssetWithUrlParameter group, urlParameter, [group]
+            @activeSection section
+            @activeGroups result.groups
+            @activeAsset result.asset
+            return
 
     # Displayed asset retains its value until another asset gets activated
     @displayedAsset = new ReactiveField null, (a, b) => a is b
@@ -226,41 +224,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @autorun (computation) =>
       return unless activeAsset = @activeAsset()
       @displayedAsset activeAsset
-
-    # Prepare settings.
-    editors = new PAA.PixelPad.Apps.Drawing.Editors
     
-    currentEditorsSituation = new LOI.Adventure.Situation
-      location: editors
-
-    @_editors = {}
-
-    @editors = new ComputedField =>
-      editorClasses = currentEditorsSituation.things()
-      editors = []
-
-      for editorClass in editorClasses
-        @_editors[editorClass.id()] ?= new editorClass
-        editors.push @_editors[editorClass.id()]
-
-      if editors.length
-        editors.unshift
-          id: => null
-          fullName: 'None'
-
-      editors
-      
-    @externalSoftware = ({value, fullName} for value, fullName of @constructor.ExternalSoftware)
-    @externalSoftware = _.sortBy @externalSoftware, 'fullName'
-
-    @externalSoftware.unshift
-      value: null
-      fullName: 'None'
-  
-    @externalSoftware.push
-      value: 'other'
-      fullName: 'Other software'
-      
     # Wire sounds on changes of sections and groups, but don't play two at once (group has priority).
     @autorun (computation) =>
       # Depend on section changes.
@@ -275,34 +239,94 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         0
     
     # To isolate recreation of groups, we depend on group names.
-    @activeGroupName = new ComputedField =>
-      @activeGroup()?.name()
+    @lastActiveGroupName = new ComputedField =>
+      _.last(@activeGroups())?.name()
 
     @autorun (computation) =>
-      @activeGroupName()
+      @lastActiveGroupName()
       
-      group = Tracker.nonreactive => @activeGroup()
+      lastActiveGroup = Tracker.nonreactive => _.last @activeGroups()
       
       Meteor.clearTimeout @_updateSectionTimeout
       
       @_updateGroupTimeout = Meteor.setTimeout =>
-        if group then @audio.groupOpen() else @audio.groupClose()
+        if lastActiveGroup then @audio.groupOpen() else @audio.groupClose()
         @_updateGroupTimeout = null
       ,
         0
+  
+    @assetGroupIsActive = new ComputedField =>
+      return false unless activeGroups = @activeGroups()
+      _.last(activeGroups)?.assets
       
-    @inactiveSectionHeight = new ComputedField =>
-      return @sectionHeight unless activeSection = @activeSection()
+    @visibleGroupsCount = new ComputedField =>
+      return 0 unless activeSection = @activeSection()
       
-      sections = @sections()
-      activeSectionGroups = activeSection.groups()
-
-      if @activeGroup()
-        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @getInactiveGroupHeight(activeSectionGroups.length) + @activeGroupHeight
+      count = activeSection.groups().length
+      
+      return count unless activeGroups = @activeGroups()
+      
+      for group in activeGroups when group.groups
+        count += group.groups().length
+      
+      count
+    
+    @lastActiveGroupGroupsCount = new ComputedField =>
+      return 0 unless activeSection = @activeSection()
+      activeGroups = @activeGroups()
+      
+      if activeGroups.length
+        _.last(activeGroups).groups?().length or 0
         
       else
-        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @getInitialGroupHeight activeSectionGroups.length
+        activeSection.groups().length
+        
+    @minimizableGroupsCount = new ComputedField =>
+      @visibleGroupsCount() - @lastActiveGroupGroupsCount()
       
+    @minimalGroupsHeight = new ComputedField =>
+      return 0 unless activeGroups = @activeGroups()
+      activeGroups.length * @maxInitialGroupHeight
+      
+    @minimizableGroupHeight = new ComputedField =>
+      minimizableHeightSpace = @groupsMaxTotalHeight - @minimalGroupsHeight() - @maxInitialGroupHeight * @lastActiveGroupGroupsCount()
+      heightPerGroup = Math.floor minimizableHeightSpace / @minimizableGroupsCount()
+      Math.min heightPerGroup, @maxInitialGroupHeight
+    
+    @minimizedGroupHeight = new ComputedField =>
+      minimizedHeightSpace = @groupsMaxTotalHeight - @activeGroupHeight - @minimalGroupsHeight()
+      heightPerGroup = Math.floor minimizedHeightSpace / (@visibleGroupsCount() - 1)
+      _.clamp heightPerGroup, @minMinimizedGroupHeight, @maxMinimizedGroupHeight
+    
+    @initialGroupHeight = new ComputedField =>
+      return @maxInitialGroupHeight unless lastActiveGroupGroupsCount = @lastActiveGroupGroupsCount()
+      initialHeightSpace = @groupsMaxTotalHeight - @minimalGroupsHeight() - @minimizedGroupHeight() * @minimizableGroupsCount()
+      heightPerGroup = Math.floor initialHeightSpace / lastActiveGroupGroupsCount
+      Math.min heightPerGroup, @maxInitialGroupHeight
+    
+    @inactiveGroupHeight = new ComputedField =>
+      if @assetGroupIsActive() then @minimizedGroupHeight() else @minimizableGroupHeight()
+      
+    @activeGroupHeaderHeight = new ComputedField =>
+      if @assetGroupIsActive() then @reducedGroupHeight else @maxInitialGroupHeight
+      
+    @activeSectionHeight = new ComputedField =>
+      return 0 unless activeSection = @activeSection()
+      groups = activeSection.groups()
+      activeGroups = @activeGroups()
+      
+      if activeGroups.length
+        height = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight() + @groupHeight activeGroups[0], activeGroups
+      
+      else
+        height = @sectionHeight + groups.length * @initialGroupHeight()
+      
+    @inactiveSectionHeight = new ComputedField =>
+      return @sectionHeight unless @activeSection()
+      
+      sections = @sections()
+      
+      activeSectionHeight = @activeSectionHeight()
       sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
       
       if sectionsTotalHeight > @sectionsMaxTotalHeight
@@ -324,8 +348,80 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     
     $(document).off '.pixelartacademy-pixelpad-apps-drawing-portfolio'
     
-    editor.destroy?() for editor in @_editors
-  
     @_artworksDictionary.stop()
     @_newArtworkAsset.destroy()
     @_importArtworkAsset.destroy()
+  
+  _createGroupsField: (sectionThingsProvider, level) ->
+    new ComputedField =>
+      groups = []
+
+      # Get section things and separate folders of things from them.
+      sectionThings = sectionThingsProvider()
+      folders = _.remove sectionThings, (sectionThing) => sectionThing instanceof PAA.PixelPad.Apps.Drawing.Portfolio.Folder
+      
+      # Turn things into groups.
+      groupIndex = 0
+      
+      for sectionThing in sectionThings
+        do (sectionThing) =>
+          assets = new ComputedField =>
+            for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
+              do (asset, assetIndex) =>
+                _id: asset.urlParameter()
+                index: assetIndex
+                asset: asset
+                scale: => @_assetScale asset
+          
+          groups.push
+            level: level
+            thing: sectionThing
+            index: groupIndex
+            name: => sectionThing.fullName()
+            noAssetsInstructions: => sectionThing.noAssetsInstructions?()
+            assets: assets
+            content: => sectionThing.content?()
+          
+          groupIndex++
+      
+      # Turn folders into groups, merged by folder ID.
+      folderInstancesById = {}
+      
+      for folder in folders
+        folderInstancesById[folder.id()] ?= []
+        folderInstancesById[folder.id()].push folder
+        
+      for folderId, folderInstances of folderInstancesById
+        do (folderInstances) =>
+          # We join the contents of all instances together.
+          folderThings = new ComputedField => _.flatten (folderInstance.things for folderInstance in folderInstances)
+          
+          # We take the first instance to act as the provider of the information for this group.
+          folder = folderInstances[0]
+
+          do (folder) =>
+            groups.push
+              level: level
+              index: groupIndex
+              name: => folder.displayName()
+              groups: @_createGroupsField folderThings, level + 1
+        
+          groupIndex++
+      
+      groups
+  
+  _searchGroupForAssetWithUrlParameter: (group, urlParameter, currentGroups) ->
+    if group.assets
+      for assetData in group.assets()
+        if assetData.asset.urlParameter() is urlParameter
+          return {
+            groups: currentGroups
+            asset: assetData
+          }
+      
+    if group.groups
+      for group in group.groups()
+        if result = @_searchGroupForAssetWithUrlParameter group, urlParameter, [currentGroups..., group]
+          return result
+      
+    null

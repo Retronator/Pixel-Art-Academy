@@ -36,7 +36,7 @@ class LM.Intro.ChallengesDrawing extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    if LM.Intro.Tutorial.Goals.PixelArtSoftware.activeAndAvailable()
+    if LM.Intro.Tutorial.Goals.PixelArtSoftware.available()
       if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed()
         @_pixelArtSoftware ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtSoftware
   

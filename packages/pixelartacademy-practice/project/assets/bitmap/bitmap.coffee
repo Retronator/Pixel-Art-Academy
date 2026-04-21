@@ -139,6 +139,8 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   _initialize: ->
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
+      # Pixel art evaluation options can either come from the constructor or from the instance.
+      # We check if the instance provides this options method, otherwise we take the static one.
       if @pixelArtEvalutionOptions
         pixelArtEvaluationOptions = @pixelArtEvaluationOptions()
         
@@ -156,6 +158,8 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
         pixelArtEvaluationInstance
         
     if readabilityAnalysis = @constructor.readabilityAnalysis()
+      # Readability analysis options can either come from the constructor or from the instance.
+      # We check if the instance provides this options method, otherwise we take the static one.
       if @readabilityAnalysisOptions
         readabilityAnalysisOptions = @readabilityAnalysisOptions()
         
@@ -192,6 +196,15 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   height: -> @bitmap()?.bounds.height
   pixelArtScaling: -> true
   portfolioBorderWidth: -> 6
+  
+  # Returns information about presenting the asset in the drawing app.
+  # borderWidth: how thick the border should be
+  # scale: what magnification the preview is using
+  # position: where the top-left corner of the preview is
+  #   top, left: CSS string for positioning the preview
+  previewInfo: ->
+    return unless @clipboardComponent.isCreated()
+    @clipboardComponent.callFirstWith null, 'previewInfo'
 
   fixedDimensions: -> @constructor.fixedDimensions()
 
@@ -227,7 +240,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     return unless bitmapId = @bitmapId()
     "/assets/bitmap.png?id=#{bitmapId}"
     
-  # Override if you want to send options based on the bitmap instance.
+  # Override if you want to send options based on the bitmap instance (instead of the static options).
   pixelArtEvaluationOptions: ->
   readabilityAnalysisOptions: ->
 

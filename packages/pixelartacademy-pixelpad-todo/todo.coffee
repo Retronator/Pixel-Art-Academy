@@ -155,6 +155,16 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in @activeTasksToBeDisplayed()
         @_animateTaskAdded task
         return
+        
+      # If there are no more active tasks, remove all completed ones.
+      unless @activeTasks().length
+        Tracker.nonreactive =>
+          completedTasks = @completedTasks()
+          @completedTasks []
+          
+          # Also remove them from the displayed list.
+          for task in completedTasks
+            @$("[data-task-id='#{task.id()}']").remove()
     
     Tracker.triggerOnDefinedChange @displayState, (displayState, previousDisplayState) =>
       # Make sure we're still being rendered.
@@ -214,22 +224,6 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     await _.waitForSeconds @waitBetweenAnimationsDuration
 
     await task.onCompletedDisplayed()
-    
-    # If there are no more active tasks, remove all completed ones.
-    unless @activeTasks().length
-      completedTasks = @completedTasks()
-      @completedTasks []
-      
-      # Also remove them from the displayed list.
-      for task in completedTasks
-        @$("[data-task-id='#{task.id()}']").remove()
-        
-      # If more tasks could be added, don't close the notebook, so the player can see the instructions to add them.
-      # But if all tasks are done and the end notification should display, we want to proceed with closing for the
-      # notification to display immediately (the "all done" text is short enough to be read at a glance).
-      unless LM.Notifications.TheEnd.condition()
-        @_animateEnd()
-        return
     
     @_animateClose()
   
@@ -303,6 +297,22 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
     Meteor.clearTimeout @_animateCloseTimeout
     
+    # Determine how long to wait before closing the notebook.
+    if LM.Notifications.TheEnd.condition()
+      closeDelay = 1500
+      
+    else unless @activeTasks().length
+      # We don't have any more active tasks. Delay closing for longer so
+      # that the player can see the instructions for adding new tasks.
+      closeDelay = 4000
+      
+    else if @notifications().displayAlwaysNotifications().length and not LM.Notifications.TheEnd.condition()
+      # There are notifications waiting to be displayed that will always be shown, so close quickly.
+      closeDelay = 500
+      
+    else
+      closeDelay = 2000
+    
     # Close after a second if no further animations are happening.
     @_animateCloseTimeout = Meteor.setTimeout =>
       return if @animating()
@@ -311,7 +321,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       @manualDisplayState null
     ,
-      2000
+      closeDelay
     
   _animateEnd: ->
     @animating false

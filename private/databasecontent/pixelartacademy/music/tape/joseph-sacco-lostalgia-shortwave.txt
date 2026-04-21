@@ -1,0 +1,22 @@
+Lostalgia / Shortwave by Joseph Sacco
+
+SIDE A: Lostalgia
+Fantasia
+Aquarius Moon
+Meadows
+Open Road
+Resistance
+Sound Travels
+Static
+Take Away
+
+SIDE B: Shortwave
+Cure Remedy
+Let's Stay
+On My Way
+Retro Grade
+Test Actions
+Waveland
+Second Chance
+
+{"_id":"o2aRDgn9kN24Y2rgA","artist":"Joseph Sacco","gain":0.9,"sides":[{"title":"Lostalgia","tracks":[{"title":"Fantasia","duration":142,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/01 Joseph Sacco - Fantasia.mp3"},{"title":"Aquarius Moon","duration":118,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/02 Joseph Sacco - Aquarius Moon.mp3"},{"title":"Meadows","duration":153,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/03 Joseph Sacco - Meadows.mp3"},{"title":"Open Road","duration":179,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/04 Joseph Sacco - Open Road.mp3"},{"title":"Resistance","duration":172,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/05 Joseph Sacco - Resistance.mp3"},{"title":"Sound Travels","duration":187,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/06 Joseph Sacco - Sound Travels.mp3"},{"title":"Static","duration":179,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/07 Joseph Sacco - Static.mp3"},{"title":"Take Away","duration":248,"url":"/pixelartacademy/music/Joseph Sacco - Lostalgia/08 Joseph Sacco - Take Away.mp3"}]},{"title":"Shortwave","tracks":[{"title":"Cure Remedy","duration":86,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/01 Joseph Sacco - Cure Remedy.mp3"},{"title":"Let's Stay","duration":78,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/02 Joseph Sacco - Lets Stay.mp3"},{"title":"On My Way","duration":86,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/03 Joseph Sacco - On My Way.mp3"},{"title":"Retro Grade","duration":103,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/04 Joseph Sacco - Retro Grade.mp3"},{"title":"Test Actions","duration":95,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/05 Joseph Sacco - Test Actions.mp3"},{"title":"Waveland","duration":86,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/06 Joseph Sacco - Waveland.mp3"},{"title":"Second Chance","duration":86,"url":"/pixelartacademy/music/Joseph Sacco - Shortwave/07 Joseph Sacco - Second Chance.mp3"}]}],"styleClass":"c60","_schema":"1.0.0","slug":"joseph-sacco-lostalgia-shortwave","lastEditTime":{"$date":1776518794741}}

@@ -57,6 +57,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
   portfolioBorderWidth: -> if @document()?.properties?.canvasBorder then 6 else 0
   pixelArtScaling: -> @document()?.properties?.pixelArtScaling
   
+  previewInfo: ->
+    return unless @clipboardComponent.isCreated()
+    @clipboardComponent.callFirstWith null, 'previewInfo'
+    
   urlParameter: -> @artworkId
   
   ready: ->

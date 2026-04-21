@@ -27,10 +27,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
 
     "/pixelartacademy/challenges/drawing/pixelartsoftware/#{@imageName()}-template.png"
 
-  @briefComponentClass: ->
-    # Note: We need to fully qualify the name instead of using @constructor
-    # since we're overriding with a class with the same name.
-    PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
+  @briefComponentClass: -> @BriefComponent
   
   constructor: ->
     super arguments...

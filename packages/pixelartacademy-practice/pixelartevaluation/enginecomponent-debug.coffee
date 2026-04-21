@@ -6,7 +6,9 @@ PAE = PAA.Practice.PixelArtEvaluation
 deepCoreColor = "hsl(100deg 50% 50% / 50%)"
 shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
+oldPointColor = "hsl(350deg 25% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
+potentialEdgeColor = "hsl(200deg 10% 10%)"
 getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
 straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
@@ -60,11 +62,14 @@ class PAE.EngineComponent extends PAE.EngineComponent
         context.beginPath()
         @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
         @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
-      
+        
       if @drawPoints()
         # Draw point network.
         for point in layer.points
-          @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
+          @_drawDebugEdge context, point, neighbor, potentialEdgeColor for neighbor in point.allNeighbors
+
+        for point in layer.points
+          @_drawDebugEdge context, point, neighbor, edgeColor for neighbor in point.neighbors
         
         # Draw points.
         @_drawDebugPoint context, point for point in layer.points
@@ -86,8 +91,8 @@ class PAE.EngineComponent extends PAE.EngineComponent
         
     context.restore()
 
-  _drawDebugEdge: (context, pointA, pointB) ->
-    context.strokeStyle = edgeColor
+  _drawDebugEdge: (context, pointA, pointB, color) ->
+    context.strokeStyle = color
     context.lineWidth = @_pixelSize * 2
     context.beginPath()
     
@@ -99,11 +104,11 @@ class PAE.EngineComponent extends PAE.EngineComponent
   _drawDebugPoint: (context, point) ->
     context.beginPath()
     context.arc point.x, point.y, @_pixelSize * 3, 0, 2 * Math.PI
-    context.fillStyle = pointColor
+    context.fillStyle = if point.old then oldPointColor else pointColor
     context.fill()
 
   _drawDebugLine: (context, line) ->
-    hueDegrees = (line.id * 9) % 360
+    hueDegrees = (line.id * 137.508) % 360
     context.strokeStyle = "hsl(#{hueDegrees}deg 50% 50%)"
     context.lineWidth = @_pixelSize * 2
     context.beginPath()

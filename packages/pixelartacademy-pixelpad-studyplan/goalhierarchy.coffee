@@ -121,6 +121,8 @@ class StudyPlan.GoalHierarchy
       
       # Recursively create potential global road network.
       createGoalConnectionPoints = (goalNode) =>
+        connectionName = (names...) => "#{_.last(goalNode.goalId.split('.'))} #{names.join ' '}"
+
         sidewaysGoalsConnectionPoints = (createGoalConnectionPoints sidewaysGoalNode for sidewaysGoalNode in goalNode.sidewaysGoalNodes)
         forwardGoalsConnectionPoints = (createGoalConnectionPoints forwardGoalNode for forwardGoalNode in goalNode.forwardGoalNodes)
         
@@ -130,14 +132,14 @@ class StudyPlan.GoalHierarchy
         topRoadY = goalGlobalPosition.y + goalNode.topRoadY
         bottomRoadY = goalGlobalPosition.y + goalNode.bottomRoadY
         
-        entryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, goalNode.entryPoint.globalPosition.y
+        entryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, goalNode.entryPoint.globalPosition.y, connectionName 'entry'
         addGlobalPathway new StudyPlan.Pathway entryConnection, goalNode.entryPoint, null, true
 
-        exitConnection = StudyPlan.ConnectionPoint.createGlobal exitX, goalNode.exitPoint.globalPosition.y
+        exitConnection = StudyPlan.ConnectionPoint.createGlobal exitX, goalNode.exitPoint.globalPosition.y, connectionName 'exit'
         addGlobalPathway new StudyPlan.Pathway goalNode.exitPoint, exitConnection, null, true
         
-        sidewaysConnections = for sidewaysPoint in goalNode.sidewaysPoints
-          sidewaysConnection = StudyPlan.ConnectionPoint.createGlobal sidewaysPoint.globalPosition.x, topRoadY
+        sidewaysConnections = for sidewaysPoint, sidewaysPointIndex in goalNode.sidewaysPoints
+          sidewaysConnection = StudyPlan.ConnectionPoint.createGlobal sidewaysPoint.globalPosition.x, topRoadY, connectionName 'sideways', sidewaysPointIndex
           addGlobalPathway new StudyPlan.Pathway sidewaysPoint, sidewaysConnection, null, true
           addGlobalPathway new StudyPlan.Pathway sidewaysConnection, sidewaysPoint, null, true
           sidewaysConnection
@@ -149,12 +151,12 @@ class StudyPlan.GoalHierarchy
           accessHorizontal: []
           
         # Create access junction between the access horizontal and the vertical.
-        accessJunction = StudyPlan.ConnectionPoint.createGlobal exitX, topRoadY
+        accessJunction = StudyPlan.ConnectionPoint.createGlobal exitX, topRoadY, connectionName 'access junction'
         
         # Create access horizontal if there are any sideways connections.
         if sidewaysConnections.length
           # Create the access horizontal.
-          accessHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, topRoadY
+          accessHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, topRoadY, connectionName 'access horizontal entry'
           goalConnectionPoints.left.push accessHorizontalEntryConnection
           
           accessHorizontalConnections = [accessHorizontalEntryConnection, accessJunction, sidewaysConnections...]
@@ -171,6 +173,8 @@ class StudyPlan.GoalHierarchy
         
         # Create main vertical that connects the access junction and bottom of the goal.
         bottomExit = StudyPlan.ConnectionPoint.createGlobal exitX, bottomRoadY
+        goalConnectionPoints.down.push bottomExit
+        
         mainVertical = [accessJunction, exitConnection, bottomExit]
 
         # Handle forward goals.
@@ -187,12 +191,12 @@ class StudyPlan.GoalHierarchy
             # Create intermediary horizontals.
             for forwardGoalBConnectionPoints, forwardGoalAIndex in forwardGoalsConnectionPoints[1..]
               forwardGoalAConnectionPoints = forwardGoalsConnectionPoints[forwardGoalAIndex]
-              forwardHorizontalConnections = [forwardGoalAConnectionPoints.up..., forwardGoalBConnectionPoints.down...]
+              forwardHorizontalConnections = [forwardGoalAConnectionPoints.down..., forwardGoalBConnectionPoints.up...]
               
               if forwardHorizontalConnections.length
                 forwardHorizontalY = forwardHorizontalConnections[0].globalPosition.y
                 
-                forwardHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, forwardHorizontalY
+                forwardHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, forwardHorizontalY, connectionName 'forward horizontal entry', forwardGoalAIndex
                 forwardHorizontalConnections.push forwardHorizontalEntryConnection
                 mainVertical.push forwardHorizontalEntryConnection
                 
@@ -220,11 +224,11 @@ class StudyPlan.GoalHierarchy
             mainHorizontalY = Math.min mainHorizontalY, topOfFirstForwardGoal
           
           # Create main junction between the main horizontal and the vertical.
-          mainJunction = StudyPlan.ConnectionPoint.createGlobal exitX, mainHorizontalY
+          mainJunction = StudyPlan.ConnectionPoint.createGlobal exitX, mainHorizontalY, connectionName 'main junction'
           mainVertical.push mainJunction
           
           # Create the main horizontal.
-          mainHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, mainHorizontalY
+          mainHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, mainHorizontalY, connectionName 'main horizontal entry'
           goalConnectionPoints.left.push mainHorizontalEntryConnection
           
           # First align the horizontal above the first forward goal and the main junction.
@@ -247,11 +251,11 @@ class StudyPlan.GoalHierarchy
               if sidewaysHorizontalConnections.length
                 sidewaysHorizontalY = sidewaysHorizontalConnections[0].globalPosition.y
                 
-                sidewaysHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryConnection.globalPosition.x, sidewaysHorizontalY
+                sidewaysHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryConnection.globalPosition.x, sidewaysHorizontalY, connectionName 'sideways horizontal entry', sidewaysGoalAIndex
                 sidewaysHorizontalConnections.push sidewaysHorizontalEntryConnection
                 goalConnectionPoints.left.push sidewaysHorizontalEntryConnection
                 
-                sidewaysHorizontalExitConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, sidewaysHorizontalY
+                sidewaysHorizontalExitConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, sidewaysHorizontalY, connectionName 'sideways horizontal exit', sidewaysGoalAIndex
                 sidewaysHorizontalConnections.push sidewaysHorizontalExitConnection
                 
                 mergeHorizontalConnectionPoints sidewaysHorizontalConnections, false
@@ -260,8 +264,6 @@ class StudyPlan.GoalHierarchy
         # Finalize the main vertical.
         mergeVerticalConnectionPoints mainVertical
         connectConnectionPoints mainVertical
-        
-        goalConnectionPoints.down.push _.last mainVertical
         
         # Create entry vertical that connects all left connection points.
         entryVertical = [goalConnectionPoints.left...]
@@ -420,7 +422,7 @@ class StudyPlan.GoalHierarchy
           
           # If there are sideways roads going past this expansion point, just connect the road.
           if roadTileMap.getTileType(expansionPosition.x, expansionPosition.y - 2) is StudyPlan.TileMap.Tile.Types.Road
-            expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal expansionPosition.x, expansionPosition.y - 1
+            expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal expansionPosition.x, expansionPosition.y - 1, 'expansion'
             pathway = new StudyPlan.Pathway sidewaysPoint, expansionRoadPoint
             addGlobalPathway pathway
             
@@ -438,7 +440,7 @@ class StudyPlan.GoalHierarchy
           lastSidewaysGoalNode = _.last goalNode.sidewaysGoalNodes
           entryY = lastSidewaysGoalNode.globalPosition().y
           
-          expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal entryX, entryY - 1
+          expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal entryX, entryY - 1, 'expansion'
           pathway = new StudyPlan.Pathway lastSidewaysGoalNode.entryPoint, expansionRoadPoint
           pathway.globalWaypointPositions.push new THREE.Vector2 entryX, entryY
           addGlobalPathway pathway

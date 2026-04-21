@@ -95,6 +95,7 @@ Package.onUse(function(api) {
   api.addFile('project/assets/bitmap..');
   api.addComponent('project/assets/bitmap/portfoliocomponent..');
   api.addComponent('project/assets/bitmap/clipboardcomponent..');
+  api.addFile('project/assets/bitmap/clipboardcomponent/previewinfomixin');
   api.addUnstyledComponent('project/assets/bitmap/briefcomponent..');
 
   api.addFile('project/migrations/0000-projectthings');

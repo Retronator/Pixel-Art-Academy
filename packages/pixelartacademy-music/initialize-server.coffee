@@ -550,6 +550,141 @@ Document.startup ->
       ]
     ]
     
+  addTape
+    artist: 'Joseph Sacco'
+    styleClass: 'c60'
+    gain: 0.9
+    sides: [
+      title: 'Lostalgia'
+      tracks: [
+        title: 'Fantasia'
+        duration: duration 2, 22
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/01 Joseph Sacco - Fantasia.mp3'
+      ,
+        title: 'Aquarius Moon'
+        duration: duration 1, 58
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/02 Joseph Sacco - Aquarius Moon.mp3'
+      ,
+        title: 'Meadows'
+        duration: duration 2, 33
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/03 Joseph Sacco - Meadows.mp3'
+      ,
+        title: 'Open Road'
+        duration: duration 2, 59
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/04 Joseph Sacco - Open Road.mp3'
+      ,
+        title: 'Resistance'
+        duration: duration 2, 52
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/05 Joseph Sacco - Resistance.mp3'
+      ,
+        title: 'Sound Travels'
+        duration: duration 3, 7
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/06 Joseph Sacco - Sound Travels.mp3'
+      ,
+        title: 'Static'
+        duration: duration 2, 59
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/07 Joseph Sacco - Static.mp3'
+      ,
+        title: 'Take Away'
+        duration: duration 4, 8
+        url: '/pixelartacademy/music/Joseph Sacco - Lostalgia/08 Joseph Sacco - Take Away.mp3'
+      ]
+    ,
+      title: 'Shortwave'
+      tracks: [
+        title: 'Cure Remedy'
+        duration: duration 1, 26
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/01 Joseph Sacco - Cure Remedy.mp3'
+      ,
+        title: "Let's Stay"
+        duration: duration 1, 18
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/02 Joseph Sacco - Lets Stay.mp3'
+      ,
+        title: 'On My Way'
+        duration: duration 1, 26
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/03 Joseph Sacco - On My Way.mp3'
+      ,
+        title: 'Retro Grade'
+        duration: duration 1, 43
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/04 Joseph Sacco - Retro Grade.mp3'
+      ,
+        title: 'Test Actions'
+        duration: duration 1, 35
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/05 Joseph Sacco - Test Actions.mp3'
+      ,
+        title: 'Waveland'
+        duration: duration 1, 26
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/06 Joseph Sacco - Waveland.mp3'
+      ,
+        title: 'Second Chance'
+        duration: duration 1, 26
+        url: '/pixelartacademy/music/Joseph Sacco - Shortwave/07 Joseph Sacco - Second Chance.mp3'
+      ]
+    ]
+    
+  addTape
+    artist: 'Holizna'
+    title: 'Be Happy With Who You Are'
+    styleClass: 'c60'
+    gain: 0.8
+    sides: [
+      tracks: [
+        title: 'Life On Cassette'
+        duration: duration 2, 15
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/01 HoliznaCC0 - Life On Cassette.mp3'
+      ,
+        title: 'Relax A While'
+        duration: duration 2, 10
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/02 HoliznaCC0 - Relax A While.mp3'
+      ,
+        title: 'Decent Person'
+        duration: duration 2, 2
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/03 HoliznaCC0 - Decent Person.mp3'
+      ,
+        title: 'I Need You'
+        duration: duration 3, 25
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/04 HoliznaCC0 - I Need You.mp3'
+      ,
+        title: 'The Good Times'
+        duration: duration 2, 21
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/05 HoliznaCC0 - The Good Times.mp3'
+      ,
+        title: 'Self Care'
+        duration: duration 2, 20
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/06 HoliznaCC0 - Self Care.mp3'
+      ,
+        title: 'No One Is Perfect'
+        duration: duration 3, 3
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/07 HoliznaCC0 - No One Is Perfect.mp3'
+      ]
+    ,
+      tracks: [
+        title: 'Finding Yourself'
+        duration: duration 2, 34
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/08 HoliznaCC0 - Finding Yourself.mp3'
+      ,
+        title: 'Find Your Peace'
+        duration: duration 2, 19
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/09 HoliznaCC0 - Find Your Peace.mp3'
+      ,
+        title: "Please Don't Go"
+        duration: duration 3, 59
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/10 HoliznaCC0 - Please Dont Go.mp3'
+      ,
+        title: 'City Lights'
+        duration: duration 4, 37
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/11 HoliznaCC0 - City Lights.mp3'
+      ,
+        title: 'Timelines'
+        duration: duration 3, 1
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/12 HoliznaCC0 - Timelines.mp3'
+      ,
+        title: 'Falling In Love With Yourself'
+        duration: duration 2, 43
+        url: '/pixelartacademy/music/HoliznaCC0 - Be Happy With Who You Are/14 HoliznaCC0 - Falling In Love With Yourself.mp3'
+      ]
+    ]
+    
 ###
   addTape
     artist: ''

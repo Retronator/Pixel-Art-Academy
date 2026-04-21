@@ -132,7 +132,7 @@ class LM.Interface extends LM.Interface
       return unless portfolio = drawing.portfolio()
       return unless portfolio.activeAsset()
       
-      activeGroup = portfolio.activeGroup()
+      activeGroup = _.last portfolio.activeGroups()
       activeThing = activeGroup.thing
       return unless course = activeThing?.content().course
       

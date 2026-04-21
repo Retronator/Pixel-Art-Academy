@@ -3,35 +3,130 @@ PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
 PAE.Point.optimizeNeighbors = (points) ->
+  return unless points.length
+  
+  # Remove all long connections that span over two short connections.
+  for rootPoint in points
+    loop
+      eliminated = false
+      
+      for neighborA in rootPoint.neighbors
+        for neighborB in rootPoint.neighbors when neighborB isnt neighborA
+          if rootPoint.x is (neighborA.x + neighborB.x) / 2 and rootPoint.y is (neighborA.y + neighborB.y) / 2
+            eliminatingPoint1 = neighborA
+            eliminatingPoint2 = neighborB
+            
+          else if neighborB.x is (rootPoint.x + neighborA.x) / 2 and neighborB.y is (rootPoint.y + neighborA.y) / 2
+            eliminatingPoint1 = rootPoint
+            eliminatingPoint2 = neighborA
+            
+          else if neighborA.x is (rootPoint.x + neighborB.x) / 2 and neighborA.y is (rootPoint.y + neighborB.y) / 2
+            eliminatingPoint1 = rootPoint
+            eliminatingPoint2 = neighborB
+            
+          else
+            continue
+          
+          # Make sure the eliminating points are directly connected.
+          continue unless eliminatingPoint1 in eliminatingPoint2.neighbors
+          
+          eliminatingPoint1._disconnectNeighbor eliminatingPoint2
+          eliminatingPoint2._disconnectNeighbor eliminatingPoint1
+          
+          eliminated = true
+          break
+          
+        break if eliminated
+        
+      break unless eliminated
+      
+  # Remove long diagonals that cross orthogonal connections.
+  for rootPoint in points
+    diagonalPoints = []
+    
+    for rootNeighbor in rootPoint.neighbors
+      distance = rootPoint._distanceSquaredTo rootNeighbor
+      continue unless distance is 5
+      
+      if Math.abs(rootPoint.x - rootNeighbor.x) is 2
+        # Diagonal is more horizontal.
+        x1 = x2 = (rootPoint.x + rootNeighbor.x) / 2
+        y1 = rootPoint.y
+        y2 = rootNeighbor.y
+        
+      else
+        # Diagonal is more vertical.
+        x1 = rootPoint.x
+        x2 = rootNeighbor.x
+        y1 = y2 = (rootPoint.y + rootNeighbor.y) / 2
+        
+      # If you can find both points, there will be a connection crossing this diagonal.
+      continue unless _.find rootPoint.neighbors, (neighbor) => neighbor.x is x1 and neighbor.y is y1
+      continue unless _.find rootPoint.neighbors, (neighbor) => neighbor.x is x2 and neighbor.y is y2
+      
+      diagonalPoints.push rootNeighbor
+
+    for diagonalPoint in diagonalPoints
+      rootPoint._disconnectNeighbor diagonalPoint
+      diagonalPoint._disconnectNeighbor rootPoint
+  
   for rootPoint in points
     # Eliminate triangles by removing the longer sides.
     loop
       eliminated = false
       
       for neighborA in rootPoint.neighbors
-        distanceA = rootPoint._distanceTo neighborA
+        distanceRA = rootPoint._distanceSquaredTo neighborA
   
-        for neighborB in rootPoint.neighbors when neighborB isnt neighborA and neighborB in neighborA.neighbors
-          distanceB = rootPoint._distanceTo neighborB
-          distanceC = neighborA._distanceTo neighborB
+        for neighborB in rootPoint.neighbors when neighborB isnt neighborA
+          # See if these two points are connected, either directly or over another point (as is the case with doubles).
+          unless neighborB in neighborA.neighbors or neighborB in neighborA.allNeighbors
+            if rootPoint.radius is 1
+              continue unless _.find neighborA.neighbors, (neighbor) =>
+                return if neighbor is rootPoint
+                return unless neighbor in neighborB.neighbors
+                
+                # Make sure the neighbor is on a straight line between two other points.
+                return true if neighbor.x is (neighborA.x + neighborB.x) / 2 and neighbor.y is (neighborA.y + neighborB.y) / 2
+                return true if neighborA.x is (rootPoint.x + neighbor.x) / 2 and neighborA.y is (rootPoint.y + neighbor.y) / 2
+                return true if neighborB.x is (rootPoint.x + neighbor.x) / 2 and neighborB.y is (rootPoint.y + neighbor.y) / 2
+                
+                false
+              
+            else
+              continue
           
-          if distanceC > distanceA and distanceC > distanceB
-            eliminatingPointA = neighborA
-            eliminatingPointB = neighborB
+          distanceRB = rootPoint._distanceSquaredTo neighborB
+          distanceAB = neighborA._distanceSquaredTo neighborB
+          
+          if distanceAB > distanceRA and distanceAB > distanceRB
+            eliminatingPoint1 = neighborA
+            eliminatingPoint2 = neighborB
             outsidePoint = rootPoint
             
+          else if distanceRA > distanceRB and distanceRA > distanceAB
+            eliminatingPoint1 = rootPoint
+            eliminatingPoint2 = neighborA
+            outsidePoint = neighborB
+            
+          else if distanceRB > distanceRA and distanceRB > distanceAB
+            eliminatingPoint1 = rootPoint
+            eliminatingPoint2 = neighborB
+            outsidePoint = neighborA
+            
           else
-            eliminatingPointA = rootPoint
-            eliminatingPointB = if distanceA > distanceB then neighborA else neighborB
-            outsidePoint = if eliminatingPointB is neighborA then neighborB else neighborA
+            continue
+            
+          # Make sure the eliminating points are directly connected.
+          continue unless eliminatingPoint1 in eliminatingPoint2.neighbors
           
           # Do not remove outline edges if that would break the outline (the outside point is not on the outline).
-          sharedOutlineCore = @getSharedOutlineCore eliminatingPointA, eliminatingPointB
+          sharedOutlineCore = @getSharedOutlineCore eliminatingPoint1, eliminatingPoint2
           outsidePixel = outsidePoint.getOutlinePixel()
           continue if sharedOutlineCore and (not outsidePixel or sharedOutlineCore not in outsidePixel.outlineCores)
           
-          eliminatingPointA._disconnectNeighbor eliminatingPointB
-          eliminatingPointB._disconnectNeighbor eliminatingPointA
+          eliminatingPoint1._disconnectNeighbor eliminatingPoint2
+          eliminatingPoint2._disconnectNeighbor eliminatingPoint1
           
           eliminated = true
           break
@@ -41,22 +136,21 @@ PAE.Point.optimizeNeighbors = (points) ->
       break unless eliminated
       
   # Store all neighbors for certain analyses that require full connectivity.
-  for point in points
-    point.allNeighbors = _.clone point.neighbors
+  point.saveAllNeighbors() for point in points[0].layer.points
   
   # Eliminate non-outline connections between junctions (3 or more neighbors), since it's hard to determine meaningful
   # connectivity in that case. We need to first collect all connections and not remove them as we go along since that
   # would change their number of neighbors.
   eliminatedConnections = []
   
-  for rootPoint in points when rootPoint.neighbors.length >= 3 and not rootPoint.getOutlinePixel()
-    for neighbor in rootPoint.neighbors when neighbor.neighbors.length >= 3
+  for rootPoint in points when rootPoint.neighbors.length >= 3
+    for neighbor in rootPoint.neighbors when neighbor.allNeighbors.length >= 3 and not (rootPoint.getOutlinePixel() and neighbor.getOutlinePixel())
       eliminatedConnections.push [rootPoint, neighbor]
   
   # Eliminate core extensions (short lines sticking out of cores, which should
   # be part of core outlines if we had better filtering when eliminating triangles).
-  for rootPoint in points when rootPoint.getOutlinePixel()
-    for neighbor in rootPoint.neighbors when neighbor.neighbors.length is 1
+  for rootPoint in points
+    for neighbor in rootPoint.neighbors when rootPoint.getOutlinePixel() and neighbor.neighbors.length is 1 or neighbor.getOutlinePixel() and rootPoint.neighbors.length is 1
       eliminatedConnections.push [rootPoint, neighbor]
   
   for [neighborA, neighborB] in eliminatedConnections

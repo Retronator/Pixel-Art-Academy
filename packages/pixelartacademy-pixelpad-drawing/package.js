@@ -32,6 +32,8 @@ Package.onUse(function(api) {
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
   api.addFile('portfolio/asset');
+  api.addFile('portfolio/folder');
+  api.addFile('portfolio/archive');
   api.addServerFile('portfolio/subscriptions');
 
   api.addFile('portfolio/forms..');
@@ -94,7 +96,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/pixelartevaluation/consistentlinewidth..');
 
   api.addComponent('editor/desktop/readabilityanalysis..');
-  api.addFile('editor/desktop/readabilityanalysis/readabilityanalysis-recognition');
+  api.addFile('editor/desktop/readabilityanalysis/readabilityanalysis-regionrecognitionresult');
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');

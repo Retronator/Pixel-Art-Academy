@@ -41,9 +41,9 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
   onCreated: ->
     super arguments...
   
-    # We can only deal with assets that can return pixels.
+    # We can only deal with bitmap assets.
     filterAsset = (asset) =>
-      if asset instanceof PAA.Practice.Project.Asset.Bitmap or asset instanceof PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset then asset else null
+      if asset?.document?() instanceof LOI.Assets.Bitmap then asset else null
   
     @activeAsset = new ComputedField => filterAsset @drawing.portfolio().activeAsset()?.asset
     @displayedAsset = new ComputedField => filterAsset @drawing.portfolio().displayedAsset()?.asset
@@ -130,13 +130,12 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       else
         zoomLevels = [50, zoomLevels...]
 
-      # Extend zoom levels down to clipboard scale if necessary.
+      # Extend zoom levels down to preview scale if necessary.
       if displayedAsset = @displayedAsset()
-        if displayedAsset.clipboardComponent.isCreated()
-          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-            minimumScale = clipboardAssetSize.scale * 100
-            while Math.round(minimumScale) < Math.round(zoomLevels[0])
-              zoomLevels.unshift zoomLevels[0] / 2
+        if previewInfo = displayedAsset.previewInfo()
+          minimumScale = previewInfo.scale * 100
+          while Math.round(minimumScale) < Math.round(zoomLevels[0])
+            zoomLevels.unshift zoomLevels[0] / 2
         
       zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
       Tracker.nonreactive => zoomLevelsHelper zoomLevels

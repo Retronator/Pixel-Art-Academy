@@ -9,14 +9,22 @@
       <span class="checkmark"></span> Completed
     </label>
     <p class="instructions">
-      {{#if goal.completed}}
+      {{#if goal.allCompleted}}
         {{#if markedComplete}}
-          Clear the checkmark to reactivate the goal and see its tasks in the Drawing app again.
+          Remove the checkmark to return this goal's tutorials from the archive.
         {{else}}
-          Mark the goal as completed to hide its tasks from the Drawing app and make space for new goals.
+          Mark the goal as completed to archive its tutorials in the Drawing app.
         {{/if}}
       {{else}}
-        Reach the flagpole to be able to mark this goal as completed.
+        {{#if goal.completed}}
+          {{#if markedComplete}}
+            Remove the checkmark to show this goal's tasks in your to-do list again.
+          {{else}}
+            Mark the goal as completed to remove this goal's tasks from your to-do list.
+          {{/if}}
+        {{else}}
+          Reach the flagpole to be able to mark this goal as completed.
+        {{/if}}
       {{/if}}
     </p>
     {{#if canRemove}}
