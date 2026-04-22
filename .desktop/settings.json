@@ -49,8 +49,7 @@
         },
         "osxSign": {
             "hardenedRuntime": true,
-            "entitlements": ".desktop/entitlements.plist",
-            "entitlements-inherit": ".desktop/entitlements.plist"
+            "entitlements": ".desktop/entitlements.plist"
         }
     }
 }
