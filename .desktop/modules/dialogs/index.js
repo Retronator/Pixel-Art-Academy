@@ -13,7 +13,7 @@ import fs from "fs";
  * @param {Object} Module      - reference to the Module class
  * @constructor
  */
-export default class Hyperlink {
+export default class Dialogs {
   constructor({log, skeletonApp, appSettings, eventsBus, modules, settings, Module}) {
     this.module = new Module(moduleJson.name);
 
@@ -22,7 +22,7 @@ export default class Hyperlink {
     this.eventsBus = eventsBus;
 
     this.module.on('saveAs', async (event, fetchId, fileData, options) => {
-      this.log.verbose('save as received');
+      this.log.verbose('saveAs received');
 
       if (fileData instanceof ArrayBuffer) {
         fileData = Buffer.from(fileData);

@@ -1,6 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.39.0",
+    "version": "0.39.1",
     "devTools": false,
     "devtron": true,
     "desktopHCP": false,
@@ -21,6 +21,9 @@
     },
     "uglify": false,
     "plugins": {},
+    "dependencies": {
+        "steamworks.js": "0.4.0"
+    },
     "devDependencies": {
         "electron": "41.2.2"
     },
@@ -45,7 +48,8 @@
         "platform": "darwin, win32, linux",
         "arch": "universal,x64",
         "osxUniversal": {
-            "mergeASARs": true
+            "mergeASARs": true,
+            "x64ArchFiles": "**/steamworks.js/**"
         },
         "osxSign": {
             "hardenedRuntime": true,
