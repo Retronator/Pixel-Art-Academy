@@ -13,7 +13,7 @@ binary-heap@1.0.11
 blaze@2.9.0
 blaze-tools@1.1.4
 boilerplate-generator@1.7.2
-bozhao:link-accounts@2.8.0
+bozhao:link-accounts@2.9.0
 caching-compiler@1.2.2
 caching-html-compiler@1.2.2
 callback-hook@1.5.1
@@ -21,8 +21,6 @@ check@1.4.1
 chfritz:easycron@0.0.4
 coffeescript@2.7.0
 coffeescript-compiler@2.4.1
-communitypackages:meteor-desktop-bundler@3.2.0
-communitypackages:meteor-desktop-watcher@3.2.0
 ddp@1.4.1
 ddp-client@2.6.2
 ddp-common@1.4.1
@@ -47,7 +45,7 @@ geojson-utils@1.0.11
 hot-code-push@1.0.4
 html-tools@1.1.4
 htmljs@1.2.1
-http@2.0.0
+http@3.0.0
 id-map@1.1.1
 inter-process-messaging@0.1.1
 jparker:crypto-aes@0.1.0
@@ -126,15 +124,15 @@ retronator:pixelartacademy@0.1.0
 retronator:pixelartacademy-challenges@0.1.0
 retronator:pixelartacademy-learning@0.0.1
 retronator:pixelartacademy-learnmode@0.1.0
-retronator:pixelartacademy-learnmode-app@0.38.4
+retronator:pixelartacademy-learnmode-app@0.39.0
 retronator:pixelartacademy-learnmode-design@0.1.0
 retronator:pixelartacademy-learnmode-intro@0.1.0
 retronator:pixelartacademy-learnmode-pixelartfundamentals@0.1.0
 retronator:pixelartacademy-music@0.1.0
 retronator:pixelartacademy-pico8@0.3.0
-retronator:pixelartacademy-pico8-snake@0.1.0
 retronator:pixelartacademy-pico8-invasion@0.1.0
 retronator:pixelartacademy-pico8-jungle@0.1.0
+retronator:pixelartacademy-pico8-snake@0.1.0
 retronator:pixelartacademy-pixelpad@0.0.1
 retronator:pixelartacademy-pixelpad-drawing@0.1.0
 retronator:pixelartacademy-pixelpad-instructions@0.1.0
@@ -145,9 +143,9 @@ retronator:pixelartacademy-pixelpad-pixeltosh@0.1.0
 retronator:pixelartacademy-pixelpad-studyplan@0.2.0
 retronator:pixelartacademy-pixelpad-todo@0.1.0
 retronator:pixelartacademy-pixeltosh@0.1.0
+retronator:pixelartacademy-pixeltosh-drawquickly@0.1.0
 retronator:pixelartacademy-pixeltosh-pinball@0.1.0
 retronator:pixelartacademy-pixeltosh-writer@0.1.0
-retronator:pixelartacademy-pixeltosh-drawquickly@0.1.0
 retronator:pixelartacademy-practice@0.1.0
 retronator:pixelartacademy-publication@0.0.1
 retronator:pixelartacademy-studyguide@0.0.1

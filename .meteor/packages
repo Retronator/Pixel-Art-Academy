@@ -19,7 +19,4 @@ dynamic-import@0.7.3
 stylus@=2.513.13
 coffeescript@2.4.1
 
-communitypackages:meteor-desktop-bundler@=3.2.0
-communitypackages:meteor-desktop-watcher@=3.2.0
-
 retronator:pixelartacademy-learnmode-app

@@ -1,9 +1,9 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.38.4",
+    "version": "0.39.0",
     "devTools": false,
     "devtron": true,
-    "desktopHCP": true,
+    "desktopHCP": false,
     "desktopHCPIgnoreCompatibilityVersion": false,
     "webAppStartupTimeout": 30000,
     "exposeLocalFilesystem": true,
@@ -22,43 +22,13 @@
     "uglify": false,
     "plugins": {},
     "devDependencies": {
-        "electron": "21.4.4"
+        "electron": "41.2.2"
     },
     "packageJsonFields": {
         "author": "Retronator",
         "private": true,
         "devDependencies": {
-            "electron": "21.4.4"
-        }
-    },
-    "builderOptions": {
-        "icon": ".desktop/assets/meteor.ico",
-        "appId": "meteor.app",
-        "compression": "maximum",
-        "win": {
-            "target": "nsis"
-        },
-        "publish": [
-            {
-                "provider": "generic",
-                "url": "http://127.0.0.1:8080/"
-            }
-        ],
-        "mac": {
-            "icon": ".desktop/assets/meteor.icns"
-        },
-        "dmg": {
-            "icon": ".desktop/assets/meteor.icns",
-            "background": ".desktop/assets/dmgBackground.png",
-            "iconSize": 54,
-            "contents": [
-                { "x": 377, "y": 190, "type": "link", "path": "/Applications" },
-                { "x": 63, "y": 190, "type": "file" }
-            ],
-            "window": {
-                "width": 480,
-                "height": 300
-            }
+            "electron": "41.2.2"
         }
     },
     "packagerOptions": {
@@ -71,8 +41,12 @@
         "appCategoryType": "public.app-category.education",
         "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2025 Matej Jan, Retronator",
         "overwrite": true,
-        "electronVersion": "21.4.4",
+        "electronVersion": "41.2.2",
         "platform": "darwin, win32, linux",
+        "arch": "universal,x64",
+        "osxUniversal": {
+            "mergeASARs": true
+        },
         "osxSign": {
             "hardenedRuntime": true,
             "entitlements": ".desktop/entitlements.plist",
