@@ -63,9 +63,3 @@ class LM.App extends Artificial.Base.App
 if Meteor.isServer
   Meteor.startup ->
     new LM.App()
-
-if Meteor.isClient and Meteor.isDesktop
-  Meteor.startup ->
-    # Test Steam.
-    steamPlayer = await Desktop.call 'steam', 'getLocalPlayer'
-    console.log "Steam player is", steamPlayer

@@ -1,0 +1,47 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-savegame
+  .safe-area
+    .options
+      display flex
+      position absolute
+      top 0
+      right 0
+      bottom 0
+      align-items center
+      visibility hidden
+      opacity 0
+      transition opacity 1s
+
+      &.visible
+        visibility visible
+        opacity 1
+
+      .steam-cloud
+        .enable
+          daily()
+          text-transform uppercase
+          line-height 10rem
+          cursor pointer
+
+          input[type='checkbox']
+            display none
+
+            &:checked + .checkmark::before
+              content '✓'
+              position relative
+              left 1rem
+              top -1rem
+
+          .checkmark
+            display inline-block
+            vertical-align bottom
+            width 10rem
+            height 10rem
+            border 1rem solid atariGray(2)
+            color atariGreen(5)
+
+        .username
+          margin-left 13rem
+          small-print()
+          color atariGray(4)

@@ -20,6 +20,7 @@ class LOI.Adventure extends LOI.Adventure
 
     @menu = new LOI.Components.Menu
       itemsClass: @constructor.menuItemsClass()
+      saveGameClass: @constructor.saveGameClass()
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency

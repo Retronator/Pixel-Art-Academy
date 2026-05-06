@@ -48,6 +48,9 @@ class LOI.Components.SaveGame extends LOI.Component
     await _.waitForSeconds 0.5
     @savingActive false
     finishedDeactivatingCallback()
+    
+  saveGame: ->
+    LOI.adventure.saveGame()
 
   saveButtonVisibleClass: ->
     'visible' if @newSaveGameName()
@@ -63,7 +66,7 @@ class LOI.Components.SaveGame extends LOI.Component
     @audio.save true
     @savingActive true
   
-    LOI.adventure.saveGame local: true
+    @saveGame()
 
     # Wait for animation of the floppy.
     await _.waitForSeconds 0.5

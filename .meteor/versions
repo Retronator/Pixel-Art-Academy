@@ -109,7 +109,7 @@ retronator:accounts-meld@1.3.1
 retronator:api@1.0.0
 retronator:artificialengines@1.0.0
 retronator:artificialengines-pages@1.0.0
-retronator:artificialengines-patreon@1.0.0
+retronator:artificialengines-steam@1.0.0
 retronator:blaze-common-component@0.5.0
 retronator:blaze-components@0.23.0
 retronator:directcollection@0.9.0
@@ -124,7 +124,7 @@ retronator:pixelartacademy@0.1.0
 retronator:pixelartacademy-challenges@0.1.0
 retronator:pixelartacademy-learning@0.0.1
 retronator:pixelartacademy-learnmode@0.1.0
-retronator:pixelartacademy-learnmode-app@0.39.0
+retronator:pixelartacademy-learnmode-app@0.39.1
 retronator:pixelartacademy-learnmode-design@0.1.0
 retronator:pixelartacademy-learnmode-intro@0.1.0
 retronator:pixelartacademy-learnmode-pixelartfundamentals@0.1.0

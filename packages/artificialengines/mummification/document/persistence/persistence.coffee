@@ -168,7 +168,7 @@ class AM.Document.Persistence
                   resolvedDocument = _.maxBy _.values(documentClones), (document) => document.lastEditTime
                   conflict = false
                   
-                when @ConflictResolutoinStrategies.ManualDocument
+                when @ConflictResolutionStrategies.ManualDocument
                   # Ask the document class to resolve the conflict.
                   resolvedDocument = documentClass.onConflict documentClones
                   

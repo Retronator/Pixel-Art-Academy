@@ -133,12 +133,18 @@ class LM.Interface extends LOI.Interface
         await LOI.adventure.menu.saveGame.show()
       
       # If the player decided to cancel or the load didn't succeed, send them back to the menu.
-      unless LOI.adventure.profile().hasSyncing()
-        LOI.adventure.quitGame callback: =>
+      profile = LOI.adventure.profile()
+      
+      unless profile?.hasSyncing()
+        if profile
+          LOI.adventure.quitGame callback: =>
+            LOI.adventure.interface.goToMainMenu()
+      
+            # Notify that we've handled the quitting sequence.
+            true
+            
+        else
           LOI.adventure.interface.goToMainMenu()
-    
-          # Notify that we've handled the quitting sequence.
-          true
           
         return
           

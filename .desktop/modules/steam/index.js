@@ -22,31 +22,59 @@ export default class Steam {
     this.log = log;
     this.eventsBus = eventsBus;
 
-    // Enable Steam overlay.
-    steamworks.electronEnableSteamOverlay();
+    this.module.on('initialize', (event, fetchId, appId) => {
+      this.log.verbose('initialize received', appId);
 
-    try {
-      // Start the Steam client.
-      this.client = steamworks.init(2330360);
-      this.log.verbose('Steam client initialized.');
-    }
-    catch (e) {
-      this.log.verbose('Steam client not available.');
-    }
+      try {
+        // Start the Steam client.
+        this.client = steamworks.init(appId);
+        this.log.verbose('Steam client initialized.');
 
-    this.module.on('getLocalPlayer', (event, fetchId) => {
-      this.log.verbose('getLocalPlayer received');
-      if (this.respondIfUnavailable('getLocalPlayer', fetchId)) return;
+        const steamData = {
+          apps: {
+            isSubscribed: this.client.apps.isSubscribed(),
+            appBuildId: this.client.apps.appBuildId(),
+            appOwner: this.client.apps.appOwner(),
+            availableGameLanguages: this.client.apps.availableGameLanguages(),
+            currentGameLanguage: this.client.apps.currentGameLanguage(),
+            currentBetaName: this.client.apps.currentBetaName()
+          },
+          cloud: {
+            isEnabledForAccount: this.client.cloud.isEnabledForAccount(),
+            isEnabledForApp: this.client.cloud.isEnabledForApp()
+          },
+          localPlayer: {
+            steamId: this.client.localplayer.getSteamId(),
+            name: this.client.localplayer.getName(),
+            level: this.client.localplayer.getLevel(),
+            ipCountry: this.client.localplayer.getIpCountry()
+          },
+          utils: {
+            appId: this.client.utils.getAppId(),
+            isSteamRunningOnSteamDeck: this.client.utils.isSteamRunningOnSteamDeck()
+          }
+        }
 
-      const localPlayer = {
-        id: this.client.localplayer.getSteamId(),
-        name: this.client.localplayer.getName(),
-        level: this.client.localplayer.getLevel(),
-        country: this.client.localplayer.getIpCountry()
+        this.module.respond('initialize', fetchId, steamData);
+      } catch (error) {
+        this.log.verbose('Steam client not available.', error.message);
+        this.module.respond('initialize', fetchId, null);
       }
+    });
 
-      this.log.verbose('Local player retrieved', localPlayer.name);
-      this.module.respond('getLocalPlayer', fetchId, localPlayer);
+    this.module.on('setEnabledForApp', (event, fetchId, enabled) => {
+      this.log.verbose('setEnabledForApp received');
+      if (this.respondIfUnavailable('setEnabledForApp', fetchId)) return;
+
+      try {
+        this.client.steam.setEnabledForApp(enabled);
+
+        const isEnabledForApp = this.client.cloud.isEnabledForApp()
+        this.module.respond('setEnabledForApp', fetchId, isEnabledForApp);
+      } catch (error) {
+        this.log.verbose('setEnabledForApp encountered an error.', error.message);
+        this.module.respond('setEnabledForApp', fetchId, null);
+      }
     });
   }
 

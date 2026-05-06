@@ -28,6 +28,7 @@
         "electron": "41.2.2"
     },
     "packageJsonFields": {
+        "productName": "Pixel Art Academy Learn Mode",
         "author": "Retronator",
         "private": true,
         "devDependencies": {

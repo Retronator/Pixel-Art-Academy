@@ -11,6 +11,8 @@ class AB.OperatingSystem extends AB.VersionProperty
     IPadOS: 'IPadOS'
     IOS: 'IOS'
   
+  @initialize()
+  
   if Meteor.isDesktop
     Desktop.call('desktop', 'getProcessPlatform').then (processPlatform) =>
       @setType switch processPlatform

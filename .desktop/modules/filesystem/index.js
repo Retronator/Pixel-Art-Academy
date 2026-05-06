@@ -47,29 +47,43 @@ export default class FileSystem {
     });
 
     this.module.on('getProfiles', async (event, fetchId, directoryPath) => {
-      this.log.verbose('getProfiles received', directoryPath);
-      const profileJsons = [];
+      try {
+        this.log.verbose('getProfiles received', directoryPath);
+        const profileJsons = [];
 
-      // Scan the directory for subdirectories, whose names correspond to profile IDs.
-      const directory = await fs.opendir(directoryPath);
-      for await (const directoryEntry of directory) {
-        if (!directoryEntry.isDirectory()) continue;
-
-        const profileId = directoryEntry.name;
-
-        // Read the profile document.
-        const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
-
+        // See if the directory has been created (it won't be before first save).
         try {
-          const profileJson = await fs.readFile(profileDocumentPath, {encoding: 'utf8'})
-          profileJsons.push(profileJson);
-          this.log.verbose("Found profile directory", profileId);
-        } catch (e) {
-          this.log.error("Invalid profile directory", profileId);
+          await fs.access(directoryPath)
+        } catch {
+          this.log.verbose("Profile directory does not exist", directoryPath);
+          this.module.respond('getProfiles', fetchId, []);
+          return;
         }
-      }
 
-      this.module.respond('getProfiles', fetchId, profileJsons);
+        // Scan the directory for subdirectories, whose names correspond to profile IDs.
+        const directory = await fs.opendir(directoryPath);
+        for await (const directoryEntry of directory) {
+          if (!directoryEntry.isDirectory()) continue;
+
+          const profileId = directoryEntry.name;
+
+          // Read the profile document.
+          const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
+
+          try {
+            const profileJson = await fs.readFile(profileDocumentPath, {encoding: 'utf8'})
+            profileJsons.push(profileJson);
+            this.log.verbose("Found profile directory", profileId);
+          } catch (e) {
+            this.log.error("Invalid profile directory", profileId);
+          }
+        }
+
+        this.module.respond('getProfiles', fetchId, profileJsons);
+      } catch (error) {
+        this.log.error('getProfiles encountered an error', error);
+        this.module.respond('getProfiles', fetchId, []);
+      }
     });
 
     this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
@@ -205,7 +219,6 @@ export default class FileSystem {
       try {
         this.log.verbose('removeProfile received', rootDirectoryPath);
 
-        // Scan the root directory for subdirectories, whose names correspond to class names.
         await fs.rm(rootDirectoryPath, {recursive: true});
         this.log.verbose('Profile directory removed.');
 
