@@ -1,6 +1,6 @@
-<template name="LandsOfIllusions.Components.LoadGame">
+<template name="PixelArtAcademy.LearnMode.LoadGame">
   {{#unless deactivated}}
-    <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem {{editEnabledClass}} {{visibleClass}}">
+    <div class="pixelartacademy-learnmode-loadgame landsofillusions-components-loadgame landsofillusions-components-savesystem {{editEnabledClass}} {{visibleClass}}">
       {{#if showBackButton}}
         {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
       {{/if}}
@@ -29,6 +29,13 @@
             <button class="previous-button action-button {{previousButtonVisibleClass}}" {{previousButtonDisabledAttribute}}>←</button>
             {{#if editEnabled}}
               {{#if editingProfileId}}
+                {{#if steam.cloud.enabledForAccount}}
+                  {{#if editingProfileHasSteamCloud}}
+                    <button class="disable-steam-cloud-button action-button">Disable Steam Cloud</button>
+                  {{else}}
+                    <button class="enable-steam-cloud-button action-button">Enable Steam Cloud</button>
+                  {{/if}}
+                {{/if}}
                 <button class="remove-button action-button">Remove</button>
               {{/if}}
             {{else}}
@@ -38,11 +45,19 @@
           </div>
         {{/unless}}
         <div class="progress-overlay {{progressOverlayVisibleClass}}">
-          <div class="loading progres {{loadingVisibleClass}}">
+          <div class="loading progress {{loadingVisibleClass}}">
             <div class="loading-text progress-text {{loadingTextVisibleClass}}">
               Loading …
               {{#if showProfileLoadingPercentage}}
                 {{profileLoadingPercentage}}%
+              {{/if}}
+            </div>
+          </div>
+          <div class="migrating progress {{migratingVisibleClass}}">
+            <div class="migrating-text progress-text {{migratingTextVisibleClass}}">
+              Migrating …
+              {{#if showMigratingPercentage}}
+                {{migratingPercentage}}%
               {{/if}}
             </div>
           </div>

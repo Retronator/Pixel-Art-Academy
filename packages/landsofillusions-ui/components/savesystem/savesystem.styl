@@ -17,9 +17,13 @@
       top 0
       width 68rem
       height 71rem
-      background-image image('/landsofillusions/components/loadgame/floppy.png')
+      background-image image('/landsofillusions/components/savesystem/floppy.png')
       filter drop-shadow(-4rem 2rem 10rem rgba(atariGray(0), 0.5))
       transition all ease-out 0.2s
+
+      &.steam-cloud
+        .shutter
+          background-image image('/landsofillusions/components/savesystem/floppy-shutter-steamcloud.png')
 
       .shutter
         position absolute
@@ -27,7 +31,7 @@
         left 15rem
         width 38rem
         height 25rem
-        background-image image('/landsofillusions/components/loadgame/floppy-shutter.png')
+        background-image image('/landsofillusions/components/savesystem/floppy-shutter.png')
         transition left ease-out 0.2s
 
       .label

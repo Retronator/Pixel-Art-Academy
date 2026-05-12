@@ -66,5 +66,6 @@ Package.onUse(function(api) {
   api.addFile('adventure..');
 
   api.addComponent('savegame..');
+  api.addUnstyledComponent('loadgame..');
 
 });

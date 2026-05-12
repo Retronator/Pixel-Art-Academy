@@ -11,6 +11,7 @@ class LM.Adventure extends LM.Adventure
   @rootUrl: -> '/'
 
   @saveGameClass: -> LM.SaveGame
+  @loadGameClass: -> LM.LoadGame
   
   getLocalSyncedStorage: ->
     if Meteor.isDesktop

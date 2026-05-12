@@ -7,7 +7,7 @@
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="title">Create a new save game</div>
         <div class="new-save-game">
-          <div class="floppy {{savingActiveClass}}">
+          <div class="floppy {{steamCloudClass}} {{savingActiveClass}}">
             <div class="shutter"></div>
             <div class="label">{{> LandsOfIllusions.Components.SaveGame.NewSaveGameName}}</div>
           </div>
@@ -16,7 +16,7 @@
           {{#if steam.cloud.enabledForAccount}}
             <div class="steam-cloud">
               <label class="enable">
-                {{> PixelArtAcademy.LearnMode.SaveGame.SteamCloud}}<span class="checkmark"></span> Steam Cloud
+                {{> PixelArtAcademy.LearnMode.SaveGame.SteamCloud}}<span class="checkmark"></span> Use Steam Cloud
               </label>
               <div class="username">
                 {{steam.player.name}}

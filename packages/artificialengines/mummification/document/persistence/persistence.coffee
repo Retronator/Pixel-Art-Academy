@@ -21,6 +21,9 @@ class AM.Document.Persistence
   @_profileLoadingPercentagesById = {}
   @_profileLoadingPercentageDependency = new Tracker.Dependency
   
+  @_addingSyncingPercentage = 0
+  @_addingSyncingPercentageDependency = new Tracker.Dependency
+  
   @_activeProfileId = new ReactiveField null
   
   @profileReady = new ReactiveField false
@@ -115,6 +118,8 @@ class AM.Document.Persistence
     @_activeProfileId profileId
     
     # Fetch all profile documents from all storages and resolve conflicts.
+    @_profileLoadingPercentagesById = {}
+    
     new Promise (resolve, reject) =>
       loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
         do (syncedStorageId) =>
@@ -277,10 +282,25 @@ class AM.Document.Persistence
         
     # Add all documents to the new synced storage.
     syncedStorage = @_syncedStoragesById[syncedStorageId]
+    
+    documents = []
   
     for documentClassId, documentClass of @_persistentDocumentClassesById
-      documentClass.documents.find(profileId: profile._id).forEach (document) => syncedStorage.added document
-      
+      documents.push documentClass.documents.fetch(profileId: profile._id)...
+
+    for document, documentIndex in documents
+      await syncedStorage.added document
+
+      @_addingSyncingPercentage = (documentIndex + 1) / documents.length * 100
+      @_addingSyncingPercentageDependency.changed()
+    
+    # Explicit return to avoid result collection.
+    return
+    
+  @addingSyncingPercentage: ->
+    @_addingSyncingPercentageDependency.depend()
+    @_addingSyncingPercentage
+    
   @removeSyncingFromProfile: (syncedStorageId) ->
     profile = @activeProfile()
     throw new AE.InvalidOperationException "There is no loaded profile to remove syncing from." unless profile
@@ -292,6 +312,10 @@ class AM.Document.Persistence
         "syncedStorages.#{syncedStorageId}": true
       $set:
         lastEditTime: new Date
+        
+    # Remove the profile from the synced storage (this should also remove all its documents).
+    syncedStorage = @_syncedStoragesById[syncedStorageId]
+    syncedStorage.removed profile
     
   # Methods for internal use by synced storages
   

@@ -32,9 +32,8 @@ class LM.SaveGame extends LOI.Components.SaveGame
   optionsVisibleClass: ->
     'visible' if @newSaveGameName()
     
-  events: ->
-    super(arguments...).concat
-      'click .save-button': @onClickSaveButton
+  steamCloudClass: ->
+    'steam-cloud' if @steamCloud()
 
   # Components
 

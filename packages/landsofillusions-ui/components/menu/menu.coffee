@@ -19,7 +19,7 @@ class LOI.Components.Menu extends AM.Component
     @signIn = new LOI.Components.SignIn
   
     @saveGame = new (@options.saveGameClass or LOI.Components.SaveGame)
-    @loadGame = new LOI.Components.LoadGame
+    @loadGame = new (@options.loadGameClass or LOI.Components.LoadGame)
   
     @account = new LOI.Components.Account
 
