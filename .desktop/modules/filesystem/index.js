@@ -4,6 +4,9 @@ import fs from 'fs/promises';
 import JSZip from 'jszip';
 import path from 'path';
 
+const profileClassName = 'Artificial.Mummification.Document.Persistence.Profile';
+const classArchiveFileName = 'archive.zip';
+
 /**
  * @param {Object} log         - Winston logger instance
  * @param {Object} skeletonApp - reference to the skeleton app instance
@@ -130,7 +133,6 @@ export default class FileSystem {
     this.log.verbose("writeFile processing for", filePath, fetchId);
 
     const directoryPath = path.dirname(filePath);
-    const temporaryPath = `${filePath}.tmp`;
     const backupPath = `${filePath}.backup`;
 
     try {
@@ -145,6 +147,21 @@ export default class FileSystem {
       }
 
       // Write to temporary file and rename it.
+      await this.writeFileAtomically(filePath, fileData);
+
+      // We are done.
+      this.endWriteFile(filePath, fetchId, null);
+
+    } catch (error) {
+      // Report error.
+      this.endWriteFile(filePath, fetchId, error);
+    }
+  }
+
+  async writeFileAtomically(filePath, fileData) {
+    const temporaryPath = `${filePath}.tmp`;
+
+    try {
       const handle = await fs.open(temporaryPath, "w");
 
       try {
@@ -157,17 +174,12 @@ export default class FileSystem {
 
       await fs.rename(temporaryPath, filePath);
 
-      // We are done.
-      this.endWriteFile(filePath, fetchId, null);
-
     } catch (error) {
-      // Clean temporary file, if it exists.
       try {
         await fs.unlink(temporaryPath);
       } catch {}
 
-      // Report error.
-      this.endWriteFile(filePath, fetchId, error);
+      throw error;
     }
   }
 
@@ -189,23 +201,57 @@ export default class FileSystem {
     this.log.verbose("deleteFile processing for", filePath, fetchId);
 
     try {
-      await fs.unlink(filePath);
+      const classDirectoryPath = path.dirname(filePath);
+      const className = path.basename(classDirectoryPath);
+      const fileName = path.basename(filePath);
+
+      // Remove the JSON file if it exists.
+      try {
+        await fs.unlink(filePath);
+
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+
+      // Remove an entry from the archive as well.
+      if (className !== profileClassName) {
+        await this.deleteFileFromClassArchive(className, classDirectoryPath, fileName);
+      }
+
       this.log.verbose("deleteFile succeeded.", filePath, fetchId);
       this.module.respond("deleteFile", fetchId, null);
 
     } catch (error) {
-      if (error.code === "ENOENT") {
-        // Already gone = success
-        this.log.verbose("deleteFile skipped (already missing).", filePath, fetchId);
-        this.module.respond("deleteFile", fetchId, null);
-
-      } else {
-        this.log.error("deleteFile error.", filePath, error, fetchId);
-        this.module.respond("deleteFile", fetchId, error);
-      }
+      this.log.error("deleteFile error.", filePath, error, fetchId);
+      this.module.respond("deleteFile", fetchId, error);
 
     } finally {
       this.moveToNextOperation();
+    }
+  }
+
+  async deleteFileFromClassArchive(className, classDirectoryPath, fileName) {
+    const classArchiveFilePath = path.join(classDirectoryPath, classArchiveFileName);
+
+    try {
+      const classArchiveData = await fs.readFile(classArchiveFilePath);
+      const classArchiveZip = await JSZip.loadAsync(classArchiveData);
+
+      // Missing archived files are already deleted.
+      if (!classArchiveZip.file(fileName)) return;
+
+      classArchiveZip.remove(fileName);
+
+      const updatedClassArchiveData = await classArchiveZip.generateAsync({type: 'nodebuffer', compression: 'DEFLATE'});
+      await this.writeFileAtomically(classArchiveFilePath, updatedClassArchiveData);
+
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        this.log.verbose('Class archive does not exist for delete.', className, classArchiveFilePath);
+        return;
+      }
+
+      throw error;
     }
   }
 
@@ -235,7 +281,7 @@ export default class FileSystem {
         const profileId = directoryEntry.name;
 
         // Read the profile document.
-        const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
+        const profileDocumentPath = path.join(directoryPath, profileId, profileClassName, `${profileId}.json`);
 
         try {
           const profileJson = await fs.readFile(profileDocumentPath, {encoding: 'utf8'})
@@ -266,72 +312,55 @@ export default class FileSystem {
 
     try {
       const documentJsons = {};
+      const classDocumentCatalogs = [];
 
       const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
       const backupZip = new JSZip();
       const backupZipFilePath = path.join(backupDirectoryPath, `${backupTimestamp}.zip`);
 
-      // Count number of documents that need to be loaded.
-      this.log.verbose('Counting number of documents to be loaded …');
+      // Create a catalog of documents that need to be loaded. JSON files override the archived versions.
+      this.log.verbose('Cataloging save folder …');
       let totalDocumentsCount = 0;
       let loadedDocumentsCount = 0;
       let reportedProgress = 0;
 
-      let rootDirectory = await fs.opendir(rootDirectoryPath);
+      const rootDirectory = await fs.opendir(rootDirectoryPath);
       for await (const rootDirectoryEntry of rootDirectory) {
         if (!rootDirectoryEntry.isDirectory()) continue;
 
         const className = rootDirectoryEntry.name;
         const classDirectoryPath = path.join(rootDirectoryPath, className);
-        const classDirectory = await fs.opendir(classDirectoryPath);
+        const classDocumentCatalog = await this.createClassDocumentCatalog(className, classDirectoryPath);
 
-        for await (const classDirectoryEntry of classDirectory) {
-          if (!classDirectoryEntry.isFile()) continue;
-          if (!classDirectoryEntry.name.endsWith('json')) continue;
-          totalDocumentsCount++;
-        }
+        classDocumentCatalogs.push(classDocumentCatalog);
+        totalDocumentsCount += classDocumentCatalog.documentEntries.length;
       }
-      this.log.verbose('Documents count:', totalDocumentsCount);
+      this.log.verbose('Number of documents to be loaded count:', totalDocumentsCount);
 
-      // Scan the root directory for subdirectories, whose names correspond to class names.
-      rootDirectory = await fs.opendir(rootDirectoryPath);
-      this.log.verbose('Root directory opened.');
-
-      for await (const rootDirectoryEntry of rootDirectory) {
-        this.log.verbose('Processing directory entry', rootDirectoryEntry.name);
-        if (!rootDirectoryEntry.isDirectory()) continue;
-
-        const className = rootDirectoryEntry.name;
+      for (const classDocumentCatalog of classDocumentCatalogs) {
+        const {className, classArchiveZip, documentEntries} = classDocumentCatalog;
         documentJsons[className] = {}
 
-        // Scan the directory for files, whose names correspond to document IDs.
-        const classDirectoryPath = path.join(rootDirectoryPath, className);
-
-        this.log.verbose('Opening class directory', className);
-        const classDirectory = await fs.opendir(classDirectoryPath);
-        this.log.verbose('Class directory opened.');
-
-        for await (const classDirectoryEntry of classDirectory) {
-          if (!classDirectoryEntry.isFile()) continue;
-
-          // Only parse json files (ignore backups).
-          if (!classDirectoryEntry.name.endsWith('json')) continue;
-
-          const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
-          const fileJson = await fs.readFile(filePath, {encoding: 'utf8'})
-          documentJsons[className][classDirectoryEntry.name] = fileJson;
+        for (const documentEntry of documentEntries) {
+          const fileJson = await this.readDocumentJson(documentEntry);
+          documentJsons[className][documentEntry.fileName] = fileJson;
 
           // Add each file to the backup as it is read from the original save location.
-          backupZip.file(`${className}/${classDirectoryEntry.name}`, fileJson);
+          backupZip.file(`${className}/${documentEntry.fileName}`, fileJson);
+
+          // Merge JSON files into the class archive so they can be removed after a successful archive write.
+          classArchiveZip?.file(documentEntry.fileName, fileJson);
 
           loadedDocumentsCount++;
-          const progress = loadedDocumentsCount / totalDocumentsCount;
+          const progress = totalDocumentsCount ? loadedDocumentsCount / totalDocumentsCount : 1;
 
           if (progress >= reportedProgress + 0.01 || progress === 1) {
             this.module.send('getProfileDocumentsProgress', progress);
             reportedProgress = progress;
           }
         }
+
+        await this.updateClassArchive(classDocumentCatalog);
       }
 
       this.log.verbose('Writing backup zip.', backupZipFilePath);
@@ -352,6 +381,96 @@ export default class FileSystem {
     }
   }
 
+  async createClassDocumentCatalog(className, classDirectoryPath) {
+    this.log.verbose('Creating document catalog for class', className);
+
+    const classArchiveZip = await this.loadClassArchive(className, classDirectoryPath);
+    const documentEntriesByFileName = {};
+    const jsonEntries = [];
+
+    if (classArchiveZip) {
+      for (const [fileName, archivedFile] of Object.entries(classArchiveZip.files)) {
+        if (archivedFile.dir) continue;
+        if (!fileName.endsWith('json')) continue;
+
+        documentEntriesByFileName[fileName] = {
+          fileName,
+          archivedFile,
+          source: 'archive'
+        };
+      }
+    }
+
+    const classDirectory = await fs.opendir(classDirectoryPath);
+    for await (const classDirectoryEntry of classDirectory) {
+      if (!classDirectoryEntry.isFile()) continue;
+      if (!classDirectoryEntry.name.endsWith('json')) continue;
+
+      const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+      const documentEntry = {
+        fileName: classDirectoryEntry.name,
+        filePath,
+        source: 'file'
+      };
+
+      documentEntriesByFileName[classDirectoryEntry.name] = documentEntry;
+      jsonEntries.push(documentEntry);
+    }
+
+    return {
+      className,
+      classDirectoryPath,
+      classArchiveZip,
+      documentEntries: Object.values(documentEntriesByFileName),
+      jsonEntries
+    };
+  }
+
+  async loadClassArchive(className, classDirectoryPath) {
+    if (className === profileClassName) return null;
+
+    const classArchiveFilePath = path.join(classDirectoryPath, classArchiveFileName);
+
+    try {
+      this.log.verbose('Reading class archive for', className);
+
+      const classArchiveData = await fs.readFile(classArchiveFilePath);
+      return await JSZip.loadAsync(classArchiveData);
+
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        this.log.verbose('Class archive does not exist yet.');
+        return new JSZip();
+      }
+
+      throw error;
+    }
+  }
+
+  async readDocumentJson(documentEntry) {
+    if (documentEntry.source === 'archive') {
+      return await documentEntry.archivedFile.async('string');
+    }
+
+    return await fs.readFile(documentEntry.filePath, {encoding: 'utf8'});
+  }
+
+  async updateClassArchive(classDocumentCatalog) {
+    const {className, classDirectoryPath, classArchiveZip, jsonEntries} = classDocumentCatalog;
+    if (!classArchiveZip) return;
+    if (!jsonEntries.length) return;
+
+    const classArchiveFilePath = path.join(classDirectoryPath, classArchiveFileName);
+    this.log.verbose('Writing class archive for', className);
+
+    const classArchiveData = await classArchiveZip.generateAsync({type: 'nodebuffer', compression: 'DEFLATE'});
+    await this.writeFileAtomically(classArchiveFilePath, classArchiveData);
+
+    for (const documentEntry of jsonEntries) {
+      await fs.unlink(documentEntry.filePath);
+    }
+  }
+
   async backupProfile(backupProfileOperation) {
     const { rootDirectoryPath, backupDirectoryPath, fetchId } = backupProfileOperation;
 
@@ -363,7 +482,7 @@ export default class FileSystem {
       const backupZipFilePath = path.join(backupDirectoryPath, `${backupTimestamp}.zip`);
 
       // Scan the root directory for subdirectories, whose names correspond to class names.
-      let rootDirectory = await fs.opendir(rootDirectoryPath);
+      const rootDirectory = await fs.opendir(rootDirectoryPath);
       this.log.verbose('Root directory opened.');
 
       for await (const rootDirectoryEntry of rootDirectory) {
@@ -371,24 +490,13 @@ export default class FileSystem {
         if (!rootDirectoryEntry.isDirectory()) continue;
 
         const className = rootDirectoryEntry.name;
-
-        // Scan the directory for files, whose names correspond to document IDs.
         const classDirectoryPath = path.join(rootDirectoryPath, className);
+        const classDocumentCatalog = await this.createClassDocumentCatalog(className, classDirectoryPath);
 
-        this.log.verbose('Opening class directory', className);
-        const classDirectory = await fs.opendir(classDirectoryPath);
-        this.log.verbose('Class directory opened.');
-
-        for await (const classDirectoryEntry of classDirectory) {
-          if (!classDirectoryEntry.isFile()) continue;
-
-          // Only copy json files (ignore backups).
-          if (!classDirectoryEntry.name.endsWith('json')) continue;
-
+        for (const documentEntry of classDocumentCatalog.documentEntries) {
           // Add each file to the archive as it is read from the original save location.
-          const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
-          const fileJson = await fs.readFile(filePath, {encoding: 'utf8'})
-          backupZip.file(`${className}/${classDirectoryEntry.name}`, fileJson);
+          const fileJson = await this.readDocumentJson(documentEntry);
+          backupZip.file(`${className}/${documentEntry.fileName}`, fileJson);
         }
       }
 
