@@ -200,15 +200,6 @@ class LOI.Components.LoadGame extends LOI.Component
     else
       'active' if @loadingProfileId() is profile._id or LOI.adventure.profileId() is profile._id
   
-  syncedStoragesClasses: ->
-    profile = @currentData()
-    
-    _.join (_.kebabCase syncedStorageId for syncedStorageId of profile.syncedStorages), ' '
-
-  profileName: ->
-    profile = @currentData()
-    profile.displayName or profile._id
-  
   progressOverlayVisibleClass: ->
     'visible' if @loadingProfileId()
     

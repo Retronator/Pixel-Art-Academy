@@ -16,11 +16,11 @@
           <ul class="profiles" {{style profilesStyle}}>
             {{#each profiles}}
               <li class="profile {{profileActiveClass}}" data-id="{{_id}}">
-                <div class="floppy {{syncedStoragesClasses}}">
+                <div class="floppy {{syncedStorageClasses}}">
                   <div class="shutter"></div>
                   <div class="label">{{#if editEnabled}}
                       {{> LandsOfIllusions.Components.LoadGame.SaveGameName}}
-                    {{else}}{{profileName}}{{/if}}</div>
+                    {{else}}{{debugName}}{{/if}}</div>
                 </div>
               </li>
             {{/each}}

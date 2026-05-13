@@ -15,6 +15,7 @@ class LOI.Components.Menu extends AM.Component
     @visible = new ReactiveField false
 
     @items = new (@options.itemsClass or @constructor.Items) @
+    @extras = new @options.extrasClass if @options.extrasClass
 
     @signIn = new LOI.Components.SignIn
   

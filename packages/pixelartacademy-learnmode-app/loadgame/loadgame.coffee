@@ -13,32 +13,10 @@ class LM.LoadGame extends LOI.Components.LoadGame
   @id: -> 'PixelArtAcademy.LearnMode.LoadGame'
   @register @id()
   
-  onCreated: ->
-    super arguments...
-    
-    @migratingVisible = new ReactiveField false
-    @migratingTextVisible = new ReactiveField false
-    @showMigratingPercentage = new ReactiveField false
-  
   editingProfileHasSteamCloud: ->
     profile = Persistence.Profile.documents.findOne @editingProfileId()
     profile.syncedStorages[Persistence.SyncedStorages.SteamCloud.id()]
   
-  showBackButton: ->
-    not (@loadingVisible() or @autoLoadedProfileId() or @migratingVisible())
-  
-  progressOverlayVisibleClass: ->
-    'visible' if @loadingProfileId() or @migratingVisible()
-    
-  migratingVisibleClass: ->
-    'visible' if @migratingVisible()
-  
-  migratingTextVisibleClass: ->
-    'visible' if @migratingTextVisible()
-  
-  migratingPercentage: ->
-    Math.floor Persistence.addingSyncingPercentage()
-    
   events: ->
     super(arguments...).concat
       'click .enable-steam-cloud-button': @onClickEnableSteamButton
@@ -46,12 +24,11 @@ class LM.LoadGame extends LOI.Components.LoadGame
   
   onClickEnableSteamButton: (event) ->
     profile = Persistence.Profile.documents.findOne @editingProfileId()
-    profileName = profile.displayName or profile._id
     
     steam = AT.Steam.instance()
     
     dialog = new LOI.Components.Dialog
-      message: "Enabling Steam Cloud will sync the #{profileName} save game with your #{steam.player.name} Steam account. You will have to be logged in to Steam to see this save game."
+      message: "Enabling Steam Cloud will sync the #{profile.debugName()} save game with your #{steam.player.name} Steam account. You will have to be logged in to Steam to see this save game."
       buttons: [
         text: "Enable"
         value: true
@@ -68,10 +45,9 @@ class LM.LoadGame extends LOI.Components.LoadGame
   
   onClickDisableSteamButton: (event) ->
     profile = Persistence.Profile.documents.findOne @editingProfileId()
-    profileName = profile.displayName or profile._id
     
     dialog = new LOI.Components.Dialog
-      message: "Disabling Steam Cloud will make the #{profileName} save game available only locally on this computer."
+      message: "Disabling Steam Cloud will make the #{profile.debugName()} save game available only locally on this computer."
       buttons: [
         text: "Disable"
         value: true
@@ -87,32 +63,10 @@ class LM.LoadGame extends LOI.Components.LoadGame
         @_migrateSyncedStorage profile._id, Persistence.SyncedStorages.SteamCloud.id(), Persistence.SyncedStorages.FileSystem.id()
         
   _migrateSyncedStorage: (profileId, existingSyncedStorageId, newSyncedStorageId) ->
-    @audio.load true
-    @showMigratingPercentage false
-    @migratingVisible true
-    await _.waitForSeconds 0.5
-    @migratingTextVisible true
-    
-    profile = Persistence.Profile.documents.findOne profileId
-    
-    try
-      await Persistence.loadProfile profileId
-      @showMigratingPercentage true
-      
-      if Meteor.isDesktop
-        await Persistence.addSyncingToProfile newSyncedStorageId unless profile.syncedStorages[newSyncedStorageId]
-        await Persistence.removeSyncingFromProfile existingSyncedStorageId if profile.syncedStorages[existingSyncedStorageId]
+    Persistence.Profile.documents.update profileId,
+      $set:
+        lastEditTime: new Date()
+        informedAboutSteamCloud: true
         
-      else
-        # Wait for browser testing purposes.
-        await _.waitForSeconds 2
-        
-      Persistence.unloadProfile()
-    
-    catch error
-      console.error error
-    
-    finally
-      @migratingVisible false
-      @migratingTextVisible false
-      @audio.load false
+    syncedStorageMigration = new LM.SyncedStorageMigration profileId, existingSyncedStorageId, newSyncedStorageId
+    LOI.adventure.showActivatableModalDialog dialog: syncedStorageMigration

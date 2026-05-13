@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AC = Artificial.Control
 AEc = Artificial.Echo
 AM = Artificial.Mirage
@@ -34,6 +34,11 @@ class LM.SaveGame extends LOI.Components.SaveGame
     
   steamCloudClass: ->
     'steam-cloud' if @steamCloud()
+    
+  _createProfileFields: ->
+    profileFields = super arguments...
+    profileFields.informedAboutSteamCloud = true if AB.DistributionPlatform.isSteam
+    profileFields
 
   # Components
 

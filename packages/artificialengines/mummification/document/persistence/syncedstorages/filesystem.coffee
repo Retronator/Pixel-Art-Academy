@@ -39,7 +39,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     # Listen to loading progress changes. Note: We wire this only once since SteamCloud inherits from FileSystem.
     unless Persistence.SyncedStorages.FileSystem._getProfileDocumentsProgressWired
       Desktop.on 'filesystem', 'getProfileDocumentsProgress', (event, progressValue) ->
-        Persistence.SyncedStorages.FileSystem._onLoadProfileProgress? progressValue * 0.5
+        Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress? progressValue
       
       Persistence.SyncedStorages.FileSystem._getProfileDocumentsProgressWired = true
   
@@ -47,13 +47,31 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
   ready: -> @_ready()
   
-  loadDocumentsForProfileIdInternal: (profileId, options) ->
+  compressStorage: (profileId, options = {}) ->
+    Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress = options.onProgress
+
+    Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+  
+  loadDocumentsForProfileIdInternal: (profileId, options = {}) ->
     console.log "File system synced storage is loading documents for profile", profileId if Persistence.debug
 
     syncedStorageId = @constructor.id()
   
     documents = {}
-    Persistence.SyncedStorages.FileSystem._onLoadProfileProgress = options.onProgress
+    
+    reportedProgress = 0
+    reportProgress = (progress) =>
+      # Report progress only when it would make a difference in the display.
+      if progress >= reportedProgress + 0.01 or progress is 1
+        options.onProgress? progress
+        reportedProgress = progress
+        
+        # Give the display a chance to update.
+        await _.waitForNextFrame()
+    
+    Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress = (progress) =>
+      # Loading the profile from disk takes only the first half of the progress (the rest happens below when parsing JSONs).
+      options.onProgress progress * 0.5
     
     try
       unless profileDocumentJsons = await Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
@@ -72,7 +90,6 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
     documentsCount = 0
     documentsParsedCount = 0
-    reportedProgress = 0
     
     for documentClassId, documentJsons of profileDocumentJsons
       for documentName of documentJsons
@@ -95,15 +112,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
           console.log "JSON content", documentJson
         
         documentsParsedCount++
-        progress = 0.5 + documentsParsedCount / documentsCount * 0.5
-        
-        # Report progress only when it would make a difference in the display.
-        if progress >= reportedProgress + 0.01 or progress is 1
-          options.onProgress? progress
-          reportedProgress = progress
-          
-          # Give the display a chance to update.
-          await _.waitForNextFrame()
+        await reportProgress 0.5 + documentsParsedCount / documentsCount * 0.5
     
     console.log "Documents successfully parsed." if Persistence.debug
     documents

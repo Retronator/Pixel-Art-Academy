@@ -74,14 +74,16 @@ class LOI.Components.SaveGame extends LOI.Component
     profileId = await LOI.adventure.profileId.waitForValue()
 
     Persistence.Profile.documents.update profileId,
-      $set:
-        displayName: @newSaveGameName()
-        lastEditTime: new Date
+      $set: @_createProfileFields()
 
     LOI.adventure.showDialogMessage "Your game will be automatically saving to this disk.", =>
       @audio.save false
       
       @callFirstWith null, 'deactivate'
+      
+  _createProfileFields: ->
+    displayName: @newSaveGameName()
+    lastEditTime: new Date
 
   # Components
 

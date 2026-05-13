@@ -58,6 +58,38 @@ class LM.Adventure extends LM.Adventure
 
     Persistence.addSyncingToProfile syncedStorage.id()
   
+  loadGame: ->
+    await super arguments...
+    await _.waitForFlush()
+
+    # Offer the user to migrate to Steam Cloud.
+    if steam = AT.Steam.instance()
+      profile = LOI.adventure.profile()
+      
+      unless profile.syncedStorages[Persistence.SyncedStorages.SteamCloud.id()] or profile.informedAboutSteamCloud
+        dialog = new LOI.Components.Dialog
+          message: """Steam Cloud saves are now available! Do you want to enable Steam Cloud for this save game?
+          
+                      Enabling Steam Cloud will sync the #{profile.debugName()} save game with your #{steam.player.name} Steam account. You will have to be logged in to Steam to see this save game."""
+          buttons: [
+            text: "Enable"
+            value: true
+          ,
+            text: "Cancel"
+          ]
+        
+        await LOI.adventure.showActivatableModalDialog
+          dialog: dialog
+          callback: =>
+            Persistence.Profile.documents.update profile._id,
+              $set:
+                lastEditTime: new Date()
+                informedAboutSteamCloud: true
+                
+        if dialog.result
+          syncedStorageMigration = new LM.SyncedStorageMigration profile._id, Persistence.SyncedStorages.FileSystem.id(), Persistence.SyncedStorages.SteamCloud.id()
+          await LOI.adventure.showActivatableModalDialog dialog: syncedStorageMigration
+
   endRun: ->
     if Meteor.isDesktop
       # Override to not perform any database flush behaviors since we don't

@@ -34,3 +34,9 @@ class Persistence.Profile extends AM.Document
 
   hasSyncing: ->
     _.keys(@syncedStorages).length > 0
+
+  syncedStorageClasses: ->
+    _.join (_.kebabCase syncedStorageId for syncedStorageId of @syncedStorages), ' '
+  
+  debugName: ->
+    @displayName or @_id

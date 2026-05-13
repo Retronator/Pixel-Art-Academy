@@ -21,6 +21,7 @@ class LM.Adventure extends PAA.Adventure
   @rootUrl: -> '/learn-mode'
 
   @menuItemsClass: -> LM.Menu.Items
+  @menuExtrasClass: -> LM.Menu.Extras
   
   @interfaceClass: -> LM.Interface
 
@@ -76,7 +77,7 @@ class LM.Adventure extends PAA.Adventure
       lastNewLessonsVersion = @constructor.lastNewLessonsVersion()
       
       if semver.lt acknowledgedNewLessonsVersion, lastNewLessonsVersion
-        LOI.adventure.showDialogMessage """
+        await LOI.adventure.showDialogMessage """
           New tutorial lessons have been added since you last played the game. If anything in the game seems missing,
           complete the new lessons first to get back to where you were.
 

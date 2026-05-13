@@ -20,6 +20,7 @@ class LOI.Adventure extends LOI.Adventure
 
     @menu = new LOI.Components.Menu
       itemsClass: @constructor.menuItemsClass()
+      extrasClass: @constructor.menuExtrasClass()
       saveGameClass: @constructor.saveGameClass()
       loadGameClass: @constructor.loadGameClass()
 

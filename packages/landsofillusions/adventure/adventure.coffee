@@ -16,6 +16,7 @@ class LOI.Adventure extends AM.Component
   @rootUrl: -> '/' # Override to provide a root URL where the adventure should start.
   
   @menuItemsClass: -> LOI.Components.Menu.Items # Override to provide alternative menu items.
+  @menuExtrasClass: -> null # Override to provide extra menu content.
   
   @saveGameClass: -> LOI.Components.SaveGame # Override to provide an alternative save game screen.
   @loadGameClass: -> LOI.Components.LoadGame # Override to provide an alternative load game screen.

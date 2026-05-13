@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-learnmode-app',
-  version: '0.39.2',
+  version: '0.39.3',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -67,5 +67,6 @@ Package.onUse(function(api) {
 
   api.addComponent('savegame..');
   api.addUnstyledComponent('loadgame..');
+  api.addComponent('syncedstoragemigration..');
 
 });

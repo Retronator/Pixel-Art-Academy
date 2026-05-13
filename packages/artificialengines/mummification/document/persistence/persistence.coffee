@@ -53,7 +53,9 @@ class AM.Document.Persistence
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
     @_syncedStoragesDependency.changed()
     
-  @hasSyncedStorage: (syncedStorageId) -> @_syncedStoragesById[syncedStorageId]
+  @hasSyncedStorage: (syncedStorageId) -> @_syncedStoragesById[syncedStorageId]?
+  
+  @getSyncedStorage: (syncedStorageId) -> @_syncedStoragesById[syncedStorageId]
     
   @ready: ->
     @_syncedStoragesDependency.depend()
@@ -280,6 +282,10 @@ class AM.Document.Persistence
         "syncedStorages.#{syncedStorageId}": {}
         lastEditTime: new Date
         
+    @_addingSyncingPercentage = 0
+    @_addingSyncingPercentageDependency.changed()
+    await _.waitForNextFrame()
+    
     # Add all documents to the new synced storage.
     syncedStorage = @_syncedStoragesById[syncedStorageId]
     
