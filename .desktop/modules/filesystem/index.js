@@ -26,10 +26,19 @@ export default class FileSystem {
     this.log = log;
     this.eventsBus = eventsBus;
 
+    // Unordered methods (executed asap, return order will not necessarily be the same as the call order)
+
     this.module.on('getApplicationPaths', (event, fetchId) => {
       this.log.verbose('getApplicationPaths received', fetchId);
       this.module.respond('getApplicationPaths', fetchId, this.getApplicationPaths());
     });
+
+    this.module.on('initializeProfileBackups', async (event, fetchId, backupDirectoryPath, backupDaysCount) => {
+      this.log.verbose('initializeProfileBackups received', backupDirectoryPath, backupDaysCount, fetchId);
+      this.initializeProfileBackups(backupDirectoryPath, backupDaysCount, fetchId);
+    });
+
+    // Ordered methods (executed and returned in order of calls)
 
     this.operations = []
 
@@ -91,6 +100,110 @@ export default class FileSystem {
     }
 
     return applicationPaths;
+  }
+
+  async initializeProfileBackups(backupDirectoryPath, backupDaysCount, fetchId) {
+    try {
+      try {
+        await fs.access(backupDirectoryPath);
+
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+
+        this.log.verbose('Backup directory does not exist.', backupDirectoryPath, fetchId);
+        this.module.respond('initializeProfileBackups', fetchId, true);
+        return;
+      }
+
+      const backupDirectory = await fs.opendir(backupDirectoryPath);
+      for await (const profileDirectoryEntry of backupDirectory) {
+        if (!profileDirectoryEntry.isDirectory()) continue;
+
+        const profileBackupDirectoryPath = path.join(backupDirectoryPath, profileDirectoryEntry.name);
+        await this.compressBackupFoldersInProfileDirectory(profileBackupDirectoryPath, backupDaysCount);
+      }
+
+      this.log.verbose('initializeProfileBackups succeeded.', backupDirectoryPath, fetchId);
+      this.module.respond('initializeProfileBackups', fetchId, true);
+
+    } catch (error) {
+      this.log.error('initializeProfileBackups error.', backupDirectoryPath, error, fetchId);
+      this.module.respond('initializeProfileBackups', fetchId, false);
+    }
+  }
+
+  async compressBackupFoldersInProfileDirectory(profileBackupDirectoryPath, backupDaysCount) {
+    this.log.verbose('Compressing backup folders in profile backup directory', profileBackupDirectoryPath);
+
+    const retainedBackupDayNames = await this.getRetainedBackupDayNames(profileBackupDirectoryPath, backupDaysCount);
+
+    const profileBackupDirectory = await fs.opendir(profileBackupDirectoryPath);
+    for await (const backupDirectoryEntry of profileBackupDirectory) {
+      const backupEntryDayName = this.getBackupEntryDayName(backupDirectoryEntry.name);
+      const backupEntryPath = path.join(profileBackupDirectoryPath, backupDirectoryEntry.name);
+
+      if (!retainedBackupDayNames.has(backupEntryDayName)) {
+        this.log.verbose('Removing old backup entry', backupEntryPath);
+        await fs.rm(backupEntryPath, {recursive: true});
+        continue;
+      }
+
+      if (backupDirectoryEntry.isDirectory()) {
+        const destinationBackupZipFilePath = path.join(profileBackupDirectoryPath, `${backupDirectoryEntry.name}.zip`);
+        await this.compressBackupFolder(backupEntryPath, destinationBackupZipFilePath);
+      }
+    }
+  }
+
+  async getRetainedBackupDayNames(profileBackupDirectoryPath, backupDaysCount) {
+    const backupDayNames = new Set();
+    const profileBackupDirectory = await fs.opendir(profileBackupDirectoryPath);
+
+    for await (const backupDirectoryEntry of profileBackupDirectory) {
+      const backupEntryDayName = this.getBackupEntryDayName(backupDirectoryEntry.name);
+      if (!backupEntryDayName) continue;
+
+      backupDayNames.add(backupEntryDayName);
+    }
+
+    return new Set([...backupDayNames].sort().reverse().slice(0, backupDaysCount));
+  }
+
+  getBackupEntryDayName(backupEntryName) {
+    const timestampSeparatorIndex = backupEntryName.indexOf('T');
+    if (timestampSeparatorIndex === -1) return null;
+
+    return backupEntryName.substring(0, timestampSeparatorIndex);
+  }
+
+  async compressBackupFolder(sourceBackupDirectoryPath, destinationBackupZipFilePath) {
+    this.log.verbose('Compressing backup folder', sourceBackupDirectoryPath);
+
+    const backupZip = new JSZip();
+
+    // Add folder contents relative to the timestamp folder, matching the layout of new backup zips.
+    await this.addDirectoryToZip(backupZip, sourceBackupDirectoryPath, '');
+
+    const backupZipData = await backupZip.generateAsync({type: 'nodebuffer', compression: 'DEFLATE'});
+    await this.writeFileAtomically(destinationBackupZipFilePath, backupZipData);
+    await fs.rm(sourceBackupDirectoryPath, {recursive: true});
+  }
+
+  async addDirectoryToZip(zip, directoryPath, zipDirectoryPath) {
+    const directory = await fs.opendir(directoryPath);
+
+    for await (const directoryEntry of directory) {
+      const entryFilePath = path.join(directoryPath, directoryEntry.name);
+      const entryZipPath = zipDirectoryPath ? `${zipDirectoryPath}/${directoryEntry.name}` : directoryEntry.name;
+
+      if (directoryEntry.isDirectory()) {
+        await this.addDirectoryToZip(zip, entryFilePath, entryZipPath);
+
+      } else if (directoryEntry.isFile()) {
+        const entryData = await fs.readFile(entryFilePath);
+        zip.file(entryZipPath, entryData);
+      }
+    }
   }
 
   addOperation(operation) {

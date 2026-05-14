@@ -9,6 +9,12 @@ Persistence = Artificial.Mummification.Document.Persistence
 # Adventure overrides for stand-alone learn mode builds.
 class LM.Adventure extends LM.Adventure
   @rootUrl: -> '/'
+  
+  @fileSystemSavesDirectory = 'saves'
+  @fileSystemSavesDirectorySteamCloud = 'steam saves'
+  @fileSystemSaveBackupsDirectory = 'save backups'
+  
+  @indexedDBDatabaseName = 'Retronator'
 
   @saveGameClass: -> LM.SaveGame
   @loadGameClass: -> LM.LoadGame
@@ -32,19 +38,19 @@ class LM.Adventure extends LM.Adventure
           steam = AT.Steam.instance()
           
           @steamCloudSyncedStorage = new Persistence.SyncedStorages.SteamCloud
-            relativeDirectoryPath: "steam saves/#{steam.player.steamId64}"
-            relativeBackupDirectoryPath: 'save backups'
+            relativeDirectoryPath: "#{@constructor.fileSystemSavesDirectorySteamCloud}/#{steam.player.steamId64}"
+            relativeBackupDirectoryPath: @constructor.fileSystemSaveBackupsDirectory
       
           Persistence.registerSyncedStorage @steamCloudSyncedStorage
       
       @fileSystemSyncedStorage = new Persistence.SyncedStorages.FileSystem
-        relativeDirectoryPath: 'saves'
-        relativeBackupDirectoryPath: 'save backups'
+        relativeDirectoryPath: @constructor.fileSystemSavesDirectory
+        relativeBackupDirectoryPath: @constructor.fileSystemSaveBackupsDirectory
         
       Persistence.registerSyncedStorage @fileSystemSyncedStorage
       
     else
-      @indexedDBSyncedStorage = new Persistence.SyncedStorages.IndexedDB databaseName: "Retronator"
+      @indexedDBSyncedStorage = new Persistence.SyncedStorages.IndexedDB databaseName: @constructor.indexedDBDatabaseName
       Persistence.registerSyncedStorage @indexedDBSyncedStorage
       
   saveGame: (options) ->
@@ -97,3 +103,8 @@ class LM.Adventure extends LM.Adventure
       return
     
     super arguments...
+
+if Meteor.isDesktop
+  Meteor.startup ->
+    backupDirectoryPath = await Persistence.SyncedStorages.FileSystem.getUserDataPath LM.Adventure.fileSystemSaveBackupsDirectory
+    Desktop.call 'filesystem', 'initializeProfileBackups', backupDirectoryPath, 10

@@ -6,6 +6,15 @@ Persistence = AM.Document.Persistence
 class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   @id: -> 'FileSystem'
   
+  @getApplicationPaths: ->
+    Persistence.SyncedStorages.FileSystem._applicationPaths ?= Desktop.call 'filesystem', 'getApplicationPaths'
+    await Persistence.SyncedStorages.FileSystem._applicationPaths
+    
+  @getUserDataPath: (relativePath) ->
+    applicationPaths = await @getApplicationPaths()
+    return applicationPaths.userData unless relativePath
+    "#{applicationPaths.userData}/#{relativePath}"
+  
   constructor: (@options) ->
     super arguments...
 
@@ -16,7 +25,8 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     @initialize()
 
   initialize: ->
-    applicationPaths = await Desktop.call 'filesystem', 'getApplicationPaths'
+    applicationPaths = await @constructor.getApplicationPaths()
+    
     @storagePath = "#{applicationPaths.userData}/#{@options.relativeDirectoryPath}"
     @backupPath = "#{applicationPaths.userData}/#{@options.relativeBackupDirectoryPath}"
 

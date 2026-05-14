@@ -7,7 +7,6 @@ node_modules
 /package
 /sign
 /notarize
-/notarize-universal
 /notarize-log.json
 .DS_Store
 version.desktop
