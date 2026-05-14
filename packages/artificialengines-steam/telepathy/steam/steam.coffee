@@ -4,7 +4,7 @@ AM = Artificial.Mummification
 
 # Steamworks wrapper.
 class AT.Steam
-  @test = true
+  @test = false
   
   @available = new ReactiveField null
   @instance = new ReactiveField null

@@ -83,6 +83,9 @@ class LM.Adventure extends LM.Adventure
           ,
             text: "Cancel"
           ]
+
+        # Disable loading audio when deciding on a popup dialogs.
+        LOI.adventure.menu.loadGame.audio.load false
         
         await LOI.adventure.showActivatableModalDialog
           dialog: dialog

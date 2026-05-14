@@ -77,6 +77,9 @@ class LM.Adventure extends PAA.Adventure
       lastNewLessonsVersion = @constructor.lastNewLessonsVersion()
       
       if semver.lt acknowledgedNewLessonsVersion, lastNewLessonsVersion
+        # Disable loading audio when deciding on a popup dialogs.
+        LOI.adventure.menu.loadGame.audio.load false
+        
         await LOI.adventure.showDialogMessage """
           New tutorial lessons have been added since you last played the game. If anything in the game seems missing,
           complete the new lessons first to get back to where you were.
