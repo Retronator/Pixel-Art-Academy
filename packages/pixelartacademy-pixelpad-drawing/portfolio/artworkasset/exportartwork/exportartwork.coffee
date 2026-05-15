@@ -137,7 +137,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork extends AM.
       fileBlob = await zip.generateAsync type: 'blob'
       filename = "#{name}.zip"
 
-    switch AB.ApplicationEnvironment.type
+    switch AB.ApplicationEnvironment.type()
       when AB.ApplicationEnvironment.Types.Browser
         $link = $('<a style="display: none">')
         $('body').append $link

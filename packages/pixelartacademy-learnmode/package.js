@@ -48,6 +48,7 @@ Package.onUse(function(api) {
 
   api.addFile('menu..');
   api.addComponent('menu/items..');
+  api.addComponent('menu/extras..');
 
   api.addComponent('menu/progress..');
   api.addComponent('menu/progress/content..');

@@ -44,7 +44,9 @@ class PAA.Pixeltosh.Adventure extends LOI.Adventure
 
   usesLocalState: -> true
   
-  getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage storageKey: "Retronator"
+  registerSyncedStorages: ->
+    @indexedDBSyncedStorage = new Persistence.SyncedStorages.IndexedDB databaseName: "Retronator"
+    Persistence.registerSyncedStorage @indexedDBSyncedStorage
 
   startingPoint: ->
     locationId: LM.Locations.Play.id()

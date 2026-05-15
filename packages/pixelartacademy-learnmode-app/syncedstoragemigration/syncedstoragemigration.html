@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.LearnMode.SyncedStorageMigration">
+  <div class="pixelartacademy-learnmode-syncedstoragemigration">
+    {{#LandsOfIllusions.Components.Overlay}}
+      <div class="migrating-text {{migratingTextVisibleClass}}">
+        Migrating …
+        {{#if showMigratingPercentage}}
+          {{migratingPercentage}}%
+        {{/if}}
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.LearnMode.Menu.Extras">
+  <div class="pixelartacademy-learnmode-menu-extras">
+    {{#with currentProfile}}
+      <div class="landsofillusions-components-savesystem profile">
+        <div class="floppy {{syncedStorageClasses}}">
+          <div class="shutter"></div>
+          <div class="label">
+            {{> LandsOfIllusions.Components.LoadGame.SaveGameName}}
+          </div>
+        </div>
+      </div>
+    {{/with}}
+  </div>
+</template>

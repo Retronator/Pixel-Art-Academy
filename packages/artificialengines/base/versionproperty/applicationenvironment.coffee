@@ -6,12 +6,14 @@ class AB.ApplicationEnvironment extends AB.VersionProperty
     Cordova: 'Cordova'
     Electron: 'Electron'
     Server: 'Server'
+    
+  @initialize()
   
   if Meteor.isDesktop
     @setType @Types.Electron
 
   else if Meteor.isCordova
-    @setType @Types.Electron
+    @setType @Types.Cordova
   
   else if Meteor.isClient
     @setType @Types.Browser

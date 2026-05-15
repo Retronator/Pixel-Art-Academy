@@ -103,4 +103,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum/color/chromaticity/chromaticity-chromaticitydiagram');
   api.addFile('spectrum/pixelart..');
   api.addComponent('spectrum/pixelart/upscaling..');
+
+  api.addFile('base/pages');
+  api.addUnstyledComponent('base/chrome..');
 });
