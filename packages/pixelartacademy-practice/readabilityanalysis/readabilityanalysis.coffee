@@ -7,6 +7,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 
 class PAA.Practice.ReadabilityAnalysis
   # passes: boolean if all regions are readable
+  # revealed: boolean if the analysis has been seen by the player, non-versioned
   # regions: an array of parts of the bitmap on which to do the analysis
   #   targetLabel: the label that the region should convey
   #   passes: boolean if the region is readable

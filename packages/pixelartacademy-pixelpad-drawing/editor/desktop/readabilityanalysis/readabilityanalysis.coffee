@@ -115,12 +115,36 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
       
     # Update analysis where requested.
     @readabilityAnalysisShouldBePerformed = new ComputedField =>
-      return false unless readabilityAnalysisProperty = @readabilityAnalysisProperty()
-
-      # Do the first report only when the analysis is open (revealed).
-      readabilityAnalysisProperty.passes? or @revealed()
+      @readabilityAnalysisProperty()?
       
     @recognition = new ReactiveField null
+    
+    # Store that the analysis was revealed on the document.
+    # We do this non-versioned so that undo/redo doesn't change it.
+    @autorun (computation) =>
+      return unless bitmap = @interface.getLoaderForActiveFile()?.asset()
+      return unless readabilityAnalysis = bitmap.properties?.readabilityAnalysis
+      
+      update =
+        $set:
+          lastEditTime: new Date()
+      
+      if @revealed() and readabilityAnalysis.passes? and not readabilityAnalysis.revealed
+        _.extend update.$set,
+          'properties.readabilityAnalysis.revealed': true
+          
+      else if readabilityAnalysis.revealed and not readabilityAnalysis.passes?
+        update.$unset =
+          'properties.readabilityAnalysis.revealed': true
+      
+      else
+        return
+        
+      Tracker.nonreactive =>
+        LOI.Assets.Bitmap.documents.update bitmap._id, update
+      
+        # Trigger reactivity.
+        LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmap._id
     
     @autorun (computation) =>
       return unless @readabilityAnalysisShouldBePerformed()
@@ -174,6 +198,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         
         # See if there was any change from the current data.
         asset = @interface.getLoaderForActiveFile()?.asset()
+        readabilityAnalysisProperty.revealed = asset.properties.readabilityAnalysis.revealed if asset.properties.readabilityAnalysis.revealed
         return if EJSON.equals asset.properties.readabilityAnalysis, readabilityAnalysisProperty
         
         # Only update analysis when we're at the end of history to prevent recalculation when undoing/redoing
@@ -270,7 +295,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
     
   pixeltoshClass: ->
     return unless readabilityAnalysisProperty = @readabilityAnalysisProperty()
-    return unless readabilityAnalysisProperty.passes?
+    return unless readabilityAnalysisProperty.revealed
     
     if readabilityAnalysisProperty.passes then 'passes' else 'fails'
   
