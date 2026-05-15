@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.LearnMode.SaveGame">
+  {{#unless deactivated}}
+    <div class="pixelartacademy-learnmode-savegame landsofillusions-components-savegame landsofillusions-components-savesystem">
+      {{#unless savingActive}}
+        {{> LandsOfIllusions.Components.BackButton}}
+      {{/unless}}
+      {{#LandsOfIllusions.Components.Overlay}}
+        <div class="title">Create a new save game</div>
+        <div class="new-save-game">
+          <div class="floppy {{steamCloudClass}} {{savingActiveClass}}">
+            <div class="shutter"></div>
+            <div class="label">{{> LandsOfIllusions.Components.SaveGame.NewSaveGameName}}</div>
+          </div>
+        </div>
+        <div class="options {{optionsVisibleClass}}">
+          {{#if steam.cloud.enabledForAccount}}
+            <div class="steam-cloud">
+              <label class="enable">
+                {{> PixelArtAcademy.LearnMode.SaveGame.SteamCloud}}<span class="checkmark"></span> Use Steam Cloud
+              </label>
+              <div class="username">
+                {{steam.player.name}}
+              </div>
+            </div>
+          {{/if}}
+        </div>
+        <div class="controls">
+          <button class="save-button action-button {{saveButtonVisibleClass}}">Save</button>
+        </div>
+      {{/LandsOfIllusions.Components.Overlay}}
+    </div>
+  {{/unless}}
+</template>

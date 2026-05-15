@@ -1,0 +1,21 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-syncedstoragemigration
+  fixed-cover()
+  z-index 5
+  cursor wait
+
+  .background
+    background atariGray(0)
+
+  .migrating-text
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    color atariGray(7)
+    opacity 0
+    transition opacity 0.2s ease-in-out
+
+    &.visible
+      opacity 1

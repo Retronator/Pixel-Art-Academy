@@ -181,7 +181,7 @@ class AB.Router extends AB.Router
         # Scroll to top since we expect that to happen if this was a hard link.
         $(document).scrollTop(0)
   
-      else if AB.ApplicationEnvironment.isElectron
+      else if Meteor.isDesktop
         # External links in Electron have to be opened in an external browser.
         event.preventDefault()
         

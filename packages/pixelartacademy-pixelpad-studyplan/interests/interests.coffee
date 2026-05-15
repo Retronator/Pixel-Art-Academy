@@ -28,7 +28,7 @@ class StudyPlan.Interests extends StudyPlan.BottomPanel
       return unless goals = StudyPlan.state 'goals'
       
       _.flatten (for goalId of goals
-        goalClass = PAA.Learning.Goal.getClassForId goalId
+        continue unless goalClass = PAA.Learning.Goal.getClassForId goalId
         goalClass.tasks()
       )
 

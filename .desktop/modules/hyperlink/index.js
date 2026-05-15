@@ -21,7 +21,7 @@ export default class Hyperlink {
     this.eventsBus = eventsBus;
 
     this.module.on('open', (event, fetchId, url) => {
-      this.log.verbose('open hyperlink received', url);
+      this.log.verbose('open received', url);
 
       shell.openExternal(url).then(() => {
         this.module.respond('open', fetchId, null);

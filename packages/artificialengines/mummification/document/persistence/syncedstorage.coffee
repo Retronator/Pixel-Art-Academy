@@ -24,7 +24,7 @@ class Persistence.SyncedStorage
       documents
   
   added: (document) ->
-    @addedInternal document
+    await @addedInternal document
   
     @_documentsCache[document._id] = _.cloneDeep document if @options.differentialSave
   
@@ -42,12 +42,12 @@ class Persistence.SyncedStorage
   _changed: (document) ->
     document = _.objectDifference @_documentsCache[document._id], document if @options.differentialSave
     
-    @changedInternal document
+    await @changedInternal document
     
     @_documentsCache[document._id] = _.cloneDeep document if @options.differentialSave
   
   removed: (document) ->
-    @removedInternal document
+    await @removedInternal document
     
     delete @_documentsCache[document._id] if @options.differentialSave
     

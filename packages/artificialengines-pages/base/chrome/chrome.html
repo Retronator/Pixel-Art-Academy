@@ -1,0 +1,37 @@
+<template name="Artificial.Base.Pages.Chrome">
+  <style>
+    body {
+      background: #111;
+      font-family: system-ui;
+      padding: 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+    }
+    .grid div {
+      aspect-ratio: 1;
+      background: hsl(calc(sibling-index() * 12deg) 80% 60%);
+      animation: pop 1.5s ease-out infinite;
+      animation-delay: calc(sibling-index() * 40ms);
+    }
+    @keyframes pop {
+      0%, 100% { transform: scale(0.6); }
+      50%      { transform: scale(1); }
+    }
+  </style>
+  <div class="grid">
+    <!-- 50 empty divs -->
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+</template>

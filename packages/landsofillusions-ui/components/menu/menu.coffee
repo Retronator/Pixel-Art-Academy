@@ -15,11 +15,12 @@ class LOI.Components.Menu extends AM.Component
     @visible = new ReactiveField false
 
     @items = new (@options.itemsClass or @constructor.Items) @
+    @extras = new @options.extrasClass if @options.extrasClass
 
     @signIn = new LOI.Components.SignIn
   
-    @saveGame = new LOI.Components.SaveGame
-    @loadGame = new LOI.Components.LoadGame
+    @saveGame = new (@options.saveGameClass or LOI.Components.SaveGame)
+    @loadGame = new (@options.loadGameClass or LOI.Components.LoadGame)
   
     @account = new LOI.Components.Account
 

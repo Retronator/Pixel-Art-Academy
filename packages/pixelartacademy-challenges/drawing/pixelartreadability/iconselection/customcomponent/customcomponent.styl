@@ -402,10 +402,13 @@ grid-background()
         .table-of-contents
           position relative
           z-index 1
-          width 308rem
+          width 145rem
           height 220rem
           overflow hidden
           counter-reset icon-counter
+
+          &.full-spread
+            width 308rem
 
           .pages
             position relative
@@ -453,13 +456,15 @@ grid-background()
                   color atariGray(1)
 
               .icon-entries
+                display table
+                width 100%
                 counter-reset none
                 list-style none
-                padding 0 1rem
+                padding 0 0 0 1rem
                 margin 3rem 0
 
                 .icon-entry
-                  display flex
+                  display table-row
                   color atariGray(2)
                   line-height 6rem
                   cursor pointer
@@ -468,50 +473,60 @@ grid-background()
                     color atariGray(1)
 
                   &::before
+                  .info-area
+                    display table-cell
+
+                  &::before
                     counter-increment icon-counter
                     content counter(icon-counter) "."
-                    margin-right 2rem
+                    padding-right 2rem
 
-                  .name
-                  .page-number
-                    white-space nowrap
+                  .info-area
+                    width 100%
 
-                  .sizes
-                    list-style none
-                    display flex
-                    position relative
-                    z-index 1
-                    left 2rem
-                    width 0
-                    padding 0
-                    margin 0
+                    .info
+                      display flex
 
-                    .size
-                      display none
-                      padding-right 1rem
+                      .name
+                      .page-number
+                        white-space nowrap
 
-                      &.started
-                      &.completed
-                        display block
+                      .sizes
+                        list-style none
+                        display flex
+                        position relative
+                        z-index 1
+                        left 2rem
+                        width 0
+                        padding 0
+                        margin 0
 
-                      &.started
+                        .size
+                          display none
+                          padding-right 1rem
+
+                          &.started
+                          &.completed
+                            display block
+
+                          &.started
+                            color atariGray(3)
+
+                          &.completed
+                            color atariGreen(3)
+
+                      .page-number
+                        display flex
                         color atariGray(3)
+                        flex 1
+                        align-items baseline
 
-                      &.completed
-                        color atariGreen(3)
-
-                  .page-number
-                    display flex
-                    color atariGray(3)
-                    flex 1
-                    align-items baseline
-
-                    &::before
-                      content ""
-                      flex 1
-                      height 1rem
-                      margin 0 2rem 0 1rem
-                      background-color atariGray(5)
+                        &::before
+                          content ""
+                          flex 1
+                          height 1rem
+                          margin 0 2rem 0 1rem
+                          background-color atariGray(5)
 
         .part-title
           text-align center

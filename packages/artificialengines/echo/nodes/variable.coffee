@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 class AEc.Node.Variable extends AEc.Node
@@ -22,12 +23,10 @@ class AEc.Node.Variable extends AEc.Node
   constructor: ->
     super arguments...
 
-    @value = new ComputedField =>
+    @value = new AE.LiveComputedField =>
       id = @readParameter 'id'
       variable = AEc.Variable.getVariableForId id
       variable?.value()
-    ,
-      true
     
   destroy: ->
     super arguments...

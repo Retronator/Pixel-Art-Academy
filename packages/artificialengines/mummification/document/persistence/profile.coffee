@@ -6,7 +6,7 @@ Persistence = AM.Document.Persistence
 class Persistence.Profile extends AM.Document
   @id: -> 'Artificial.Mummification.Document.Persistence.Profile'
   # profileId: same as _id, but needed as it is itself a persistent document
-  # lastEditTime: the time the whole profile was last synced (updates with every document save)
+  # lastEditTime: the time the profile information was last updated
   # displayName: user-defined name for this profile
   # syncedStorages: an object with extra data for each synced storage this profile is synced to.
   #   {syncedStorageId}
@@ -34,3 +34,9 @@ class Persistence.Profile extends AM.Document
 
   hasSyncing: ->
     _.keys(@syncedStorages).length > 0
+
+  syncedStorageClasses: ->
+    _.join (_.kebabCase syncedStorageId for syncedStorageId of @syncedStorages), ' '
+  
+  debugName: ->
+    @displayName or @_id

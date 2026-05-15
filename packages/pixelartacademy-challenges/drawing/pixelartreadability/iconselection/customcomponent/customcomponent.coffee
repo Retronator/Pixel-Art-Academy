@@ -251,9 +251,11 @@ class IconSelection.CustomComponent extends LOI.Component
   
     for number in [1..count]
       number: number
-      imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{size}-#{number}.png"
+      imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{@volumeNumber()}-#{size}-#{number}.png"
     
   onTableOfContents: -> @currentPage() <= 3
+  
+  tableOfContentsFullSpreadClass: -> 'full-spread' if @currentPage() is 1
   
   tableOfContentsPagesStyle: ->
     left: "#{-(145 + 18) * (@currentPage() - 1)}rem"

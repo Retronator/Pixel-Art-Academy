@@ -51,13 +51,15 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @completedConditions: -> PAA.Challenges.Drawing.PixelArtReadability.state('completedCounts')?[@size()] >= 1
     
+    activeNotificationId: -> Goal.ReadabilityAnalysisNotification.id()
+    
   class @Icon8 extends @Icon
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon8'
     @size: -> 8
     
     @directive: -> "Draw an #{@sizeString()} icon"
     
-    @groupNumber: -> -1
+    @groupNumber: -> 1
     
     @studyPlanBuilding: -> 'SimCityResidential1'
     
@@ -69,8 +71,6 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @directive: -> "Draw a #{@sizeString()} icon"
     
-    @interests: -> ['size (pixel art)']
-    
     @studyPlanBuilding: -> 'TransportTycoonCinema'
     
     @initialize()
@@ -81,21 +81,67 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @directive: -> "Draw a #{@sizeString()} icon"
     
-    @groupNumber: -> 1
+    @groupNumber: -> -1
     
     @studyPlanBuilding: -> 'SimCityOffice3'
     
     @initialize()
   
+  class @Icons extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icons'
+    @goal: -> Goal
+    
+    @directive: -> "Draw at least 5 icons"
+    
+    @instructions: -> """
+      In the Pixel art readability challenge, draw at least 5 icons of any size.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['size (pixel art)']
+    
+    @studyPlanBuilding: -> 'SimCityIndustrial3'
+    
+    @initialize()
+    
+    @completedConditions: -> PAA.Challenges.Drawing.PixelArtReadability.startedTotalCount() >= 5
+    
+    @predecessors: -> [
+      Goal.Icon8
+      Goal.Icon16
+      Goal.Icon32
+    ]
+    
+    activeNotificationId: -> Goal.ReadabilityAnalysisNotification.id()
+    
   @tasks: -> [
     @Learn
-    @Icon8
-    @Icon16
     @Icon32
+    @Icon16
+    @Icon8
+    @Icons
   ]
 
   @finalTasks: -> [
-    @Icon16
+    @Icons
   ]
 
   @initialize()
+
+  class @ReadabilityAnalysisNotification extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "#{Goal.id()}.ReadabilityAnalysisNotification"
+    
+    @message: -> """
+      Don't listen to Pixeltosh too much when it's analyzing readability.
+      It's trying its best, but in the end it's just an old computer without imagination.
+
+      Trust your own judgement and show pixel art to other humans to know if it's readable.
+    """
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @retroClasses: ->
+      head: PAA.PixelPad.Systems.Notifications.Retro.HeadClasses.Smirk
+    
+    @initialize()

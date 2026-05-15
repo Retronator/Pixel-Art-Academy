@@ -12,13 +12,13 @@ class StudyPlan.ConnectionPoint
     connectionPoint.localPosition.set x, y
     connectionPoint
     
-  @createGlobal: (x, y) ->
-    connectionPoint = new @
+  @createGlobal: (x, y, name) ->
+    connectionPoint = new @ name
     connectionPoint.localPosition.set x, y
     connectionPoint.globalPosition.set x, y
     connectionPoint
     
-  constructor: ->
+  constructor: (@name) ->
     @localPosition = new THREE.Vector2
     @globalPosition = new THREE.Vector2
     

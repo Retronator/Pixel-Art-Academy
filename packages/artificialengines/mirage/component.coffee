@@ -118,11 +118,10 @@ class AM.Component extends CommonComponent
 
     components
 
-  # Code based on childComponentsWith.
   parentDataWith: (filterParameter) ->
     filter = _.filterFunction filterParameter
 
-    level = 0
+    level = 1
 
     loop
       data = Template.parentData level

@@ -17,7 +17,7 @@ class LM.Design.Fundamentals.Workbench extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    if LM.Design.Fundamentals.Goals.Invasion.activeAndAvailable()
+    if LM.Design.Fundamentals.Goals.Invasion.available()
       if projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
         if LM.Design.Fundamentals.Goals.Invasion.Start.completed()
           @_invasion?.destroy()

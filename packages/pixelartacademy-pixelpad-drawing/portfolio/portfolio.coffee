@@ -15,7 +15,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
-    Settings: 'Settings'
 
   # Subscriptions
   @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
@@ -41,60 +40,45 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   constructor: (@drawing) ->
     super arguments...
 
-    @sectionHeight = 25
+    @sectionHeight = 23
     @maxInitialGroupHeight = 19
-    @maxInactiveGroupHeight = 5
+    @reducedGroupHeight = 10
+    @minMinimizedGroupHeight = 2
+    @maxMinimizedGroupHeight = 5
+    @inactiveSectionGroupHeight = 4
+    @inactiveSectionLastGroupHeight = 19
     @activeGroupHeight = 150
     @groupsMaxTotalHeight = 180
-    @settingsHeight = 118
     @sectionsMargin = 13
     @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
     
-  getInitialGroupHeight: (groupCount) ->
-    heightPerGroup = Math.floor @groupsMaxTotalHeight / groupCount
-    Math.min heightPerGroup, @maxInitialGroupHeight
-    
-  getInactiveGroupHeight: (groupCount) ->
-    heightPerGroup = Math.floor (@groupsMaxTotalHeight - @activeGroupHeight) / (groupCount - 1)
-    Math.min heightPerGroup, @maxInactiveGroupHeight
-  
-  defaultGroupHeightInActiveSection: ->
-    return @maxInitialGroupHeight unless activeSection = @activeSection()
-
-    @getInitialGroupHeight activeSection.groups().length
-  
-  defaultInactiveGroupHeightInActiveSection: ->
-    return @maxInactiveGroupHeight unless activeSection = @activeSection()
-    
-    @getInactiveGroupHeight activeSection.groups().length
-
   sectionActiveClass: ->
     section = @currentData()
 
     'active' if @activeSection() is section
 
-  groupInSectionActiveClass: ->
+  sectionSubgroupActiveClass: ->
     section = @currentData()
 
-    'group-in-section-active' if @activeSection() is section and @activeGroup()
+    'subgroup-active' if @activeSection() is section and @activeGroups().length
+  
+  assetGroupActiveClass: ->
+    'asset-group-active' if @assetGroupIsActive()
+  
+  groupSubgroupActiveClass: ->
+    group = @currentData()
+    activeGroups = @activeGroups()
+    
+    'subgroup-active' if group in @activeGroups() and activeGroups[group.level + 1]
 
   sectionStyle: ->
     section = @currentData()
-    groups = section.groups()
-    
     activeSection = @activeSection()
-    activeGroup = @activeGroup()
     
     width = @sectionWidth section
     
     if section is activeSection
-      if activeGroup
-        activeSectionHeight = @sectionHeight + (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
-      
-      else
-        activeSectionHeight = @sectionHeight + groups.length * @getInitialGroupHeight groups.length
-        
-      height = activeSectionHeight
+      height = @activeSectionHeight()
       
     else
       height = @inactiveSectionHeight()
@@ -110,16 +94,66 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
   groupStyle: ->
     group = @currentData()
-    section = @parentDataWith 'groups'
+    section = @parentDataWith 'isSection'
     
-    sectionWidth = @sectionWidth section
+    activeSection = @activeSection()
+    activeGroups = @activeGroups()
+    
+    width = @groupWidth group, 0
+    
+    if section is activeSection
+      height = @groupHeight group, activeGroups
+      
+    else
+      parent = @parentDataWith 'groups'
+      
+      if group is _.last parent.groups()
+        height = @inactiveSectionLastGroupHeight
+      
+      else
+        height = @inactiveSectionGroupHeight
+      
+    width: "#{width}rem"
+    height: "#{height}rem"
 
-    width: "#{sectionWidth - 18 - 3 * (section.groups().length - group.index - 1)}rem"
+  groupHeight: (group, activeGroups) ->
+    if group in activeGroups
+      # If the group has assets, it will display at active group height.
+      return @activeGroupHeight if group.assets
+      
+      # The group must have other groups inside. See if a subgroup is active.
+      subgroups = group.groups()
+  
+      if activeSubGroup = activeGroups[group.level + 1]
+        # A child asset group is active. We have other groups collapsed and the active group at its desired height.
+        @activeGroupHeaderHeight() + (subgroups.length - 1) * @inactiveGroupHeight() + @groupHeight activeSubGroup, activeGroups
+      
+      else
+        # No subgroup is active. We have the title of this group plus all sub groups.
+        @maxInitialGroupHeight + subgroups.length * @initialGroupHeight()
+      
+    else if group.level is activeGroups.length
+      @initialGroupHeight()
+      
+    else
+      @inactiveGroupHeight()
+      
+  groupWidth: (group, dataLevel) ->
+    parentDataLevel = dataLevel
+    
+    loop
+      parentDataLevel++
+      return 0 unless parent = Template.parentData parentDataLevel
+      break if parent?.groups
+    
+    parentWidth = if parent.isSection then @sectionWidth parent else @groupWidth parent, parentDataLevel
+    
+    parentWidth - 18 - 3 * (parent.groups().length - group.index - 1)
 
   groupActiveClass: ->
     group = @currentData()
 
-    'active' if @activeGroup() is group
+    'active' if group in @activeGroups()
 
   briefStyle: ->
     assetData = @currentData()
@@ -179,22 +213,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     sections = @sections()
     
     sectionsCount = sections.length
-    sectionsCount++ if @showSettingsSection()
     
+    activeSectionHeight = @activeSectionHeight()
     inactiveSectionHeight = @inactiveSectionHeight()
 
-    if section = @activeSection()
-      top = @sectionsMargin + (sectionsCount - 1) * inactiveSectionHeight + @sectionHeight
-  
-      if groups = section.groups?()
-        if @activeGroup()
-          top += (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
-
-        else
-          top += groups.length * @getInitialGroupHeight groups.length
-
-      else
-        top += @settingsHeight
+    if @activeSection()
+      top = @sectionsMargin + (sectionsCount - 1) * inactiveSectionHeight + activeSectionHeight
         
     else
       top = @sectionsMargin + sectionsCount * inactiveSectionHeight
@@ -220,13 +244,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
     'active' if assetData is @activeAsset()
 
-  showSettingsSection: ->
-    # Only potentially hide settings in Learn Mode.
-    return true unless AB.Router.currentRouteName() is LM.Adventure.id()
-    
-    # Only show settings if there is more than one choice (besides the None option).
-    @editors().length > 2
-
   selectedEditorClass: ->
     editor = @currentData()
     selectedEditorId = @drawing.state('editorId') or null
@@ -244,10 +261,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       'click .section': @onClickSection
       'click .group-header': @onClickGroupHeader
       'click': @onClick
-      'mouseenter .section': @onMouseEnterSection
-      'mouseenter .group-name': @onMouseEnterGroupName
-      'mouseenter .asset': @onMouseEnterAsset
-      'mouseleave .asset': @onMouseLeaveAsset
+      'pointerenter .section': @onPointerEnterSection
+      'pointerenter .group-name': @onPointerEnterGroupName
+      'pointerenter .asset': @onPointerEnterAsset
+      'pointerleave .asset': @onPointerLeaveAsset
       'click .brief': @onClickBrief
       'click .asset': @onClickAsset
       'click .pixel-boy .editor': @onClickPixelPadEditor
@@ -266,20 +283,24 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
       # Reset group if we click on the name, but not one of the inner groups.
       # In that case the group handler will activate a new group in this new section.
-      @activeGroup null unless clickInsideContent
+      @activeGroups [] unless clickInsideContent
 
   onClickGroupHeader: (event) ->
     group = @currentData()
-    section = @parentDataWith 'groups'
+    section = @parentDataWith 'isSection'
     
     # Only open the group if we have an active section or if the group is the only one in the section.
     return unless @activeSection() is section or section.groups().length is 1
 
-    if group is @activeGroup()
-      @activeGroup null
+    activeGroups = @activeGroups()
+    newActiveGroups = activeGroups[0...group.level]
+    
+    if group is _.last activeGroups
+      @activeGroups newActiveGroups
 
     else
-      @activeGroup group
+      newActiveGroups.push group
+      @activeGroups newActiveGroups
 
   onClick: (event) ->
     # If we click outside the clipboard, close current asset.
@@ -288,8 +309,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       return
 
     # If we click outside a group, close current group.
-    if @activeGroup() and not $(event.target).closest('.group').length
-      @activeGroup null
+    if @activeGroups().length and not $(event.target).closest('.group').length
+      @activeGroups []
 
       # Don't let section close as well, if we were clicking inside the current section.
       event.stopPropagation() if @currentData() is @activeSection()
@@ -298,15 +319,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     # If we click outside a section, close current section.
     @activeSection null if @activeSection() and not $(event.target).closest('.section').length
   
-  onMouseEnterSection: (event) ->
+  onPointerEnterSection: (event) ->
     section = @currentData()
     return if section is @activeSection()
     
     @audio.sectionHover()
     
-  onMouseEnterGroupName: (event) ->
+  onPointerEnterGroupName: (event) ->
     group = @currentData()
-    return if group is @activeGroup()
+    return if group in @activeGroups()
     
     return unless activeSection = @activeSection()
     
@@ -315,7 +336,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     @audio.groupHover()
 
-  onMouseEnterAsset: (event) ->
+  onPointerEnterAsset: (event) ->
     assetData = @currentData()
     @hoveredAsset assetData
     @lastHoveredAsset assetData
@@ -323,7 +344,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @audio.assetPan AEc.getPanForElement event.target
     @_assetHoverUnlessFirst assetData
 
-  onMouseLeaveAsset: (event) ->
+  onPointerLeaveAsset: (event) ->
     assetData = @hoveredAsset()
     @hoveredAsset null
 
@@ -384,8 +405,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f4, shift: true}
       console.log "Cheating commences …"
       
-      return unless activeGroup = @activeGroup()
-      return unless activeGroup.thing.assets() and activeGroup.thing.state 'assets'
+      return unless activeGroup = _.last @activeGroups()
+      return unless activeGroup.thing?.assets() and activeGroup.thing.state 'assets'
       
       cheating = =>
         assets = activeGroup.thing.assets()

@@ -162,14 +162,14 @@ class StudyPlan.Instructions
       
       if @flagChangedCount() < 2
         if pixelArtSoftware.allCompleted()
-          flagText = "Click on the flagpole\nto mark this goal complete" unless markedComplete
+          flagText = "Click on the flagpole to\nmark this goal complete" unless markedComplete
           
         else
           if markedComplete
-            flagText = "Click on the flag\nto show tutorials again"
+            flagText = "Click on the flag to\nshow tasks in the to-do list again"
             
           else
-            flagText = "Click on the flagpole\nto hide optional tutorials"
+            flagText = "Click on the flagpole to\nremove optional tutorials from your to-do list"
   
         if flagText
           markup.push
@@ -177,9 +177,9 @@ class StudyPlan.Instructions
               selector: "[data-goalid='#{PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.id()}'] .tile.flag.revealed"
               trackTarget: true
               bounds:
-                x: -50
+                x: -90
                 y: -70
-                width: 120
+                width: 200
                 height: 60
               markings: [
                 line: _.extend {}, arrowBase,

@@ -16,11 +16,11 @@
           <ul class="profiles" {{style profilesStyle}}>
             {{#each profiles}}
               <li class="profile {{profileActiveClass}}" data-id="{{_id}}">
-                <div class="floppy">
+                <div class="floppy {{syncedStorageClasses}}">
                   <div class="shutter"></div>
                   <div class="label">{{#if editEnabled}}
                       {{> LandsOfIllusions.Components.LoadGame.SaveGameName}}
-                    {{else}}{{profileName}}{{/if}}</div>
+                    {{else}}{{debugName}}{{/if}}</div>
                 </div>
               </li>
             {{/each}}
@@ -37,12 +37,14 @@
             <button class="next-button action-button {{nextButtonVisibleClass}}" {{nextButtonDisabledAttribute}}>→</button>
           </div>
         {{/unless}}
-        <div class="loading {{loadingVisibleClass}}">
-          <div class="loading-text {{loadingTextVisibleClass}}">
-            Loading …
-            {{#if showProfileLoadingPercentage}}
-              {{profileLoadingPercentage}}%
-            {{/if}}
+        <div class="progress-overlay {{progressOverlayVisibleClass}}">
+          <div class="loading progres {{loadingVisibleClass}}">
+            <div class="loading-text progress-text {{loadingTextVisibleClass}}">
+              Loading …
+              {{#if showProfileLoadingPercentage}}
+                {{profileLoadingPercentage}}%
+              {{/if}}
+            </div>
           </div>
         </div>
       {{/LandsOfIllusions.Components.Overlay}}

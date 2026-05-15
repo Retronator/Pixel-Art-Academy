@@ -61,7 +61,7 @@ class StudyPlan.TaskInfo extends AM.Component
   onDestroyed: ->
     super arguments...
     
-    @_resizeObserver.disconnect()
+    @_resizeObserver?.disconnect()
   
   visibleClass: ->
     'visible' if @taskId()

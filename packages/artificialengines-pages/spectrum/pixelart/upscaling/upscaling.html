@@ -1,0 +1,31 @@
+<template name="Artificial.Spectrum.Pages.PixelArt.Upscaling">
+  <div class="artificial-spectrum-pages-pixelart-upscaling page">
+    <h1>Artificial Spectrum</h1>
+    <h2>Pixel art upscaling</h2>
+    <p>
+      Upload file: <input class="source-file-input" type="file" accept="image/png"/><br/>
+      Width: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.SourceWidth}}
+      Height: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.SourceHeight}}<br/>
+      Upscale algorithm: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.Algorithm}}<br/>
+      {{#if $is algorithm 'Depixelizer'}}
+        Depixelizer scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerScale}} {{depixelizerScale}}x<br/>
+        Depixelizer color similarity threshold: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerColorSimilarityThreshold}} {{depixelizerColorSimilarityThreshold}}<br/>
+        Depixelizer border width: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerBorderWidth}} {{depixelizerBorderWidth}} px<br/>
+        Depixelizer render mode: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.DepixelizerRenderMode}}
+      {{/if}}
+      {{#if $is algorithm 'Hqx'}}
+        hxq scale: {{> Artificial.Spectrum.Pages.PixelArt.Upscaling.HqxScale}} {{hqxScale}}x
+      {{/if}}
+    </p>
+    <div class="previews">
+      <div class="preview">
+        <h3>Source</h3>
+        <canvas class="source preview-canvas"></canvas>
+      </div>
+      <div class="preview">
+        <h3>Result</h3>
+        <canvas class="result preview-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+</template>

@@ -45,10 +45,8 @@ class AEc.Variable
         
         console.log "Variable", id, "triggered." if AEc.debug
 
-        Meteor.setTimeout =>
+        Tracker.afterFlush =>
           valueField false
-        ,
-          0
         
       else
         value = valueOrInstanceId

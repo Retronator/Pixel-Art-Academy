@@ -35,7 +35,7 @@ class LM.Notifications
       and only works on lines for now.
     """
     
-    @displayStyle: -> @DisplayStyles.Always
+    @displayStyle: -> @DisplayStyles.IfIdle
     
     @condition: ->
       # Show when the player can create artworks.

@@ -74,7 +74,7 @@
         <div class="book-open">
           <div class="page left">
             {{#if onTableOfContents}}
-              <div class="table-of-contents">
+              <div class="table-of-contents {{tableOfContentsFullSpreadClass}}">
                 <div class="pages" {{style tableOfContentsPagesStyle}}>
                   <hgroup class="title">
                     <h1>Contents</h1>
@@ -86,13 +86,17 @@
                       <ol class="icon-entries">
                         {{#each iconEntries}}
                           <li class="icon-entry">
-                            <div class="name">{{name}}</div>
-                            <ul class="sizes">
-                              {{#each iconEntrySizes}}
-                                <li class="size {{iconStatusClass}}">✔</li>
-                              {{/each}}
-                            </ul>
-                            <div class="page-number">{{pageNumber}}</div>
+                            <div class="info-area">
+                              <div class="info">
+                                <div class="name">{{name}}</div>
+                                <ul class="sizes">
+                                  {{#each iconEntrySizes}}
+                                    <li class="size {{iconStatusClass}}">✔</li>
+                                  {{/each}}
+                                </ul>
+                                <div class="page-number">{{pageNumber}}</div>
+                              </div>
+                            </div>
                           </li>
                         {{/each}}
                       </ol>

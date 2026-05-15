@@ -32,14 +32,13 @@ PAE.Line::addOutlinePoints = (core, startingPoint) ->
       core in outlinePixel.outlineCores
 
     if neighborsOnOutline.length > 2
-      # There are multiple neighbors, so we must be on an inside outline. We should
-      # attempt to close the outline around the previous nearby empty spot.
+      # There are multiple neighbors, so we should attempt to continue the outline around the previous nearby empty spot.
       emptySpots = getEmptySpots previousPoint
       
       _.remove neighborsOnOutline, (point) =>
         # For this point to be eligible, it needs to share an empty spot with the current point.
         for neighborEmptySpot in getEmptySpots point
-          return false if _.find emptySpots, (emptySpot) -> emptySpot.x is neighborEmptySpot.x and emptySpot.y is neighborEmptySpot.y
+          return false if _.find emptySpots, (emptySpot) => emptySpot.x is neighborEmptySpot.x and emptySpot.y is neighborEmptySpot.y
 
         true
       
@@ -56,7 +55,7 @@ PAE.Line::addOutlinePoints = (core, startingPoint) ->
       break
     
     @assignPoint nextPoint unless nextPoint in @points
-    nextPoint.assignLine @
+    nextPoint.assignLine @ unless @ in nextPoint.lines
     
     previousPoint = currentPoint
     currentPoint = nextPoint

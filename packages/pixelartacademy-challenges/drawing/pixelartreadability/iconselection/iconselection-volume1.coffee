@@ -10,14 +10,14 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.Volume1 extends P
   @displayName: -> "The Graphics Book of Icons"
 
   @description: -> """
-    Successfully draw at least one 16×16 icon in the book to complete the challenge.
+    Draw icons of various sizes to practice drawing pixel art with limited space.
   """
   
   @volumeNumber: -> 1
   
   @defaultUrl: -> 'the-graphics-book-of-icons'
 
-  @coverIconsCounts: -> 8: 4, 16: 9, 32: 2
+  @coverIconsCounts: -> 8: 5, 16: 9, 32: 2
   
   @initialize()
   

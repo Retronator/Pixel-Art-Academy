@@ -34,11 +34,15 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     stepArea = @stepAreas()[0]
     steps = stepArea.steps()
 
-    # Pixels prom previous steps get repainted, so they have to be preserved. The last step holds the final picture.
-    step.options.preserveCompleted = true for step in steps[..26]
+    for step in steps
+      # Pixels from previous steps get repainted, so they have to be preserved.
+      step.options.preserveCompleted = true
     
-    # Allow extra pixels since markup images cover the canvas and you can accidentally paint in that area.
-    step.options.canCompleteWithExtraPixels = true for step in steps
+      # Allow extra pixels since markup images cover the canvas and you can accidentally paint in that area.
+      step.options.canCompleteWithExtraPixels = true
+    
+    new @constructor.FinalStep @, stepArea,
+      goalPixels: _.last(steps).options.goalPixels
 
   _initialize: ->
     super arguments...
@@ -111,6 +115,15 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     @_setPaletteColorsAutorun?.stop()
     
   Asset = @
+  
+  class @FinalStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.PixelsStep
+    hasPixel: (x, y) ->
+      return true if super arguments...
+
+      # Allow extra pixels since markup images cover the canvas and you can accidentally paint in that area.
+      return true if 9 <= x < 9 + 32 and 52 <= y < 52 + 18
+      return true if 61 <= x < 61 + 160 and 11 <= y < 11 + 90
+      false
   
   class @Context extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Context"

@@ -118,10 +118,11 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     portfolio = @portfolio()
 
     # We only need to handle closing groups when not on an asset.
-    return unless portfolio.activeGroup() and not portfolio.activeAsset()
+    return if portfolio.activeAsset()
 
-    # Close the group.
-    portfolio.activeGroup null
+    # Close the groups showing assets.
+    return unless portfolio.assetGroupIsActive()
+    portfolio.activeGroups _.initial portfolio.activeGroups()
 
     # Inform that we've handled the back button.
     true

@@ -9,16 +9,10 @@ class LOI.Adventure extends LOI.Adventure
   @debugState = false
   @profileIdLocalStorageKey = 'LandsOfIllusions.Adventure.profileId'
   
-  getLocalSyncedStorage: -> null # Override to return a synced storage that will save the game locally.
-  getServerSyncedStorage: -> null # Override to return a synced storage that will save the game to the server.
+  registerSyncedStorages: -> # Override to register any synced storages used.
 
   _initializeState: ->
-    # Prepare local and server storage.
-    @localSyncedStorage = @getLocalSyncedStorage()
-    Persistence.registerSyncedStorage @localSyncedStorage if @localSyncedStorage
-    
-    @serverSyncedStorage = @getServerSyncedStorage()
-    Persistence.registerSyncedStorage @serverSyncedStorage if @serverSyncedStorage
+    @registerSyncedStorages()
     
     # Prepare profile handling.
     @profileId = new ReactiveField null
@@ -133,14 +127,7 @@ class LOI.Adventure extends LOI.Adventure
     
     console.log "Changed profile to", profileId if LOI.debug or LOI.Adventure.debugState
 
-  saveGame: (options) ->
-    # Start syncing the profile to desired storages.
-    if options.local and @localSyncedStorage
-      Persistence.addSyncingToProfile @localSyncedStorage.id()
-      
-    if options.server and @serverSyncedStorage
-      Persistence.addSyncingToProfile @serverSyncedStorage.id()
-  
+  saveGame: ->
     # Store profile ID locally.
     @_storeProfileId()
 

@@ -238,7 +238,9 @@ Package.onUse(function(api) {
 
   api.addFile('mummification/document/persistence/syncedstorages..');
   api.addFile('mummification/document/persistence/syncedstorages/localstorage');
+  api.addFile('mummification/document/persistence/syncedstorages/indexeddb');
   api.addFile('mummification/document/persistence/syncedstorages/filesystem');
+  api.addFile('mummification/document/persistence/syncedstorages/steamcloud');
 
   // We add profile last since it's a persistent document itself.
   api.addFile('mummification/document/persistence/profile');
@@ -360,6 +362,7 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygonalchain');
 
   api.addFile('pyramid/beziercurve');
+  api.addFile('pyramid/bspline');
 
   api.addFile('pyramid/triangulatedsurface..');
   api.addFile('pyramid/triangulatedsurface/triangulatedsurface-getsilhouette');
@@ -480,12 +483,14 @@ Package.onUse(function(api) {
   api.addClientJavascript('spectrum/creature/creaturemeshbone');
   api.addClientJavascript('spectrum/creature/creaturerenderer');
 
-  api.addFile('spectrum/hqx..');
-  api.addJavascript('spectrum/hqx..');
-
   api.addClientJavascript('spectrum/previewgif-client/previewgif');
 
   api.addFile('spectrum/pixelart..');
+  api.addFile('spectrum/pixelart/upscaling..');
+  api.addFile('spectrum/pixelart/upscaling/depixelizer..');
+  api.addJavascript('spectrum/pixelart/upscaling/depixelizer..');
+  api.addFile('spectrum/pixelart/upscaling/hqx..');
+  api.addJavascript('spectrum/pixelart/upscaling/hqx..');
   api.addFile('spectrum/pixelart/pixelart-detectpixelscale');
   api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
   api.addFile('spectrum/pixelart/circle');

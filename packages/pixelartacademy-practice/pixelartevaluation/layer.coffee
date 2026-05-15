@@ -61,6 +61,9 @@ class PAE.Layer
       @_removePoint point for id, point in outlinePoints when point.lines.length is 0
     
   updateArea: (bounds) ->
+    # Mark all points as old so we can discern them from new ones during debugging.
+    point.old = true for point in @points
+    
     # Detect added and removed pixels.
     bounds ?= @pixelArtEvaluation.bitmap.bounds
     
@@ -216,7 +219,7 @@ class PAE.Layer
     for core in @cores
       # Create points on the core outlines.
       for outlinePixel in core.outlinePixels
-        point = _.find outlinePixel.points, (point) -> point.pixels.length is 1
+        point = _.find outlinePixel.points, (point) => point.pixels.length is 1
         
         unless point
           point ?= @_addPoint()
@@ -306,6 +309,9 @@ class PAE.Layer
     
     # Classify lines.
     line.classifyLineParts() for line in newLines
+    
+    # Explicit return to avoid result collection.
+    return
   
   _addPixel: (x, y) ->
     pixel = new PAE.Pixel @, x, y

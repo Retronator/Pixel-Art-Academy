@@ -9,6 +9,7 @@ class Artificial.Pages
     
   constructor: ->
     Artificial.Pages.addPublicPage '/artificial/pyramid/interpolation', Artificial.Pyramid.Pages.Interpolation
+    Artificial.Pages.addPublicPage '/artificial/pyramid/bspline', Artificial.Pyramid.Pages.BSpline
     Artificial.Pages.addPublicPage '/artificial/pyramid/polygonalchain/decimate', Artificial.Pyramid.Pages.PolygonalChain.Decimate
     Artificial.Pages.addPublicPage '/artificial/reality/chemistry/materials', Artificial.Reality.Pages.Chemistry.Materials
     Artificial.Pages.addPublicPage '/artificial/reality/chemistry/materials/scattering', Artificial.Reality.Pages.Chemistry.Materials.Scattering
@@ -17,6 +18,8 @@ class Artificial.Pages
     Artificial.Pages.addPublicPage '/artificial/reality/optics/sky', Artificial.Reality.Pages.Optics.Sky
     Artificial.Pages.addPublicPage '/artificial/reality/ammo', Artificial.Reality.Pages.Ammo
     Artificial.Pages.addPublicPage '/artificial/spectrum/color/chromaticity', Artificial.Spectrum.Pages.Color.Chromaticity
+    Artificial.Pages.addPublicPage '/artificial/spectrum/pixelart/upscaling', Artificial.Spectrum.Pages.PixelArt.Upscaling
+    Artificial.Pages.addPublicPage '/artificial/base/chrome', Artificial.Base.Pages.Chrome
   
     Artificial.Pages.addAdminPage '/admin/artificial/babel', Artificial.Babel.Pages.Admin
     Artificial.Pages.addAdminPage '/admin/artificial/babel/scripts', Artificial.Babel.Pages.Admin.Scripts

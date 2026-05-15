@@ -118,10 +118,14 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
       
     false
   
-  completed: ->
+  completed: -> @_getIconStatusIfRevealedAnalysis()?.completed
+  started: -> @_getIconStatusIfRevealedAnalysis()?.started
+  
+  _getIconStatusIfRevealedAnalysis: ->
     return unless bitmap = @document()
+    return unless bitmap.properties.readabilityAnalysis.revealed
     
-    @constructor.getIconStatus(bitmap).completed
+    @constructor.getIconStatus bitmap
   
   width: -> 56
   height: -> 82

@@ -6,6 +6,15 @@ Persistence = AM.Document.Persistence
 class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   @id: -> 'FileSystem'
   
+  @getApplicationPaths: ->
+    Persistence.SyncedStorages.FileSystem._applicationPaths ?= Desktop.call 'filesystem', 'getApplicationPaths'
+    await Persistence.SyncedStorages.FileSystem._applicationPaths
+    
+  @getUserDataPath: (relativePath) ->
+    applicationPaths = await @getApplicationPaths()
+    return applicationPaths.userData unless relativePath
+    "#{applicationPaths.userData}/#{relativePath}"
+  
   constructor: (@options) ->
     super arguments...
 
@@ -16,12 +25,12 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     @initialize()
 
   initialize: ->
-    applicationPaths = await Desktop.call 'filesystem', 'getApplicationPaths'
+    applicationPaths = await @constructor.getApplicationPaths()
+    
     @storagePath = "#{applicationPaths.userData}/#{@options.relativeDirectoryPath}"
     @backupPath = "#{applicationPaths.userData}/#{@options.relativeBackupDirectoryPath}"
 
-    @lastEditTimes =
-      "#{Persistence.Profile.id()}": {}
+    @lastEditTimes = {}
     
     # Send all profiles to persistence.
     profileJsons = await Desktop.call 'filesystem', 'getProfiles', @storagePath
@@ -30,32 +39,49 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
     for profileJson in profileJsons
       try
-        profile = EJSON.parse profileJson
-        
-        @lastEditTimes[Persistence.Profile.id()][profile._id] = profile.lastEditTime
-  
-        profiles.push profile
+        profiles.push EJSON.parse profileJson
         
       catch error
         console.error "Error parsing profile JSON.", error, profileJson
     
     Persistence.addProfiles @constructor.id(), profiles
   
-    # Listen to loading progress changes.
-    Desktop.on 'filesystem', 'getProfileDocumentsProgress', (event, progressValue) =>
-      @_onLoadProfileProgress progressValue
+    # Listen to loading progress changes. Note: We wire this only once since SteamCloud inherits from FileSystem.
+    unless Persistence.SyncedStorages.FileSystem._getProfileDocumentsProgressWired
+      Desktop.on 'filesystem', 'getProfileDocumentsProgress', (event, progressValue) ->
+        Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress? progressValue
+      
+      Persistence.SyncedStorages.FileSystem._getProfileDocumentsProgressWired = true
   
     @_ready true
     
   ready: -> @_ready()
   
-  loadDocumentsForProfileIdInternal: (profileId, options) ->
+  compressStorage: (profileId, options = {}) ->
+    Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress = options.onProgress
+
+    Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+  
+  loadDocumentsForProfileIdInternal: (profileId, options = {}) ->
     console.log "File system synced storage is loading documents for profile", profileId if Persistence.debug
 
     syncedStorageId = @constructor.id()
   
     documents = {}
-    @_onLoadProfileProgress = options.onProgress
+    
+    reportedProgress = 0
+    reportProgress = (progress) =>
+      # Report progress only when it would make a difference in the display.
+      if progress >= reportedProgress + 0.01 or progress is 1
+        options.onProgress? progress
+        reportedProgress = progress
+        
+        # Give the display a chance to update.
+        await _.waitForNextFrame()
+    
+    Persistence.SyncedStorages.FileSystem._onGetProfileDocumentsProgress = (progress) =>
+      # Loading the profile from disk takes only the first half of the progress (the rest happens below when parsing JSONs).
+      options.onProgress progress * 0.5
     
     try
       unless profileDocumentJsons = await Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
@@ -70,7 +96,16 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
     console.log "Documents retrieved. Parsing JSON …" if Persistence.debug
     
-    for documentClassId, documentJsons of profileDocumentJsons when documentClassId isnt Persistence.Profile.id()
+    @lastEditTimes = {}
+    
+    documentsCount = 0
+    documentsParsedCount = 0
+    
+    for documentClassId, documentJsons of profileDocumentJsons
+      for documentName of documentJsons
+        documentsCount++
+    
+    for documentClassId, documentJsons of profileDocumentJsons
       console.log "#{documentJsons.length} documents for class", documentClassId if Persistence.debug
 
       documents[documentClassId] = {}
@@ -79,31 +114,31 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       for documentName, documentJson of documentJsons
         try
           document = EJSON.parse documentJson
-          documents[documentClassId][document._id] = "#{syncedStorageId}": document
+          documents[documentClassId][document._id] = "#{syncedStorageId}": document unless documentClassId is Persistence.Profile.id()
           @lastEditTimes[documentClassId][document._id] = document.lastEditTime
       
         catch error
           console.error "Error parsing document JSON for", documentClassId, documentName, error
           console.log "JSON content", documentJson
+        
+        documentsParsedCount++
+        await reportProgress 0.5 + documentsParsedCount / documentsCount * 0.5
     
     console.log "Documents successfully parsed." if Persistence.debug
     documents
 
-  addedInternal: (document) -> @_add document
-  changedInternal: (document) -> @_update document
+  addedInternal: (document) -> @_save document
+  changedInternal: (document) -> @_save document
   removedInternal: (document) -> @_delete document
 
-  _add: (document) ->
-    @_update document
-
-  _update: (document) ->
+  _save: (document) ->
     # Check if this is a different version than the one we have.
     documentClassId = document.constructor.id()
     return if EJSON.equals document.lastEditTime, @lastEditTimes[documentClassId]?[document._id]
     
     path = @_getDocumentPath document
     documentJson = EJSON.stringify document.getSourceData()
-    error = await Desktop.call 'filesystem', 'writeFile', path, documentJson
+    error = await Desktop.fetch 'filesystem', 'writeFile', 60000, path, documentJson
     
     if error
       LOI.adventure.showDialogMessage """
@@ -130,7 +165,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       profileId = document._id
       
       try
-        unless backupSucceeded = await Desktop.call 'filesystem', 'backupProfile', "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+        unless backupSucceeded = await Desktop.fetch 'filesystem', 'backupProfile', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
           throw new AE.IOException "Unable to backup profile #{profileId}."
       
       catch error
@@ -142,8 +177,10 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
         throw new AE.ExternalException "Backing up profile directory from the file system failed.", path, error
       
       try
-        unless removeSucceeded = await Desktop.call 'filesystem', 'removeProfile', "#{@storagePath}/#{profileId}"
+        unless removeSucceeded = await Desktop.fetch 'filesystem', 'removeProfile', 60000, "#{@storagePath}/#{profileId}"
           throw new AE.IOException "Unable to remove profile #{profileId}."
+        
+        @lastEditTimes = {}
       
       catch error
         LOI.adventure.showDialogMessage """
@@ -155,4 +192,6 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
     else
       path = @_getDocumentPath document
-      Desktop.call 'filesystem', 'deleteFile', path
+      await Desktop.fetch 'filesystem', 'deleteFile', 60000, path
+    
+      delete @lastEditTimes[documentClassId][document._id]

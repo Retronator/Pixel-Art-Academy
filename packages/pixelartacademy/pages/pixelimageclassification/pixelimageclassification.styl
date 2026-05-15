@@ -1,0 +1,27 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pages-pixelimageclassification
+  .main-area
+    display flex
+    align-items flex-start
+    gap 24px
+
+    .canvas-area
+      max-width 600px
+
+      .preview-canvas
+        width 100%
+        pixel-image-rendering()
+        cursor crosshair
+
+    .results-area
+      display flex
+
+      .classifier-results
+        width 200px
+
+        h3
+          margin-top 0
+
+        .results
+          padding-left 20px

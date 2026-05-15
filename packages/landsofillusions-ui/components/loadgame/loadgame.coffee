@@ -65,8 +65,7 @@ class LOI.Components.LoadGame extends LOI.Component
       # Wait for the dialog to be rendered before you activate it.
       Tracker.afterFlush =>
         # In web apps, adventure and its UI is never created/rendered so don't try to activate it in that case.
-        if @isCreated()
-          @activatable.activate()
+        @activatable.activate() if @isCreated()
     
       new Promise (resolve, reject) =>
         Tracker.autorun (computation) =>
@@ -82,6 +81,7 @@ class LOI.Components.LoadGame extends LOI.Component
           else
             console.log "Desired profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
             LOI.adventure.removeModalDialog @
+            @activatable.deactivate() if @isCreated()
             reject()
             
     else
@@ -199,10 +199,9 @@ class LOI.Components.LoadGame extends LOI.Component
     
     else
       'active' if @loadingProfileId() is profile._id or LOI.adventure.profileId() is profile._id
-
-  profileName: ->
-    profile = @currentData()
-    profile.displayName or profile._id
+  
+  progressOverlayVisibleClass: ->
+    'visible' if @loadingProfileId()
     
   loadingVisibleClass: ->
     'visible' if @loadingVisible()
