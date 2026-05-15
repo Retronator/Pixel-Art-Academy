@@ -39,7 +39,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin exte
   onRendered: ->
     super arguments...
     
-    $clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')
+    @$clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')
     
     # Recalculate the position of the placeholder.
     @autorun (computation) =>
@@ -49,34 +49,43 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin exte
       # Depend on the content above the placeholder.
       @assetInfoChangedDependency.depend()
       
-      # Give a chance for the first page to be rendered.
-      Tracker.afterFlush =>
-        # Make sure we're still rendered.
-        return unless @isRendered()
-        
-        # React to asset info changes.
-        $assetInfo = @$('.asset-info')
-  
-        @_resizeObserver?.disconnect()
-        @_resizeObserver = new ResizeObserver =>
-          @assetInfoChangedDependency.changed()
+      @_updatePreviewPosition()
       
-        @_resizeObserver.observe $assetInfo[0]
-        
-        $assetPlaceholder = @$('.asset-placeholder')
-        
-        # Measure the placeholder relative to the center of the clipboard.
-        assetOffset = $assetPlaceholder.offset()
-        
-        offsetOrigin = $clipboard.offset()
-        offsetOrigin.left += $clipboard.width() / 2
-        offsetOrigin.top += $clipboard.height() / 2
-        
-        scale = LOI.adventure.interface.display.scale()
-        
-        @previewPosition
-          left: (assetOffset.left - offsetOrigin.left) / scale
-          top: (assetOffset.top - offsetOrigin.top) / scale
+  _updatePreviewPosition: ->
+    # Make sure we're still rendered.
+    return unless @isRendered()
+    
+    # React to asset info changes.
+    $assetInfo = @$('.asset-info')
+    
+    # If the first page hasn't rendered yet (as when returning from the second page), wait until it does.
+    unless $assetInfo.length
+      Tracker.afterFlush => @_updatePreviewPosition()
+      return
+      
+    unless $assetInfo[0] is @assetInfo
+      @assetInfo = $assetInfo[0]
+      
+      @_resizeObserver?.disconnect()
+      @_resizeObserver = new ResizeObserver =>
+        @assetInfoChangedDependency.changed()
+    
+      @_resizeObserver.observe @assetInfo
+      
+    $assetPlaceholder = @$('.asset-placeholder')
+    
+    # Measure the placeholder relative to the center of the clipboard.
+    assetOffset = $assetPlaceholder.offset()
+    
+    offsetOrigin = @$clipboard.offset()
+    offsetOrigin.left += @$clipboard.width() / 2
+    offsetOrigin.top += @$clipboard.height() / 2
+    
+    scale = LOI.adventure.interface.display.scale()
+    
+    @previewPosition
+      left: (assetOffset.left - offsetOrigin.left) / scale
+      top: (assetOffset.top - offsetOrigin.top) / scale
     
   onDestroyed: ->
     super arguments...

@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import process from 'process';
-import { app, dialog } from 'electron';
+import { app } from 'electron';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Entry point to your native desktop code.
@@ -64,3 +66,14 @@ export default class Desktop {
         });
     }
 }
+
+app.on('will-quit', () => {
+    try {
+        fs.rmSync(path.join(app.getAppPath(), '.reify-cache'), {
+            recursive: true,
+            force: true
+        });
+    } catch (error) {
+        this.log.error('reify cache cleanup failed:', error);
+    }
+});
