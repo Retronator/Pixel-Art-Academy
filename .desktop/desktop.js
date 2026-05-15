@@ -74,6 +74,6 @@ app.on('will-quit', () => {
             force: true
         });
     } catch (error) {
-        this.log.error('reify cache cleanup failed:', error);
+        console.error('Reify cache cleanup failed.', error);
     }
 });
