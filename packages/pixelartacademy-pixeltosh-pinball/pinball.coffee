@@ -135,7 +135,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Reactively change the interface layout.
     layouts = @constructor.Interface.createLayoutsData @
     
-    @autorun (computation) =>
+    @_layoutAutorun = @autorun (computation) =>
       return unless window = @os.interface.getWindow @windowId
       window.data().set 'contentArea', layouts[@constructor.Interface.determineLayout @]
       
@@ -168,6 +168,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @editorManager null
     @mouse null
     @sceneImage null
+    
+    @_layoutAutorun.stop()
     
     @_macintoshPaletteSubscription.stop()
     

@@ -132,10 +132,177 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
     @displayName: -> "Block breaker"
     @initialize()
   
-  class @Chess extends LM.Content.FutureContent
+  class @Chess extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess'
     @displayName: -> "Chess"
+    @contents: -> [
+      @TwoDimensional
+      @ThreeDimensional
+    ]
+    
     @initialize()
+    
+    status: -> LM.Content.Status.Unlocked
+    
+    constructor: ->
+      super arguments...
+      
+      @progress = new LM.Content.Progress.ManualProgress
+        content: @
+        completed: -> false
+        completedUnitsCount: -> 0
+        requiredUnitsCount: -> 1
+        units: 'chess sets'
+        
+    class @PieceType extends LM.Content
+      constructor: ->
+        super arguments...
+        
+        # TODO: This has to account for both white and black pieces.
+        @progress = new LM.Content.Progress.ManualProgress
+          content: @
+          completed: -> false
+          completedUnitsCount: -> 0
+          requiredUnitsCount: -> 2
+          units: 'colors'
+      
+      status: -> LM.Content.Status.Unlocked
+    
+    class @TwoDimensional extends LM.Content
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional'
+      @displayName: -> "2D"
+      
+      @unlockInstructions: -> "Complete the Pixel art fundamentals: size goal to start the 2D chess project."
+      
+      @contents: -> [
+        @Pawn
+        @Knight
+        @Bishop
+        @Rook
+        @Queen
+        @King
+      ]
+      
+      @initialize()
+      
+      constructor: ->
+        super arguments...
+        
+        @progress = new LM.Content.Progress.ContentProgress
+          content: @
+          units: "chess pieces"
+      
+      status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.Size.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+      class @Pawn extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Pawn'
+        
+        @displayName: -> "Pawn"
+        
+        @initialize()
+      
+      class @Knight extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Knight'
+        
+        @displayName: -> "Knight"
+        
+        @initialize()
+      
+      class @Bishop extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Bishop'
+        
+        @displayName: -> "Bishop"
+        
+        @initialize()
+      
+      class @Rook extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Rook'
+        
+        @displayName: -> "Rook"
+        
+        @initialize()
+      
+      class @Queen extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Queen'
+        
+        @displayName: -> "Queen"
+        
+        @initialize()
+      
+      class @King extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.King'
+        
+        @displayName: -> "King"
+        
+        @initialize()
+    
+    class @ThreeDimensional extends LM.Content
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional'
+      @displayName: -> "3D"
+      
+      @unlockInstructions: -> "Complete the Elements of art: form task to start the 3D chess project."
+      
+      @contents: -> [
+        @Pawn
+        @Knight
+        @Bishop
+        @Rook
+        @Queen
+        @King
+      ]
+      
+      @initialize()
+      
+      constructor: ->
+        super arguments...
+        
+        @progress = new LM.Content.Progress.ContentProgress
+          content: @
+          units: "chess pieces"
+      
+      status: -> if false then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+      
+      class @Pawn extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Pawn'
+        
+        @displayName: -> "Pawn"
+        
+        @initialize()
+      
+      class @Knight extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Knight'
+        
+        @displayName: -> "Knight"
+        
+        @initialize()
+      
+      class @Bishop extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Bishop'
+        
+        @displayName: -> "Bishop"
+        
+        @initialize()
+      
+      class @Rook extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Rook'
+        
+        @displayName: -> "Rook"
+        
+        @initialize()
+      
+      class @Queen extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Queen'
+        
+        @displayName: -> "Queen"
+        
+        @initialize()
+      
+      class @King extends Chess.PieceType
+        @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.King'
+        
+        @displayName: -> "King"
+        
+        @initialize()
   
   class @PixelPaint extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelPaint'

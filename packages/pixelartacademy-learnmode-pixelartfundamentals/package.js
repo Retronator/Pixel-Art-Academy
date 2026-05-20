@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixeltosh-pinball');
+  api.use('retronator:pixelartacademy-pixeltosh-chess');
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixelpad-music');
   api.use('retronator:pixelartacademy-pixelpad-notifications');
@@ -51,6 +52,9 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/goals/pinball..');
   api.addFile('fundamentals/goals/pinball/assetstask');
   api.addFile('fundamentals/goals/pinball/tasks');
+
+  api.addFile('fundamentals/goals/chess..');
+  api.addFile('fundamentals/goals/chess/tasks');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');
