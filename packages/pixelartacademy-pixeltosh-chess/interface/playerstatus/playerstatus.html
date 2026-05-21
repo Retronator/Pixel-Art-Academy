@@ -1,5 +1,11 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.PlayerStatus">
   <div class="pixelartacademy-pixeltosh-programs-chess-interface-playerstatus">
-    PLAYER STATUS
+    <div class="player-status">
+      <div class="currency-area">Currency: <span class="currency">{{chess.gameManager.currency}}</span></div>
+      <div class="pieces">
+        <button class="buy-button pixelartacademy-pixeltosh-os-interface-button">Buy</button>
+        <span class="pieces-count">{{chess.gameManager.ownedPiecesCount}}/16 pieces</span>
+      </div>
+    </div>
   </div>
 </template>

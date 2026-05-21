@@ -24,16 +24,21 @@ Package.onUse(function(api) {
   api.addFile('project-startend');
 
   api.addFile('interfacemanager');
+  api.addFile('gamemanager');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/chessboard..');
+  api.addComponent('interface/chessboard/square..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/about..');
+  api.addComponent('interface/shop..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
   api.addFile('interface/actions/about');
   api.addFile('interface/actions/backtomenu');
+  api.addFile('interface/actions/displayboardcoordinates');
+  api.addFile('interface/actions/flipboard');
   api.addFile('interface/actions/boarddisplaytype');
 });

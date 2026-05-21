@@ -28,6 +28,10 @@ class Chess.Interface
       items: [
         Chess.Interface.Actions.BoardDisplay2D.id()
         Chess.Interface.Actions.BoardDisplay3D.id()
+        null
+        Chess.Interface.Actions.DisplayBoardCoordinates.id()
+        null
+        Chess.Interface.Actions.FlipBoard.id()
       ]
     ]
     

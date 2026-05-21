@@ -1,5 +1,23 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard">
   <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard">
-    CHESS HAPPENS HERE
+    <div class="board {{flippedClass}}">
+      <div class="squares">
+        {{#each squares}}
+          {{#each this}}
+            {{> Render this}}
+          {{/each}}
+        {{/each}}
+      </div>
+      <div class="coordinates {{coordinatesVisibleClass}}">
+        <div class="files">
+          <div class="top border"></div>
+          <div class="bottom border"></div>
+        </div>
+        <div class="ranks">
+          <div class="left border"></div>
+          <div class="right border"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

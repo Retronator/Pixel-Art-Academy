@@ -1,0 +1,25 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Shop">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-shop pixelartacademy-pixeltosh-chess pixelartacademy-pixeltosh-os-interface-rectanglearea">
+    <ol class="pieces">
+      {{#each pieces}}
+        <li class="piece">
+          <span class="name">{{type}}</span>
+          <span class="price"><span class="currency">{{price}}</span></span>
+          <span class="owned">Owned: {{ownedCount}}/{{requiredCount}}</span>
+          <span class="purchase">
+            {{#if needsPiece}}
+              <button class="buy-button pixelartacademy-pixeltosh-os-interface-button" {{buyButtonDisabledAttribute}}>Buy</button>
+            {{/if}}
+          </span>
+        </li>
+      {{/each}}
+    </ol>
+    <div class="player-status">
+      <div class="available">Currency:</div>
+      <span class="currency">{{chess.gameManager.currency}}</span>
+    </div>
+    <div class="actions">
+      <button class="close-button pixelartacademy-pixeltosh-os-interface-button">Close</button>
+    </div>
+  </div>
+</template>

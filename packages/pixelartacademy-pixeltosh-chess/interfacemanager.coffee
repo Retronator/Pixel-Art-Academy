@@ -16,6 +16,8 @@ class Chess.InterfaceManager
   
   constructor: (@chess) ->
     @boardDisplayType = @chess.state.field 'boardDisplayType', default: @constructor.BoardDisplayTypes.TwoDimensional
+    @displayBoardCoordinates = @chess.state.field 'displayBoardCoordinates', default: false
+    @flippedBoard = new ReactiveField false
     
     @screen = new ReactiveField @constructor.Screens.Menu
     

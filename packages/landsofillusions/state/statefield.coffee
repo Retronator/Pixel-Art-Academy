@@ -69,5 +69,9 @@ class LOI.StateField
     stateField.stop = ->
       field.stop()
 
+    # Note: We need this in templates and it's not available from the function because we change the prototype.
+    stateField.apply = (thisArgument, argumentsList) ->
+      Function.prototype.apply.call stateField, thisArgument, argumentsList
+    
     # Return the state getter function (return must be explicit).
     return stateField
