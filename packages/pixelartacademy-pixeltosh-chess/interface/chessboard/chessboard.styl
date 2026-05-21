@@ -3,27 +3,18 @@
 .pixelartacademy-pixeltosh-programs-chess-interface-chessboard
   background white
   height 100%
-  padding 12rem
+  padding 12rem 11rem 11rem 12rem
 
   .board
-    box-sizing border-box
     position relative
     width 177rem
     height 177rem
     padding 3rem
     border 1rem solid black
 
-    .squares
-      display flex
-      flex-flow row wrap-reverse
-      align-content flex-start
-      gap 1rem
-      background black
-      border 1rem solid black
-
     &.flipped
       .squares
-        flex-flow row-reverse wrap
+        flex-flow column wrap-reverse
 
       .coordinates
         .files
@@ -33,6 +24,16 @@
         .ranks
           .border
             flex-direction column
+
+    .squares
+      display flex
+      width 169rem
+      height 169rem
+      flex-flow column-reverse wrap
+      align-content flex-start
+      gap 1rem
+      background black
+      border 1rem solid black
 
     .coordinates
       visibility hidden

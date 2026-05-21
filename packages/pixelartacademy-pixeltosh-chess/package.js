@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'js-chess-engine': '2.4.6'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:pixelartacademy');
@@ -22,6 +26,8 @@ Package.onUse(function(api) {
   api.addFile('assets');
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('piece');
+  api.addFile('gamestate');
 
   api.addFile('interfacemanager');
   api.addFile('gamemanager');
@@ -29,6 +35,7 @@ Package.onUse(function(api) {
   api.addStyledFile('interface..');
   api.addComponent('interface/chessboard..');
   api.addComponent('interface/chessboard/square..');
+  api.addComponent('interface/chessboard/piece..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/about..');

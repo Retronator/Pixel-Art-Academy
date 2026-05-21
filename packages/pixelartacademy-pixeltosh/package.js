@@ -25,6 +25,7 @@ Package.onUse(function(api) {
 
   // Interface needs to be added before programs.
   api.addFile('os/interface..');
+  api.addComponent('os/interface/errordialog..');
   api.addComponent('os/interface/cursor..');
   api.addComponent('os/interface/titlebar..');
   api.addComponent('os/interface/window..');

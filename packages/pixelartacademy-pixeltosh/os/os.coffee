@@ -123,6 +123,10 @@ class PAA.Pixeltosh.OS extends LOI.Component
     @activeProgram program
     
     @interface.currentShortcutsMappingId _.snakeCase program.id()
+
+  throwError: (options) ->
+    dialog = @constructor.Interface.ErrorDialog.createInterfaceData options
+    @interface.displayDialog dialog
   
   addWindow: (windowData) ->
     windowId = @interface.addWindow _.extend {}, windowData,

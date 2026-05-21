@@ -1,3 +1,7 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Square">
-  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square {{typeClass}}"></div>
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square {{typeClass}}">
+    {{#with piece}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Piece}}
+    {{/with}}
+  </div>
 </template>

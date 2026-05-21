@@ -42,7 +42,16 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
       
       PAA.Pixeltosh.Programs.Pinball.Project.start()
 
+    # Create the chess projects when the content is unlocked.
+    @_createChess2DProjectAutorun = Tracker.autorun (computation) =>
+      return unless AM.Document.Persistence.profileReady()
+      return unless LM.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.getAdventureInstance().status() is LM.Content.Status.Unlocked
+      return if PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.state 'activeProjectId'
+      
+      PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.start()
+  
   destroy: ->
     super arguments...
     
     @_createPinballProjectAutorun.stop()
+    @_createChess2DProjectAutorun.stop()

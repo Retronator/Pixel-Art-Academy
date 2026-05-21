@@ -1,0 +1,36 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-errordialog
+  absolute-cover()
+  background image('/pixelartacademy/pixeltosh/os/dither-black.png') 0 0 / 2rem 2rem !important
+
+  .dialog
+    position absolute
+    chicago-mini()
+    left 50%
+    top 50%
+    width 220rem
+    padding 10rem
+    transform translate(-50%, -50%)
+
+    .bomb
+      float left
+      width 25rem
+      height 26rem
+      background-image image('/pixelartacademy/pixeltosh/os/bomb.png')
+
+    .text
+      margin-left 35rem
+
+      .error
+        margin 2rem 0 10rem
+
+      .reason
+        text-transform  uppercase
+        margin-bottom 2rem
+
+      .details
+        margin-bottom 6rem
+
+    .actions
+      text-align right

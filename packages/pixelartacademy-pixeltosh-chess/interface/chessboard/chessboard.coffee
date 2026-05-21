@@ -20,7 +20,7 @@ class Chess.Interface.Chessboard extends LOI.View
       @squares.push file
 
       for rankIndex in [0...8]
-        file[rankIndex] = new @constructor.Square fileIndex, rankIndex
+        file[rankIndex] = new @constructor.Square @, fileIndex, rankIndex
 
   onRendered: ->
     super arguments...
@@ -32,7 +32,7 @@ class Chess.Interface.Chessboard extends LOI.View
       @$('.files .border').append("<div class='coordinate'>#{file}</div>")
 
   coordinatesVisibleClass: ->
-    'visible' if @chess.interfaceManager().displayBoardCoordinates()
+    'visible' if @chess.interfaceManager()?.displayBoardCoordinates()
 
   flippedClass: ->
-    'flipped' if @chess.interfaceManager().flippedBoard()
+    'flipped' if @chess.interfaceManager()?.flippedBoard()

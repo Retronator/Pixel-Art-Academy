@@ -22,8 +22,8 @@ class Chess.Interface.Shop extends FM.Dialog
     @chess = @os.getProgram Chess
 
   pieces: ->
-    for pieceType in _.values Chess.PieceTypes
-      pieceData = Chess.GameManager.PiecesInfo[pieceType]
+    for pieceType in _.values Chess.Piece.Types
+      pieceData = Chess.Piece.InfoForType[pieceType]
 
       _.extend {type: pieceType}, pieceData
 
