@@ -5,11 +5,16 @@ Chess = PAA.Pixeltosh.Programs.Chess
 ChessEngine = require 'js-chess-engine'
 
 class Chess.GameManager
+  @PlayerTypes =
+    Human: 'Human'
+    Computer: 'Computer'
+  
   constructor: (@chess) ->
     @currency = @chess.state.field 'currency', default: 0
     @ownedPieceTypeCounts = @chess.state.field 'ownedPieceTypeCounts', default: {}
     
     @game = new AE.ReactiveWrapper null
+    @gameOptions = new ReactiveField null
 
     @gameState = new AE.LiveComputedField =>
       # In the menu, we show a special board with
@@ -18,7 +23,6 @@ class Chess.GameManager
       # Otherwise, read the state from the engine game.
       return unless game = @game.withUpdates()
       boardConfig = game.exportJson()
-      console.log "new state", boardConfig
       new Chess.GameState boardConfig
 
     # Give the player the first currency if they have no pieces.
@@ -55,8 +59,40 @@ class Chess.GameManager
           throwError 'black', pieceType
           return
   
+    @_playAutorun = @chess.autorun (computation) =>
+      return unless state = @gameState()
+      
+      Tracker.nonreactive =>
+        return unless game = @game()
+        options = @gameOptions()
+        
+        return if state.finished()
+        
+        # Determine whether to process a human or a computer move.
+        currentPlayerType = if state.turn() is Chess.Piece.Colors.White then options.whitePlayerType else options.blackPlayerType
+        
+        if currentPlayerType is @constructor.PlayerTypes.Computer
+          startTime = Date.now()
+          game.aiMove options.difficulty
+          elapsedTime = (Date.now() - startTime) / 1000
+          
+          await _.waitForSeconds Math.max 0, 1 - elapsedTime
+          
+          @game.updated()
+
   destroy: ->
     @_missingAssetsAutorun.stop()
+    @_playAutorun.stop()
+    
+  startNewGame: (options) ->
+    @gameOptions options
+    
+    @chess.interfaceManager().flippedBoard options.white is @constructor.PlayerTypes.Computer and options.black is @constructor.PlayerTypes.Human
+    
+    @game new ChessEngine.Game
+  
+  endGame: ->
+    @game null
   
   generateMenuGameState: ->
     data = Chess.GameState.getEmptyData()

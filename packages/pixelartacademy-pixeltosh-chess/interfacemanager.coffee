@@ -26,14 +26,31 @@ class Chess.InterfaceManager
     # Reactively change the interface layout.
     layouts = Chess.Interface.createLayoutsData @
     
+    menuTabs = {}
+    
+    for tab in layouts[Chess.Interface.Layouts.Menu].remainingArea.remainingArea.tabs
+      menuTabs[tab.name.toLowerCase()] = tab
+    
     @_layoutAutorun = @chess.autorun (computation) =>
       return unless window = @chess.os.interface.getWindow @windowId
       
-      layout = switch @screen()
+      switch @screen()
         when @constructor.Screens.Menu
-          Chess.Interface.Layouts.MenuIntro
+          if @chess.gameManager().ownedPiecesCount()
+            layout = layouts[Chess.Interface.Layouts.Menu]
+            
+            # Only have play available.
+            tabs = [_.clone menuTabs.play]
+            tabs[0].active = true
+            layout.remainingArea.remainingArea.tabs = tabs
+            
+          else
+            layout = layouts[Chess.Interface.Layouts.MenuIntro]
+            
+        when @constructor.Screens.Play
+          layout = layouts[Chess.Interface.Layouts.Play]
       
-      window.data().set 'contentArea', layouts[layout]
+      window.data().set 'contentArea', layout
       
   destroy: ->
     @_layoutAutorun.stop()
@@ -45,3 +62,7 @@ class Chess.InterfaceManager
   enterScreen: (screen) ->
     return if @screen() is screen
     @screen screen
+    
+    switch screen
+      when @constructor.Screens.Menu
+        @chess.gameManager().endGame()

@@ -35,7 +35,8 @@ class Chess.Interface
       ]
     ]
     
-  @createShortcuts: -> {}
+  @createShortcuts: ->
+    "#{Chess.Interface.Actions.FlipBoard.id()}": key: AC.Keys.f
     
   @createInterfaceData: ->
     type: PAA.Pixeltosh.Program.View.id()
@@ -52,7 +53,7 @@ class Chess.Interface
       dockSide: FM.SplitView.DockSide.Left
       mainArea:
         contentComponentId: @Chessboard.id()
-        width: 200
+        width: 199
       remainingArea:
         type: FM.SplitView.id()
         fixed: true
@@ -62,3 +63,32 @@ class Chess.Interface
           height: 152
         remainingArea:
           contentComponentId: @PlayerStatus.id()
+
+    "#{@Layouts.Menu}":
+      type: FM.SplitView.id()
+      fixed: true
+      dockSide: FM.SplitView.DockSide.Left
+      mainArea:
+        contentComponentId: @Chessboard.id()
+        width: 199
+      remainingArea:
+        type: FM.SplitView.id()
+        fixed: true
+        dockSide: FM.SplitView.DockSide.Bottom
+        styleClass: 'menu-sidebar'
+        mainArea:
+          contentComponentId: @PlayerStatus.id()
+          height: 45
+        remainingArea:
+          type: FM.TabbedView.id()
+          tabs: [
+            name: 'Lessons'
+            contentComponentId: @Intro.id()
+          ,
+            name: 'Play'
+            contentComponentId: @PlayStart.id()
+          ]
+          allowClosing: false
+
+    "#{@Layouts.Play}":
+      contentComponentId: @Chessboard.id()

@@ -40,6 +40,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/chessboard/piece..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
+  api.addComponent('interface/playstart..');
   api.addComponent('interface/about..');
   api.addComponent('interface/shop..');
 

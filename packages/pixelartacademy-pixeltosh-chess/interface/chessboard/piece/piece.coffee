@@ -25,4 +25,3 @@ class Chess.Interface.Chessboard.Piece extends AM.Component
 
   bitmapImageOptions: ->
     bitmap: => @bitmap()
-    loadPalette: true

@@ -17,3 +17,7 @@ class Chess.GameState
   constructor: (@data) ->
 
   getPieceAt: (fileIndex, rankIndex) -> Chess.Piece.fromLetter @data.pieces[@constructor.getSquareName fileIndex, rankIndex]
+
+  turn: -> if @data.turn is 'white' then Chess.Piece.Colors.White else Chess.Piece.Colors.Black
+  
+  finished: -> @data.isFinished

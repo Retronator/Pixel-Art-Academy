@@ -46,11 +46,18 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @interfaceManager new @constructor.InterfaceManager @
     @gameManager new @constructor.GameManager @
     
+    # Subscribe to the macintosh palette.
+    @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
+    
   unload: ->
     @interfaceManager()?.destroy()
     @gameManager()?.destroy()
     
     @interfaceManager null
     @gameManager null
+    
+    @_macintoshPaletteSubscription.stop()
   
   menuItems: -> @constructor.Interface.createMenuItems()
+
+  shortcuts: -> @constructor.Interface.createShortcuts()
