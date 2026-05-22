@@ -60,7 +60,7 @@ class LOI.Assets.Bitmap.Area
     # See if the pixel exists.
     return unless flags = @attributes.flags.getPixel x, y
     
-    pixel = {}
+    pixel = {x, y}
 
     for attributeId in @pixelFormat.attributeIds
       # If the attribute has a flag value, make sure the flag is present for this pixel.
@@ -75,7 +75,7 @@ class LOI.Assets.Bitmap.Area
     # Make sure the pixel is in bounds.
     return unless 0 <= x < @width and 0 <= y < @height
   
-    pixel = {}
+    pixel = {x, y}
   
     for attributeId in @pixelFormat.attributeIds
       pixel[attributeId] = @attributes[attributeId].getPixel x, y

@@ -25,15 +25,14 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   
   @initialize()
   
+  @chessSet2D: -> @state('chessSet2D') or @Project.TwoDimensional.state 'activeProjectId'
+  
   constructor: ->
     super arguments...
     
     # Prepare all reactive fields.
     @interfaceManager = new ReactiveField null
     @gameManager = new ReactiveField null
-    
-    @projectId2D = new AE.LiveComputedField =>
-      @state('chessSet2D') or @constructor.Project.TwoDimensional.state('activeProjectId')
     
   destroy: ->
     super arguments...

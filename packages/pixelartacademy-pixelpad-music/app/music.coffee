@@ -137,7 +137,7 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     
     # If we have a tape inserted, start at the player.
     @autorun (computation) =>
-      return unless AMu.Document.Persistence.profileReady()
+      return unless LOI.adventure.gameState()
       computation.stop()
       
       if PAA.PixelPad.Systems.Music.state 'tapeId'

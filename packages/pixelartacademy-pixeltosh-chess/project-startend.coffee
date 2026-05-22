@@ -24,7 +24,7 @@ class Chess.Project.TwoDimensional extends Chess.Project.TwoDimensional
   
   @end: ->
     # Make sure the player has an active project.
-    projectId = Chess.Project.state 'activeProjectId'
+    projectId = Chess.Project.TwoDimensional.state 'activeProjectId'
     throw new AE.InvalidOperationException "Profile does not have an active Chess 2D project." unless projectId
     
     # End the project.

@@ -19,11 +19,13 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixeltosh');
+  api.use('retronator:pixelartacademy-practice');
 
   api.export('PixelArtAcademy');
 
   api.addFile('chess');
-  api.addFile('assets');
+  api.addFile('assets..');
+  api.addUnstyledComponent('assets/briefcomponent..');
   api.addFile('project');
   api.addFile('project-startend');
   api.addFile('piece');

@@ -22,7 +22,7 @@ class PAA.Chapter extends LOI.Adventure.Chapter
     
     # Notify tasks when they activate.
     @_activeTasks = new AE.ReactiveArray =>
-      return [] unless Persistence.profileReady()
+      return [] unless LOI.adventure.gameState()
       _.filter @tasks, (task) => task.active()
     ,
       added: (task) =>
@@ -30,7 +30,7 @@ class PAA.Chapter extends LOI.Adventure.Chapter
 
     # Listen to all active automatic tasks.
     @_automaticTasksAutorun = Tracker.autorun (computation) =>
-      return unless Persistence.profileReady()
+      return unless LOI.adventure.gameState()
 
       for task in automaticTasks when task.active()
         if task.completedConditions()

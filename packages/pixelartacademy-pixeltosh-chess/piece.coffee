@@ -59,9 +59,9 @@ class Chess.Piece
  
     new @ color, type
     
-  @getLetter: (@color, @type) ->
-    letter = @TypeLetters[@type]
-    letter.toUpperCase() if @color is @Colors.White
+  @getLetter: (color, type) ->
+    letter = @TypeLetters[type]
+    letter = letter.toUpperCase() if color is @Colors.White
     letter
     
   constructor: (@color, @type) ->

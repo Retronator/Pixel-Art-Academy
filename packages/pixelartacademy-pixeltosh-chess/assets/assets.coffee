@@ -1,18 +1,105 @@
 AE = Artificial.Everywhere
-AM = Artificial.Mirage
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
+
+TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class Chess.Assets
   class @Asset extends PAA.Practice.Project.Asset.Bitmap
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @backgroundColor: -> new THREE.Color '#edddb5'
+    
+    @briefComponentClass: -> Chess.Assets.BriefComponent
+
+    @copySourceAsset: -> # Override if you can copy this asset's art from another asset.
+
+    @addToProject: (projectId) ->
+      assetId = @id()
+      
+      # Load the Macintosh palette.
+      macintoshPalette = await new Promise (resolve) =>
+        Tracker.autorun (computation) =>
+          LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
+          return unless palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Macintosh
+          computation.stop()
+          resolve palette
+  
+      # Create the bitmap.
+      creationTime = new Date
+      
+      dimensions = @fixedDimensions()
+      width = dimensions.width
+      height = dimensions.height
+      
+      bitmapData =
+        versioned: true
+        profileId: LOI.adventure.profileId()
+        creationTime: creationTime
+        lastEditTime: creationTime
+        name: @displayName()
+        bounds:
+          fixed: true
+          left: 0
+          right: width - 1
+          top: 0
+          bottom: height - 1
+        pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor'
+        palette:
+          _id: macintoshPalette._id
+          
+      bitmapId = LOI.Assets.Bitmap.documents.insert bitmapData
+  
+      # Add the bitmap to the project assets.
+      PAA.Practice.Project.documents.update projectId,
+        $push:
+          assets:
+            id: assetId
+            type: @type()
+            bitmapId: bitmapId
+        $set:
+          lastEditTime: creationTime
+          
+    solve: ->
+      # Load the default image.
+      imageFileName = @id().toLowerCase().split('.')[-2..].join('-')
+      imageUrl = "/pixelartacademy/pixeltosh/programs/chess/#{imageFileName}.png"
+      
+      pixels = await new Promise (resolve) =>
+        imagePixels = new TutorialBitmap.Resource.ImagePixels imageUrl,
+          palette: =>
+            LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Macintosh
+        
+        Tracker.autorun (computation) =>
+          return unless imagePixels.ready()
+          computation.stop()
+          
+          resolve imagePixels.pixels()
+          
+      @_setPixels pixels
+      
+    _setPixels: (pixels) ->
+      assetId = @id()
+      bitmap = @bitmap()
+      layerAddress = [0]
+      action = new AM.Document.Versioning.Action assetId
+    
+      unless bitmap.getLayer [0]
+        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer assetId, bitmap, []
+        AM.Document.Versioning.executePartialAction bitmap, addLayerAction
+        action.append addLayerAction
+        
+      strokeAction = new LOI.Assets.Bitmap.Actions.Stroke assetId, bitmap, layerAddress, pixels
+      AM.Document.Versioning.executePartialAction bitmap, strokeAction
+      action.append strokeAction
+      
+      AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, action, new Date
   
   class @TwoDimensional
     class @Asset extends Assets.Asset
-      @fixedDimensions: -> width: 16, height: 16
+      @fixedDimensions: -> width: 20, height: 20
     
     class @Pawn
       class @White extends TwoDimensional.Asset
@@ -21,9 +108,9 @@ class Chess.Assets
         @displayName: -> "White pawn"
         
         @description: -> """
-          Draw a white pawn piece.
+          The simplest of the chess pieces.
           
-          It is recommended to use dark lines, light coloring and shading, as well as an additional light outline around the whole piece to make it stand out on dark squares.
+          It is recommended to use dark line art filled with a light color, as well as an additional light outline around the whole piece to make it stand out on dark squares.
         """
         
         @initialize()
@@ -34,11 +121,13 @@ class Chess.Assets
         @displayName: -> "Black pawn"
         
         @description: -> """
-          Draw a black pawn piece.
+          The black variant of the pawn piece.
           
-          You can copy the white pawn using the option below and change the coloring and shading to make it black. Keep the light outline around the whole piece to make it stand out on dark squares.
+          As a starting point, you can copy the white pawn artwork using the option below. Then, change the coloring and shading to make the piece black. Keep the light outline around the whole piece to make it stand out on dark squares.
         """
-        
+
+        @copySourceAsset: -> Pawn.White
+
         @initialize()
     
     class @Knight
@@ -48,11 +137,13 @@ class Chess.Assets
         @displayName: -> "White knight"
         
         @description: -> """
-          Draw a white knight piece.
+          The L-moving piece, typically symbolized as a horse.
           
           You can copy the base from the white pawn using the option below.
         """
-    
+
+        @copySourceAsset: -> TwoDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends TwoDimensional.Asset
@@ -61,11 +152,13 @@ class Chess.Assets
         @displayName: -> "Black knight"
         
         @description: -> """
-          Draw a black knight piece.
+          The black variant of the knight piece.
           
           You can copy the base from the white knight using the option below.
         """
-    
+
+        @copySourceAsset: -> Knight.White
+
         @initialize()
     
     class @Bishop
@@ -75,11 +168,13 @@ class Chess.Assets
         @displayName: -> "White bishop"
         
         @description: -> """
-          Draw a white bishop piece.
+          The diagonal-moving piece, typically distinguished by a pointed top.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> TwoDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends TwoDimensional.Asset
@@ -88,11 +183,13 @@ class Chess.Assets
         @displayName: -> "Black bishop"
         
         @description: -> """
-          Draw a black bishop piece.
+          The black variant of the bishop piece.
           
           You can copy the base from the white bishop using the option below.
         """
-        
+
+        @copySourceAsset: -> Bishop.White
+
         @initialize()
     
     class @Rook
@@ -102,11 +199,13 @@ class Chess.Assets
         @displayName: -> "White rook"
         
         @description: -> """
-          Draw a white rook piece.
+          The straight-moving piece, often depicted as a tower.
 
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> TwoDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends TwoDimensional.Asset
@@ -115,11 +214,13 @@ class Chess.Assets
         @displayName: -> "Black rook"
         
         @description: -> """
-          Draw a black rook piece.
+          The black variant of the rook piece.
           
           You can copy the base from the white rook using the option below.
         """
-        
+
+        @copySourceAsset: -> Rook.White
+
         @initialize()
     
     class @Queen
@@ -129,11 +230,13 @@ class Chess.Assets
         @displayName: -> "White queen"
         
         @description: -> """
-          Draw a white queen piece.
+          The strongest piece in chess, typically represented as a crown.
 
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> TwoDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends TwoDimensional.Asset
@@ -142,9 +245,13 @@ class Chess.Assets
         @displayName: -> "Black queen"
         
         @description: -> """
-          Draw a black queen piece. You can copy the base from the white queen using the option below.
+          The black variant of the queen piece.
+
+          You can copy the base from the white queen using the option below.
         """
-        
+
+        @copySourceAsset: -> Queen.White
+
         @initialize()
     
     class @King
@@ -154,11 +261,28 @@ class Chess.Assets
         @displayName: -> "White king"
         
         @description: -> """
-          Draw a white king piece.
+          The piece that needs to be checkmated. It's most often distinguished by a cross on its crown.
 
           You can copy the base from the white pawn using the option below.
         """
+
+        @copySourceAsset: -> TwoDimensional.Pawn.White
+
+        @initialize()
+      
+      class @Black extends TwoDimensional.Asset
+        @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.King.Black'
         
+        @displayName: -> "Black king"
+        
+        @description: -> """
+          The black variant of the king piece.
+
+          You can copy the base from the white king using the option below.
+        """
+
+        @copySourceAsset: -> King.White
+
         @initialize()
   
   class @ThreeDimensional
@@ -172,9 +296,9 @@ class Chess.Assets
         @displayName: -> "White pawn"
         
         @description: -> """
-          Draw a white pawn piece.
+          The simplest of the chess pieces.
           
-          It is recommended to use dark lines, light coloring and shading, as well as an additional light outline around the whole piece to make it stand out on dark squares.
+          It is recommended to use dark line art filled with a light color, as well as an additional light outline around the whole piece to make it stand out on dark squares.
         """
         
         @initialize()
@@ -185,11 +309,13 @@ class Chess.Assets
         @displayName: -> "Black pawn"
         
         @description: -> """
-          Draw a black pawn piece.
+          The black variant of the pawn piece.
           
-          You can copy the white pawn using the option below and change the coloring and shading to make it black. Keep the light outline around the whole piece to make it stand out on dark squares.
+          As a starting point, you can copy the white pawn artwork using the option below. Then, change the coloring and shading to make the piece black. Keep the light outline around the whole piece to make it stand out on dark squares.
         """
-        
+
+        @copySourceAsset: -> Pawn.White
+
         @initialize()
     
     class @Knight
@@ -199,11 +325,13 @@ class Chess.Assets
         @displayName: -> "White knight"
         
         @description: -> """
-          Draw a white knight piece.
+          The L-moving piece, typically symbolized as a horse.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> ThreeDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends ThreeDimensional.Asset
@@ -212,11 +340,13 @@ class Chess.Assets
         @displayName: -> "Black knight"
         
         @description: -> """
-          Draw a black knight piece.
+          The black variant of the knight piece.
 
           You can copy the base from the white knight using the option below.
         """
-        
+
+        @copySourceAsset: -> Knight.White
+
         @initialize()
     
     class @Bishop
@@ -226,11 +356,13 @@ class Chess.Assets
         @displayName: -> "White bishop"
         
         @description: -> """
-          Draw a white bishop piece.
+          The diagonal-moving piece, typically distinguished by a pointed top.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> ThreeDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends ThreeDimensional.Asset
@@ -239,11 +371,13 @@ class Chess.Assets
         @displayName: -> "Black bishop"
         
         @description: -> """
-          Draw a black bishop piece.
+          The black variant of the bishop piece.
           
           You can copy the base from the white bishop using the option below.
         """
-        
+
+        @copySourceAsset: -> Bishop.White
+
         @initialize()
     
     class @Rook
@@ -253,11 +387,13 @@ class Chess.Assets
         @displayName: -> "White rook"
         
         @description: -> """
-          Draw a white rook piece.
+          The straight-moving piece, often depicted as a tower.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> ThreeDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends ThreeDimensional.Asset
@@ -266,11 +402,13 @@ class Chess.Assets
         @displayName: -> "Black rook"
         
         @description: -> """
-          Draw a black rook piece.
+          The black variant of the rook piece.
           
           You can copy the base from the white rook using the option below.
         """
-        
+
+        @copySourceAsset: -> Rook.White
+
         @initialize()
     
     class @Queen
@@ -280,11 +418,13 @@ class Chess.Assets
         @displayName: -> "White queen"
         
         @description: -> """
-          Draw a white queen piece.
+          The strongest piece in chess, typically represented as a crown.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> ThreeDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends ThreeDimensional.Asset
@@ -293,11 +433,13 @@ class Chess.Assets
         @displayName: -> "Black queen"
         
         @description: -> """
-          Draw a black queen piece.
+          The black variant of the queen piece.
           
           You can copy the base from the white queen using the option below.
         """
-        
+
+        @copySourceAsset: -> Queen.White
+
         @initialize()
     
     class @King
@@ -307,11 +449,13 @@ class Chess.Assets
         @displayName: -> "White king"
         
         @description: -> """
-          Draw a white king piece.
+          The piece that needs to be checkmated. It's most often distinguished by a cross on its crown.
           
           You can copy the base from the white pawn using the option below.
         """
-        
+
+        @copySourceAsset: -> ThreeDimensional.Pawn.White
+
         @initialize()
       
       class @Black extends ThreeDimensional.Asset
@@ -320,9 +464,11 @@ class Chess.Assets
         @displayName: -> "Black king"
         
         @description: -> """
-          Draw a black king piece.
+          The black variant of the king piece.
           
           You can copy the base from the white king using the option below.
         """
-        
+
+        @copySourceAsset: -> King.White
+
         @initialize()

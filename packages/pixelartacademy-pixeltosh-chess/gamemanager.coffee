@@ -33,7 +33,7 @@ class Chess.GameManager
       return if @chess.os.interface.dialogs().length
       
       return unless LOI.adventure.gameState()
-      return unless project = PAA.Practice.Project.documents.findOne @chess.projectId2D()
+      return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
       
       assetIsDrawn = (assetId) =>
         return unless asset = _.find project.assets, (asset) => asset.id is assetId
