@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Play.MovesHistory">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-play-moveshistory">
+    {{#PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea scrollbars}}
+      <ol class="moves">
+        {{#each moves}}
+          <li class="move">
+            {{#each plies}}
+              <div class="ply {{colorClass}} {{activeClass}}" data-cursor="pointer">{{moveText}}</div>
+            {{/each}}
+          </li>
+        {{/each}}
+      </ol>
+      {{#if endingStatus}}
+        <div class="ending-status">{{endingStatus}}</div>
+      {{/if}}
+    {{/PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea}}
+  </div>
+</template>

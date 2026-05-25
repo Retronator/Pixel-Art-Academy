@@ -18,6 +18,6 @@ class Chess.Interface.PlayStart extends LOI.View
       
   onClickPlayButton: (event) ->
     @chess.interfaceManager().enterScreen Chess.InterfaceManager.Screens.Play
-    @chess.gameManager().startNewGame
-      whitePlayerType: Chess.GameManager.PlayerTypes.Computer
+    @chess.gameManager().startGame
+      whitePlayerType: Chess.GameManager.PlayerTypes.Human
       blackPlayerType: Chess.GameManager.PlayerTypes.Computer

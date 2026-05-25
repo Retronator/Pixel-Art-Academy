@@ -15,11 +15,16 @@ class Chess.GameManager
     
     @game = new AE.ReactiveWrapper null
     @gameOptions = new ReactiveField null
+    @plyHistory = new ReactiveField []
+    @previewedHistoryPlyNumber = new ReactiveField null
 
     @gameState = new AE.LiveComputedField =>
-      # In the menu, we show a special board with
-      return @generateMenuGameState() if @chess.interfaceManager()?.inMenu()
+      # In the menu, we show a special board with the purchased pieces.
+      return @_generateMenuGameState() if @chess.interfaceManager()?.inMenu()
       
+      previewedHistoryPlyNumber = @previewedHistoryPlyNumber()
+      return @plyHistory()[previewedHistoryPlyNumber].gameState if previewedHistoryPlyNumber?
+
       # Otherwise, read the state from the engine game.
       return unless game = @game.withUpdates()
       boardConfig = game.exportJson()
@@ -61,62 +66,144 @@ class Chess.GameManager
   
     @_playAutorun = @chess.autorun (computation) =>
       return unless state = @gameState()
+      return if state.finished()
       
       Tracker.nonreactive =>
         return unless game = @game()
+        return unless @displayingLivePosition()
+
+        # Determine whether it's computer's turn.
         options = @gameOptions()
-        
-        return if state.finished()
-        
-        # Determine whether to process a human or a computer move.
         currentPlayerType = if state.turn() is Chess.Piece.Colors.White then options.whitePlayerType else options.blackPlayerType
+        return unless currentPlayerType is @constructor.PlayerTypes.Computer
         
-        if currentPlayerType is @constructor.PlayerTypes.Computer
-          startTime = Date.now()
-          game.aiMove options.difficulty
-          elapsedTime = (Date.now() - startTime) / 1000
-          
-          await _.waitForSeconds Math.max 0, 1 - elapsedTime
-          
-          @game.updated()
+        # Make a move, but simulate as if it took a second to calculate.
+        osCursor = @chess.os.cursor()
+        osCursor.wait @
+        startTime = Date.now()
+        move = Chess.Move.fromEngine game.aiMove options.difficulty
+        elapsedTime = (Date.now() - startTime) / 1000
+        
+        await _.waitForSeconds Math.max 0, 1 - elapsedTime
+        
+        osCursor.endWait @
+        @game.updated()
+        @_recordMove move
 
   destroy: ->
     @_missingAssetsAutorun.stop()
     @_playAutorun.stop()
     
-  startNewGame: (options) ->
-    @gameOptions options
-    
-    @chess.interfaceManager().flippedBoard options.white is @constructor.PlayerTypes.Computer and options.black is @constructor.PlayerTypes.Human
-    
-    @game new ChessEngine.Game
-  
-  endGame: ->
-    @game null
-  
-  generateMenuGameState: ->
+  _generateMenuGameState: ->
     data = Chess.GameState.getEmptyData()
     
     for fileIndex in [0...@ownedPiecesCount Chess.Piece.Types.Pawn]
-      data.pieces[Chess.GameState.getSquareName fileIndex, 1] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Pawn
+      data.pieces[Chess.Square[fileIndex][1].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Pawn
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Knight]
-      data.pieces[Chess.GameState.getSquareName 1 + pieceIndex * 5, 0] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Knight
+      data.pieces[Chess.Square[1 + pieceIndex * 5][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Knight
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Rook]
-      data.pieces[Chess.GameState.getSquareName pieceIndex * 7, 0] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Rook
+      data.pieces[Chess.Square[pieceIndex * 7][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Rook
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Bishop]
-      data.pieces[Chess.GameState.getSquareName 2 + pieceIndex * 3, 0] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Bishop
+      data.pieces[Chess.Square[2 + pieceIndex * 3][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Bishop
     
     if @ownedPiecesCount Chess.Piece.Types.Queen
-      data.pieces[Chess.GameState.getSquareName 3, 0] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Queen
+      data.pieces[Chess.Square[3][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Queen
     
     if @ownedPiecesCount Chess.Piece.Types.King
-      data.pieces[Chess.GameState.getSquareName 4, 0] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
+      data.pieces[Chess.Square[4][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
     
     new Chess.GameState data
     
+  startGame: (options) ->
+    @gameOptions options
+    @plyHistory []
+    @previewedHistoryPlyNumber null
+
+    # Determine the starting board orientation.
+    @chess.interfaceManager().flippedBoard options.whitePlayerType is @constructor.PlayerTypes.Computer and options.blackPlayerType is @constructor.PlayerTypes.Human
+
+    # Create a new game with white able to make an ambiguous knight move.
+    @game new ChessEngine.Game
+
+    @plyHistory [
+      number: 0
+      gameState: new Chess.GameState EJSON.clone @game().exportJson()
+    ]
+
+  endGame: ->
+    @game null
+    @plyHistory []
+    @previewedHistoryPlyNumber null
+
+  getLegalMovesFromSquare: (square) ->
+    return [] unless game = @game()
+
+    moves = game.moves square.name
+    return [] unless moves[square.name]
+
+    Chess.Square[squareName] for squareName in moves[square.name]
+
+  move: (move) ->
+    unless game = @game()
+      console.warn "Tried to move when there was no game is active."
+      return
+
+    unless @displayingLivePosition()
+      console.warn "Tried to move when we weren't displaying the live position."
+      return
+
+    unless @humanCanMove()
+      console.warn "Tried to move when it wasn't the human's turn."
+      return
+
+    unless move.to in @getLegalMovesFromSquare move.from
+      console.warn "Tried to move to an illegal square."
+      return
+
+    game.move move.from.name, move.to.name
+    @game.updated()
+
+    @_recordMove move
+
+  _recordMove: (move) ->
+    plyHistory = @plyHistory()
+
+    plyHistory.push
+      number: plyHistory.length
+      move: move
+      gameState: new Chess.GameState EJSON.clone @game().exportJson()
+
+    @plyHistory plyHistory
+
+  displayPosition: (plyNumber) ->
+    if plyNumber is @livePlyNumber()
+      @previewedHistoryPlyNumber null
+
+    else
+      @previewedHistoryPlyNumber plyNumber
+
+  currentPlayerType: ->
+    return unless state = @gameState()
+    return unless options = @gameOptions()
+
+    if state.turn() is Chess.Piece.Colors.White then options.whitePlayerType else options.blackPlayerType
+
+  humanCanMove: ->
+    return unless @displayingLivePosition()
+
+    @currentPlayerType() is @constructor.PlayerTypes.Human
+
+  currentDisplayedPlyNumber: -> @previewedHistoryPlyNumber() ? @livePlyNumber()
+
+  livePlyNumber: -> @plyHistory().length - 1
+
+  liveGameState: -> _.last(@plyHistory()).gameState
+
+  displayingLivePosition: -> not @previewedHistoryPlyNumber()?
+
   ownedPiecesCount: (pieceType) ->
     counts = @ownedPieceTypeCounts()
 

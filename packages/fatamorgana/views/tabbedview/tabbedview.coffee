@@ -13,7 +13,7 @@ class FM.TabbedView extends FM.View
     super arguments...
     
     @activeTabIndex = new ComputedField =>
-      tabbedViewData = @data()
+      return unless tabbedViewData = @data()
       _.findIndex tabbedViewData.get('tabs'), (tab) => tab.active
 
   activeClass: ->

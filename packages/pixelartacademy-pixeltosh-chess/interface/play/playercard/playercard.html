@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Play.PlayerCard">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-play-playercard">
+    <div class="king">
+      {{#with kingPiece}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Piece}}
+      {{/with}}
+    </div>
+    <div class="details">
+      <div class="name">{{name}}</div>
+      <div class="clock">00:00:00</div>
+    </div>
+  </div>
+</template>

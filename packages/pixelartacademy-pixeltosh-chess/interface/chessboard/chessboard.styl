@@ -1,9 +1,11 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-chess-interface-chessboard
-  background white
+  position relative
+  z-index 0
   height 100%
   padding 11rem 11rem 12rem 11rem
+  background white
 
   .board
     position relative
@@ -39,7 +41,6 @@
       visibility hidden
       color black
       pixel-text-outline white true 1
-      text-transform uppercase
       small-print()
 
       &.visible

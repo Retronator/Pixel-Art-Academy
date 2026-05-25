@@ -75,7 +75,7 @@ class Chess.Interface
         type: FM.SplitView.id()
         fixed: true
         dockSide: FM.SplitView.DockSide.Bottom
-        styleClass: 'menu-sidebar'
+        styleClass: 'pixelartacademy-pixeltosh-chess-interface-sidebar'
         mainArea:
           contentComponentId: @PlayerStatus.id()
           height: 45
@@ -91,4 +91,20 @@ class Chess.Interface
           allowClosing: false
 
     "#{@Layouts.Play}":
-      contentComponentId: @Chessboard.id()
+      type: FM.SplitView.id()
+      fixed: true
+      dockSide: FM.SplitView.DockSide.Left
+      mainArea:
+        contentComponentId: @Chessboard.id()
+        width: 199
+      remainingArea:
+        type: FM.TabbedView.id()
+        styleClass: 'pixelartacademy-pixeltosh-chess-interface-sidebar'
+        tabs: [
+          name: 'Play'
+          contentComponentId: @Play.id()
+          active: true
+        ,
+          name: 'Overlays'
+        ]
+        allowClosing: false

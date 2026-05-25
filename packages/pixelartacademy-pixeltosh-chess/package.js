@@ -28,6 +28,8 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('assets/briefcomponent..');
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('square');
+  api.addFile('move');
   api.addFile('piece');
   api.addFile('gamestate');
 
@@ -36,11 +38,16 @@ Package.onUse(function(api) {
 
   api.addStyledFile('interface..');
   api.addComponent('interface/chessboard..');
+  api.addFile('interface/chessboard/chessboard-animation');
+  api.addFile('interface/chessboard/chessboard-dragging');
   api.addComponent('interface/chessboard/square..');
   api.addComponent('interface/chessboard/piece..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/playstart..');
+  api.addComponent('interface/play..');
+  api.addComponent('interface/play/playercard..');
+  api.addComponent('interface/play/moveshistory..');
   api.addComponent('interface/about..');
   api.addComponent('interface/shop..');
 

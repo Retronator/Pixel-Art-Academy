@@ -1,12 +1,9 @@
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.GameState
-  @FileLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-  @RankNumbers = [1..8]
+ChessEngine = require 'js-chess-engine'
 
-  @getSquareName: (fileIndex, rankIndex) -> "#{@FileLetters[fileIndex]}#{@RankNumbers[rankIndex]}"
-  
+class Chess.GameState
   @getEmptyData: ->
     turn: 'white'
     pieces: {}
@@ -16,8 +13,26 @@ class Chess.GameState
 
   constructor: (@data) ->
 
-  getPieceAt: (fileIndex, rankIndex) -> Chess.Piece.fromLetter @data.pieces[@constructor.getSquareName fileIndex, rankIndex]
-
   turn: -> if @data.turn is 'white' then Chess.Piece.Colors.White else Chess.Piece.Colors.Black
-  
+
+  check: -> @data.check
+
+  checkMate: -> @data.checkMate
+
+  staleMate: -> @data.staleMate
+
   finished: -> @data.isFinished
+
+  occupiedSquares: -> Chess.Square[squareName] for squareName of @data.pieces
+
+  getPieceAtSquare: (square) -> Chess.Piece.fromLetter @data.pieces[square.name]
+
+  hasPieceAtSquare: (piece, square) -> @data.pieces[square.name] is piece?.letter
+
+  hasSamePiecePlacementAs: (gameState) -> EJSON.equals @data.pieces, gameState.data.pieces
+
+  getLegalMovesFromSquare: (square) ->
+    moves = ChessEngine.moves @data
+    return [] unless moves[square.name]
+
+    Chess.Square[squareName] for squareName in moves[square.name]

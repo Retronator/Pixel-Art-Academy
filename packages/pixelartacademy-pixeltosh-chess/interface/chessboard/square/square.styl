@@ -1,9 +1,30 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square
+  position relative
   width 20rem
   height 20rem
   background-color white
+
+  &.selected::before
+  &.legal-move::before
+    content ''
+    position absolute
+    inset -1rem
+    background-position 1rem 1rem
+    background-size 20rem 20rem
+    background-repeat no-repeat
+    z-index 1
+
+  &.selected::before
+    background black
+
+  &.legal-move
+    &:hover::before
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover.png')
+
+    &::before
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove.png')
 
   &.dark
     background image('/pixelartacademy/pixeltosh/os/dither.png') 0 0 / 2rem 2rem

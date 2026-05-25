@@ -37,7 +37,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
         type: PAA.Pixeltosh.OS.Interface.Window.id()
         title:
           text: folderFile.name()
-        scrollbar:
+        scrollbars:
           vertical:
             enabled: true
           horizontal:

@@ -1,4 +1,10 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-chess-interface-chessboard-piece
-  // TODO
+  position relative
+  z-index 2
+  pointer-events none
+
+  &.dragged
+  &.animating
+    z-index 3

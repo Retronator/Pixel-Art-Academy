@@ -34,11 +34,6 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @interfaceManager = new ReactiveField null
     @gameManager = new ReactiveField null
     
-  destroy: ->
-    super arguments...
-    
-    @projectId2D.stop()
-    
   load: ->
     super arguments...
 
