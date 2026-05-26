@@ -40,4 +40,3 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Prefer targeted validation first.
 - For CoffeeScript style-sensitive changes, use the repo’s existing lint/configuration when relevant.
 - For app/runtime changes, prefer the smallest check that exercises the edited area before suggesting broader app runs.
-

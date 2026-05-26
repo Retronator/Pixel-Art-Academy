@@ -53,6 +53,23 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     
     @_macintoshPaletteSubscription.stop()
   
+  onBackButton: ->
+    # Going back closes the shop.
+    interfaceManager = @interfaceManager()
+    
+    if interfaceManager.shopIsOpen()
+      interfaceManager.closeShop()
+
+      # Inform that we've handled the back button.
+      return true
+      
+    # Going back returns to the menu.
+    if not interfaceManager.inMenu()
+      interfaceManager.enterScreen @constructor.InterfaceManager.Screens.Menu
+      
+      # Inform that we've handled the back button.
+      return true
+    
   menuItems: -> @constructor.Interface.createMenuItems()
 
   shortcuts: -> @constructor.Interface.createShortcuts()

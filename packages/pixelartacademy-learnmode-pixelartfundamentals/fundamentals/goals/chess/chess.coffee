@@ -27,7 +27,9 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Chess extends PAA.Learning.Goal
   reset: ->
     super arguments...
     
-    PAA.Pixeltosh.Programs.Chess.Project.end()
+    PAA.Pixeltosh.Programs.Chess.state 'ownedPieceTypeCounts', null
+    PAA.Pixeltosh.Programs.Chess.state 'currency', null
+    PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.end()
 
   Goal = @
   

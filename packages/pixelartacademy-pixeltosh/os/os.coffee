@@ -175,6 +175,10 @@ class PAA.Pixeltosh.OS extends LOI.Component
     _.last(sortedWindows)?.order or 0
 
   onBackButton: ->
+    # Relay to the error dialog.
+    if errorDialog = @interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
+      return result if result = errorDialog.onBackButton?()
+    
     # Relay to the active program.
     return unless activeProgram = @activeProgram()
     return result if result = activeProgram.onBackButton?()

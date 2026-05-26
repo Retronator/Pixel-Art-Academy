@@ -23,8 +23,6 @@ class Pinball.Project extends PAA.Practice.Project.Thing
   @iconUrl: -> @versionedUrl "/pixelartacademy/pixeltosh/programs/pinball/icon-project.png"
   @program: -> Pinball
 
-  @initialize()
-
   constructor: ->
     super arguments...
 

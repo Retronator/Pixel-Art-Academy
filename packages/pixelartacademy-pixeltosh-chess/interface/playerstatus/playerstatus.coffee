@@ -17,4 +17,4 @@ class Chess.Interface.PlayerStatus extends LOI.View
       'click .buy-button': @onClickBuyButton
 
   onClickBuyButton: (event) ->
-    @os.interface.displayDialog Chess.Interface.Shop.createInterfaceData()
+    @chess.interfaceManager().openShop()

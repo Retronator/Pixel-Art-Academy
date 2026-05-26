@@ -198,39 +198,43 @@ class FM.Interface extends AM.Component
     @getLoaderForFile @activeFileId()
 
   displayDialog: (dialog) ->
-    # Wrap the plain object into data for compatibility.
-    dialogData = new FM.Interface.Data load: => dialog
-
-    # Add ID to minimize reactivity.
-    dialogData._id ?= Random.id()
-
-    dialogs = @dialogs()
-    dialogs.push dialogData
-    @dialogs dialogs
+    Tracker.nonreactive =>
+      # Wrap the plain object into data for compatibility.
+      dialogData = new FM.Interface.Data load: => dialog
+  
+      # Add ID to minimize reactivity.
+      dialogData._id ?= Random.id()
+  
+      dialogs = @dialogs()
+      dialogs.push dialogData
+      @dialogs dialogs
 
   closeDialog: (dialog) ->
-    dialogs = @dialogs()
-    _.pull dialogs, dialog
-    @dialogs dialogs
+    Tracker.nonreactive =>
+      dialogs = @dialogs()
+      _.pull dialogs, dialog
+      @dialogs dialogs
     
   addWindow: (window) ->
-    windowsData = @currentLayoutData().child 'windows'
-
-    windows = windowsData.value() or {}
-    window.id ?= Random.id()
-    windows[window.id] = window
-
-    windowsData.value windows
-    
-    window.id
+    Tracker.nonreactive =>
+      windowsData = @currentLayoutData().child 'windows'
+  
+      windows = windowsData.value() or {}
+      window.id ?= Random.id()
+      windows[window.id] = window
+  
+      windowsData.value windows
+      
+      window.id
     
   removeWindow: (id) ->
-    windowsData = @currentLayoutData().child 'windows'
-    
-    windows = windowsData.value() or {}
-    delete windows[id]
-    
-    windowsData.value windows
+    Tracker.nonreactive =>
+      windowsData = @currentLayoutData().child 'windows'
+      
+      windows = windowsData.value() or {}
+      delete windows[id]
+      
+      windowsData.value windows
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'

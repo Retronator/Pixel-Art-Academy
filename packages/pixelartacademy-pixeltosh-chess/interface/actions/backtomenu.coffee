@@ -11,7 +11,7 @@ class Chess.Interface.Actions.BackToMenu extends Chess.Interface.Actions.Action
   
   @initialize()
   
-  enabled: -> @chess.interfaceManager()?.screen() isnt Chess.InterfaceManager.Screens.Menu
+  enabled: -> not @chess.interfaceManager()?.inMenu()
   
   execute: ->
     @chess.interfaceManager().enterScreen Chess.InterfaceManager.Screens.Menu

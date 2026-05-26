@@ -5,6 +5,8 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Project extends Pinball.Project
+  @initialize()
+  
   @start: ->
     # Make sure the player doesn't have an already active project.
     throw new AE.InvalidOperationException "Profile already has an active Pinball project." if Pinball.Project.state 'activeProjectId'

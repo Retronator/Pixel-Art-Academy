@@ -16,7 +16,8 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     super arguments...
 
     @autorun =>
-      plyHistoryLength = @chess.gameManager().plyHistory().length
+      return unless gameManager = @chess.gameManager()
+      plyHistoryLength = gameManager.plyHistory().length
 
       if @_previousPlyHistoryLength? and plyHistoryLength > @_previousPlyHistoryLength
         Tracker.afterFlush => Meteor.setTimeout =>
@@ -30,7 +31,8 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
       enabled: true
 
   moves: ->
-    plyHistory = @chess.gameManager().plyHistory()
+    return unless gameManager = @chess.gameManager()
+    plyHistory = gameManager.plyHistory()
 
     for whitePlyNumber in [1...plyHistory.length] by 2
       whitePly = plyHistory[whitePlyNumber]
@@ -55,11 +57,13 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     _.kebabCase plyInfo.color
 
   activeClass: ->
+    return unless gameManager = @chess.gameManager()
+    
     plyInfo = @currentData()
-    'active' if plyInfo.ply.number is @chess.gameManager().currentDisplayedPlyNumber()
+    'active' if plyInfo.ply.number is gameManager.currentDisplayedPlyNumber()
 
   endingStatus: ->
-    return unless gameState = @chess.gameManager().liveGameState()
+    return unless gameState = @chess.gameManager()?.liveGameState()
     return unless gameState.finished()
 
     if gameState.checkMate()

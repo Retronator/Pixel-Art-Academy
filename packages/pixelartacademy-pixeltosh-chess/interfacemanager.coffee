@@ -23,6 +23,8 @@ class Chess.InterfaceManager
     
     @windowId = @chess.os.addWindow Chess.Interface.createInterfaceData()
     
+    @_shopWindowId = new ReactiveField null
+    
     # Reactively change the interface layout.
     layouts = Chess.Interface.createLayoutsData @
     
@@ -66,3 +68,16 @@ class Chess.InterfaceManager
     switch screen
       when @constructor.Screens.Menu
         @chess.gameManager().endGame()
+
+  openShop: ->
+    @_shopWindowId @chess.os.addWindow Chess.Interface.Shop.createInterfaceData()
+    
+  closeShop: ->
+    return unless shopWindowId = @_shopWindowId()
+    
+    @chess.os.removeWindow shopWindowId
+    @_shopWindowId null
+    
+    @chess.os.activateWindow @windowId
+
+  shopIsOpen: -> @_shopWindowId()

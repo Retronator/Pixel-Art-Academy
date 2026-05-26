@@ -19,12 +19,23 @@ class PAA.Pixeltosh.OS.Interface.ErrorDialog extends FM.Dialog
 
     @os = @ancestorComponentOfType PAA.Pixeltosh.OS
 
+  onBackButton: ->
+    options = @data()
+    
+    @shutDown() if options.shutDownProgram
+    @closeDialog()
+    
+    # Inform that we've handled the back button.
+    true
+    
+  shutDown: ->
+    options = @data()
+    @os.unloadProgram options.shutDownProgram
+  
   events: ->
     super(arguments...).concat
       'click .shut-down-button': @onClickShutDownButton
 
   onClickShutDownButton: (event) ->
-    options = @data()
-    
-    @os.unloadProgram options.shutDownProgram
+    @shutDown()
     @closeDialog()

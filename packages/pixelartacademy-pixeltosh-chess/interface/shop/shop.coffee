@@ -10,6 +10,7 @@ class Chess.Interface.Shop extends FM.Dialog
 
   @createInterfaceData: ->
     contentComponentId: @id()
+    programId: PAA.Pixeltosh.Programs.Chess.id()
     left: 0
     top: 0
     right: 0
@@ -29,16 +30,16 @@ class Chess.Interface.Shop extends FM.Dialog
 
   ownedCount: ->
     piece = @currentData()
-    @chess.gameManager().ownedPiecesCount piece.type
+    @chess.gameManager()?.ownedPiecesCount piece.type
     
   needsPiece: ->
     piece = @currentData()
-    @chess.gameManager().ownedPiecesCount(piece.type) < piece.requiredCount
+    @chess.gameManager()?.ownedPiecesCount(piece.type) < piece.requiredCount
   
   buyButtonDisabledAttribute: ->
     piece = @currentData()
     
-    'disabled' if @chess.gameManager().currency() < piece.price
+    'disabled' if @chess.gameManager()?.currency() < piece.price
     
   events: ->
     super(arguments...).concat
@@ -56,4 +57,4 @@ class Chess.Interface.Shop extends FM.Dialog
     gameManager.ownedPieceTypeCounts ownedPieceTypeCounts
 
   onClickCloseButton: (event) ->
-    @closeDialog()
+    @chess.interfaceManager().closeShop()

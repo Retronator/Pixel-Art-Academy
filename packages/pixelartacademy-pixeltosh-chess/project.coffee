@@ -42,11 +42,9 @@ class Chess.Project extends PAA.Practice.Project.Thing
     
   class @TwoDimensional extends Project
     # activeProjectId: ID of the project that is currently active
-    @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Project'
+    @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Project.TwoDimensional'
     
     @fullName: -> "Chess 2D"
-  
-    @initialize()
 
     content: ->
       return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals

@@ -4,6 +4,8 @@ PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Project.TwoDimensional extends Chess.Project.TwoDimensional
+  @initialize()
+  
   @start: ->
     # Make sure the player doesn't have an already active project.
     throw new AE.InvalidOperationException "Profile already has an active Chess 2D project." if Chess.Project.TwoDimensional.state 'activeProjectId'

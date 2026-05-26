@@ -39,7 +39,7 @@ class Chess.GameManager
     
     # Throw an error if a piece a player owns doesn't have a drawn asset in the current project.
     @_missingAssetsAutorun = @chess.autorun (computation) =>
-      return if @chess.os.interface.dialogs().length
+      return if @chess.os.interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
       
       return unless LOI.adventure.gameState()
       return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
@@ -200,7 +200,7 @@ class Chess.GameManager
 
   livePlyNumber: -> @plyHistory().length - 1
 
-  liveGameState: -> _.last(@plyHistory()).gameState
+  liveGameState: -> _.last(@plyHistory())?.gameState
 
   displayingLivePosition: -> not @previewedHistoryPlyNumber()?
 
