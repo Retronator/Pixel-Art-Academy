@@ -1,0 +1,40 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-lessons
+  height 100%
+
+  .pixelartacademy-pixeltosh-os-interface-scrollablearea
+    height 100%
+    border 1rem solid black
+
+    .vertical-scrollbar
+      bottom -1rem
+
+    .content-area
+      bottom 0
+
+    .resize-control
+      display none
+
+  .categories
+    list-style none
+    padding 0
+    margin 2rem 4rem
+    counter-reset lesson-counter
+
+    .category
+      margin-bottom 6rem
+
+      .lessons
+        list-style none
+        margin 0
+        padding-left 6rem
+        small-print()
+
+        .lesson
+          .title
+            &::before
+              display inline-block
+              counter-increment lesson-counter
+              content counter(lesson-counter) "."
+              margin-right 3rem

@@ -1,0 +1,27 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-markup">
+    {{#each markup}}
+      {{#with target}}
+        <div class="target" {{style (positionStyle position)}}></div>
+      {{/with}}
+      {{#with arrow}}
+        <div class="arrow" {{style arrowStyle}}>
+          {{#if straightArrowPart}}
+            <div class="straight"></div>
+          {{/if}}
+          {{#if orthogonalArrowPart}}
+            <div class="orthogonal"></div>
+          {{/if}}
+          {{#if diagonalArrowPart}}
+            <div class="diagonal"></div>
+          {{/if}}
+        </div>
+      {{/with}}
+      {{#with legalMoves}}
+        {{#each legalMovesSquares}}
+          <div class="legal-move-square" {{style (positionStyle this)}}></div>
+        {{/each}}
+      {{/with}}
+    {{/each}}
+  </div>
+</template>

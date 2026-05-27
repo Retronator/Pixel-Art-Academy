@@ -20,6 +20,15 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Use 2-space indentation and avoid trailing whitespace.
 - Keep changes focused; do not mix style cleanups with behavior changes unless asked.
 
+## Style and architecture observations
+
+- Prefer precise domain vocabulary over generic technical names. For example, in chess code, use terms such as ply, live position, previewed history position, square, move, piece, and game state when those are the concepts being modeled.
+- Prefer rich package-level domain objects over primitive strings or coordinate pairs when the concept exists. For example, a variable named `square` should be a `Chess.Square`, while square names should be explicitly named as such.
+- Keep game rules and persistent game state in manager/model classes, and keep interface-only behavior in interface components. Animation, dragging, display formatting, and other presentation concerns belong close to the relevant UI component.
+- When a concept is reused or hides collection shape, expose it through a helper method on the owning class instead of reaching through fields from another component.
+- In Blaze/Artificial.Mirage components, get parent context through `ancestorComponentOfType` in lifecycle methods, use `currentData()` for item helpers, and pass rich data objects rather than relying on DOM data attributes when possible.
+- This codebase often splits a class across multiple CoffeeScript files by extending the same class again for a specific concern. Follow that pattern for large component concerns instead of creating detached utility modules.
+
 ## Repository guidance
 
 - Read `codestyle.md` before making substantial code changes in existing modules.

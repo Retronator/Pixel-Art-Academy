@@ -32,27 +32,45 @@ class Chess.InterfaceManager
     
     for tab in layouts[Chess.Interface.Layouts.Menu].remainingArea.remainingArea.tabs
       menuTabs[tab.name.toLowerCase()] = tab
+      
+    @window = new AE.LiveComputedField =>
+      @chess.os.interface.getWindow @windowId
+    ,
+      (a, b) => a is b
     
     @_layoutAutorun = @chess.autorun (computation) =>
-      return unless window = @chess.os.interface.getWindow @windowId
+      return unless window = @window()
       
       switch @screen()
         when @constructor.Screens.Menu
-          if @chess.gameManager().ownedPiecesCount()
+          if ownedPiecesCount = @chess.gameManager().ownedPiecesCount()
             layout = layouts[Chess.Interface.Layouts.Menu]
             
-            # Only have play available.
-            tabs = [_.clone menuTabs.play]
-            tabs[0].active = true
+            tabs = [_.cloneDeep menuTabs.lessons]
+            
+            # Play is available once we have all 16 pieces.
+            if ownedPiecesCount is 16 or true
+              tabs.push _.cloneDeep menuTabs.play
+
+            # Persist active tab across reflows.
+            Tracker.nonreactive =>
+              currentLayout = window.data().get 'contentArea'
+              activeIndex = _.findIndex currentLayout?.remainingArea?.remainingArea?.tabs, (tab) => tab.active
+              
+              tabs[if activeIndex >= 0 then activeIndex else 0].active = true
+              
             layout.remainingArea.remainingArea.tabs = tabs
             
           else
             layout = layouts[Chess.Interface.Layouts.MenuIntro]
             
+        when @constructor.Screens.Lesson
+          layout = layouts[Chess.Interface.Layouts.Lesson]
+            
         when @constructor.Screens.Play
           layout = layouts[Chess.Interface.Layouts.Play]
       
-      window.data().set 'contentArea', layout
+      Tracker.nonreactive => window.data().set 'contentArea', layout
       
   destroy: ->
     @_layoutAutorun.stop()
@@ -68,6 +86,7 @@ class Chess.InterfaceManager
     switch screen
       when @constructor.Screens.Menu
         @chess.gameManager().endGame()
+        @chess.lessonManager().endLesson()
 
   openShop: ->
     @_shopWindowId @chess.os.addWindow Chess.Interface.Shop.createInterfaceData()

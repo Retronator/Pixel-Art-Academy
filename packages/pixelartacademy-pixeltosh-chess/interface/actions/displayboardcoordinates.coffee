@@ -10,7 +10,13 @@ class Chess.Interface.Actions.DisplayBoardCoordinates extends Chess.Interface.Ac
 
   @initialize()
   
-  active: -> @chess.interfaceManager()?.displayBoardCoordinates()
+  active: ->
+    return unless interfaceManager = @chess.interfaceManager()
+    interfaceManager.inLesson() or interfaceManager.displayBoardCoordinates()
+    
+  enabled: ->
+    return unless interfaceManager = @chess.interfaceManager()
+    not interfaceManager.inLesson()
   
   execute: ->
     interfaceManager = @chess.interfaceManager()

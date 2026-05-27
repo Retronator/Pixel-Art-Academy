@@ -10,15 +10,8 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
 
     # Reactively prepare animation information when game state changes.
     @autorun =>
-      return unless gameManager = @chess.gameManager()
-      game = gameManager.game()
-
-      # Reset animations when the game changes.
-      unless game is @_previousGame
-        @_previousGame = game
-        @_previousGameState = null
-
-      gameState = gameManager.gameState()
+      return unless provider = @provider()
+      gameState = provider.gameState()
 
       # Reset animations when we don't have a game state anymore.
       unless gameState

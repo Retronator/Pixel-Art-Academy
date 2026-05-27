@@ -33,6 +33,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     # Prepare all reactive fields.
     @interfaceManager = new ReactiveField null
     @gameManager = new ReactiveField null
+    @lessonManager = new ReactiveField null
     
   load: ->
     super arguments...
@@ -40,6 +41,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     # Initialize components.
     @interfaceManager new @constructor.InterfaceManager @
     @gameManager new @constructor.GameManager @
+    @lessonManager new @constructor.LessonManager @
     
     # Subscribe to the macintosh palette.
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
@@ -47,9 +49,11 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   unload: ->
     @interfaceManager()?.destroy()
     @gameManager()?.destroy()
+    @lessonManager()?.destroy()
     
     @interfaceManager null
     @gameManager null
+    @lessonManager null
     
     @_macintoshPaletteSubscription.stop()
   

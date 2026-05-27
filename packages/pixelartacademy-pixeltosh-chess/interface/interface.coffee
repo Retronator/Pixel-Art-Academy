@@ -53,6 +53,7 @@ class Chess.Interface
       dockSide: FM.SplitView.DockSide.Left
       mainArea:
         contentComponentId: @Chessboard.id()
+        contentComponentData: @Chessboard.Providers.GameManager
         width: 199
       remainingArea:
         type: FM.SplitView.id()
@@ -70,6 +71,7 @@ class Chess.Interface
       dockSide: FM.SplitView.DockSide.Left
       mainArea:
         contentComponentId: @Chessboard.id()
+        contentComponentData: @Chessboard.Providers.GameManager
         width: 199
       remainingArea:
         type: FM.SplitView.id()
@@ -83,12 +85,26 @@ class Chess.Interface
           type: FM.TabbedView.id()
           tabs: [
             name: 'Lessons'
-            contentComponentId: @Intro.id()
+            contentComponentId: @Lessons.id()
+            active: true
+          ,
+            name: 'Puzzles'
           ,
             name: 'Play'
             contentComponentId: @PlayStart.id()
           ]
           allowClosing: false
+
+    "#{@Layouts.Lesson}":
+      type: FM.SplitView.id()
+      fixed: true
+      dockSide: FM.SplitView.DockSide.Left
+      mainArea:
+        contentComponentId: @Chessboard.id()
+        contentComponentData: @Chessboard.Providers.LessonManager
+        width: 199
+      remainingArea:
+        contentComponentId: @Lesson.id()
 
     "#{@Layouts.Play}":
       type: FM.SplitView.id()
@@ -96,6 +112,7 @@ class Chess.Interface
       dockSide: FM.SplitView.DockSide.Left
       mainArea:
         contentComponentId: @Chessboard.id()
+        contentComponentData: @Chessboard.Providers.GameManager
         width: 199
       remainingArea:
         type: FM.TabbedView.id()

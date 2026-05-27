@@ -32,9 +32,11 @@ Package.onUse(function(api) {
   api.addFile('move');
   api.addFile('piece');
   api.addFile('gamestate');
+  api.addFile('gamestate-moves');
 
   api.addFile('interfacemanager');
   api.addFile('gamemanager');
+  api.addFile('lessonmanager');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/chessboard..');
@@ -42,8 +44,11 @@ Package.onUse(function(api) {
   api.addFile('interface/chessboard/chessboard-dragging');
   api.addComponent('interface/chessboard/square..');
   api.addComponent('interface/chessboard/piece..');
+  api.addComponent('interface/chessboard/markup..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
+  api.addComponent('interface/lessons..');
+  api.addComponent('interface/lesson..');
   api.addComponent('interface/playstart..');
   api.addComponent('interface/play..');
   api.addComponent('interface/play/playercard..');
@@ -58,4 +63,18 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/displayboardcoordinates');
   api.addFile('interface/actions/flipboard');
   api.addFile('interface/actions/boarddisplaytype');
+
+  api.addFile('lesson..');
+  api.addFile('lesson/category');
+  api.addFile('lesson/piececategory');
+  api.addUnstyledComponent('lesson/steps/step');
+  api.addFile('lesson/steps/positionstep');
+  api.addUnstyledComponent('lesson/steps/endstep');
+
+  api.addFile('lessons..');
+  api.addFile('lessons/pawnmovement');
+  api.addFile('lessons/knightmovement');
+  api.addFile('lessons/categories..');
+  api.addFile('lessons/categories/pawn');
+  api.addFile('lessons/categories/knight');
 });

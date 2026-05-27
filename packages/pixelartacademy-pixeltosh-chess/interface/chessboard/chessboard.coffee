@@ -5,6 +5,10 @@ Chess = PAA.Pixeltosh.Programs.Chess
 class Chess.Interface.Chessboard extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard'
   
+  @Providers:
+    GameManager: 'gameManager'
+    LessonManager: 'lessonManager'
+    
   onCreated: ->
     super arguments...
     
@@ -32,30 +36,39 @@ class Chess.Interface.Chessboard extends LOI.View
     for file in Chess.Square.FileLetters
       @$('.files .border').append("<div class='coordinate'>#{file}</div>")
 
+  provider: ->
+    providerName = @data()
+    @chess[providerName]()
+      
   legalMoveSquares: ->
-    return [] unless @chess.gameManager()?.humanCanMove()
+    return [] unless @provider()?.humanCanMove()
     return [] unless selectedSquare = @selectedSquare()
 
-    @chess.gameManager().getLegalMovesFromSquare selectedSquare
+    @provider().getLegalMovesFromSquare selectedSquare
 
   humanCanMovePieceOnSquare: (square) ->
-    return unless gameManager = @chess.gameManager()
-    return unless gameManager.humanCanMove()
+    return unless provider = @provider()
+    return unless provider.humanCanMove()
     
-    gameState = gameManager.gameState()
+    gameState = provider.gameState()
     piece = gameState.getPieceAtSquare square
-    piece?.color is gameState.turn() and gameManager.getLegalMovesFromSquare(square).length
+    piece?.color is gameState.turn() and provider.getLegalMovesFromSquare(square).length
     
   performMoveTo: (square) ->
-    @chess.gameManager().move new Chess.Move @selectedSquare(), square
+    @provider().move new Chess.Move @selectedSquare(), square
     @selectedSquare null
     
     # Reset the grabbing cursor since the piece element will be removed
     # and the pointer leave event will not handle the cursor change.
     @chess.os.cursor().setClass null
+    
+  selectSquare: (square) ->
+    @selectedSquare square
 
   coordinatesVisibleClass: ->
-    'visible' if @chess.interfaceManager()?.displayBoardCoordinates()
+    return unless interfaceManager = @chess.interfaceManager()
+    
+    'visible' if interfaceManager.inLesson() or interfaceManager.displayBoardCoordinates()
 
   flippedClass: ->
     'flipped' if @chess.interfaceManager()?.flippedBoard()
@@ -65,8 +78,8 @@ class Chess.Interface.Chessboard extends LOI.View
       @_ignoreNextClick = false
       return
 
-    return unless gameManager = @chess.gameManager()
-    return unless gameManager.humanCanMove()
+    return unless provider = @provider()
+    return unless provider.humanCanMove()
 
     selectedSquare = @selectedSquare()
 

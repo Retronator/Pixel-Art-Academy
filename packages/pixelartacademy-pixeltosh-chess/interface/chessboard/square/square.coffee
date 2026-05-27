@@ -31,7 +31,7 @@ class Chess.Interface.Chessboard.Square extends AM.Component
   cursorAttribute: ->
     'data-cursor': 'grab' if @legalMove() or @chessboard.humanCanMovePieceOnSquare @square
 
-  pieceRenderData: -> @chessboard.chess.gameManager()?.gameState()?.getPieceAtSquare @square
+  pieceRenderData: -> @chessboard.provider()?.gameState()?.getPieceAtSquare @square
 
   events: ->
     super(arguments...).concat
