@@ -25,5 +25,13 @@ class Chess.Interface.Lesson extends AM.Component
       return unless lesson = @lesson()
       return unless activeStep = @activeStep()
       
+      if activeStep.failed()
+        @chess.lessonManager().rewind()
+
       if activeStep.completed()
         @activeStepIndex Math.min @activeStepIndex() + 1, lesson.steps.length - 1
+
+  onDestroyed: ->
+    super arguments...
+
+    Meteor.clearTimeout @_revertTimeout if @_revertTimeout

@@ -12,6 +12,13 @@ _knightOffsets = [
   [-1, 2]
 ]
 
+_diagonalDirections = [
+  [1, 1]
+  [1, -1]
+  [-1, -1]
+  [-1, 1]
+]
+
 class Chess.GameState extends Chess.GameState
   _getLegalPawnMovesFromSquare: (square) ->
     piece = @getPieceAtSquare square
@@ -53,4 +60,22 @@ class Chess.GameState extends Chess.GameState
       
       moves.push targetSquare
     
+    moves
+
+  _getLegalBishopMovesFromSquare: (square) ->
+    moves = []
+
+    for direction in _diagonalDirections
+      distance = 1
+
+      loop
+        targetSquare = Chess.Square[square.fileIndex + direction[0] * distance]?[square.rankIndex + direction[1] * distance]
+        break unless targetSquare
+        break if @isSquareOccupiedByMe targetSquare
+
+        moves.push targetSquare
+        break if @isSquareOccupiedByOpponent targetSquare
+
+        distance++
+
     moves

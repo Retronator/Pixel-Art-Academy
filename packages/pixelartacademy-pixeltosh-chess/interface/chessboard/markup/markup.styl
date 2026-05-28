@@ -65,3 +65,48 @@
         right -2rem
         height 4rem
         background-color black
+
+    .diagonal
+      &::before
+        inset -4rem
+        background image('/pixelartacademy/pixeltosh/programs/chess/arrow-diagonal-outline.png') 0 0 / 160rem 160rem
+
+      &::after
+        inset -3rem
+        background image('/pixelartacademy/pixeltosh/programs/chess/arrow-diagonal.png') 0 0 / 160rem 160rem
+
+  .arrows
+    .outline
+    .fill
+      absolute-cover()
+
+    .outline
+      z-index 1
+
+      .arrow
+        .straight
+        .orthogonal
+        .diagonal
+          &::after
+            display none
+
+    .fill
+      z-index 2
+
+      .arrow
+        .straight
+        .orthogonal
+        .diagonal
+          &::before
+            display none
+
+    .arrow
+      position absolute
+      transform-origin top left
+
+      .straight
+      .orthogonal
+      .diagonal
+        &::before
+        &::after
+          z-index initial

@@ -8,8 +8,12 @@ class Chess.LessonManager
     
     @lesson = new ReactiveField null
     @gameState = new ReactiveField null
+    
+    @rewinding = new ReactiveField false
 
   destroy: ->
+    Meteor.clearTimeout @_rewindTimeout
+
     category.destroy() for category in @_lessonCategories
     
   availableCategories: ->
@@ -38,9 +42,24 @@ class Chess.LessonManager
   getLegalMovesFromSquare: (square) -> @gameState()?.getLegalMovesFromSquare square
   
   move: (move) ->
-    @gameState @gameState().applyMove move
+    @_previousGameState = @gameState()
+    @gameState @_previousGameState.applyMove move
+  
+  rewind: ->
+    Tracker.nonreactive =>
+      return if @rewinding()
+      @rewinding true
+      
+      @_rewindTimeout = Meteor.setTimeout =>
+        @gameState @_previousGameState
+        @rewinding false
+      ,
+        1000
   
   humanCanMove: ->
+    # Prevent movement while rewinding.
+    return if @rewinding()
+    
     # In the lessons, the player is always white.
     @gameState()?.turn() is Chess.Piece.Colors.White
 

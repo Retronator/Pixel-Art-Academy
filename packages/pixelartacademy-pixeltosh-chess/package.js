@@ -73,8 +73,11 @@ Package.onUse(function(api) {
 
   api.addFile('lessons..');
   api.addFile('lessons/pawnmovement');
+  api.addFile('lessons/pawndoublestep');
   api.addFile('lessons/knightmovement');
+  api.addFile('lessons/bishopmovement');
   api.addFile('lessons/categories..');
   api.addFile('lessons/categories/pawn');
   api.addFile('lessons/categories/knight');
+  api.addFile('lessons/categories/bishop');
 });
