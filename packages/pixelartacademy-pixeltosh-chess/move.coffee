@@ -7,3 +7,6 @@ class Chess.Move
       return new @ Chess.Square[fromSquareName], Chess.Square[toSquareName]
 
   constructor: (@from, @to) ->
+
+  manhattanDistance: ->
+    Math.abs(@from.fileIndex - @to.fileIndex) + Math.abs(@from.rankIndex - @to.rankIndex)

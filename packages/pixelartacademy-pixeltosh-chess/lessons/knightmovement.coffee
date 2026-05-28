@@ -10,11 +10,11 @@ class Chess.Lessons.KnightMovement extends Chess.Lesson
   @steps: -> [
     @MoveExplanation
     @MoveTarget
-    Chess.Lessons.DefaultEndStep
+    @End
   ]
   
   @startingPosition: ->
-    D4: 'N'
+    d4: 'N'
   
   @initialize()
 
@@ -30,20 +30,20 @@ class Chess.Lessons.KnightMovement extends Chess.Lesson
     """
     
     @requiredPosition: ->
-      D4: null
+      d4: null
     
     @initialize()
     
     onRendered: ->
       super arguments...
       
-      @chessboard().selectSquare Chess.Square.D4
+      @chessboard().selectSquare Chess.Square.d4
     
     markup: -> [
       legalMoves: true
       arrow:
-        from: Chess.Square.D4
-        to: Chess.Square.E2
+        from: Chess.Square.d4
+        to: Chess.Square.e2
     ]
 
   class @MoveTarget extends Chess.Lesson.PositionStep
@@ -54,11 +54,22 @@ class Chess.Lessons.KnightMovement extends Chess.Lesson
     """
     
     @requiredPosition: ->
-      B2: 'N'
+      b2: 'N'
       
     @initialize()
     
     markup: -> [
       target:
-        position: Chess.Square.B2
+        position: Chess.Square.b2
     ]
+
+  class @End extends Chess.Lesson.EndStep
+    @id: -> "#{Lesson.id()}.End"
+
+    @message: -> """
+      Well done!
+
+      The knight is the only piece that doesn't move in a straight line. Its crooked path makes it the trickiest piece to see coming.
+    """
+
+    @initialize()

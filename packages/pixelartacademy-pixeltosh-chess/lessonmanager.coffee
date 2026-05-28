@@ -10,6 +10,7 @@ class Chess.LessonManager
     @gameState = new ReactiveField null
     
     @rewinding = new ReactiveField false
+    @moving = new ReactiveField false
 
   destroy: ->
     Meteor.clearTimeout @_rewindTimeout
@@ -39,22 +40,38 @@ class Chess.LessonManager
     @lesson null
     @gameState null
   
-  getLegalMovesFromSquare: (square) -> @gameState()?.getLegalMovesFromSquare square
+  getLegalDestinationsFromSquare: (square) -> @gameState()?.getLegalDestinationsFromSquare square
   
   move: (move) ->
-    @_previousGameState = @gameState()
-    @gameState @_previousGameState.applyMove move
+    Tracker.nonreactive =>
+      @_previousGameState = @gameState()
+      
+      newGameState = @_previousGameState.applyMove move
+      @gameState newGameState
+      
+      unless aiMove = @lesson().aiMove()
+        newGameState.setTurn Chess.Piece.Colors.White
+        @gameState newGameState
+        return
+      
+      @moving true
+      
+      await _.waitForSeconds 0.5
+      
+      newGameState = newGameState.applyMove aiMove
+      @gameState newGameState
+      
+      @moving false
   
   rewind: ->
     Tracker.nonreactive =>
       return if @rewinding()
       @rewinding true
       
-      @_rewindTimeout = Meteor.setTimeout =>
-        @gameState @_previousGameState
-        @rewinding false
-      ,
-        1000
+      await _.waitForSeconds if @moving() then 2 else 1
+      
+      @gameState @_previousGameState
+      @rewinding false
   
   humanCanMove: ->
     # Prevent movement while rewinding.

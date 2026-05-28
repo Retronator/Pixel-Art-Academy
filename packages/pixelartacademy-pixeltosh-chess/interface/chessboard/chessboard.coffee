@@ -44,7 +44,7 @@ class Chess.Interface.Chessboard extends LOI.View
     return [] unless @provider()?.humanCanMove()
     return [] unless selectedSquare = @selectedSquare()
 
-    @provider().getLegalMovesFromSquare selectedSquare
+    @provider().getLegalDestinationsFromSquare selectedSquare
 
   humanCanMovePieceOnSquare: (square) ->
     return unless provider = @provider()
@@ -52,7 +52,7 @@ class Chess.Interface.Chessboard extends LOI.View
     
     gameState = provider.gameState()
     piece = gameState.getPieceAtSquare square
-    piece?.color is gameState.turn() and provider.getLegalMovesFromSquare(square).length
+    piece?.color is gameState.turn() and provider.getLegalDestinationsFromSquare(square).length
     
   performMoveTo: (square) ->
     @provider().move new Chess.Move @selectedSquare(), square

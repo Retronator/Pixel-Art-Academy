@@ -14,7 +14,7 @@ class Chess.Lessons.PawnMovement extends Chess.Lesson
   ]
   
   @startingPosition: ->
-    D4: 'P'
+    d4: 'P'
   
   @initialize()
 
@@ -26,24 +26,24 @@ class Chess.Lessons.PawnMovement extends Chess.Lesson
     @message: -> """
       The pawn advances one square at a time.
 
-      Move the pawn from D4 to D5.
+      Move the pawn from d4 to d5.
     """
     
     @requiredPosition: ->
-      D5: 'P'
+      d5: 'P'
     
     @initialize()
     
     onRendered: ->
       super arguments...
       
-      @chessboard().selectSquare Chess.Square.D4
+      @chessboard().selectSquare Chess.Square.d4
     
     markup: -> [
       legalMoves: true
       arrow:
-        from: Chess.Square.D4
-        to: Chess.Square.D5
+        from: Chess.Square.d4
+        to: Chess.Square.d5
     ]
 
   class @MoveTarget extends Chess.Lesson.PositionStep
@@ -54,13 +54,13 @@ class Chess.Lessons.PawnMovement extends Chess.Lesson
     """
     
     @requiredPosition: ->
-      D7: 'P'
+      d7: 'P'
       
     @initialize()
     
     markup: -> [
       target:
-        position: Chess.Square.D7
+        position: Chess.Square.d7
     ]
   
   class @End extends Chess.Lesson.EndStep

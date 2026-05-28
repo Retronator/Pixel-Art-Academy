@@ -121,7 +121,7 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     ambiguousFromSquares = for fromSquare in previousGameState.occupiedSquares() when fromSquare isnt move.from
       otherPiece = previousGameState.getPieceAtSquare fromSquare
       continue unless otherPiece.color is piece.color and otherPiece.type is piece.type
-      continue unless move.to in previousGameState.getLegalMovesFromSquare fromSquare
+      continue unless move.to in previousGameState.getLegalDestinationsFromSquare fromSquare
       fromSquare
 
     return '' unless ambiguousFromSquares.length

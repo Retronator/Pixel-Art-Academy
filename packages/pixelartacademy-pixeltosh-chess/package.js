@@ -65,6 +65,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/boarddisplaytype');
 
   api.addFile('lesson..');
+  api.addFile('lesson/lesson-ai');
   api.addFile('lesson/category');
   api.addFile('lesson/piececategory');
   api.addUnstyledComponent('lesson/steps/step');
@@ -74,6 +75,11 @@ Package.onUse(function(api) {
   api.addFile('lessons..');
   api.addFile('lessons/pawnmovement');
   api.addFile('lessons/pawndoublestep');
+  api.addFile('lessons/pawncapture');
+  api.addFile('lessons/stuckpawns');
+  api.addFile('lessons/enpassant');
+  api.addFile('lessons/pawnsstrongertogether');
+  api.addFile('lessons/pawnchains');
   api.addFile('lessons/knightmovement');
   api.addFile('lessons/bishopmovement');
   api.addFile('lessons/categories..');

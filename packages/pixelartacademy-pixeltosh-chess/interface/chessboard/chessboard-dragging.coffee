@@ -83,7 +83,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
       $destinationSquare = $(event.target).closest '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square'
       destinationSquare = Chess.Square[$destinationSquare.data 'square-name']
 
-      if destinationSquare in @provider().getLegalMovesFromSquare square
+      if destinationSquare in @provider().getLegalDestinationsFromSquare square
         @_skipMoveAnimationTo = destinationSquare
         @performMoveTo destinationSquare
 

@@ -49,6 +49,10 @@ class Chess.GameState extends Chess.GameState
     if rightCaptureSquare and @isSquareOccupiedByOpponent rightCaptureSquare
       moves.push rightCaptureSquare
 
+    if enPassantSquare = @enPassantSquare()
+      if enPassantSquare.rankIndex is square.rankIndex + direction and Math.abs(enPassantSquare.fileIndex - square.fileIndex) is 1
+        moves.push enPassantSquare
+
     moves
   
   _getLegalKnightMovesFromSquare: (square) ->

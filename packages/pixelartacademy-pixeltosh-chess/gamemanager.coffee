@@ -98,22 +98,22 @@ class Chess.GameManager
     data = Chess.GameState.getEmptyData()
     
     for fileIndex in [0...@ownedPiecesCount Chess.Piece.Types.Pawn]
-      data.pieces[Chess.Square[fileIndex][1].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Pawn
+      data.pieces[Chess.Square[fileIndex][1].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Pawn
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Knight]
-      data.pieces[Chess.Square[1 + pieceIndex * 5][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Knight
+      data.pieces[Chess.Square[1 + pieceIndex * 5][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Knight
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Rook]
-      data.pieces[Chess.Square[pieceIndex * 7][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Rook
+      data.pieces[Chess.Square[pieceIndex * 7][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Rook
     
     for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Bishop]
-      data.pieces[Chess.Square[2 + pieceIndex * 3][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Bishop
+      data.pieces[Chess.Square[2 + pieceIndex * 3][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Bishop
     
     if @ownedPiecesCount Chess.Piece.Types.Queen
-      data.pieces[Chess.Square[3][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Queen
+      data.pieces[Chess.Square[3][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Queen
     
     if @ownedPiecesCount Chess.Piece.Types.King
-      data.pieces[Chess.Square[4][0].name] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
+      data.pieces[Chess.Square[4][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
     
     new Chess.GameState data
     
@@ -138,13 +138,13 @@ class Chess.GameManager
     @plyHistory []
     @previewedHistoryPlyNumber null
 
-  getLegalMovesFromSquare: (square) ->
+  getLegalDestinationsFromSquare: (square) ->
     return [] unless game = @game()
 
-    moves = game.moves square.name
-    return [] unless moves[square.name]
+    moves = game.moves square.engineName
+    return [] unless moves[square.engineName]
 
-    Chess.Square[squareName] for squareName in moves[square.name]
+    Chess.Square[squareName] for squareName in moves[square.engineName]
 
   move: (move) ->
     unless game = @game()
@@ -159,11 +159,11 @@ class Chess.GameManager
       console.warn "Tried to move when it wasn't the human's turn."
       return
 
-    unless move.to in @getLegalMovesFromSquare move.from
+    unless move.to in @getLegalDestinationsFromSquare move.from
       console.warn "Tried to move to an illegal square."
       return
 
-    game.move move.from.name, move.to.name
+    game.move move.from.engineName, move.to.engineName
     @game.updated()
 
     @_recordMove move

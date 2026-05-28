@@ -86,4 +86,4 @@ class Chess.Interface.Chessboard.Markup extends AM.Component
   legalMovesSquares: ->
     return unless selectedSquare = @chessboard.selectedSquare()
     
-    @chessboard.provider().getLegalMovesFromSquare selectedSquare
+    @chessboard.provider().getLegalDestinationsFromSquare selectedSquare

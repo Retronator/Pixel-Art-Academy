@@ -14,7 +14,7 @@ class Chess.Lessons.PawnDoubleStep extends Chess.Lesson
   ]
 
   @startingPosition: ->
-    D2: 'P'
+    d2: 'P'
 
   @initialize()
 
@@ -24,29 +24,29 @@ class Chess.Lessons.PawnDoubleStep extends Chess.Lesson
     @id: -> "#{Lesson.id()}.DoubleStepExplanation"
 
     @message: -> """
-      From its very first move, a pawn may advance one or two squares.
+      On its first move, a pawn may advance one or two squares.
 
-      Move the pawn from D2 to D4.
+      Move the pawn from d2 to d4.
     """
 
     @requiredPosition: ->
-      D4: 'P'
+      d4: 'P'
       
     @retryMessage: -> """
-      One square is always legal—but you just spent your one-time jump to go half as far.
+      One square is always legal, but you just spent your one-time jump to go half as far.
       
-      Let's rewind and use it properly: D2 straight to D4.
+      Let's rewind and use it properly: d2 straight to d4.
     """
     
     @failedPosition: ->
-      D3: 'P'
+      d3: 'P'
 
     @initialize()
 
     onRendered: ->
       super arguments...
 
-      @chessboard().selectSquare Chess.Square.D2
+      @chessboard().selectSquare Chess.Square.d2
 
     markup: -> [
       legalMoves: true
@@ -60,14 +60,14 @@ class Chess.Lessons.PawnDoubleStep extends Chess.Lesson
     """
 
     @requiredPosition: ->
-      D5: 'P'
+      d5: 'P'
 
     @initialize()
 
     onRendered: ->
       super arguments...
 
-      @chessboard().selectSquare Chess.Square.D4
+      @chessboard().selectSquare Chess.Square.d4
 
     markup: -> [
       legalMoves: true
@@ -79,7 +79,7 @@ class Chess.Lessons.PawnDoubleStep extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The two-square jump is a one-time offer—only on a pawn's very first move.
+      The two-square jump is a one-time offer. You can only perform it from its home square.
     """
 
     @initialize()

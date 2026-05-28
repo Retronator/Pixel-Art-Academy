@@ -14,7 +14,7 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
   ]
 
   @startingPosition: ->
-    D4: 'B'
+    d4: 'B'
 
   @initialize()
 
@@ -30,29 +30,29 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
     """
 
     @requiredPosition: ->
-      D4: null
+      d4: null
 
     @initialize()
 
     onRendered: ->
       super arguments...
 
-      @chessboard().selectSquare Chess.Square.D4
+      @chessboard().selectSquare Chess.Square.d4
 
     markup: -> [
       legalMoves: true
       arrows: [
-        from: Chess.Square.D4
-        to: Chess.Square.H8
+        from: Chess.Square.d4
+        to: Chess.Square.h8
       ,
-        from: Chess.Square.D4
-        to: Chess.Square.A7
+        from: Chess.Square.d4
+        to: Chess.Square.a7
       ,
-        from: Chess.Square.D4
-        to: Chess.Square.A1
+        from: Chess.Square.d4
+        to: Chess.Square.a1
       ,
-        from: Chess.Square.D4
-        to: Chess.Square.G1
+        from: Chess.Square.d4
+        to: Chess.Square.g1
       ]
     ]
 
@@ -74,7 +74,7 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
     
     markup: -> [
       target:
-        position: Chess.Square.A4
+        position: Chess.Square.a4
     ]
   
   class @End extends Chess.Lesson.EndStep
@@ -90,5 +90,5 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
     
     markup: -> [
       target:
-        position: Chess.Square.A4
+        position: Chess.Square.a4
     ]

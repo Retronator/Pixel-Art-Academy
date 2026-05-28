@@ -18,11 +18,15 @@ class Chess.Lesson
   
   @category: -> throw new AE.NotImplementedException "You must specify the lesson category."
   
-  @startingPosition: -> null # Override to specify a starting position.
+  @startingPosition: -> throw new AE.NotImplementedException "You must specify where the pieces start."
 
   @startingGameState: ->
-    new Chess.GameState _.extend Chess.GameState.getEmptyData(),
-      pieces: @startingPosition()
+    pieces = {}
+
+    for squareName, pieceLetter of @startingPosition()
+      pieces[squareName.toUpperCase()] = pieceLetter
+
+    new Chess.GameState _.extend Chess.GameState.getEmptyData(), {pieces}
   
   @steps: -> throw new AE.NotImplementedException "You must specify the lesson steps."
 
@@ -54,3 +58,5 @@ class Chess.Lesson
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
+
+  aiMove: -> # Override if this lesson is played against the computer.
