@@ -66,8 +66,8 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
     @initialize()
     
     completed: ->
-      return unless gameState = @gameState()
-      return unless bishopSquare = gameState.occupiedSquares()[0]
+      gameState = @gameState()
+      bishopSquare = gameState.occupiedSquares()[0]
       
       manhattanDistance = Math.abs(bishopSquare.fileIndex) + Math.abs(bishopSquare.rankIndex - 3)
       manhattanDistance is 1

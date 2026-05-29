@@ -19,6 +19,15 @@ _diagonalDirections = [
   [-1, 1]
 ]
 
+_straightDirections = [
+  [1, 0]
+  [0, -1]
+  [-1, 0]
+  [0, 1]
+]
+
+_allDirections = _diagonalDirections.concat _straightDirections
+
 class Chess.GameState extends Chess.GameState
   _getLegalPawnMovesFromSquare: (square) ->
     piece = @getPieceAtSquare square
@@ -67,9 +76,18 @@ class Chess.GameState extends Chess.GameState
     moves
 
   _getLegalBishopMovesFromSquare: (square) ->
+    @_getLegalSlidingPieceMovesFromSquare square, _diagonalDirections
+
+  _getLegalRookMovesFromSquare: (square) ->
+    @_getLegalSlidingPieceMovesFromSquare square, _straightDirections
+
+  _getLegalQueenMovesFromSquare: (square) ->
+    @_getLegalSlidingPieceMovesFromSquare square, _allDirections
+
+  _getLegalSlidingPieceMovesFromSquare: (square, directions) ->
     moves = []
 
-    for direction in _diagonalDirections
+    for direction in directions
       distance = 1
 
       loop
@@ -82,4 +100,16 @@ class Chess.GameState extends Chess.GameState
 
         distance++
 
+    moves
+
+  _getLegalKingMovesFromSquare: (square) ->
+    moves = []
+    
+    for direction in _allDirections
+      targetSquare = Chess.Square[square.fileIndex + direction[0]]?[square.rankIndex + direction[1]]
+      continue unless targetSquare
+      continue if @isSquareOccupiedByMe targetSquare
+      
+      moves.push targetSquare
+    
     moves

@@ -33,6 +33,11 @@ class Chess.Interface
         null
         Chess.Interface.Actions.FlipBoard.id()
       ]
+    ,
+      caption: 'Play'
+      items: [
+        Chess.Interface.Actions.AutoPromotion.id()
+      ]
     ]
     
   @createShortcuts: ->

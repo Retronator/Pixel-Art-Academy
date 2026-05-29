@@ -6,6 +6,12 @@ Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Lesson.Step extends AM.Component
   @retryMessage: -> # Override if the step has a message for failed attempts.
+  @retryPosition: -> # Override to retry from a specific position after failure.
+  
+  @retryGameState: ->
+    return unless retryPosition = @retryPosition()
+    
+    Chess.GameState.fromPosition retryPosition
 
   @initialize: ->
     @register @id()
@@ -41,6 +47,7 @@ class Chess.Lesson.Step extends AM.Component
       @retrying true
 
   id: -> @constructor.id()
+  retryGameState: -> @constructor.retryGameState()
   
   message: -> @translate('message').text
   messageTranslation: -> @translation 'message'

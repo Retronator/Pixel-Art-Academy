@@ -20,13 +20,7 @@ class Chess.Lesson
   
   @startingPosition: -> throw new AE.NotImplementedException "You must specify where the pieces start."
 
-  @startingGameState: ->
-    pieces = {}
-
-    for squareName, pieceLetter of @startingPosition()
-      pieces[squareName.toUpperCase()] = pieceLetter
-
-    new Chess.GameState _.extend Chess.GameState.getEmptyData(), {pieces}
+  @startingGameState: -> Chess.GameState.fromPosition @startingPosition()
   
   @steps: -> throw new AE.NotImplementedException "You must specify the lesson steps."
 

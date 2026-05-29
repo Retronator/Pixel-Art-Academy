@@ -12,7 +12,7 @@ class Chess.Interface.Lesson extends AM.Component
     @os = @ancestorComponentOfType PAA.Pixeltosh.OS
     @chess = @os.getProgram Chess
     
-    @lesson = new ComputedField => @chess.lessonManager().lesson()
+    @lesson = new ComputedField => @chess.lessonManager()?.lesson()
     
     @activeStepIndex = new ReactiveField 0
     @activeStep = new ComputedField =>
@@ -26,7 +26,7 @@ class Chess.Interface.Lesson extends AM.Component
       return unless activeStep = @activeStep()
       
       if activeStep.failed()
-        @chess.lessonManager().rewind()
+        @chess.lessonManager().rewind activeStep.retryGameState()
 
       if activeStep.completed()
         @activeStepIndex Math.min @activeStepIndex() + 1, lesson.steps.length - 1

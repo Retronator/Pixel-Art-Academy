@@ -74,14 +74,14 @@ class Chess.LessonManager
     @gameState @_prePromotionGameState
     @_prePromotionGameState = null
   
-  rewind: ->
+  rewind: (gameState) ->
     Tracker.nonreactive =>
       return if @rewinding()
       @rewinding true
       
       await _.waitForSeconds if @moving() then 2 else 1
       
-      @gameState @_previousGameState
+      @gameState gameState or @_previousGameState
       @rewinding false
   
   humanCanMove: ->

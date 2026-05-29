@@ -62,7 +62,7 @@ class Chess.Interface.Chessboard extends LOI.View
     piece = gameState.getPieceAtSquare selectedSquare
     move = new Chess.Move selectedSquare, square
     
-    if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7]
+    if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7] and not @chess.interfaceManager().autoPromotion()
       @promotionInfo
         move: move
         color: piece.color

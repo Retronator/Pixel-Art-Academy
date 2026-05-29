@@ -64,6 +64,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/displayboardcoordinates');
   api.addFile('interface/actions/flipboard');
   api.addFile('interface/actions/boarddisplaytype');
+  api.addFile('interface/actions/autopromotion');
 
   api.addFile('lesson..');
   api.addFile('lesson/lesson-ai');
@@ -83,7 +84,11 @@ Package.onUse(function(api) {
   api.addFile('lessons/pawnchains');
   api.addFile('lessons/pawnpromotion');
   api.addFile('lessons/knightmovement');
+  api.addFile('lessons/knightscenicroute');
   api.addFile('lessons/knightjumps');
+  api.addFile('lessons/knightcapture');
+  api.addFile('lessons/knightinpursuit');
+  api.addFile('lessons/knightonrim');
   api.addFile('lessons/bishopmovement');
   api.addFile('lessons/categories..');
   api.addFile('lessons/categories/pawn');

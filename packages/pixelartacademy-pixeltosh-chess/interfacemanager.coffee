@@ -17,6 +17,7 @@ class Chess.InterfaceManager
   constructor: (@chess) ->
     @boardDisplayType = @chess.state.field 'boardDisplayType', default: @constructor.BoardDisplayTypes.TwoDimensional
     @displayBoardCoordinates = @chess.state.field 'displayBoardCoordinates', default: false
+    @_autoPromotion = @chess.state.field 'autoPromotion', default: false
     @flippedBoard = new ReactiveField false
     
     @screen = new ReactiveField @constructor.Screens.Menu
@@ -100,3 +101,5 @@ class Chess.InterfaceManager
     @chess.os.activateWindow @windowId
 
   shopIsOpen: -> @_shopWindowId()
+  
+  autoPromotion: -> @_autoPromotion() and not @inLesson()

@@ -17,10 +17,12 @@ class Chess.Interface.Chessboard.Piece extends AM.Component
     # Listen for chessboard animations if we're rendered in the chessboard.
     @chessboard?.pieceAnimation.addHandler @, @onAnimation
     @animating = new ReactiveField false
-
+    @promoting = new ReactiveField false
+    
     @bitmapId = new ComputedField =>
-      piece = @currentData()
-      assetId = Chess.Assets.TwoDimensional[piece.type][piece.color].id()
+      piece = @data()
+      type = if @promoting() then Chess.Piece.Types.Pawn else piece.type
+      assetId = Chess.Assets.TwoDimensional[type][piece.color].id()
       
       return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
       return unless asset = _.find project.assets, (asset) => asset.id is assetId
@@ -74,6 +76,8 @@ class Chess.Interface.Chessboard.Piece extends AM.Component
     @_animatePieceAnimation animation
 
   _animatePieceAnimation: (animation) ->
+    @promoting true if animation.promotion
+    
     # Determine where we should animate from.
     if @chessboard.chess.interfaceManager()?.flippedBoard()
       fileOffset = animation.move.to.fileIndex - animation.move.from.fileIndex
@@ -119,4 +123,5 @@ class Chess.Interface.Chessboard.Piece extends AM.Component
           left: 0
           top: 0
         
+        @promoting false
         @animating false

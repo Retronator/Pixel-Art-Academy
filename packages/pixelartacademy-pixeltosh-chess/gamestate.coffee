@@ -10,6 +10,14 @@ class Chess.GameState
     castling: {}
     halfMove: 0
     fullMove: 0
+    
+  @fromPosition: (position) ->
+    pieces = {}
+    
+    for squareName, pieceLetter of position
+      pieces[squareName.toUpperCase()] = pieceLetter
+    
+    new @ _.extend @getEmptyData(), {pieces}
 
   constructor: (@data) ->
     try
@@ -48,6 +56,8 @@ class Chess.GameState
 
   hasPieceAtSquare: (piece, square) -> @data.pieces[square.engineName] is piece?.letter
 
+  getPiecesOfColor: (color) -> (@getPieceAtSquare square for square in @occupiedSquaresOfColor color)
+
   hasSamePiecePlacementAs: (gameState) -> EJSON.equals @data.pieces, gameState.data.pieces
 
   getLegalDestinationsFromSquare: (square) ->
@@ -65,7 +75,7 @@ class Chess.GameState
         when Chess.Piece.Types.Knight then @_getLegalKnightMovesFromSquare square
         when Chess.Piece.Types.Bishop then @_getLegalBishopMovesFromSquare square
         when Chess.Piece.Types.Rook then @_getLegalRookMovesFromSquare square
-        when Chess.Piece.Types.Queen then @_getLegQueenMovesFromSquare square
+        when Chess.Piece.Types.Queen then @_getLegalQueenMovesFromSquare square
         when Chess.Piece.Types.King then @_getLegalKingMovesFromSquare square
 
   getLegalMoves: ->
@@ -109,8 +119,9 @@ class Chess.GameState
         delete data.pieces[capturedPawnSquare.engineName]
 
       # Move the piece to the new square.
-      if move.promotionPieceType
-        data.pieces[move.to.engineName] = Chess.Piece.getLetter piece.color, move.promotionPieceType
+      if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7]
+        pieceType = move.promotionPieceType or Chess.Piece.Types.Queen
+        data.pieces[move.to.engineName] = Chess.Piece.getLetter piece.color, pieceType
 
       else
         data.pieces[move.to.engineName] = data.pieces[move.from.engineName]

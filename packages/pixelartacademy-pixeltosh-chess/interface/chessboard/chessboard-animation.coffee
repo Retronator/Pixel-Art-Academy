@@ -45,7 +45,9 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
     for toSquare in nextGameState.occupiedSquares()
       piece = nextGameState.getPieceAtSquare toSquare
       continue if previousGameState.hasPieceAtSquare piece, toSquare
-      continue unless fromSquare = @_findPreviousSquareForPiece piece, previousGameState, nextGameState, usedPreviousSquares
+      fromSquare = @_findPreviousSquareForPiece piece, previousGameState, nextGameState, usedPreviousSquares
+      fromSquare ?= @_findPreviousSquareForPromotedPiece piece, toSquare, previousGameState, nextGameState, usedPreviousSquares
+      continue unless fromSquare
 
       usedPreviousSquares[fromSquare.name] = true
       
@@ -53,6 +55,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
 
       pieceAnimations.push
         move: new Chess.Move fromSquare, toSquare
+        promotion: previousGameState.getPieceAtSquare(fromSquare).type is Chess.Piece.Types.Pawn and piece.type in Chess.Piece.PromotionTypes
 
     pieceAnimations
 
@@ -61,5 +64,19 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
       continue if usedPreviousSquares[fromSquare.name]
       continue unless previousGameState.hasPieceAtSquare piece, fromSquare
       continue if nextGameState.hasPieceAtSquare piece, fromSquare
+
+      return fromSquare
+
+  _findPreviousSquareForPromotedPiece: (piece, toSquare, previousGameState, nextGameState, usedPreviousSquares) ->
+    return unless piece.type in Chess.Piece.PromotionTypes
+    return unless toSquare.rankIndex in [0, 7]
+
+    pawn = new Chess.Piece piece.color, Chess.Piece.Types.Pawn
+
+    for fromSquare in previousGameState.occupiedSquares()
+      continue if usedPreviousSquares[fromSquare.name]
+      continue unless previousGameState.hasPieceAtSquare pawn, fromSquare
+      continue if nextGameState.hasPieceAtSquare pawn, fromSquare
+      continue unless toSquare in previousGameState.getLegalDestinationsFromSquare fromSquare
 
       return fromSquare
