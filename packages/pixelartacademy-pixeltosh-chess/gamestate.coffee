@@ -87,7 +87,14 @@ class Chess.GameState
 
   applyMove: (move) ->
     try
-      new @constructor ChessEngine.move @data, move.from.engineName, move.to.engineName
+      data = ChessEngine.move @data, move.from.engineName, move.to.engineName
+
+      # JS Chess Engine automatically promotes pawns to queens, so we have to override the piece.
+      if move.promotionPieceType
+        piece = @getPieceAtSquare move.from
+        data.pieces[move.to.engineName] = Chess.Piece.getLetter piece.color, move.promotionPieceType
+
+      new @constructor data
 
     catch
       # The state is not a valid chess position so we have to calculate the new state ourselves.
@@ -102,7 +109,12 @@ class Chess.GameState
         delete data.pieces[capturedPawnSquare.engineName]
 
       # Move the piece to the new square.
-      data.pieces[move.to.engineName] = data.pieces[move.from.engineName]
+      if move.promotionPieceType
+        data.pieces[move.to.engineName] = Chess.Piece.getLetter piece.color, move.promotionPieceType
+
+      else
+        data.pieces[move.to.engineName] = data.pieces[move.from.engineName]
+
       delete data.pieces[move.from.engineName]
 
       # Add en passant possibility.
@@ -114,3 +126,12 @@ class Chess.GameState
       data.turn = if data.turn is 'white' then 'black' else 'white'
 
       new @constructor data
+    
+  startPromotion: (move) ->
+    # We create a simple copy with the pawn moved to the last rank.
+    data = _.cloneDeep @data
+    
+    data.pieces[move.to.engineName] = data.pieces[move.from.engineName]
+    delete data.pieces[move.from.engineName]
+    
+    new @constructor data

@@ -45,6 +45,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/chessboard/square..');
   api.addComponent('interface/chessboard/piece..');
   api.addComponent('interface/chessboard/markup..');
+  api.addComponent('interface/chessboard/promotion..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/lessons..');
@@ -80,7 +81,9 @@ Package.onUse(function(api) {
   api.addFile('lessons/enpassant');
   api.addFile('lessons/pawnsstrongertogether');
   api.addFile('lessons/pawnchains');
+  api.addFile('lessons/pawnpromotion');
   api.addFile('lessons/knightmovement');
+  api.addFile('lessons/knightjumps');
   api.addFile('lessons/bishopmovement');
   api.addFile('lessons/categories..');
   api.addFile('lessons/categories/pawn');

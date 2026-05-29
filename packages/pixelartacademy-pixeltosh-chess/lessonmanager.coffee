@@ -44,7 +44,8 @@ class Chess.LessonManager
   
   move: (move) ->
     Tracker.nonreactive =>
-      @_previousGameState = @gameState()
+      @_previousGameState = @_prePromotionGameState or @gameState()
+      @_prePromotionGameState = null
       
       newGameState = @_previousGameState.applyMove move
       @gameState newGameState
@@ -62,6 +63,16 @@ class Chess.LessonManager
       @gameState newGameState
       
       @moving false
+      
+  startPromotion: (move) ->
+    Tracker.nonreactive =>
+      @_prePromotionGameState = @_previousGameState = @gameState()
+      newGameState = @_prePromotionGameState.startPromotion move
+      @gameState newGameState
+    
+  cancelPromotion: ->
+    @gameState @_prePromotionGameState
+    @_prePromotionGameState = null
   
   rewind: ->
     Tracker.nonreactive =>

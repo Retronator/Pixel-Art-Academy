@@ -16,6 +16,7 @@ class Chess.Interface.Chessboard extends LOI.View
     @chess = @os.getProgram Chess
 
     @selectedSquare = new ReactiveField null
+    @promotionInfo = new ReactiveField null
 
     # Create board squares.
     @squares = []
@@ -55,12 +56,41 @@ class Chess.Interface.Chessboard extends LOI.View
     piece?.color is gameState.turn() and provider.getLegalDestinationsFromSquare(square).length
     
   performMoveTo: (square) ->
-    @provider().move new Chess.Move @selectedSquare(), square
+    selectedSquare = @selectedSquare()
+    provider = @provider()
+    gameState = provider.gameState()
+    piece = gameState.getPieceAtSquare selectedSquare
+    move = new Chess.Move selectedSquare, square
+    
+    if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7]
+      @promotionInfo
+        move: move
+        color: piece.color
+        
+      provider.startPromotion move
+
+    else
+      @performMove move
+
+  performMove: (move) ->
+    @provider().move move
     @selectedSquare null
+    @promotionInfo null
     
     # Reset the grabbing cursor since the piece element will be removed
     # and the pointer leave event will not handle the cursor change.
     @chess.os.cursor().setClass null
+  
+  choosePromotion: (pieceType) ->
+    promotionInfo = @promotionInfo()
+    promotionInfo.move.promotionPieceType = pieceType
+    
+    @performMove promotionInfo.move
+    
+  cancelPromotion: ->
+    @promotionInfo null
+    @selectedSquare null
+    @provider().cancelPromotion()
     
   selectSquare: (square) ->
     @selectedSquare square

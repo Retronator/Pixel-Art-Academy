@@ -1,0 +1,30 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-promotion
+  absolute-cover()
+  display flex
+  justify-content center
+  align-items center
+
+  .promotion
+    padding 5rem
+
+    .prompt
+      text-align center
+      margin-bottom 5rem
+
+    .pieces
+      list-style none
+      display flex
+      z-index 6
+      margin 0 auto
+      padding 0
+
+      .piece
+        position relative
+        width 24rem
+        height 24rem
+        padding 2rem
+
+        &:hover
+          background black

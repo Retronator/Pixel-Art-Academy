@@ -17,13 +17,18 @@ class Chess.GameManager
     @gameOptions = new ReactiveField null
     @plyHistory = new ReactiveField []
     @previewedHistoryPlyNumber = new ReactiveField null
+    @promotionGameState = new ReactiveField null
 
     @gameState = new AE.LiveComputedField =>
       # In the menu, we show a special board with the purchased pieces.
       return @_generateMenuGameState() if @chess.interfaceManager()?.inMenu()
       
+      # Show any historic state.
       previewedHistoryPlyNumber = @previewedHistoryPlyNumber()
       return @plyHistory()[previewedHistoryPlyNumber].gameState if previewedHistoryPlyNumber?
+
+      # During promotion, we show the temporary state with the pawn on the last rank.
+      return promotionGameState if promotionGameState = @promotionGameState()
 
       # Otherwise, read the state from the engine game.
       return unless game = @game.withUpdates()
@@ -121,6 +126,7 @@ class Chess.GameManager
     @gameOptions options
     @plyHistory []
     @previewedHistoryPlyNumber null
+    @promotionGameState null
 
     # Determine the starting board orientation.
     @chess.interfaceManager().flippedBoard options.whitePlayerType is @constructor.PlayerTypes.Computer and options.blackPlayerType is @constructor.PlayerTypes.Human
@@ -137,6 +143,7 @@ class Chess.GameManager
     @game null
     @plyHistory []
     @previewedHistoryPlyNumber null
+    @promotionGameState null
 
   getLegalDestinationsFromSquare: (square) ->
     return [] unless game = @game()
@@ -164,6 +171,16 @@ class Chess.GameManager
       return
 
     game.move move.from.engineName, move.to.engineName
+
+    if @promotionGameState()
+      if move.promotionPieceType and move.promotionPieceType isnt Chess.Piece.Types.Queen
+        # JS Chess Engine automatically promotes pawns to queens, so we have to override the piece.
+        piece = @promotionGameState().getPieceAtSquare move.to
+        promotionPieceLetter = Chess.Piece.getLetter piece.color, move.promotionPieceType
+        game.setPiece move.to.engineName, promotionPieceLetter
+
+      @promotionGameState null
+
     @game.updated()
 
     @_recordMove move
@@ -177,6 +194,12 @@ class Chess.GameManager
       gameState: new Chess.GameState EJSON.clone @game().exportJson()
 
     @plyHistory plyHistory
+
+  startPromotion: (move) ->
+    @promotionGameState @gameState().startPromotion move
+
+  cancelPromotion: ->
+    @promotionGameState null
 
   displayPosition: (plyNumber) ->
     if plyNumber is @livePlyNumber()

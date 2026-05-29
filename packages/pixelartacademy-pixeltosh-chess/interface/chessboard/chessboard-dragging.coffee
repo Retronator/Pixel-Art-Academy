@@ -71,14 +71,11 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
       @pieceDraggingInfo null
       cursor.endClassRequests @
 
-      unless wasDragging or previousSelectedSquare is square
+      if wasDragging or previousSelectedSquare isnt square
         @_ignoreNextClick = true
         Meteor.setTimeout => @_ignoreNextClick = false
 
       return unless wasDragging
-
-      @_ignoreNextClick = true
-      Meteor.setTimeout => @_ignoreNextClick = false
 
       $destinationSquare = $(event.target).closest '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square'
       destinationSquare = Chess.Square[$destinationSquare.data 'square-name']

@@ -13,6 +13,13 @@ class Chess.Piece
     Rook: 'Rook'
     Queen: 'Queen'
     King: 'King'
+    
+  @PromotionTypes = [
+    @Types.Knight
+    @Types.Bishop
+    @Types.Rook
+    @Types.Queen
+  ]
   
   @TypeLetters =
     Pawn: 'p'
