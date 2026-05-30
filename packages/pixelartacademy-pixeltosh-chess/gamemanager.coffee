@@ -47,27 +47,9 @@ class Chess.GameManager
       return if @chess.os.interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
       
       return unless LOI.adventure.gameState()
-      return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
       
-      assetIsDrawn = (assetId) =>
-        return unless asset = _.find project.assets, (asset) => asset.id is assetId
-        return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId, false
-        bitmap.historyPosition
-        
-      throwError = (color, pieceType) =>
-        @chess.os.throwError
-          reason: "file not found"
-          details: "#{color} #{pieceType.toLowerCase()}"
-          shutDownProgram: @chess
-      
-      for pieceType, count of @ownedPieceTypeCounts() when count
-        unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].White.id()
-          throwError 'white', pieceType
-          return
-        
-        unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].Black.id()
-          throwError 'black', pieceType
-          return
+      ownedPieceTypes = (pieceType for pieceType, count of @ownedPieceTypeCounts() when count)
+      @assertDrawnPieces ownedPieceTypes
   
     @_playAutorun = @chess.autorun (computation) =>
       return unless state = @gameState()
@@ -121,6 +103,29 @@ class Chess.GameManager
       data.pieces[Chess.Square[4][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
     
     new Chess.GameState data
+    
+  assertDrawnPieces: (pieceTypes) ->
+    return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
+  
+    assetIsDrawn = (assetId) =>
+      return unless asset = _.find project.assets, (asset) => asset.id is assetId
+      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId, false
+      bitmap.historyPosition
+      
+    throwError = (color, pieceType) =>
+      @chess.os.throwError
+        reason: "file not found"
+        details: "#{color} #{pieceType.toLowerCase()}"
+        shutDownProgram: @chess
+    
+    for pieceType in pieceTypes
+      unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].White.id()
+        throwError 'white', pieceType
+        return
+      
+      unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].Black.id()
+        throwError 'black', pieceType
+        return
     
   startGame: (options) ->
     @gameOptions options
@@ -235,3 +240,9 @@ class Chess.GameManager
       
     else
       _.sum _.values counts
+
+  bestOwnedPromotionPieceType: ->
+    @_promotionTypesDescending ?= _.reverse _.clone Chess.Piece.PromotionTypes
+    
+    for pieceType in @_promotionTypesDescending
+      return pieceType if @ownedPiecesCount pieceType

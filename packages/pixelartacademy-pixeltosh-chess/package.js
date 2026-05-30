@@ -90,6 +90,9 @@ Package.onUse(function(api) {
   api.addFile('lessons/knightinpursuit');
   api.addFile('lessons/knightonrim');
   api.addFile('lessons/bishopmovement');
+  api.addFile('lessons/blockedbishop');
+  api.addFile('lessons/twobishopstwocolours');
+  api.addFile('lessons/bishopcapture');
   api.addFile('lessons/categories..');
   api.addFile('lessons/categories/pawn');
   api.addFile('lessons/categories/knight');

@@ -22,40 +22,13 @@ class Chess.Lessons.KnightCapture extends Chess.Lesson
 
   Lesson = @
 
-  class @CapturePawn extends Chess.Lesson.PositionStep
+  class @CapturePawn extends Chess.Lessons.CapturePawn
     @id: -> "#{Lesson.id()}.CapturePawn"
 
     @message: -> """
       A knight captures just as it moves—by landing on the enemy.
 
       Capture the pawn.
-    """
-
-    @retryPosition: -> Lesson.startingPosition()
-
-    completed: ->
-      not @gameState().occupiedSquaresOfColor(Chess.Piece.Colors.Black).length
-
-    failed: ->
-      gameState = @gameState()
-      return true unless gameState.getPiecesOfColor(Chess.Piece.Colors.White).length
-      
-      return unless blackPiece = gameState.getPiecesOfColor(Chess.Piece.Colors.Black)[0]
-      return unless blackPiece.type is Chess.Piece.Types.Queen
-      
-      # Make sure the knight can't capture the queen in the next move.
-      queenSquare = gameState.occupiedSquaresOfColor(Chess.Piece.Colors.Black)[0]
-      knightSquare = gameState.occupiedSquaresOfColor(Chess.Piece.Colors.White)[0]
-      
-      fileDistance = Math.abs queenSquare.fileIndex - knightSquare.fileIndex
-      rankDistance = Math.abs queenSquare.rankIndex - knightSquare.rankIndex
-
-      not ((fileDistance is 2 and rankDistance is 1) or (fileDistance is 1 and rankDistance is 2))
-    
-    @retryMessage: -> """
-      You missed your moment, the pawn was able to get the best of you.
-
-      Try again by capturing the pawn while you have the chance.
     """
 
     @initialize()

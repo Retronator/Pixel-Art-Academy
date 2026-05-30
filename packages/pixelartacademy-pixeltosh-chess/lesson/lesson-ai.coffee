@@ -31,6 +31,14 @@ class Chess.Lesson extends Chess.Lesson
 
     for fromSquare in blackPieceSquares
       for toSquare in gameState.getLegalDestinationsFromSquare fromSquare
-        moves.push new Chess.Move fromSquare, toSquare
+        move = new Chess.Move fromSquare, toSquare
+        
+        # For promotions, set it to the best piece the player owns.
+        piece = gameState.getPieceAtSquare move.from
+        
+        if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7]
+          move.promotionPieceType = @lessonManager.chess.gameManager().bestOwnedPromotionPieceType()
+
+        moves.push move
 
     moves

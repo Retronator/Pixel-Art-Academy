@@ -10,6 +10,8 @@ class Chess.Interface.Chessboard.Promotion extends AM.Component
     super arguments...
 
     @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard
+    
+    @chessboard.chess.gameManager().assertDrawnPieces Chess.Piece.PromotionTypes
   
   pieces: ->
     promotionInfo = @data()
