@@ -57,7 +57,8 @@ class Chess.Lessons.PawnChains extends Chess.Lesson
     """
 
     @requiredPosition: ->
-      e4: 'P'
+      d3: null
+      d4: null
       
     @failedPosition: ->
       d4: 'P'

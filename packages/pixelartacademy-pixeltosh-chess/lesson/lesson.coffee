@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Lesson
+  # completedCount: integer, how many times the player completed a lesson.
   @_lessonClasses = []
   
   @getClassesForCategory: (categoryId) -> _.filter @_lessonClasses, (lessonClass) => lessonClass.category().id() is categoryId
@@ -23,10 +24,15 @@ class Chess.Lesson
   @startingGameState: -> Chess.GameState.fromPosition @startingPosition()
   
   @steps: -> throw new AE.NotImplementedException "You must specify the lesson steps."
+  
+  @additionalRequiredPieces: -> [] # Override if this lesson requires pieces that are not part of the starting game state.
 
   @initialize: ->
     @_lessonClasses.push @
 
+    @stateAddress = new LOI.StateAddress "things.#{@id()}"
+    @state = new LOI.StateObject address: @stateAddress
+    
     # On the server, after document observers are started, perform initialization.
     if Meteor.isServer
       Document.startup =>
@@ -37,6 +43,9 @@ class Chess.Lesson
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
 
   constructor: (@lessonManager) ->
+    @stateAddress = @constructor.stateAddress
+    @state = @constructor.state
+    
     # Subscribe to this lesson's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
@@ -53,4 +62,23 @@ class Chess.Lesson
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
 
+  completedCount: -> @state('completedCount') or 0
+  
+  requiredPieceTypeCounts: ->
+    whitePieces = @startingGameState().getPiecesOfColor Chess.Piece.Colors.White
+    pieceTypeCounts = _.countBy whitePieces, (piece) => piece.type
+    
+    for pieceType in @constructor.additionalRequiredPieces()
+      pieceTypeCounts[pieceType] = (pieceTypeCounts[pieceType] or 0) + 1
+    
+    pieceTypeCounts
+  
+  available: ->
+    return unless gameManager = @lessonManager.chess.gameManager()
+
+    for pieceType, count of @requiredPieceTypeCounts()
+      return false if count > gameManager.ownedPiecesCount pieceType
+      
+    true
+  
   aiMove: -> # Override if this lesson is played against the computer.

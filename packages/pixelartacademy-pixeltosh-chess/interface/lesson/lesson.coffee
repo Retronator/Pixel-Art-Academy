@@ -28,8 +28,14 @@ class Chess.Interface.Lesson extends AM.Component
       if activeStep.failed()
         @chess.lessonManager().rewind activeStep.retryGameState()
 
-      if activeStep.completed()
-        @activeStepIndex Math.min @activeStepIndex() + 1, lesson.steps.length - 1
+      if activeStep.completed() and not @_completedCountIncreased
+        if @activeStepIndex() < lesson.steps.length - 1
+          @activeStepIndex @activeStepIndex() + 1
+          
+        else
+          completedCount = lesson.state('completedCount') or 0
+          lesson.state 'completedCount', completedCount + 1
+          @_completedCountIncreased = true
 
   onDestroyed: ->
     super arguments...

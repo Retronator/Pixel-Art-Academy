@@ -15,6 +15,8 @@ class Chess.Lessons.PawnPromotion extends Chess.Lesson
 
   @startingPosition: ->
     d7: 'P'
+    
+  @additionalRequiredPieces: -> Chess.Piece.PromotionTypes
 
   @initialize()
 

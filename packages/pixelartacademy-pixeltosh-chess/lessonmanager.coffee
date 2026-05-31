@@ -56,12 +56,15 @@ class Chess.LessonManager
         return
       
       @moving true
+      osCursor = @chess.os.cursor()
+      osCursor.wait @
       
       await _.waitForSeconds 0.5
       
       newGameState = newGameState.applyMove aiMove
       @gameState newGameState
       
+      osCursor.endWait @
       @moving false
       
   startPromotion: (move) ->

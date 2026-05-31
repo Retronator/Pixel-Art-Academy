@@ -7,7 +7,7 @@
             <div class="name">{{displayName}}</div>
             <ol class="lessons">
               {{#each lessons}}
-                <li class="lesson {{lessonStatusClass}}" {{lessonCursorAttribute}}>
+                <li class="lesson {{lessonLockedClass}} {{lessonCompletedClass}}" {{lessonCursorAttribute}}>
                   <span class="name">{{displayName}}</span>
                 </li>
               {{/each}}
@@ -16,5 +16,18 @@
         {{/each}}
       </ol>
     {{/PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea}}
+    {{#with lockedLessonInfo}}
+      <div class="locked-lesson-info pixelartacademy-pixeltosh-os-interface-rectanglearea" {{style topStyle}}>
+        <div class="requires">Requires</div>
+        <ul class="required-piece-types">
+          {{#each requiredPieceTypes}}
+            <li class="required-piece-type">
+              <span class="name">{{type}}</span>
+              <span class="owned">{{ownedCount}}/{{requiredCount}}</span>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/with}}
   </div>
 </template>
