@@ -1,9 +1,9 @@
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Lessons.TwoBishopsTwoColours extends Chess.Lesson
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Lessons.TwoBishopsTwoColours'
-  @displayName: -> "Two bishops, two colours"
+class Chess.Lessons.TwoBishopsTwoColors extends Chess.Lesson
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Lessons.TwoBishopsTwoColors'
+  @displayName: -> "Two bishops, two colors"
 
   @category: -> Chess.Lessons.Categories.Bishop
 

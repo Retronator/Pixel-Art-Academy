@@ -29,7 +29,7 @@ class Chess.Lessons
       return unless blackPiece = gameState.getPiecesOfColor(Chess.Piece.Colors.Black)[0]
       return if blackPiece.type is Chess.Piece.Types.Pawn
       
-      # Make sure white can't capture the queen in the next move.
+      # Make sure white can't capture the piece in the next move.
       blackSquare = gameState.occupiedSquaresOfColor(Chess.Piece.Colors.Black)[0]
       whiteSquare = gameState.occupiedSquaresOfColor(Chess.Piece.Colors.White)[0]
       blackSquare not in gameState.getLegalDestinationsFromSquare whiteSquare
