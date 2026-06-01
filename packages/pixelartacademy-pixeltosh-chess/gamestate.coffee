@@ -9,7 +9,7 @@ class Chess.GameState
     pieces: {}
     castling: {}
     halfMove: 0
-    fullMove: 0
+    fullMove: 1
     
   @fromPosition: (position) ->
     pieces = {}
@@ -20,11 +20,12 @@ class Chess.GameState
     new @ _.extend @getEmptyData(), {pieces}
 
   constructor: (@data) ->
-    try
-      @_engineMoves = ChessEngine.moves @data
 
   turn: -> if @data.turn is 'white' then Chess.Piece.Colors.White else Chess.Piece.Colors.Black
-  setTurn: (color) -> @data.turn = color.toLowerCase()
+
+  setTurn: (color) ->
+    @data.turn = color.toLowerCase()
+    @_engineMoves = null
 
   check: -> @data.check
 
@@ -40,6 +41,11 @@ class Chess.GameState
 
   occupiedSquaresOfColor: (color) ->
     _.filter @occupiedSquares(), (square) => @getPieceAtSquare(square).color is color
+    
+  occupiedSquaresByPiecesOfColor: (pieceType, color) ->
+    _.filter @occupiedSquares(), (square) =>
+      piece = @getPieceAtSquare square
+      piece.type is pieceType and piece.color is color
 
   isSquareOccupied: (square) -> @data.pieces[square.engineName]
   
@@ -61,10 +67,10 @@ class Chess.GameState
   hasSamePiecePlacementAs: (gameState) -> EJSON.equals @data.pieces, gameState.data.pieces
 
   getLegalDestinationsFromSquare: (square) ->
-    if @_engineMoves
-      return [] unless @_engineMoves[square.engineName]
+    if engineMoves = @_getEngineMoves()
+      return [] unless engineMoves[square.engineName]
 
-      Chess.Square[squareName] for squareName in @_engineMoves[square.engineName]
+      Chess.Square[squareName] for squareName in engineMoves[square.engineName]
 
     else
       # The state is not a valid chess position so we have to calculate the moves ourselves.
@@ -83,8 +89,8 @@ class Chess.GameState
 
     @_moves = []
 
-    if @_engineMoves
-      for fromSquareName, toSquareNames of @_engineMoves
+    if engineMoves = @_getEngineMoves()
+      for fromSquareName, toSquareNames of engineMoves
         for toSquareName in toSquareNames
           @_moves.push new Chess.Move Chess.Square[fromSquareName], Chess.Square[toSquareName]
 
@@ -95,6 +101,18 @@ class Chess.GameState
 
     @_moves
 
+  aiMove: (level) ->
+    Chess.Move.fromEngine ChessEngine.aiMove @data, level
+
+  _getEngineMoves: ->
+    return @_engineMoves if @_engineMoves?
+    
+    try
+      @_engineMoves = ChessEngine.moves @data
+      
+    catch error
+      @_engineMoves = false
+  
   applyMove: (move) ->
     try
       data = ChessEngine.move @data, move.from.engineName, move.to.engineName
@@ -104,6 +122,16 @@ class Chess.GameState
         piece = @getPieceAtSquare move.from
         data.pieces[move.to.engineName] = Chess.Piece.getLetter piece.color, move.promotionPieceType
 
+      # Stateless call to move doesn't update checkmate and stalemate automatically, so we have to do it ourselves.
+      unless _.keys(ChessEngine.moves(data)).length
+        if data.check
+          data.checkMate = true
+          
+        else
+          data.staleMate = true
+          
+        data.isFinished = true
+      
       new @constructor data
 
     catch

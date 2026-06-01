@@ -8,6 +8,9 @@ class Chess.Lesson extends Chess.Lesson
   randomAIMove: ->
     Random.choice @_getBlackMoves()
 
+  randomAIMoveByPiece: (pieceType) ->
+    Random.choice @_getBlackMovesForPiece pieceType
+  
   randomAICapture: ->
     gameState = @lessonManager.gameState()
     captureMoves = _.filter @_getBlackMoves(), (move) => gameState.isSquareOccupied move.to
@@ -26,10 +29,19 @@ class Chess.Lesson extends Chess.Lesson
   _getBlackMoves: ->
     gameState = @lessonManager.gameState()
     blackPieceSquares = gameState.occupiedSquaresOfColor Chess.Piece.Colors.Black
+    @_getBlackMovesFromSquares blackPieceSquares
+
+  _getBlackMovesForPiece: (pieceType) ->
+    gameState = @lessonManager.gameState()
+    blackPieceSquares = gameState.occupiedSquaresByPiecesOfColor pieceType, Chess.Piece.Colors.Black
+    @_getBlackMovesFromSquares blackPieceSquares
+  
+  _getBlackMovesFromSquares: (fromSquares) ->
+    gameState = @lessonManager.gameState()
 
     moves = []
 
-    for fromSquare in blackPieceSquares
+    for fromSquare in fromSquares
       for toSquare in gameState.getLegalDestinationsFromSquare fromSquare
         move = new Chess.Move fromSquare, toSquare
         

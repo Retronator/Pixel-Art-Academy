@@ -50,6 +50,8 @@ class Chess.LessonManager
       newGameState = @_previousGameState.applyMove move
       @gameState newGameState
       
+      return if newGameState.finished()
+      
       unless aiMove = @lesson().aiMove()
         newGameState.setTurn Chess.Piece.Colors.White
         @gameState newGameState

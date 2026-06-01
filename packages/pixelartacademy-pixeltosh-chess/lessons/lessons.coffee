@@ -23,7 +23,7 @@ class Chess.Lessons
     completed: -> not @gameState().occupiedSquaresOfColor(Chess.Piece.Colors.Black).length
 
     failed: ->
-      gameState = @gameState()
+      return unless gameState = @gameState()
       return true unless gameState.getPiecesOfColor(Chess.Piece.Colors.White).length
       
       return unless blackPiece = gameState.getPiecesOfColor(Chess.Piece.Colors.Black)[0]

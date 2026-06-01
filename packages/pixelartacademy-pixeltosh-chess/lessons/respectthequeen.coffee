@@ -50,7 +50,7 @@ class Chess.Lessons.RespectTheQueen extends Chess.Lesson
       queenSaved or queenLostWithoutTrade
     
     failed: ->
-      gameState = @gameState()
+      return unless gameState = @gameState()
       not gameState.getPiecesOfColor(Chess.Piece.Colors.White).length and gameState.getPiecesOfColor(Chess.Piece.Colors.Black).length is 1
   
   class @WinThePawns extends Chess.Lesson.Step
@@ -77,7 +77,7 @@ class Chess.Lessons.RespectTheQueen extends Chess.Lesson
     completed: -> not @gameState().occupiedSquaresOfColor(Chess.Piece.Colors.Black).length
     
     failed: ->
-      gameState = @gameState()
+      return unless gameState = @gameState()
       return true unless whiteSquare = gameState.occupiedSquaresOfColor(Chess.Piece.Colors.White)[0]
       
       blackSquares = gameState.occupiedSquaresOfColor Chess.Piece.Colors.Black

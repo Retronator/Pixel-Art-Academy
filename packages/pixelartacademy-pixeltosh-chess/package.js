@@ -102,6 +102,15 @@ Package.onUse(function(api) {
   api.addFile('lessons/queencapture');
   api.addFile('lessons/respectthequeen');
   api.addFile('lessons/kingmovement');
+  api.addFile('lessons/check');
+  api.addFile('lessons/kingdanger');
+  api.addFile('lessons/capturingattacker');
+  api.addFile('lessons/blockingcheck');
+  api.addFile('lessons/checkmate');
+  api.addFile('lessons/stalemate');
+  api.addFile('lessons/castling');
+  api.addFile('lessons/kingscanttouch');
+  api.addFile('lessons/kingjoinsfight');
   api.addFile('lessons/categories..');
   api.addFile('lessons/categories/pawn');
   api.addFile('lessons/categories/knight');

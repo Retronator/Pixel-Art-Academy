@@ -10,6 +10,9 @@ class Chess.Square
   constructor: (@fileIndex, @rankIndex) ->
     @name = @constructor.getName @fileIndex, @rankIndex
     @engineName = @name.toUpperCase()
+    
+  manhattanDistanceTo: (square) ->
+    Math.abs(@fileIndex - square.fileIndex) + Math.abs(@rankIndex - square.rankIndex)
 
 for fileIndex in [0...8]
   Chess.Square[fileIndex] = []
