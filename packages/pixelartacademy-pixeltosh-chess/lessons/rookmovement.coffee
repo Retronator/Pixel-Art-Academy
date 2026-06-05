@@ -79,7 +79,7 @@ class Chess.Lessons.RookMovement extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The rook is a powerful long-range piece. Down an open rank (row) or file (column) it sweeps the whole length of the board in a single move.
+      The rook is a powerful long-range piece. Down an open rank (row) or file (column) it reaches the whole length of the board in a single move.
     """
 
     @initialize()

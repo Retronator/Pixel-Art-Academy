@@ -39,7 +39,7 @@ class Chess.Lessons.QueenCapture extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Rook's lines and bishop's diagonals together, the queen strikes in every direction. Across an open board, few squares are safe from her.
+      The queen holds the power of a rook and a bishop in one piece. Across an open board, few squares are safe from her.
     """
 
     @initialize()

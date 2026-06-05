@@ -35,7 +35,7 @@ class Chess.Lessons.PawnDoubleStep extends Chess.Lesson
     @retryMessage: -> """
       One square is always legal, but you just spent your one-time jump to go half as far.
       
-      Let's rewind and use it properly: d2 straight to d4.
+      Let's rewind and use this special move: d2 straight to d4.
     """
     
     @failedPosition: ->

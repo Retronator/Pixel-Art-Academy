@@ -57,7 +57,7 @@ class Chess.Lessons.OpeningTheFile extends Chess.Lesson
     @id: -> "#{Lesson.id()}.ReachTarget"
 
     @message: -> """
-      The file is yours. Finish the journey.
+      The file is clear.
 
       Reach d8.
     """
@@ -78,7 +78,7 @@ class Chess.Lessons.OpeningTheFile extends Chess.Lesson
     @message: -> """
       Well done!
 
-      An open file is a rook's highway, and a rook that owns one controls the board from edge to edge.
+      An open file is a rook's highway. A rook placed on one controls the board from edge to edge.
     """
 
     @initialize()

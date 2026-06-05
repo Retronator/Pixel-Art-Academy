@@ -28,9 +28,9 @@ class Chess.Lessons.BlockingCheck extends Chess.Lesson
     @id: -> "#{Lesson.id()}.BlockAttack"
 
     @message: -> """
-      Here is the third answer to a check. This attacker is too far to capture, but you need not run from it.
+      Here is the third answer to a check, besides moving away or capturing the attacker.
 
-      Block the check: slide your rook into the line of fire, onto e2.
+      Block the check: move your rook onto e2, to cut the line of attack.
     """
 
     @requiredPosition: ->
@@ -40,9 +40,9 @@ class Chess.Lessons.BlockingCheck extends Chess.Lesson
       e1: null
 
     @retryMessage: -> """
-      Moving the king works as well. But you have a piece that can step in and shield him.
+      Moving the king works too, but you have a piece that can answer with blocking.
 
-      This time, block the attack: put your rook between the king and the enemy rook, on e4.
+      Try to block the attack: put your rook on e4 between the king and the enemy rook.
     """
 
     @initialize()
@@ -54,8 +54,8 @@ class Chess.Lessons.BlockingCheck extends Chess.Lesson
       Well done!
 
       Blocking shields the king with a piece of your own, breaking the attacker's line.
-      It works only against the rook, bishop, and queen, since their power travels in a straight line.
-      A knight's check can never be blocked, because the knight leaps over everything.
+      It works only against the rook, bishop, and queen, since their attacks travel in straight lines.
+      A knight's check can never be blocked, because the knight can jump over pieces.
     """
 
     @initialize()

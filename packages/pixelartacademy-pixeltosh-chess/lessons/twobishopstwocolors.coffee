@@ -28,7 +28,7 @@ class Chess.Lessons.TwoBishopsTwoColors extends Chess.Lesson
     @message: -> """
       Your two bishops split the board between them. One rules the light squares, the other the dark.
 
-      A target on a light square: send the bishop that can reach it.
+      You have a target on a light square. Send the bishop that can reach it.
     """
 
     @requiredPosition: ->
@@ -47,7 +47,7 @@ class Chess.Lessons.TwoBishopsTwoColors extends Chess.Lesson
     @message: -> """
       A new target on e5.
 
-      Reach it!
+      Get to it!
     """
 
     @requiredPosition: ->
@@ -85,7 +85,7 @@ class Chess.Lessons.TwoBishopsTwoColors extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Each bishop covers only half the squares on the board. Together they miss nothing, which is why the two of them—the bishop pair—are such a prize.
+      Each bishop covers only half the squares on the board. Together they miss nothing, which is why the two of them together—the bishop pair—are worth more than twice an individual bishop.
     """
 
     @initialize()

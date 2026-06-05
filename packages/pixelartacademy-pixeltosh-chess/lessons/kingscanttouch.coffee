@@ -51,7 +51,9 @@ class Chess.Lessons.KingsCantTouch extends Chess.Lesson
     @id: -> "#{Lesson.id()}.ApproachKing"
 
     @message: -> """
-      The enemy king stands alone at the far end of the board. March your king up the file to confront him. The target sits on e7, right at his side.
+      The enemy king stands alone at the far end of the board. March your king up to confront him.
+      
+      The target sits on e7, right at his side.
     """
 
     @initialize()

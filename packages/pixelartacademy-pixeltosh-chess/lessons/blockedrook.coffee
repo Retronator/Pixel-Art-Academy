@@ -25,9 +25,9 @@ class Chess.Lessons.BlockedRook extends Chess.Lesson
     @id: -> "#{Lesson.id()}.SlideToBlocker"
 
     @message: -> """
-      Your own pawn stands in the way, and a rook can't jump over it.
+      Your pawn is in the way and the rook can't jump over it.
 
-      You'll have to navigate around.
+      You'll have to go around.
     """
 
     @initialize()
@@ -74,7 +74,7 @@ class Chess.Lessons.BlockedRook extends Chess.Lesson
     @message: -> """
       Well done!
 
-      A file (column) clogged with pawns is a cramped one. Rooks come alive on open files, where no pawn blocks the road.
+      Rooks are well positioned on files (columns), where one or both pawns are already missing.
     """
 
     @initialize()

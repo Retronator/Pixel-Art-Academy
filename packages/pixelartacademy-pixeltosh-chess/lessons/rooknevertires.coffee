@@ -27,7 +27,7 @@ class Chess.Lessons.RookNeverTires extends Chess.Lesson
       
       From the center, your rook already commands fourteen squares, a whole rank and a whole file at once.
 
-      Now banish it to the corner. Send it to a1.
+      Now move it to the corner. Send it to a1.
     """
 
     @requiredPosition: ->
@@ -54,7 +54,7 @@ class Chess.Lessons.RookNeverTires extends Chess.Lesson
 
       A knight in the corner reaches two squares; in the center, eight. The rook reaches the same fourteen wherever it stands.
       
-      Park a rook anywhere with an open line and it is ready to strike.
+      Place a rook anywhere on an open line and it is ready to strike.
     """
 
     @initialize()

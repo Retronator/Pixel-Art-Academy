@@ -27,7 +27,7 @@ class Chess.Lessons.EnPassant extends Chess.Lesson
     @id: -> "#{Lesson.id()}.AdvanceToFifthRank"
 
     @message: -> """
-      Push your pawn deep into Black's half.
+      Push your pawn over into Black's half.
 
       Advance to d5.
     """
@@ -66,7 +66,7 @@ class Chess.Lessons.EnPassant extends Chess.Lesson
     @message: -> """
       Well done!
 
-      En passant is allowed only on the move right after the enemy's two-square jump. Hesitate, and the chance is gone for good.
+      En passant is allowed only right after the two-square jump, so think twice before passing on the capture.
     """
 
     @initialize()

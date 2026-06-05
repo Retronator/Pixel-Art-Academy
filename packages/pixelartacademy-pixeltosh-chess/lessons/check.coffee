@@ -27,7 +27,7 @@ class Chess.Lessons.Check extends Chess.Lesson
     @id: -> "#{Lesson.id()}.EscapeCheck"
 
     @message: -> """
-      The black rook attacks your king straight down the file. An attack on the king has a special name: check. You can never ignore it.
+      The black rook attacks your king down the file. An attack on the king has a special name: check. You can never ignore it.
 
       Move your king off the file, out of check.
     """

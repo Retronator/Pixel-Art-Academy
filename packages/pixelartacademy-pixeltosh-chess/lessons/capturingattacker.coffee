@@ -27,9 +27,9 @@ class Chess.Lessons.CapturingAttacker extends Chess.Lesson
     @id: -> "#{Lesson.id()}.CaptureAttacker"
 
     @message: -> """
-      There are three ways to answer a check: move the king, capture the attacker, or block its path.
+      There are three ways to answer a check: move the king, capture the attacker, or block the attack.
       
-      This attacker stands right beside your king, and nothing defends it.
+      This attacker stands within your king's reach, and no defender prevents you from taking it.
 
       Capture the rook on e2.
     """
@@ -42,7 +42,7 @@ class Chess.Lessons.CapturingAttacker extends Chess.Lesson
       e1: null
 
     @retryMessage: -> """
-      That escapes the check too. But when the attacker is undefended and within reach, you can remove the threat for good.
+      That answers the check too, but since the attacker is undefended and within reach, you can make it pay the price.
 
       This time, take the rook on e2.
     """
@@ -55,7 +55,7 @@ class Chess.Lessons.CapturingAttacker extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Capturing the attacker ends a check in the cleanest way: no attacker, no check. But take care to capture only what is undefended. Had another black piece been guarding that rook, taking it with your king would have walked him into a new check, which is forbidden.
+      Note that if the attacker was defended by another black piece, the king couldn't take it as that would walked him into check.
     """
 
     @initialize()

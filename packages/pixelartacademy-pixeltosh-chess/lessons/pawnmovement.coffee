@@ -69,7 +69,7 @@ class Chess.Lessons.PawnMovement extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The pawn has special moves too—find them in other lessons.
+      The pawn has a few special moves too. Learn them in the other lessons.
     """
 
     @initialize()

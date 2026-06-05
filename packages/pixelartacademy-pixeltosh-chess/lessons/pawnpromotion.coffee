@@ -26,7 +26,7 @@ class Chess.Lessons.PawnPromotion extends Chess.Lesson
     @id: -> "#{Lesson.id()}.AdvanceToLastRank"
 
     @message: -> """
-      Your pawn stands one step from the far edge. See what happens when you reach it.
+      Your pawn stands one step from the end square. See what happens when you reach it.
 
       Advance to d8.
     """
@@ -62,7 +62,7 @@ class Chess.Lessons.PawnPromotion extends Chess.Lesson
     @retryMessage: -> """
       You closed the menu without choosing.
       
-      Advance to d8 again, then pick the piece your pawn becomes.
+      Advance to d8 again, then pick the piece your pawn promotes to.
     """
     
   class @End extends Chess.Lesson.EndStep
@@ -71,7 +71,7 @@ class Chess.Lessons.PawnPromotion extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The far rank turns your humblest soldier into a mighty one—almost always a queen. Every pawn carries a crown in its knapsack.
+      The far rank turns your weakest pieces into powerful fighters, almost always new queens.
     """
 
     @initialize()

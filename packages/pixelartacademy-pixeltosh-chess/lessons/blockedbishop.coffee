@@ -25,7 +25,7 @@ class Chess.Lessons.BlockedBishop extends Chess.Lesson
     @id: -> "#{Lesson.id()}.UnderstandBlock"
 
     @message: -> """
-      The bishop glides along a diagonal, but it can't jump over a single thing.
+      The bishop moves as far as it wants, but it can't jump over pieces.
 
       To reach the target, you will have to go around, or push the pawn.
     """
@@ -77,7 +77,7 @@ class Chess.Lessons.BlockedBishop extends Chess.Lesson
     @message: -> """
       Well done!
 
-      A single piece on a diagonal cuts a bishop's reach down. Bishops are long-range snipers, but only down open lines.
+      Bishops don't favor closed positions with lots of locked pawns on the squares of its color. They like open, far-reaching diagonals.
     """
 
     @initialize()

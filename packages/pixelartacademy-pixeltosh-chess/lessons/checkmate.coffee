@@ -30,7 +30,7 @@ class Chess.Lessons.Checkmate extends Chess.Lesson
     @id: -> "#{Lesson.id()}.DeliverCheckmate"
 
     @message: -> """
-      The black king is boxed in by his own pawns, with no room to breathe. Your rook can end the game in a single move.
+      The black king is boxed in by his own pawns, with no way out of a potential check. Your rook can end the game in a single move.
 
       Deliver checkmate: a check the king cannot escape.
     """
@@ -53,7 +53,7 @@ class Chess.Lessons.Checkmate extends Chess.Lesson
     @message: -> """
       Well done! That is checkmate.
 
-      The king is in check and has no answer: nowhere to move, nothing to block with, no way to capture the attacker. The game ends at once. This is the goal of every game of chess.
+      Black has nowhere to move, nothing to block with, and no way to capture the attacker. The game is over. This is the goal of every game of chess.
     """
 
     @initialize()

@@ -24,7 +24,7 @@ class Chess.Lessons.KnightOnRim extends Chess.Lesson
     @id: -> "#{Lesson.id()}.SideReach"
 
     @message: -> """
-      Tucked against the edge, this knight reaches only four squares.
+      Placed on the edge, this knight reaches only four squares.
       
       Move it somewhere it can do more.
     """
@@ -48,7 +48,7 @@ class Chess.Lessons.KnightOnRim extends Chess.Lesson
     @id: -> "#{Lesson.id()}.MoveToCenter"
 
     @message: -> """
-      Closer. Keep going until the knight has its full range.
+      Keep going until the knight has its full range.
     """
 
     @initialize()
@@ -68,7 +68,7 @@ class Chess.Lessons.KnightOnRim extends Chess.Lesson
     @id: -> "#{Lesson.id()}.End"
 
     @message: -> """
-      Look at it now!
+      Well done!
       
       From an active square the knight reaches eight squares—twice as many as on the rim.
       

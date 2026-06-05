@@ -69,7 +69,7 @@ class Chess.Lessons.KnightMovement extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The knight is the only piece that doesn't move in a straight line. Its crooked path makes it the trickiest piece to see coming.
+      The knight is the only piece that doesn't move in a straight line. Its crooked path makes it tricky to see coming.
     """
 
     @initialize()

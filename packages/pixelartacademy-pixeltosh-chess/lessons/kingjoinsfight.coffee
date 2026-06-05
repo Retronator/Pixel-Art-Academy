@@ -28,9 +28,9 @@ class Chess.Lessons.KingJoinsFight extends Chess.Lesson
     @id: -> "#{Lesson.id()}.CapturePawns"
 
     @message: -> """
-      The board has emptied out. With few pieces left and the enemy king stranded far away, your king is no longer something to hide. He becomes a fighter.
+      The board has emptied out. With few pieces left to check the king, you can activate him as an attacker.
 
-      March him across the board and capture both of Black's stray pawns.
+      March the king across the board and capture both of Black's pawns.
     """
 
     @retryMessage: -> """
@@ -67,9 +67,9 @@ class Chess.Lessons.KingJoinsFight extends Chess.Lesson
     @message: -> """
       Well done!
 
-      In the opening you hid your king behind a wall. In the endgame you sent him into battle. The same piece, used in opposite ways.
+      In the opening you hide your king behind pawns. In the endgame you sent him into battle.
       
-      Knowing when to shelter the king and when to unleash him is one of the deepest skills in all of chess.
+      Knowing when to guard the king and when to unleash him is an important piece of chess strategy.
     """
 
     @initialize()

@@ -30,7 +30,7 @@ class Chess.Lessons.PawnChains extends Chess.Lesson
     @message: -> """
       Your pawns can link into a chain along a diagonal. They'll be able to take a hit and survive.
 
-      Push from e3 to e4. Yes, this offers the pawn to Black. Watch what happens.
+      Push from e3 to e4 and offer Black the capture.
     """
 
     @requiredPosition: ->
@@ -42,7 +42,9 @@ class Chess.Lessons.PawnChains extends Chess.Lesson
     @retryMessage: -> """
       That locks the d-file and prevents a protected push to e4.
 
-      We want Black to bite at the head, so your base can answer. Let's rewind: push e3 to e4 instead.
+      We want Black to attack the head of the chain, so the base can answer.
+      
+      Let's rewind: push e3 to e4 instead.
     """
 
     @initialize()
@@ -51,7 +53,7 @@ class Chess.Lessons.PawnChains extends Chess.Lesson
     @id: -> "#{Lesson.id()}.RecaptureHead"
 
     @message: -> """
-      Black snatched your head pawn, but your base was defending it. Take it back.
+      Black captured your head pawn, but your base is defending it. Take it back.
 
       Recapture on e4.
     """
@@ -64,7 +66,9 @@ class Chess.Lessons.PawnChains extends Chess.Lesson
       d4: 'P'
     
     @retryMessage: -> """
-      You let the pawn escape. Let's try again: capture on e4.'
+      You let the pawn escape.
+      
+      Let's try again: capture on e4.
     """
 
     @initialize()

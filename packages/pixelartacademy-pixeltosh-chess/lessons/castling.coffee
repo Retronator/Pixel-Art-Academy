@@ -42,7 +42,7 @@ class Chess.Lessons.Castling extends Chess.Lesson
     @id: -> "#{Lesson.id()}.CastleKingside"
 
     @message: -> """
-      In the center, the king is slow and exposed. There is a special move to whisk him to safety: castling. In one move the king slides two squares toward a rook, and that rook hops over to his far side.
+      The king in the center gets quickly exposed to checks. A special move can help you defend: castling. In one move, the king moves two squares toward a rook, and the rook jumps over it.
 
       Castle: move your king to g1.
     """
@@ -54,9 +54,9 @@ class Chess.Lessons.Castling extends Chess.Lesson
       f1: 'K'
     
     @retryMessage: -> """
-      Castling is a single move, not two. The king leaps two squares at once, he does not walk there one step at a time.
+      Castling is initiated by moving two squares at once. It doesn't work when moving one-by-one.
 
-      Castle in one move: send the king straight to g1.
+      Castle in one move: slide the king all the way to g1.
     """
     
     @initialize()
@@ -73,9 +73,9 @@ class Chess.Lessons.Castling extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Castling is allowed only if neither the king nor that rook has moved yet, and the king is not in check, does not pass through an attacked square, and does not land on one.
+      Castling is allowed only if neither the king nor that rook has moved yet. The king must also not be in check or travel on attacked squares.
       
-      You can also castle the other way, toward the distant rook.
+      You can castle the other way as well, toward the queen-side rook.
     """
 
     @initialize()

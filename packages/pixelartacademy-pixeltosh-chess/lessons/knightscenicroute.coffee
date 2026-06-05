@@ -44,7 +44,7 @@ class Chess.Lessons.KnightScenicRoute extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Getting next door costs a knight three moves. Spend them well: a knight rerouted to the right square repays every step.
+      Getting next door costs a knight three moves. Spend them well: a knight rerouted to the right square can be well worth it.
     """
 
     @initialize()

@@ -24,9 +24,9 @@ class Chess.Lessons.KingMovement extends Chess.Lesson
     @id: -> "#{Lesson.id()}.MoveExplanation"
 
     @message: -> """
-      The king has arrived!
+      The king is here!
 
-      Every piece you have met so far, the pawn, knight, bishop, rook, and queen, serves one purpose: to guard this piece, or to hunt the enemy's.
+      Every other piece—the pawn, knight, bishop, rook, and queen—serves to hunt the enemy's king or guard your own.
 
       The king moves one square in any direction. Move him to any of the legal squares.
     """
@@ -93,7 +93,7 @@ class Chess.Lessons.KingMovement extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The king reaches every square around him, just like the queen, but only one step at a time. He is the slowest piece on the board. Because he cannot run, you must think ahead to keep him out of trouble.
+      The king can move in all directions like the queen, but only one step at a time. Because he cannot run, you must think ahead to keep him out of trouble.
     """
 
     @initialize()

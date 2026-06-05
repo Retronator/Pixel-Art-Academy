@@ -28,15 +28,15 @@ class Chess.Lessons.RespectTheQueen extends Chess.Lesson
     @id: -> "#{Lesson.id()}.MoveToSafety"
 
     @message: -> """
-      Your queen is under attack from the c6 pawn, and she could snatch it up at once. But look before you leap. Is that pawn defended?
+      Your queen is under attack from the c6 pawn. She could capture it, but be careful! Is that pawn defended?
 
       What should you do?
     """
 
     @retryMessage: -> """
-      And there goes your queen, traded for a single pawn. The pawn on c6 was guarded by the one on b7.
+      There goes your queen, traded for a single pawn. The pawn on c6 was guarded by the one on b7.
 
-      Before you grab material, always check what defends it. Let's rewind, and this time lead your queen quietly out of danger.
+      Before you grab material, always check what defends it. Let's rewind, and this time lead your queen out of danger.
     """
 
     @initialize()
@@ -63,7 +63,7 @@ class Chess.Lessons.RespectTheQueen extends Chess.Lesson
     """
     
     @retryMessage: -> """
-      And there goes your queen, outmaneuvered by a simple pawn.
+      There goes your queen, outmaneuvered by a simple pawn.
 
       Before you grab material or move to a square, always check what defends it.
       

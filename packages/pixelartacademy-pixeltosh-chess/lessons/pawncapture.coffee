@@ -63,9 +63,9 @@ class Chess.Lessons.PawnCapture extends Chess.Lesson
       e5: 'P'
     
     @retryMessage: -> """
-      A pawn captures to the side, not straight ahead. You walked right past the prize.
+      A pawn captures to the side, not straight ahead. You moved past your opportunity to capture.
 
-      Back to e4: this time, step onto d5 and take it.
+      Back to e4. This time, capture the pawn on d5.
     """
     
     @initialize()

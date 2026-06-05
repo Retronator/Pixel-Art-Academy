@@ -37,7 +37,7 @@ class Chess.Lessons.Stalemate extends Chess.Lesson
     @failedPosition: -> g5: 'P', f7: null
 
     @retryMessage: -> """
-      This is useful, but Let's push the pawn anyway, to see what happens.
+      This is useful, but let's push the pawn anyway, to see what happens.
 
       Move the pawn to g6.
     """

@@ -59,7 +59,7 @@ class Chess.Lessons.KnightJumps extends Chess.Lesson
     @message: -> """
       Well done!
 
-      No other piece could clear that wall—rooks, bishops, and queens all have to go around. The knight simply hops over anything in its way, friend or foe.
+      No other piece could make that jump—rooks, bishops, and queens all get stopped in the way. The knight simply hops over anything in its way, friend or foe.
     """
 
     @initialize()

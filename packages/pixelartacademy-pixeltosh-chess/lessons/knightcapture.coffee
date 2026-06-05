@@ -26,7 +26,7 @@ class Chess.Lessons.KnightCapture extends Chess.Lesson
     @id: -> "#{Lesson.id()}.CapturePawn"
 
     @message: -> """
-      A knight captures just as it moves—by landing on the enemy.
+      A knight will capture an opponent piece it can jump on.
 
       Capture the pawn.
     """
@@ -39,7 +39,7 @@ class Chess.Lessons.KnightCapture extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Because the knight jumps, nothing can block its attack. The only defense is to move the target or guard it.
+      Because the knight jumps, nothing can block its attack. The only defense is to move the target, or have another piece ready to capture the knight in return.
     """
 
     @initialize()

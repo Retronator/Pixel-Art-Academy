@@ -43,7 +43,7 @@ class Chess.Lessons.KnightInPursuit extends Chess.Lessons.KnightCapture
     @message: -> """
       Well done!
 
-      A knight can't sprint, but it can be in the right place ahead of time.
+      A knight can't move quickly, but it can be in the right place in advance.
     """
 
     @initialize()

@@ -91,9 +91,9 @@ class Chess.Lessons.QueenMovement extends Chess.Lesson
     @message: -> """
       Well done!
 
-      The queen is the most powerful piece on the board. From the center she reaches twenty-seven squares, more than any other piece can.
+      The queen is the most powerful piece on the board. From the center she reaches twenty-seven squares, more than any other piece.
       
-      She shares one weakness with her parents, though: like the rook and bishop, she cannot jump.
+      She shares one weakness with her parents, though: like the rook and the bishop, she cannot jump.
     """
 
     @initialize()

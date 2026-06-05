@@ -30,7 +30,7 @@ class Chess.Lessons.PawnsStrongerTogether extends Chess.Lesson
     @message: -> """
       A lone pawn marching forward is easy to stop. Two pawns side by side are not.
 
-      Bring your d-pawn into line. Push from d3 to d4.
+      Bring your d-pawn forward. Push from d3 to d4.
     """
 
     @retryMessage: -> """

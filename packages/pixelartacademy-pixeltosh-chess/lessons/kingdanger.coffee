@@ -30,7 +30,7 @@ class Chess.Lessons.KingDanger extends Chess.Lesson
     @id: -> "#{Lesson.id()}.ReachNearTarget"
 
     @message: -> """
-      A target waits on d4. Bring your king to it.
+      A target lies on d4. Bring your king to it.
     """
 
     @requiredPosition: -> d3: 'K'
@@ -48,7 +48,7 @@ class Chess.Lessons.KingDanger extends Chess.Lesson
     @message: -> """
       So close, yet you cannot take the final step.
 
-      The rook guards the entire fourth rank, d4 along with it. A king may never move onto a square the enemy attacks, because that would walk him straight into check, and that is forbidden. Of every piece, the king alone must always stay out of danger.
+      The rook guards the entire fourth rank, d4 along with it. A king may never move onto a square the enemy attacks, because you would end up checking yourself. You can never put the king under attack voluntarily.
     """
 
     @initialize()
