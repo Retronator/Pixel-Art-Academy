@@ -11,6 +11,8 @@ class Chess.Interface.PlayerStatus extends LOI.View
     
     @os = @interface.parent
     @chess = @os.getProgram Chess
+  
+  ownedPiecesCount: -> Chess.ownedPiecesCount()
 
   events: ->
     super(arguments...).concat

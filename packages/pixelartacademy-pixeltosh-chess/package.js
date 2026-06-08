@@ -28,24 +28,19 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('assets/briefcomponent..');
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('project-2d3d');
   api.addFile('square');
   api.addFile('move');
   api.addFile('piece');
   api.addFile('gamestate');
   api.addFile('gamestate-moves');
+  api.addStyledFile('instructions');
 
   api.addFile('interfacemanager');
   api.addFile('gamemanager');
   api.addFile('lessonmanager');
 
   api.addStyledFile('interface..');
-  api.addComponent('interface/chessboard..');
-  api.addFile('interface/chessboard/chessboard-animation');
-  api.addFile('interface/chessboard/chessboard-dragging');
-  api.addComponent('interface/chessboard/square..');
-  api.addComponent('interface/chessboard/piece..');
-  api.addComponent('interface/chessboard/markup..');
-  api.addComponent('interface/chessboard/promotion..');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/lessons..');
@@ -56,6 +51,18 @@ Package.onUse(function(api) {
   api.addComponent('interface/play/moveshistory..');
   api.addComponent('interface/about..');
   api.addComponent('interface/shop..');
+  api.addComponent('interface/boarddisplaychoice..');
+
+  api.addComponent('interface/chessboard..');
+  api.addFile('interface/chessboard/component');
+
+  api.addComponent('interface/chessboard/twodimensional..');
+  api.addFile('interface/chessboard/twodimensional/twodimensional-animation');
+  api.addFile('interface/chessboard/twodimensional/twodimensional-dragging');
+  api.addComponent('interface/chessboard/twodimensional/square..');
+  api.addComponent('interface/chessboard/twodimensional/piece..');
+  api.addComponent('interface/chessboard/twodimensional/markup..');
+  api.addComponent('interface/chessboard/twodimensional/promotion..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');

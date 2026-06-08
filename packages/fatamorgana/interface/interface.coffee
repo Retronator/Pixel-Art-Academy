@@ -240,7 +240,7 @@ class FM.Interface extends AM.Component
     windowsData = @currentLayoutData().child 'windows'
     return unless windows = windowsData.value()
     
-    sortedWindows = _.orderBy _.values(windows), ['alwaysOnTop', 'order']
+    sortedWindows = _.orderBy _.values(windows), [((window) => Boolean window.alwaysOnTop), 'order']
     
     # Create child data objects to send as data.
     for window in sortedWindows

@@ -1,0 +1,69 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-boarddisplaychoice
+  position absolute
+  inset 5rem
+  background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem !important
+
+  .window
+    position absolute
+    top 114rem
+    left 160rem
+    transform translate(-50%, -50%)
+    padding 8rem 10rem
+
+    .title
+      margin-bottom 8rem
+      chicago-mini()
+      text-align center
+
+    .options
+      display flex
+      border 1rem solid black
+
+      .option
+        position relative
+
+        &.two-dimensional
+          .option-button
+            .preview
+              background-image image('/pixelartacademy/pixeltosh/programs/chess/board-2d.png')
+
+        &.three-dimensional
+          .option-button
+            .preview
+              background-image image('/pixelartacademy/pixeltosh/programs/chess/board-3d.png')
+
+        &.active
+          .option-button
+            background-color black
+
+        &:not(.active)
+          .option-button:hover
+            background image('/pixelartacademy/pixeltosh/os/dither.png') 1rem 0 / 2rem 2rem
+
+        & + .option
+          border-left 1rem solid black
+
+        .option-button
+          display block
+          padding 0
+          border none
+          background-color white
+
+          .preview
+            display block
+            width 64rem
+            height 64rem
+
+        .label
+          position absolute
+          top 67rem
+          left 0
+          right 0
+          geneva-mini()
+          text-align center
+
+    .actions
+      margin-top 14rem
+      text-align center

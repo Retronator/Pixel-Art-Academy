@@ -50,11 +50,10 @@ class Chess.Interface.Lessons extends AM.Component
     return unless hoveredLesson = @hoveredLesson()
     lesson = hoveredLesson.lesson
     return if lesson.available()
-    return unless gameManager = @chess.gameManager()
     
     requiredPieceTypes = for pieceType, count of lesson.requiredPieceTypeCounts()
       type: pieceType
-      ownedCount: gameManager.ownedPiecesCount pieceType
+      ownedCount: Chess.ownedPiecesCount pieceType
       requiredCount: count
       
     _.remove requiredPieceTypes, (requiredPieceType) => requiredPieceType.ownedCount >= requiredPieceType.requiredCount

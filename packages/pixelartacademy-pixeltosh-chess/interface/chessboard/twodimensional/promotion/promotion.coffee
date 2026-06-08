@@ -2,14 +2,14 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Chessboard.Promotion extends AM.Component
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Promotion'
+class Chess.Interface.Chessboard.TwoDimensional.Promotion extends AM.Component
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Promotion'
   @register @id()
   
   onCreated: ->
     super arguments...
 
-    @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard
+    @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard.TwoDimensional
     
     @chessboard.chess.gameManager().assertDrawnPieces Chess.Piece.PromotionTypes
   

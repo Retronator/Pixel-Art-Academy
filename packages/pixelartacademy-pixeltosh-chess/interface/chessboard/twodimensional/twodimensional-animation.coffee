@@ -2,7 +2,7 @@ AB = Artificial.Base
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
+class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboard.TwoDimensional
   onCreated: ->
     super arguments...
 

@@ -25,7 +25,7 @@ class Goal.BuyPawn extends Goal.Task
 
   @initialize()
 
-  @completedConditions: -> false
+  @completedConditions: -> Chess.ownedPiecesCount Chess.Piece.Types.Pawn
 
 class Goal.DrawWhitePawn extends Goal.Task
   @id: -> "#{Goal.id()}.DrawWhitePawn"
@@ -43,7 +43,7 @@ class Goal.DrawWhitePawn extends Goal.Task
   
   @initialize()
   
-  @completedConditions: -> false
+  @completedConditions: -> Chess.eitherAssetIsDrawn Chess.Piece.Types.Pawn, Chess.Piece.Colors.White
 
 class Goal.DrawBlackPawn extends Goal.Task
   @id: -> "#{Goal.id()}.DrawBlackPawn"
@@ -61,7 +61,7 @@ class Goal.DrawBlackPawn extends Goal.Task
   
   @initialize()
   
-  @completedConditions: -> false
+  @completedConditions: -> Chess.eitherAssetIsDrawn Chess.Piece.Types.Pawn, Chess.Piece.Colors.Black
 
 class Goal.PawnLessons extends Goal.Task
   @id: -> "#{Goal.id()}.PawnLessons"

@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Chessboard.Square extends AM.Component
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Square'
+class Chess.Interface.Chessboard.TwoDimensional.Square extends AM.Component
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Square'
   @register @id()
   
   @Size = 21

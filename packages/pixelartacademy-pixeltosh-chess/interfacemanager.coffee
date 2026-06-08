@@ -9,13 +9,9 @@ class Chess.InterfaceManager
     Menu: 'Menu'
     Lesson: 'Lesson'
     Play: 'Play'
-    
-  @BoardDisplayTypes:
-    TwoDimensional: 'TwoDimensional'
-    ThreeDimensional: 'ThreeDimensional'
   
   constructor: (@chess) ->
-    @boardDisplayType = @chess.state.field 'boardDisplayType', default: @constructor.BoardDisplayTypes.TwoDimensional
+    @boardDisplayType = @chess.state.field 'boardDisplayType', default: Chess.BoardDisplayTypes.TwoDimensional
     @displayBoardCoordinates = @chess.state.field 'displayBoardCoordinates', default: false
     @_autoPromotion = @chess.state.field 'autoPromotion', default: false
     @flippedBoard = new ReactiveField false
@@ -25,6 +21,7 @@ class Chess.InterfaceManager
     @windowId = @chess.os.addWindow Chess.Interface.createInterfaceData()
     
     @_shopWindowId = new ReactiveField null
+    @_boardDisplayChoiceWindowId = new ReactiveField null
     
     # Reactively change the interface layout.
     layouts = Chess.Interface.createLayoutsData @
@@ -44,7 +41,7 @@ class Chess.InterfaceManager
       
       switch @screen()
         when @constructor.Screens.Menu
-          if ownedPiecesCount = @chess.gameManager().ownedPiecesCount()
+          if ownedPiecesCount = Chess.ownedPiecesCount()
             layout = layouts[Chess.Interface.Layouts.Menu]
             
             tabs = [_.cloneDeep menuTabs.lessons]
@@ -73,8 +70,20 @@ class Chess.InterfaceManager
       
       Tracker.nonreactive => window.data().set 'contentArea', layout
       
+    @_boardDisplayChoiceAutorun = @chess.autorun =>
+      return unless LOI.adventure.gameState()
+      return unless @window()
+      
+      # Note: We want to compare to the raw state value to not take the default into account.
+      return if Chess.state 'boardDisplayType'
+      return if @_boardDisplayChoiceWindowId()
+      
+      @_boardDisplayChoiceWindowId @chess.os.addWindow Chess.Interface.BoardDisplayChoice.createInterfaceData()
+      
   destroy: ->
+    @window.stop()
     @_layoutAutorun.stop()
+    @_boardDisplayChoiceAutorun.stop()
     
   inMenu: -> @screen() is @constructor.Screens.Menu
   inLesson: -> @screen() is @constructor.Screens.Lesson
@@ -102,4 +111,17 @@ class Chess.InterfaceManager
 
   shopIsOpen: -> @_shopWindowId()
   
+  closeBoardDisplayChoice: ->
+    return unless boardDisplayChoiceWindowId = @_boardDisplayChoiceWindowId()
+
+    @chess.os.removeWindow boardDisplayChoiceWindowId
+    @_boardDisplayChoiceWindowId null
+
+    @chess.os.activateWindow @windowId
+    
+  getBoardDisplayChoice: ->
+    return unless boardDisplayChoiceWindowId = @_boardDisplayChoiceWindowId()
+    return unless window = @chess.os.interface.getWindow boardDisplayChoiceWindowId
+    window.childComponentsOfType(Chess.Interface.BoardDisplayChoice)[0]
+
   autoPromotion: -> @_autoPromotion() and not @inLesson()

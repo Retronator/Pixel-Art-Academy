@@ -3,7 +3,7 @@ AB = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
-  # TODO: boardDisplayType: enum whether the camera should be 3D or 3D
+  # boardDisplayType: enum whether the camera should be 2D or 3D
   # displayBoardCoordinates: boolean whether to display the files and ranks along the border of the board
   # chessSet2D: the project ID of the currently chosen 2D chess set
   # TODO: chessSet3D: the project ID of the currently chosen 3D chess set
@@ -25,7 +25,49 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   
   @initialize()
   
+  @BoardDisplayTypes:
+    TwoDimensional: 'TwoDimensional'
+    ThreeDimensional: 'ThreeDimensional'
+  
   @chessSet2D: -> @state('chessSet2D') or @Project.TwoDimensional.state 'activeProjectId'
+  @chessSet3D: -> @state('chessSet3D') or @Project.ThreeDimensional.state 'activeProjectId'
+  
+  @activeAssetIsDrawn: (pieceType, color) ->
+    switch @state('boardDisplayType')
+      when @BoardDisplayTypes.TwoDimensional then @_assetIsDrawn2D pieceType, color
+      when @BoardDisplayTypes.ThreeDimensional then @_assetIsDrawn3D pieceType, color
+      
+  @eitherAssetIsDrawn: (pieceType, color) ->
+    @_assetIsDrawn2D(pieceType, color) or @_assetIsDrawn3D(pieceType, color)
+    
+  @_assetIsDrawn2D: (pieceType, color) ->
+    return unless project = PAA.Practice.Project.documents.findOne @chessSet2D()
+    assetId = Chess.Assets.TwoDimensional[pieceType][color].id()
+    @_assetIsDrawnInProject project, assetId
+  
+  @_assetIsDrawn3D: (pieceType, color) ->
+    return unless project = PAA.Practice.Project.documents.findOne @chessSet3D()
+    assetId = Chess.Assets.ThreeDimensional[pieceType][color].id()
+    @_assetIsDrawnInProject project, assetId
+    
+  @_assetIsDrawnInProject: (project, assetId) ->
+    return unless asset = _.find project.assets, (asset) => asset.id is assetId
+    return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
+    bitmap.historyPosition
+  
+  @ownedPieceTypeCounts = @state.field 'ownedPieceTypeCounts', default: {}
+  @ownedPiecesCount: (pieceType) ->
+    counts = @ownedPieceTypeCounts()
+    
+    if pieceType
+      counts[pieceType] or 0
+    
+    else
+      _.sum _.values counts
+  
+  @pawnAssetsMissing: ->
+    return unless @ownedPiecesCount Chess.Piece.Types.Pawn
+    not (@activeAssetIsDrawn(Chess.Piece.Types.Pawn, Chess.Piece.Colors.White) and @activeAssetIsDrawn(Chess.Piece.Types.Pawn, Chess.Piece.Colors.Black))
   
   constructor: ->
     super arguments...

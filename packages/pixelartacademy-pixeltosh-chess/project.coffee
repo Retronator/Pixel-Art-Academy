@@ -39,13 +39,3 @@ class Chess.Project extends PAA.Practice.Project.Thing
   assets: ->
     @_assetsUpdatedDependency.depend()
     _.values @_assets
-    
-  class @TwoDimensional extends Project
-    # activeProjectId: ID of the project that is currently active
-    @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Project.TwoDimensional'
-    
-    @fullName: -> "Chess 2D"
-
-    content: ->
-      return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals
-      chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional

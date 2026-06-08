@@ -1,0 +1,7 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Square">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-square {{typeClass}} {{selectedClass}} {{legalMoveClass}} {{movablePieceClass}}" data-square-name="{{square.name}}" {{cursorAttribute}}>
+    {{#with pieceRenderData}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Piece}}
+    {{/with}}
+  </div>
+</template>

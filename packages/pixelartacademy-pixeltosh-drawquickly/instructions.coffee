@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 DrawQuickly = PAA.Pixeltosh.Programs.DrawQuickly
 
 class DrawQuickly.Instructions
-  class @Instruction extends PAA.PixelPad.Systems.Instructions.Instruction
+  class @Instruction extends PAA.Pixeltosh.Instructions.Instruction
     @getDrawQuickly: ->
       return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
       program = os.activeProgram()

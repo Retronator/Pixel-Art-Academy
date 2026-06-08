@@ -7,16 +7,16 @@ Chess = PAA.Pixeltosh.Programs.Chess
 class BoardDisplayType extends Chess.Interface.Actions.Action
   @boardDisplayType: -> throw new AE.NotImplementedException "Board display type action must provide the display type it activates."
   
-  active: -> @chess.interfaceManager()?.boardDisplayType() is @constructor.boardDisplayType()
+  active: -> Chess.state('boardDisplayType') is @constructor.boardDisplayType()
   
   execute: ->
-    @chess.interfaceManager().boardDisplayType @constructor.boardDisplayType()
+    Chess.state 'boardDisplayType', @constructor.boardDisplayType()
 
 class Chess.Interface.Actions.BoardDisplay2D extends BoardDisplayType
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.BoardDisplay2D'
   @displayName: -> "2D"
   
-  @boardDisplayType: -> Chess.InterfaceManager.BoardDisplayTypes.TwoDimensional
+  @boardDisplayType: -> Chess.BoardDisplayTypes.TwoDimensional
   
   @initialize()
 
@@ -24,7 +24,7 @@ class Chess.Interface.Actions.BoardDisplay3D extends BoardDisplayType
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.BoardDisplay3D'
   @displayName: -> "3D"
 
-  @boardDisplayType: -> Chess.InterfaceManager.BoardDisplayTypes.ThreeDimensional
+  @boardDisplayType: -> Chess.BoardDisplayTypes.ThreeDimensional
 
   @initialize()
 

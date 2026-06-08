@@ -3,12 +3,10 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Project.TwoDimensional extends Chess.Project.TwoDimensional
-  @initialize()
-  
+class Chess.Project extends Chess.Project
   @start: ->
     # Make sure the player doesn't have an already active project.
-    throw new AE.InvalidOperationException "Profile already has an active Chess 2D project." if Chess.Project.TwoDimensional.state 'activeProjectId'
+    throw new AE.InvalidOperationException "Profile already has an active #{@fullName()} project." if @state 'activeProjectId'
 
     profileId = LOI.adventure.profileId()
     creationTime = new Date()
@@ -17,17 +15,17 @@ class Chess.Project.TwoDimensional extends Chess.Project.TwoDimensional
     projectId = PAA.Practice.Project.documents.insert
       startTime: creationTime
       lastEditTime: creationTime
-      type: Chess.Project.TwoDimensional.id()
+      type: @id()
       profileId: profileId
       assets: []
     
     # Write the project ID into profile's game state.
-    Chess.Project.TwoDimensional.state 'activeProjectId', projectId
+    @state 'activeProjectId', projectId
   
   @end: ->
     # Make sure the player has an active project.
-    projectId = Chess.Project.TwoDimensional.state 'activeProjectId'
-    throw new AE.InvalidOperationException "Profile does not have an active Chess 2D project." unless projectId
+    projectId = @state 'activeProjectId'
+    throw new AE.InvalidOperationException "Profile does not have an active #{@fullName()} project." unless projectId
     
     # End the project.
     endTime = new Date()
@@ -37,4 +35,4 @@ class Chess.Project.TwoDimensional extends Chess.Project.TwoDimensional
         lastEditTime: endTime
     
     # Remove project ID from profile's game state.
-    Chess.Project.TwoDimensional.state 'activeProjectId', null
+    @state 'activeProjectId', null

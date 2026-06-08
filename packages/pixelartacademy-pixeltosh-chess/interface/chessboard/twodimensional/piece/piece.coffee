@@ -3,16 +3,16 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Chessboard.Piece extends AM.Component
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Piece'
+class Chess.Interface.Chessboard.TwoDimensional.Piece extends AM.Component
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Piece'
   @register @id()
   
   onCreated: ->
     super arguments...
     
-    @square = @ancestorComponentOfType(Chess.Interface.Chessboard.Square)?.square
+    @square = @ancestorComponentOfType(Chess.Interface.Chessboard.TwoDimensional.Square)?.square
     
-    @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard
+    @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard.TwoDimensional
 
     # Listen for chessboard animations if we're rendered in the chessboard.
     @chessboard?.pieceAnimation.addHandler @, @onAnimation
@@ -41,7 +41,7 @@ class Chess.Interface.Chessboard.Piece extends AM.Component
   onRendered: ->
     super arguments...
 
-    @$piece = @$('.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-piece')
+    @$piece = @$('.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-piece')
     
     if @_pendingPieceAnimation
       @_animatePieceAnimation @_pendingPieceAnimation 

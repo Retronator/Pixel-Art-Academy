@@ -6,6 +6,4 @@ class Chess.Lesson.PieceCategory extends Chess.Lesson.Category
   
   pieceType: -> @constructor.pieceType()
   
-  available: ->
-    return unless gameManager = @lessonManager.chess.gameManager()
-    gameManager.ownedPiecesCount @pieceType()
+  available: -> Chess.ownedPiecesCount @pieceType()

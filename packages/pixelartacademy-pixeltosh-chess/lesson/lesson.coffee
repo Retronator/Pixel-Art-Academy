@@ -74,10 +74,8 @@ class Chess.Lesson
     pieceTypeCounts
   
   available: ->
-    return unless gameManager = @lessonManager.chess.gameManager()
-
     for pieceType, count of @requiredPieceTypeCounts()
-      return false if count > gameManager.ownedPiecesCount pieceType
+      return false if count > Chess.ownedPiecesCount pieceType
       
     true
   

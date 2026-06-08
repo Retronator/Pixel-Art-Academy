@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Shop extends FM.Dialog
+class Chess.Interface.Shop extends FM.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Shop'
   @register @id()
 
@@ -30,11 +30,11 @@ class Chess.Interface.Shop extends FM.Dialog
 
   ownedCount: ->
     piece = @currentData()
-    @chess.gameManager()?.ownedPiecesCount piece.type
+    Chess.ownedPiecesCount piece.type
     
   needsPiece: ->
     piece = @currentData()
-    @chess.gameManager()?.ownedPiecesCount(piece.type) < piece.requiredCount
+    Chess.ownedPiecesCount(piece.type) < piece.requiredCount
   
   buyButtonDisabledAttribute: ->
     piece = @currentData()

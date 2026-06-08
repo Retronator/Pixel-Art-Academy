@@ -1,7 +1,7 @@
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
+class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboard.TwoDimensional
   @register @id()
 
   onCreated: ->
@@ -15,7 +15,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
     @_endDraggingEvents()
 
   _endDraggingEvents: ->
-    $(document).off '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-dragging'
+    $(document).off '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-dragging'
 
   onPointerDownSquare: (square, event) ->
     return unless @humanCanMovePieceOnSquare square
@@ -50,7 +50,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
     $document = $(document)
     cursor = @os.cursor()
 
-    $document.on 'pointermove.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-dragging', (event) =>
+    $document.on 'pointermove.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-dragging', (event) =>
       return unless coordinates = cursor.coordinates()
       return if coordinates.x is dragStartCoordinates.x and coordinates.y is dragStartCoordinates.y
 
@@ -64,7 +64,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
       @pieceDraggingInfo _.extend {}, pieceDraggingInfo
       cursor.requestClass 'grabbing', @
 
-    $document.on 'pointerup.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-dragging', (event) =>
+    $document.on 'pointerup.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-dragging', (event) =>
       @_endDraggingEvents()
 
       wasDragging = @pieceDraggingInfo()?.active
@@ -77,7 +77,7 @@ class Chess.Interface.Chessboard extends Chess.Interface.Chessboard
 
       return unless wasDragging
 
-      $destinationSquare = $(event.target).closest '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-square'
+      $destinationSquare = $(event.target).closest '.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-square'
       destinationSquare = Chess.Square[$destinationSquare.data 'square-name']
 
       if destinationSquare in @provider().getLegalDestinationsFromSquare square

@@ -29,6 +29,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Chess extends PAA.Learning.Goal
     
     PAA.Pixeltosh.Programs.Chess.state 'ownedPieceTypeCounts', null
     PAA.Pixeltosh.Programs.Chess.state 'currency', null
+    PAA.Pixeltosh.Programs.Chess.state 'boardDisplayType', null
+    PAA.Pixeltosh.Programs.Chess.state 'Lessons', null
     PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.end()
 
   Goal = @

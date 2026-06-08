@@ -1,22 +1,22 @@
-<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup">
-  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-markup">
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-markup">
     {{#each markup}}
       {{#with target}}
         <div class="target" {{style (positionStyle position)}}></div>
       {{/with}}
       {{#with arrow}}
-        {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup.Arrow}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup.Arrow}}
       {{/with}}
       {{#with arrows}}
         <div class="arrows">
           <div class="outline">
             {{#each this}}
-              {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup.Arrow}}
+              {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup.Arrow}}
             {{/each}}
           </div>
           <div class="fill">
             {{#each this}}
-              {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup.Arrow}}
+              {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup.Arrow}}
             {{/each}}
           </div>
         </div>
@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.Markup.Arrow">
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup.Arrow">
   <div class="arrow" {{style arrowStyle}}>
     {{#if straightArrowPart}}
       <div class="straight"></div>

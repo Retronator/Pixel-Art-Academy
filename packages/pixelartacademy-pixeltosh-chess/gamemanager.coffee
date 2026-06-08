@@ -40,7 +40,7 @@ class Chess.GameManager
       return unless LOI.adventure.gameState()
       computation.stop()
       
-      @currency 1 unless @ownedPiecesCount() or @currency()
+      @currency 1 unless Chess.ownedPiecesCount() or @currency()
     
     # Throw an error if a piece a player owns doesn't have a drawn asset in the current project.
     @_missingAssetsAutorun = @chess.autorun (computation) =>
@@ -84,34 +84,27 @@ class Chess.GameManager
   _generateMenuGameState: ->
     data = Chess.GameState.getEmptyData()
     
-    for fileIndex in [0...@ownedPiecesCount Chess.Piece.Types.Pawn]
+    for fileIndex in [0...Chess.ownedPiecesCount Chess.Piece.Types.Pawn]
       data.pieces[Chess.Square[fileIndex][1].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Pawn
     
-    for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Knight]
+    for pieceIndex in [0...Chess.ownedPiecesCount Chess.Piece.Types.Knight]
       data.pieces[Chess.Square[1 + pieceIndex * 5][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Knight
     
-    for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Rook]
+    for pieceIndex in [0...Chess.ownedPiecesCount Chess.Piece.Types.Rook]
       data.pieces[Chess.Square[pieceIndex * 7][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Rook
     
-    for pieceIndex in [0...@ownedPiecesCount Chess.Piece.Types.Bishop]
+    for pieceIndex in [0...Chess.ownedPiecesCount Chess.Piece.Types.Bishop]
       data.pieces[Chess.Square[2 + pieceIndex * 3][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Bishop
     
-    if @ownedPiecesCount Chess.Piece.Types.Queen
+    if Chess.ownedPiecesCount Chess.Piece.Types.Queen
       data.pieces[Chess.Square[3][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.Queen
     
-    if @ownedPiecesCount Chess.Piece.Types.King
+    if Chess.ownedPiecesCount Chess.Piece.Types.King
       data.pieces[Chess.Square[4][0].engineName] = Chess.Piece.getLetter Chess.Piece.Colors.White, Chess.Piece.Types.King
     
     new Chess.GameState data
     
   assertDrawnPieces: (pieceTypes) ->
-    return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
-  
-    assetIsDrawn = (assetId) =>
-      return unless asset = _.find project.assets, (asset) => asset.id is assetId
-      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId, false
-      bitmap.historyPosition
-      
     throwError = (color, pieceType) =>
       @chess.os.throwError
         reason: "file not found"
@@ -119,11 +112,11 @@ class Chess.GameManager
         shutDownProgram: @chess
     
     for pieceType in pieceTypes
-      unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].White.id()
+      unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
         throwError 'white', pieceType
         return
       
-      unless assetIsDrawn Chess.Assets.TwoDimensional[pieceType].Black.id()
+      unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.Black
         throwError 'black', pieceType
         return
     
@@ -245,4 +238,4 @@ class Chess.GameManager
     @_promotionTypesDescending ?= _.reverse _.clone Chess.Piece.PromotionTypes
     
     for pieceType in @_promotionTypesDescending
-      return pieceType if @ownedPiecesCount pieceType
+      return pieceType if Chess.ownedPiecesCount pieceType

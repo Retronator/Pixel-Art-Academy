@@ -97,7 +97,7 @@ class Chess.LessonManager
     @gameState()?.turn() is Chess.Piece.Colors.White
 
   getChessboard: ->
-    @chess.os.interface.getView Chess.Interface.Chessboard
+    @chess.os.interface.getView Chess.Interface.Chessboard.Component
     
   getLessonView: ->
     @chess.os.interface.getView Chess.Interface.Lesson
