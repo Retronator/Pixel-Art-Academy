@@ -115,14 +115,14 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
     'active' if @active()
 
   prerequisitesAll: ->
-    @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.All
+    @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteTypes.All
 
   prerequisites: ->
     tasks = @goal.tasks()
     prerequisites = []
 
     # See if we only need one predecessor completed.
-    anyCompleted = @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.Any
+    anyCompleted = @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteTypes.Any
 
     for predecessorClass in @task.predecessors()
       predecessor = _.find tasks, (task) => task instanceof predecessorClass

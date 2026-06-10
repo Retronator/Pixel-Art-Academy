@@ -55,7 +55,7 @@ class Chess.Lessons.CapturingAttacker extends Chess.Lesson
     @message: -> """
       Well done!
 
-      Note that if the attacker was defended by another black piece, the king couldn't take it as that would walked him into check.
+      Note that if the attacker was defended by another black piece, the king couldn't take it as that would walk him into check.
     """
 
     @initialize()

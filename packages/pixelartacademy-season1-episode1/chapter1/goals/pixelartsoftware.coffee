@@ -170,7 +170,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @icon: -> PAA.Learning.Task.Icons.Drawing
 
       @predecessors: -> [Goal.DIY.ChooseSoftware, Goal.DIY.WatchTutorial]
-      @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
+      @predecessorsCompleteType: -> @PredecessorsCompleteTypes.Any
 
       @groupNumber: -> 1
 
@@ -276,7 +276,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     """
 
     @predecessors: -> [Goal.Editor, Goal.DIY.ChooseSoftware]
-    @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
+    @predecessorsCompleteType: -> @PredecessorsCompleteTypes.Any
 
     @initialize()
 
@@ -299,7 +299,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
     @predecessors: -> [Goal.GetReference, Goal.DIY.Grid]
-    @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
+    @predecessorsCompleteType: -> @PredecessorsCompleteTypes.Any
 
     @initialize()
 

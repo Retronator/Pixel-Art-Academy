@@ -11,9 +11,6 @@ class Chess.InterfaceManager
     Play: 'Play'
   
   constructor: (@chess) ->
-    @boardDisplayType = @chess.state.field 'boardDisplayType', default: Chess.BoardDisplayTypes.TwoDimensional
-    @displayBoardCoordinates = @chess.state.field 'displayBoardCoordinates', default: false
-    @_autoPromotion = @chess.state.field 'autoPromotion', default: false
     @flippedBoard = new ReactiveField false
     
     @screen = new ReactiveField @constructor.Screens.Menu
@@ -22,6 +19,7 @@ class Chess.InterfaceManager
     
     @_shopWindowId = new ReactiveField null
     @_boardDisplayChoiceWindowId = new ReactiveField null
+    @_earningsWindowId = new ReactiveField null
     
     # Reactively change the interface layout.
     layouts = Chess.Interface.createLayoutsData @
@@ -41,13 +39,13 @@ class Chess.InterfaceManager
       
       switch @screen()
         when @constructor.Screens.Menu
-          if ownedPiecesCount = Chess.ownedPiecesCount()
+          if Chess.ownedPiecesCount()
             layout = layouts[Chess.Interface.Layouts.Menu]
             
             tabs = [_.cloneDeep menuTabs.lessons]
             
-            # Play is available once we have all 16 pieces.
-            if ownedPiecesCount is 16 or true
+            # Play is available once king lessons are completed.
+            if Chess.Lessons.Categories.King.completed()
               tabs.push _.cloneDeep menuTabs.play
 
             # Persist active tab across reflows.
@@ -80,15 +78,25 @@ class Chess.InterfaceManager
       
       @_boardDisplayChoiceWindowId @chess.os.addWindow Chess.Interface.BoardDisplayChoice.createInterfaceData()
       
+    @_earningsAutorun = @chess.autorun =>
+      return unless @window()
+      return unless @inMenu()
+      return unless Chess.pendingRewards().length
+
+      return if @_earningsWindowId()
+
+      @_earningsWindowId @chess.os.addWindow Chess.Interface.Earnings.createInterfaceData()
+
   destroy: ->
     @window.stop()
     @_layoutAutorun.stop()
     @_boardDisplayChoiceAutorun.stop()
+    @_earningsAutorun.stop()
     
   inMenu: -> @screen() is @constructor.Screens.Menu
   inLesson: -> @screen() is @constructor.Screens.Lesson
   inPlay: -> @screen() is @constructor.Screens.Play
-    
+  
   enterScreen: (screen) ->
     return if @screen() is screen
     @screen screen
@@ -97,6 +105,9 @@ class Chess.InterfaceManager
       when @constructor.Screens.Menu
         @chess.gameManager().endGame()
         @chess.lessonManager().endLesson()
+        
+      when @constructor.Screens.Play
+        Chess.state 'playStarted', true
 
   openShop: ->
     @_shopWindowId @chess.os.addWindow Chess.Interface.Shop.createInterfaceData()
@@ -124,4 +135,14 @@ class Chess.InterfaceManager
     return unless window = @chess.os.interface.getWindow boardDisplayChoiceWindowId
     window.childComponentsOfType(Chess.Interface.BoardDisplayChoice)[0]
 
-  autoPromotion: -> @_autoPromotion() and not @inLesson()
+  closeEarnings: ->
+    return unless earningsWindowId = @_earningsWindowId()
+
+    @chess.os.removeWindow earningsWindowId
+    @_earningsWindowId null
+
+    @chess.os.activateWindow @windowId
+    
+  displayBoardCoordinates: -> Chess.displayBoardCoordinates() or @inLesson()
+
+  autoPromotion: -> Chess.autoPromotion() and not @inLesson()

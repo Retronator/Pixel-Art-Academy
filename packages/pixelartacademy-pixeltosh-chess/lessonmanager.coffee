@@ -18,8 +18,6 @@ class Chess.LessonManager
     category.destroy() for category in @_lessonCategories
     
   availableCategories: ->
-    return unless gameManager = @chess.gameManager()
-
     availableCategories = _.filter @_lessonCategories, (category) => category.available()
     pieceCategories = _.filter availableCategories, (category) => category instanceof Chess.Lesson.PieceCategory
     otherCategories = _.difference availableCategories, pieceCategories
@@ -27,7 +25,7 @@ class Chess.LessonManager
     # Order piece categories in purchase order.
     pieceCategoriesByPiece = {}
     pieceCategoriesByPiece[category.pieceType()] = category for category in pieceCategories
-    orderedPieceCategories = (pieceCategoriesByPiece[piece] for piece of gameManager.ownedPieceTypeCounts())
+    orderedPieceCategories = (pieceCategoriesByPiece[piece] for piece of Chess.ownedPieceTypeCounts())
 
     # Show piece categories first, then other categories.
     [orderedPieceCategories..., otherCategories...]

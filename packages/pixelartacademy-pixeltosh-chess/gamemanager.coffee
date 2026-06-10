@@ -10,9 +10,6 @@ class Chess.GameManager
     Computer: 'Computer'
   
   constructor: (@chess) ->
-    @currency = @chess.state.field 'currency', default: 0
-    @ownedPieceTypeCounts = @chess.state.field 'ownedPieceTypeCounts', default: {}
-    
     @game = new AE.ReactiveWrapper null
     @gameOptions = new ReactiveField null
     @plyHistory = new ReactiveField []
@@ -40,7 +37,7 @@ class Chess.GameManager
       return unless LOI.adventure.gameState()
       computation.stop()
       
-      @currency 1 unless Chess.ownedPiecesCount() or @currency()
+      Chess.currency 1 unless Chess.ownedPiecesCount() or Chess.currency()
     
     # Throw an error if a piece a player owns doesn't have a drawn asset in the current project.
     @_missingAssetsAutorun = @chess.autorun (computation) =>
@@ -48,7 +45,7 @@ class Chess.GameManager
       
       return unless LOI.adventure.gameState()
       
-      ownedPieceTypes = (pieceType for pieceType, count of @ownedPieceTypeCounts() when count)
+      ownedPieceTypes = (pieceType for pieceType, count of Chess.ownedPieceTypeCounts() when count)
       @assertDrawnPieces ownedPieceTypes
   
     @_playAutorun = @chess.autorun (computation) =>
@@ -110,6 +107,9 @@ class Chess.GameManager
         reason: "file not found"
         details: "#{color} #{pieceType.toLowerCase()}"
         shutDownProgram: @chess
+
+      # Reset any cursor changes since pointer leave will not fire once the error overlay is displayed.
+      @chess.os.cursor().setClass null
     
     for pieceType in pieceTypes
       unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
@@ -226,7 +226,7 @@ class Chess.GameManager
   displayingLivePosition: -> not @previewedHistoryPlyNumber()?
 
   ownedPiecesCount: (pieceType) ->
-    counts = @ownedPieceTypeCounts()
+    counts = Chess.ownedPieceTypeCounts()
 
     if pieceType
       counts[pieceType] or 0

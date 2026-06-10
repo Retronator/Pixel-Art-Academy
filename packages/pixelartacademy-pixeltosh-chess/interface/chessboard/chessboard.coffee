@@ -16,4 +16,4 @@ class Chess.Interface.Chessboard extends LOI.View
     @os = @interface.parent
     @chess = @os.getProgram Chess
   
-  boardDisplayType: -> @chess.interfaceManager()?.boardDisplayType()
+  boardDisplayType: -> Chess.boardDisplayType()

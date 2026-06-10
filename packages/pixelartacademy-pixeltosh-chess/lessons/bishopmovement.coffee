@@ -81,7 +81,7 @@ class Chess.Lessons.BishopMovement extends Chess.Lesson
     @id: -> "#{Lesson.id()}.End"
     
     @message: -> """
-      As you might have guessed, this bishop can't reach the target. It's confined to the dark squares, so we call it the dark-squared bishop.
+      As you can notice, this bishop can't completely reach the target. It's confined to the dark squares, so we call it the dark-squared bishop.
       
       Each player starts with both a light-squared and a dark-squared bishop. Only together can they reach any target.
     """

@@ -39,7 +39,7 @@ class Chess.Interface.Shop extends FM.View
   buyButtonDisabledAttribute: ->
     piece = @currentData()
     
-    'disabled' if @chess.gameManager()?.currency() < piece.price
+    'disabled' if Chess.currency() < piece.value
     
   events: ->
     super(arguments...).concat
@@ -48,13 +48,12 @@ class Chess.Interface.Shop extends FM.View
 
   onClickBuyButton: (event) ->
     piece = @currentData()
-    gameManager = @chess.gameManager()
     
-    gameManager.currency gameManager.currency() - piece.price
+    Chess.currency Chess.currency() - piece.value
 
-    ownedPieceTypeCounts = gameManager.ownedPieceTypeCounts()
+    ownedPieceTypeCounts = Chess.ownedPieceTypeCounts()
     ownedPieceTypeCounts[piece.type] = (ownedPieceTypeCounts[piece.type] or 0) + 1
-    gameManager.ownedPieceTypeCounts ownedPieceTypeCounts
+    Chess.ownedPieceTypeCounts ownedPieceTypeCounts
 
   onClickCloseButton: (event) ->
     @chess.interfaceManager().closeShop()

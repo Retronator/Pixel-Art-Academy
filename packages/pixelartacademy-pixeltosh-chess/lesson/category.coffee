@@ -26,6 +26,12 @@ class Chess.Lesson.Category
         # Create this category's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
+        
+  @completed: ->
+    for lessonClass in Chess.Lesson.getClassesForCategory @id()
+      return unless lessonClass.state 'completedCount'
+      
+    true
 
   constructor: (@lessonManager) ->
     # Subscribe to this category's translations.

@@ -95,7 +95,7 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
   coordinatesVisibleClass: ->
     return unless interfaceManager = @chess.interfaceManager()
     
-    'visible' if interfaceManager.inLesson() or interfaceManager.displayBoardCoordinates()
+    'visible' if interfaceManager.displayBoardCoordinates()
 
   flippedClass: ->
     'flipped' if @chess.interfaceManager()?.flippedBoard()

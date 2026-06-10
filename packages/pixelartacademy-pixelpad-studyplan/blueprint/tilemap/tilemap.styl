@@ -1,5 +1,16 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
+/*
+  z-index levels
+  0 = blueprint
+  1 = blueprint roads
+  2 = ground
+  3 = shadows
+  4 = roads
+  5 = buildings
+  6 = expansion points, goal names
+ */
+
 .pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
   position absolute
   top 0
@@ -86,17 +97,22 @@
 
     .ground
       absolute-cover()
-      z-index 1
+      z-index 2
       pointer-events none
       background image('/pixelartacademy/pixelpad/apps/studyplan/ground-tiles.png') -1rem 0 / 45rem 85rem
 
     .pathway
       absolute-cover()
-      z-index 3
 
       .blueprint
       .image
         absolute-cover-size()
+
+      .blueprint
+        z-index 1
+
+      .image
+        z-index 4
 
       .image
       .image::after
@@ -119,11 +135,11 @@
       .blueprint
       .image
         position absolute
-        z-index 4
+        z-index 5
 
       .shadow
         position absolute
-        z-index 2
+        z-index 3
 
     .building
     .gate

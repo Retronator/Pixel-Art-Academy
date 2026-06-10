@@ -5,7 +5,7 @@ class Chess.Lessons.PawnPromotion extends Chess.Lesson
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Lessons.PawnPromotion'
   @displayName: -> "Pawn promotion"
 
-  @category: -> Chess.Lessons.Categories.Pawn
+  @category: -> Chess.Lessons.Categories.Queen
 
   @steps: -> [
     @AdvanceToLastRank

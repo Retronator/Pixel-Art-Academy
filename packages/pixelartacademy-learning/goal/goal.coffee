@@ -7,7 +7,7 @@ class PAA.Learning.Goal
   @_goalClassesById = {}
   @_goalClassesUpdatedDependency = new Tracker.Dependency
 
-  @FinalTasksCompleteType:
+  @FinalTasksCompleteTypes:
     All: 'All'
     Any: 'Any'
     
@@ -38,7 +38,7 @@ class PAA.Learning.Goal
 
   # Override to provide task classes that complete this goal.
   @finalTasks: -> []
-  @finalTasksCompleteType: -> @FinalTasksCompleteType.Any
+  @finalTasksCompleteType: -> @FinalTasksCompleteTypes.Any
   @finalGroupNumber: -> 0
 
   @initialize: ->
@@ -133,7 +133,7 @@ class PAA.Learning.Goal
     finalTasks = @finalTasks()
     finalTaskPaths = (@_findPaths predecessor for predecessor in finalTasks)
 
-    if @finalTasksCompleteType() is @FinalTasksCompleteType.All
+    if @finalTasksCompleteType() is @FinalTasksCompleteTypes.All
       # We need to take one path from each of the final tasks, so we create all possible combinations.
       combinations = _.cartesianProduct finalTaskPaths...
 
@@ -157,7 +157,7 @@ class PAA.Learning.Goal
 
     predecessorPaths = (@_findPaths predecessor for predecessor in predecessors)
 
-    if task.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.All
+    if task.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteTypes.All
       # We need to take one path from each of the predecessors, so we create all possible combinations.
       combinations = _.cartesianProduct predecessorPaths...
 
@@ -175,13 +175,13 @@ class PAA.Learning.Goal
     
   @isInterestProvidedFromIndividuallyCompletedFinalTask: (interest) ->
     switch @finalTasksCompleteType()
-      when @FinalTasksCompleteType.All
+      when @FinalTasksCompleteTypes.All
         # We can get this interest from completing the goal only if there's only one final task that provides it.
         finalTasks = @finalTasks()
         return false unless finalTasks.length is 1
         interest in finalTasks[0].interests()
         
-      when @FinalTasksCompleteType.Any
+      when @FinalTasksCompleteTypes.Any
         # We can get this interest from completing the goal if any final task provides it.
         for finalTask in @finalTasks()
           return true if interest in finalTask.interests()
@@ -189,7 +189,7 @@ class PAA.Learning.Goal
         false
       
   @doesCompletingAnyFinalTaskCompleteTheGoal: ->
-    @finalTasksCompleteType() is @FinalTasksCompleteType.Any or @finalTasks().length is 1
+    @finalTasksCompleteType() is @FinalTasksCompleteTypes.Any or @finalTasks().length is 1
 
   @getAdventureInstanceForId: (goalId) ->
     return unless LOI.adventureInitialized()

@@ -291,7 +291,7 @@ class StudyPlan.GoalHierarchy
           
           else
             startPoint = startGoal.getExitPointForInterest connection.interest
-            endPoint = endGoal.getEntryPointForInterest connection.interest
+            endPoint = endGoal.entryPoint
           
           paths.push path if path = @pathfind startPoint, endPoint
           
@@ -330,8 +330,8 @@ class StudyPlan.GoalHierarchy
         for taskPoint in goalNode.taskPoints
           unprovidedInterests = _.difference taskPoint.entryPoint.requiredInterests, taskPoint.entryPoint.propagatedProvidedInterests
           for interest in unprovidedInterests when interestProviders[interest]
-            startPoint = interestProviders[interest]
-            endPoint = taskPoint.entryPoint
+            startPoint = interestProviders[interest].goalNode.getExitPointForInterest interest
+            endPoint = taskPoint.goalNode.entryPoint
             if path = @pathfind startPoint, endPoint
               addPath path
       
@@ -376,6 +376,7 @@ class StudyPlan.GoalHierarchy
           goalNode.possibleSidewaysGoalIds[sidewaysPointIndex] ?= []
           goalNode.possibleSidewaysGoalIds[sidewaysPointIndex].push (availableGoalIds sidewaysPoint[interestsCollectionName])...
           
+        for sidewaysPoint, sidewaysPointIndex in goalNode.sidewaysPoints
           for outgoingPathway in sidewaysPoint.outgoingPathways when outgoingPathway.endPoint is outgoingPathway.endPoint.goalNode?.entryPoint
             distributePossibleGoals outgoingPathway.endPoint.goalNode, interestsCollectionName
             
@@ -397,18 +398,23 @@ class StudyPlan.GoalHierarchy
         # If there are forward goal nodes, we have to expand down, otherwise forward.
         if goalNode.possibleForwardGoalIds.length
           connectionOptions = {goalId, exit: true}
+          expansionPosition = goalNode.exitPoint.globalPosition
           
           if goalNode.forwardGoalNodes.length
-            exitX = goalNode.exitPoint.globalPosition.x + @constructor.goalPadding.right
-            testY = goalNode.exitPoint.globalPosition.y
-            
+            exitX = expansionPosition.x + @constructor.goalPadding.right
+            testY = expansionPosition.y
             testY++ while roadTileMap.getTileType(exitX, testY) is StudyPlan.TileMap.Tile.Types.Road
-            roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.Road
+            
+            roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.ExpansionRoad
             roadTileMap.placeExpansionPoint exitX, testY + 2, StudyPlan.TileMap.Tile.ExpansionDirections.ForwardDown, goalNode.possibleForwardGoalIds, connectionOptions
           
           else
-            expansionPosition = goalNode.exitPoint.globalPosition
-            roadTileMap.placeExpansionPoint expansionPosition.x + 2, expansionPosition.y, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIds, connectionOptions
+            exitX = expansionPosition.x
+            testY = expansionPosition.y
+            exitX++ while roadTileMap.getTileType(exitX, testY) is StudyPlan.TileMap.Tile.Types.Road
+            
+            roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.ExpansionRoad
+            roadTileMap.placeExpansionPoint exitX + 2, testY, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIds, connectionOptions
             
         # We can expand sideways where there are no outgoing pathways.
         sidewaysExpansionPossible = false
@@ -468,11 +474,12 @@ class StudyPlan.GoalHierarchy
     @_recalculateAutorun.stop()
     
   pathfind: (startPoint, endPoint) ->
-    AP.Search.BreadthFirstSearch.searchEdges
+    AP.Search.Dijkstra.searchEdges
       root: startPoint
       isGoal: (point) => point is endPoint
       getEdgeStart: (pathway) => pathway.startPoint
       getEdgeEnd: (pathway) => pathway.endPoint
+      getEdgeDistance: (pathway) => pathway.distance()
       getDescendentEdges: (point) =>
         if point.potentialOutgoingPathways.length
           point.potentialOutgoingPathways

@@ -68,3 +68,44 @@ class Chess.Instructions
     faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
     
     customClass: -> 'pixelartacademy-pixeltosh-programs-chess-instructions-wide'
+
+  class @RepeatLessons extends @Instruction
+    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Chess.Instructions.RepeatLessons"
+    
+    @activeConditions: ->
+      return unless chess = @getChess()
+      return unless interfaceManager = chess.interfaceManager()
+      return unless interfaceManager.inMenu() and interfaceManager.shopIsOpen()
+      
+      return unless lessonManager = chess.lessonManager()
+      categories = lessonManager.availableCategories()
+
+      # See if we have any available lessons that haven't been completed yet.
+      for category in categories
+        for lesson in category.lessons
+          return if lesson.available() and not lesson.completedCount()
+          
+      # See if we can afford to buy another piece.
+      currency = Chess.currency()
+
+      for pieceType of Chess.Piece.Types
+        ownedCount = Chess.ownedPiecesCount pieceType
+        pieceInfo = Chess.Piece.InfoForType[pieceType]
+        requiredCount = pieceInfo.requiredCount
+        
+        continue if ownedCount is requiredCount
+
+        # This is the cheapest needed piece. Show instruction if we can't cover its value.
+        return currency < pieceInfo.value
+    
+    @message: -> """
+      You can repeat each lesson once to gain more currency.
+    """
+    
+    @initialize()
+    
+    bodyClass: -> PAA.Pixeltosh.Instructions.BodyClasses.Exclamation
+    
+    faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.Thoughtful
+    
+    customClass: -> 'pixelartacademy-pixeltosh-programs-chess-instructions-narrow'

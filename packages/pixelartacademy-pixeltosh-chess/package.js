@@ -35,10 +35,12 @@ Package.onUse(function(api) {
   api.addFile('gamestate');
   api.addFile('gamestate-moves');
   api.addStyledFile('instructions');
+  api.addFile('reward');
 
   api.addFile('interfacemanager');
   api.addFile('gamemanager');
   api.addFile('lessonmanager');
+  api.addFile('rewardsmanager');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/intro..');
@@ -52,6 +54,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/about..');
   api.addComponent('interface/shop..');
   api.addComponent('interface/boarddisplaychoice..');
+  api.addComponent('interface/earnings..');
 
   api.addComponent('interface/chessboard..');
   api.addFile('interface/chessboard/component');
@@ -89,7 +92,6 @@ Package.onUse(function(api) {
   api.addFile('lessons/enpassant');
   api.addFile('lessons/pawnsstrongertogether');
   api.addFile('lessons/pawnchains');
-  api.addFile('lessons/pawnpromotion');
   api.addFile('lessons/knightmovement');
   api.addFile('lessons/knightscenicroute');
   api.addFile('lessons/knightjumps');
@@ -108,6 +110,7 @@ Package.onUse(function(api) {
   api.addFile('lessons/queenmovement');
   api.addFile('lessons/queencapture');
   api.addFile('lessons/respectthequeen');
+  api.addFile('lessons/pawnpromotion');
   api.addFile('lessons/kingmovement');
   api.addFile('lessons/check');
   api.addFile('lessons/kingdanger');
@@ -125,4 +128,8 @@ Package.onUse(function(api) {
   api.addFile('lessons/categories/rook');
   api.addFile('lessons/categories/queen');
   api.addFile('lessons/categories/king');
+
+  api.addFile('rewards..');
+  api.addFile('rewards/lessoncompleted');
+  api.addFile('rewards/lessonrepeated');
 });

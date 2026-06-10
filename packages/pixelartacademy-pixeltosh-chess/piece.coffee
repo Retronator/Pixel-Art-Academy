@@ -39,22 +39,22 @@ class Chess.Piece
     
   @InfoForType =
     Pawn:
-      price: 1
+      value: 1
       requiredCount: 8
     Knight:
-      price: 3
+      value: 3
       requiredCount: 2
     Bishop:
-      price: 3
+      value: 3
       requiredCount: 2
     Rook:
-      price: 5
+      value: 5
       requiredCount: 2
     Queen:
-      price: 9
+      value: 9
       requiredCount: 1
     King:
-      price: 10
+      value: 10
       requiredCount: 1
   
   @fromLetter: (letter) ->
