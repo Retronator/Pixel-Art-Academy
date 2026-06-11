@@ -19,5 +19,4 @@ class Chess.Interface.Actions.AutoPromotion extends Chess.Interface.Actions.Acti
     not interfaceManager.inLesson()
     
   execute: ->
-    interfaceManager = @chess.interfaceManager()
-    interfaceManager.autoPromotion not interfaceManager.autoPromotion()
+    Chess.autoPromotion not Chess.autoPromotion()

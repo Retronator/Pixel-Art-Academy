@@ -34,6 +34,13 @@ class Chess.Interface
         Chess.Interface.Actions.FlipBoard.id()
       ]
     ,
+      caption: 'Theme'
+      items: [
+        Chess.Interface.Actions.LightChessboard.id()
+        Chess.Interface.Actions.ContrastChessboard.id()
+        Chess.Interface.Actions.DarkChessboard.id()
+      ]
+    ,
       caption: 'Play'
       items: [
         Chess.Interface.Actions.AutoPromotion.id()

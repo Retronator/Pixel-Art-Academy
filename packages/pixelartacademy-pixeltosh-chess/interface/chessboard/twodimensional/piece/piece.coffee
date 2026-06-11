@@ -24,7 +24,7 @@ class Chess.Interface.Chessboard.TwoDimensional.Piece extends AM.Component
       type = if @promoting() then Chess.Piece.Types.Pawn else piece.type
       assetId = Chess.Assets.TwoDimensional[type][piece.color].id()
       
-      return unless project = PAA.Practice.Project.documents.findOne Chess.chessSet2D()
+      return unless project = PAA.Practice.Project.documents.findOne Chess.projectId2D()
       return unless asset = _.find project.assets, (asset) => asset.id is assetId
       
       asset.bitmapId

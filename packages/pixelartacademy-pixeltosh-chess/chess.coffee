@@ -6,8 +6,8 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   # boardDisplayType: enum whether the camera should be 2D or 3D
   # displayBoardCoordinates: boolean whether to display the files and ranks along the border of the board
   # autoPromotion: boolean whether to automatically promote a pawn to a queen
-  # chessSet2D: the project ID of the currently chosen 2D chess set
-  # TODO: chessSet3D: the project ID of the currently chosen 3D chess set
+  # projectId2D: the project ID of the currently chosen 2D chess set
+  # TODO: projectId3D: the project ID of the currently chosen 3D chess set
   # currency: number of currency the player has
   # ownedPieceTypeCounts: how many pieces did the player purchase
   #   {pieceType}: number of pieces of this type the player owns
@@ -35,13 +35,27 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   @BoardDisplayTypes:
     TwoDimensional: 'TwoDimensional'
     ThreeDimensional: 'ThreeDimensional'
+
+  @ChessboardThemes:
+    Light: 'Light'
+    Contrast: 'Contrast'
+    Dark: 'Dark'
   
   @boardDisplayType = @state.field 'boardDisplayType', default: @BoardDisplayTypes.TwoDimensional
   @displayBoardCoordinates = @state.field 'displayBoardCoordinates', default: false
   @autoPromotion = @state.field 'autoPromotion', default: false
   
-  @chessSet2D: -> @state('chessSet2D') or @Project.TwoDimensional.state 'activeProjectId'
-  @chessSet3D: -> @state('chessSet3D') or @Project.ThreeDimensional.state 'activeProjectId'
+  @projectId2D: -> @state('projectId2D') or @Project.TwoDimensional.state 'activeProjectId'
+  @projectId3D: -> @state('projectId3D') or @Project.ThreeDimensional.state 'activeProjectId'
+
+  @currentProjectId: ->
+    switch @boardDisplayType()
+      when @BoardDisplayTypes.TwoDimensional then @projectId2D()
+      when @BoardDisplayTypes.ThreeDimensional then @projectId3D()
+
+  @currentProject: ->
+    return unless projectId = @currentProjectId()
+    PAA.Practice.Project.documents.findOne projectId
   
   @currency = @state.field 'currency', default: 0
   @ownedPieceTypeCounts = @state.field 'ownedPieceTypeCounts', default: {}
@@ -67,12 +81,12 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @_assetIsDrawn2D(pieceType, color) or @_assetIsDrawn3D(pieceType, color)
     
   @_assetIsDrawn2D: (pieceType, color) ->
-    return unless project = PAA.Practice.Project.documents.findOne @chessSet2D()
+    return unless project = PAA.Practice.Project.documents.findOne @projectId2D()
     assetId = Chess.Assets.TwoDimensional[pieceType][color].id()
     @_assetIsDrawnInProject project, assetId
   
   @_assetIsDrawn3D: (pieceType, color) ->
-    return unless project = PAA.Practice.Project.documents.findOne @chessSet3D()
+    return unless project = PAA.Practice.Project.documents.findOne @projectId3D()
     assetId = Chess.Assets.ThreeDimensional[pieceType][color].id()
     @_assetIsDrawnInProject project, assetId
     

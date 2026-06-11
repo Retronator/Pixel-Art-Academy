@@ -100,6 +100,11 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
   flippedClass: ->
     'flipped' if @chess.interfaceManager()?.flippedBoard()
 
+  themeClass: ->
+    return unless interfaceManager = @chess.interfaceManager()
+    
+    _.kebabCase interfaceManager.chessboardTheme()
+
   onClickSquare: (square) ->
     if @_ignoreNextClick
       @_ignoreNextClick = false

@@ -145,4 +145,6 @@ class Chess.InterfaceManager
     
   displayBoardCoordinates: -> Chess.displayBoardCoordinates() or @inLesson()
 
+  chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Light
+  
   autoPromotion: -> Chess.autoPromotion() and not @inLesson()
