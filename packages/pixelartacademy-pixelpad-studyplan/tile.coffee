@@ -15,7 +15,6 @@ class StudyPlan.TileMap.Tile
     Building: 'Building'
     Gate: 'Gate'
     Flag: 'Flag'
-    ExpansionRoad: 'ExpansionRoad'
     ExpansionPoint: 'ExpansionPoint'
     
   @ExpansionDirections =

@@ -21,7 +21,7 @@ class Goal.TwoDimensional extends Goal.Task
   
   @requiredInterests: -> ['size (pixel art)']
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'CountyLineSign'
   
   @initialize()
   
@@ -42,7 +42,7 @@ class Goal.ThreeDimensional extends Goal.Task
   
   @requiredInterests: -> ['form']
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonDepot'
   
   @initialize()
   
@@ -65,7 +65,7 @@ class Goal.BuyPawn extends Goal.Task
 
   @predecessorsCompleteType: -> @PredecessorsCompleteTypes.Any
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonHouses1'
 
   @initialize()
 
@@ -83,7 +83,7 @@ class Goal.DrawWhitePawn extends Goal.Task
   
   @predecessors: -> [Goal.BuyPawn]
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonHouse4'
   
   @initialize()
   
@@ -101,7 +101,7 @@ class Goal.DrawBlackPawn extends Goal.Task
   
   @predecessors: -> [Goal.DrawWhitePawn]
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonHouses2'
   
   @initialize()
   
@@ -119,7 +119,7 @@ class Goal.PawnLessons extends Goal.Task
   
   @predecessors: -> [Goal.DrawBlackPawn]
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonBusStation'
   
   @initialize()
   
@@ -139,7 +139,7 @@ class Goal.BuyKnight extends Goal.Task
 
   @groupNumber: -> -3
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonPark2'
 
   @initialize()
 
@@ -159,7 +159,7 @@ class Goal.DrawKnight extends Goal.Task
 
   @groupNumber: -> -3
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonHouses3'
 
   @initialize()
 
@@ -179,7 +179,7 @@ class Goal.BuySecondKnight extends Goal.Task
 
   @groupNumber: -> -3
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonPark1'
 
   @initialize()
 
@@ -199,7 +199,7 @@ class Goal.BuyBishop extends Goal.Task
 
   @groupNumber: -> -2
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonChurch'
 
   @initialize()
 
@@ -219,7 +219,7 @@ class Goal.DrawBishop extends Goal.Task
 
   @groupNumber: -> -2
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonFlats1'
 
   @initialize()
 
@@ -239,7 +239,7 @@ class Goal.BuySecondBishop extends Goal.Task
 
   @groupNumber: -> -2
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'SimCityChurch'
 
   @initialize()
 
@@ -259,7 +259,7 @@ class Goal.BuyRook extends Goal.Task
 
   @groupNumber: -> -1
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'SimCityOffice3'
 
   @initialize()
 
@@ -279,7 +279,7 @@ class Goal.DrawRook extends Goal.Task
 
   @groupNumber: -> -1
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonHouses4'
 
   @initialize()
 
@@ -299,7 +299,7 @@ class Goal.BuySecondRook extends Goal.Task
 
   @groupNumber: -> -1
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonOffice1'
 
   @initialize()
 
@@ -319,7 +319,7 @@ class Goal.BuyQueen extends Goal.Task
 
   @groupNumber: -> 0
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonOffice4'
 
   @initialize()
 
@@ -339,7 +339,7 @@ class Goal.DrawQueen extends Goal.Task
 
   @groupNumber: -> 0
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonShops2'
 
   @initialize()
 
@@ -359,7 +359,7 @@ class Goal.BuyKing extends Goal.Task
 
   @groupNumber: -> 1
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonOffice3'
 
   @initialize()
 
@@ -379,7 +379,7 @@ class Goal.DrawKing extends Goal.Task
 
   @groupNumber: -> 1
 
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonTheater'
 
   @initialize()
 
@@ -399,7 +399,7 @@ class Goal.KingLessons extends Goal.Task
   
   @groupNumber: -> 1
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonFlats2'
   
   @initialize()
   
@@ -419,7 +419,7 @@ class Goal.BuyPawns extends Goal.Task
   
   @groupNumber: -> 2
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoonWarehouse'
   
   @initialize()
   
@@ -448,7 +448,7 @@ class Goal.PlayGame extends Goal.Task
     Goal.BuyPawns
   ]
   
-  @studyPlanBuilding: -> 'SimCitySubway'
+  @studyPlanBuilding: -> 'TransportTycoon'
   
   @initialize()
   

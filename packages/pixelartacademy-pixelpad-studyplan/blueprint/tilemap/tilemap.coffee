@@ -94,7 +94,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
           else
             sourceY = 10
           
-        else unless tile.type in [TileTypes.Road, TileTypes.ExpansionRoad]
+        else unless tile.type is TileTypes.Road
           sourceX = 16
           sourceY = 10
 
@@ -190,7 +190,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       
       for x in [minX..maxX]
         revealingTiles = _.filter taskPoint.tiles, (tile) =>
-          tile.position.x is x and tile.type not in [TileTypes.Sidewalk, TileTypes.Road, TileTypes.ExpansionRoad]
+          tile.position.x is x and tile.type not in [TileTypes.Sidewalk, TileTypes.Road]
         
         revealed = false
         
@@ -289,7 +289,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
 
     switch tile.data.type
       when TileTypes.Sidewalk then classes.push 'sidewalk'
-      when TileTypes.Road, TileTypes.ExpansionRoad
+      when TileTypes.Road
         classes.push 'road', tile.data.roadMarkingStyles...
 
         for side, neighborExists of tile.data.roadNeighbors when neighborExists

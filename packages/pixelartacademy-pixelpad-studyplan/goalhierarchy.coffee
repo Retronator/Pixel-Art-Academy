@@ -402,19 +402,28 @@ class StudyPlan.GoalHierarchy
           
           if goalNode.forwardGoalNodes.length
             exitX = expansionPosition.x + @constructor.goalPadding.right
-            testY = expansionPosition.y
-            testY++ while roadTileMap.getTileType(exitX, testY) is StudyPlan.TileMap.Tile.Types.Road
+            exitY = expansionPosition.y
+            exitY++ while roadTileMap.getTileType(exitX, exitY) is StudyPlan.TileMap.Tile.Types.Road
             
-            roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.ExpansionRoad
-            roadTileMap.placeExpansionPoint exitX, testY + 2, StudyPlan.TileMap.Tile.ExpansionDirections.ForwardDown, goalNode.possibleForwardGoalIds, connectionOptions
+            expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal exitX, exitY, 'expansion'
+            pathway = new StudyPlan.Pathway goalNode.exitPoint, expansionRoadPoint
+            pathway.globalWaypointPositions.push new THREE.Vector2 exitX, goalNode.exitPoint.globalPosition.y
+            addGlobalPathway pathway
+            
+            roadTileMap.placeRoad pathway, useGlobalPositions: true
+            roadTileMap.placeExpansionPoint exitX, exitY + 3, StudyPlan.TileMap.Tile.ExpansionDirections.ForwardDown, goalNode.possibleForwardGoalIds, connectionOptions
           
           else
             exitX = expansionPosition.x
-            testY = expansionPosition.y
-            exitX++ while roadTileMap.getTileType(exitX, testY) is StudyPlan.TileMap.Tile.Types.Road
+            exitY = expansionPosition.y
+            exitX++ while roadTileMap.getTileType(exitX, exitY) is StudyPlan.TileMap.Tile.Types.Road
             
-            roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.ExpansionRoad
-            roadTileMap.placeExpansionPoint exitX + 2, testY, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIds, connectionOptions
+            expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal exitX, exitY, 'expansion'
+            pathway = new StudyPlan.Pathway goalNode.exitPoint, expansionRoadPoint
+            addGlobalPathway pathway
+            
+            roadTileMap.placeRoad pathway, useGlobalPositions: true
+            roadTileMap.placeExpansionPoint exitX + 2, exitY, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIds, connectionOptions
             
         # We can expand sideways where there are no outgoing pathways.
         sidewaysExpansionPossible = false

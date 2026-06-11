@@ -121,18 +121,18 @@ class StudyPlan.TileMap
 
   finishConstruction: (options = {}) ->
     # Determine road neighbors.
-    for tile in @tiles when tile.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
+    for tile in @tiles when tile.type is @constructor.Tile.Types.Road
       x = tile.position.x
       y = tile.position.y
-      left = @map[x - 1]?[y]?.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
-      right = @map[x + 1]?[y]?.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
-      up = @map[x]?[y - 1]?.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
-      down = @map[x]?[y + 1]?.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
+      left = @map[x - 1]?[y]?.type is @constructor.Tile.Types.Road
+      right = @map[x + 1]?[y]?.type is @constructor.Tile.Types.Road
+      up = @map[x]?[y - 1]?.type is @constructor.Tile.Types.Road
+      down = @map[x]?[y + 1]?.type is @constructor.Tile.Types.Road
       tile.roadNeighbors = {left, right, up, down}
       tile.intersection = _.sumBy([left, right, up, down], (neighbor) => if neighbor then 1 else 0) > 2
     
     # Add road marking styles.
-    for tile in @tiles when tile.type in [@constructor.Tile.Types.Road, @constructor.Tile.Types.ExpansionRoad]
+    for tile in @tiles when tile.type is @constructor.Tile.Types.Road
       x = tile.position.x
       y = tile.position.y
       tile.roadMarkingStyles ?= []

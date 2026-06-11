@@ -135,6 +135,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   class @Chess extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess'
     @displayName: -> "Chess"
+    @tags: -> [LM.Content.Tags.WIP]
     @contents: -> [
       @TwoDimensional
       @ThreeDimensional
@@ -147,22 +148,35 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
     constructor: ->
       super arguments...
       
-      @progress = new LM.Content.Progress.ManualProgress
+      @progress = new LM.Content.Progress.ContentProgress
         content: @
-        completed: -> false
-        completedUnitsCount: -> 0
-        requiredUnitsCount: -> 1
         units: 'chess sets'
         
     class @PieceType extends LM.Content
       constructor: ->
         super arguments...
         
-        # TODO: This has to account for both white and black pieces.
+        pieceTypeClass = @constructor
+        
         @progress = new LM.Content.Progress.ManualProgress
           content: @
-          completed: -> false
-          completedUnitsCount: -> 0
+          completed: -> @completedUnitsCount() is 2
+          completedUnitsCount: ->
+            return unless projectId = pieceTypeClass.project.state 'activeProjectId'
+            return unless project = PAA.Practice.Project.documents.findOne projectId
+            
+            count = 0
+            
+            if whiteAsset = _.find project.assets, (asset) => asset.id is pieceTypeClass.whiteAsset.id()
+              if whiteBitmap = LOI.Assets.Bitmap.documents.findOne whiteAsset.bitmapId
+                count++ if whiteBitmap.historyPosition
+            
+            if blackAsset = _.find project.assets, (asset) => asset.id is pieceTypeClass.blackAsset.id()
+              if blackBitmap = LOI.Assets.Bitmap.documents.findOne blackAsset.bitmapId
+                count++ if blackBitmap.historyPosition
+
+            count
+
           requiredUnitsCount: -> 2
           units: 'colors'
       
@@ -194,49 +208,70 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
       
       status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.Size.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
-      class @Pawn extends Chess.PieceType
+      class @PieceType extends Chess.PieceType
+        @project = PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional
+
+      class @Pawn extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Pawn'
         
         @displayName: -> "Pawn"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Pawn.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Pawn.Black
+        
         @initialize()
       
-      class @Knight extends Chess.PieceType
+      class @Knight extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Knight'
         
         @displayName: -> "Knight"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Knight.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Knight.Black
+
         @initialize()
       
-      class @Bishop extends Chess.PieceType
+      class @Bishop extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Bishop'
         
         @displayName: -> "Bishop"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Bishop.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Bishop.Black
+
         @initialize()
       
-      class @Rook extends Chess.PieceType
+      class @Rook extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Rook'
         
         @displayName: -> "Rook"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Rook.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Rook.Black
+
         @initialize()
       
-      class @Queen extends Chess.PieceType
+      class @Queen extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.Queen'
         
         @displayName: -> "Queen"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Queen.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.Queen.Black
+
         @initialize()
       
-      class @King extends Chess.PieceType
+      class @King extends TwoDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.King'
         
         @displayName: -> "King"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.King.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.TwoDimensional.King.Black
+
         @initialize()
     
-    class @ThreeDimensional extends LM.Content
+    class @ThreeDimensional extends LM.Content.FutureContent
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional'
       @displayName: -> "3D"
       
@@ -262,46 +297,67 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
       
       status: -> if false then LM.Content.Status.Unlocked else LM.Content.Status.Locked
       
-      class @Pawn extends Chess.PieceType
+      class @PieceType extends Chess.PieceType
+        @project = PAA.Pixeltosh.Programs.Chess.Project.ThreeDimensional
+        
+      class @Pawn extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Pawn'
         
         @displayName: -> "Pawn"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Pawn.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Pawn.Black
+
         @initialize()
       
-      class @Knight extends Chess.PieceType
+      class @Knight extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Knight'
         
         @displayName: -> "Knight"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Knight.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Knight.Black
+
         @initialize()
       
-      class @Bishop extends Chess.PieceType
+      class @Bishop extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Bishop'
         
         @displayName: -> "Bishop"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Bishop.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Bishop.Black
+
         @initialize()
       
-      class @Rook extends Chess.PieceType
+      class @Rook extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Rook'
         
         @displayName: -> "Rook"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Rook.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Rook.Black
+
         @initialize()
       
-      class @Queen extends Chess.PieceType
+      class @Queen extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.Queen'
         
         @displayName: -> "Queen"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Queen.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.Queen.Black
+
         @initialize()
       
-      class @King extends Chess.PieceType
+      class @King extends ThreeDimensional.PieceType
         @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.ThreeDimensional.King'
         
         @displayName: -> "King"
         
+        @whiteAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.King.White
+        @blackAsset = PAA.Pixeltosh.Programs.Chess.Assets.ThreeDimensional.King.Black
+
         @initialize()
   
   class @PixelPaint extends LM.Content.FutureContent

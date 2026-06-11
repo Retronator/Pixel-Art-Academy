@@ -27,5 +27,30 @@ StudyPlan.Blueprint.TileMap.buildings =
     SimCityOffice1: 15
     SimCityOffice2: 21
     SimCityOffice3: 19
-    TransportTycoonHouse: 9
+    TransportTycoonHouse1: 9
     TransportTycoonCinema: 12
+    TransportTycoonHouse2: 8
+    TransportTycoonHouse3: 11
+    TransportTycoonHouse4: 10
+    TransportTycoonHouses1: 9
+    TransportTycoonHouses2: 10
+    TransportTycoonHouses3: 10
+    TransportTycoonHouses4: 9
+    TransportTycoonChurch: 13
+    TransportTycoonOffice1: 21
+    TransportTycoonOffice2: 19
+    TransportTycoonOffice3: 21
+    TransportTycoonOffice4: 20
+    TransportTycoonFlats1: 13
+    TransportTycoonFlats2: 15
+    TransportTycoonFlats3: 15
+    TransportTycoonFlats4: 12
+    TransportTycoonShops1: 13
+    TransportTycoonShops2: 15
+    TransportTycoonTheater: 15
+    TransportTycoonWarehouse: 12
+    TransportTycoonPark1: 10
+    TransportTycoonPark2: 9
+    TransportTycoonBusStation: 8
+    TransportTycoonDepot: 10
+    CountyLineSign: 9

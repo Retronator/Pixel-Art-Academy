@@ -7,6 +7,7 @@ InvasionDesignDocument = PAA.Pico8.Cartridges.Invasion.DesignDocument
 class LM.Design.Fundamentals.Content.Projects extends LM.Content
   @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects'
   @displayName: -> "Projects"
+  @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
     @Invasion
     @Maze

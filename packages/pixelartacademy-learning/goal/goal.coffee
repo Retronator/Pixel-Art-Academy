@@ -272,7 +272,9 @@ class PAA.Learning.Goal
   added: -> PAA.PixelPad.Apps.StudyPlan.hasGoal @
   
   # A goal is active when it has been added to the study plan and not marked complete.
-  active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
+  active: ->
+    # Note: We want to makes sure the goal is completed, since it might not be anymore after an update or to debug.
+    PAA.PixelPad.Apps.StudyPlan.hasActiveGoal(@) or PAA.PixelPad.Apps.StudyPlan.hasGoal(@) and not @completed()
   
   # A goal is available when one of its initial tasks is available or completed.
   available: -> _.some (task.availableOrCompleted() for task in @initialTasks())

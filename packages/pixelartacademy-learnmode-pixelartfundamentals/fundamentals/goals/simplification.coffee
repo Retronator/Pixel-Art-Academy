@@ -25,7 +25,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     
     @requiredInterests: -> ['shape']
     
-    @studyPlanBuilding: -> 'TransportTycoonHouse'
+    @studyPlanBuilding: -> 'TransportTycoonHouse1'
   
     @initialize()
     
