@@ -32,6 +32,8 @@ Package.onUse(function(api) {
   api.addStyle('os/interface/rectanglearea..');
   api.addStyle('os/interface/button..');
   api.addComponent('os/interface/scrollablearea..');
+  api.addStyle('os/interface/radio..');
+  api.addStyle('os/interface/segmentedcontrol..');
 
   api.addFile('os/interface/actions..');
   api.addFile('os/interface/actions/action');

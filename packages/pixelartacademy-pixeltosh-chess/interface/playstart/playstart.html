@@ -1,5 +1,30 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.PlayStart">
   <div class="pixelartacademy-pixeltosh-programs-chess-interface-playstart">
-    <button class="play-button pixelartacademy-pixeltosh-os-interface-button">Play</button>
+    {{#each players}}
+      <div class="player-options">
+        <div class="color">{{color}}</div>
+        <div class="types">
+          {{#each playerTypeOptions}}
+            <label class="type pixelartacademy-pixeltosh-os-interface-radio">
+              <input class="type-input" type="radio" value="{{this}}" {{playerTypeCheckedAttribute}}><span class="radio"></span>
+              {{this}}
+            </label>
+          {{/each}}
+        </div>
+        {{#if $is type "Computer"}}
+          <div class="levels-area">
+            <span class="label">Level</span>
+            <div class="levels pixelartacademy-pixeltosh-os-interface-segmentedcontrol">
+              {{#each levels}}
+                <button class="level-button segment {{levelSelectedClass}}">{{this}}</button>
+              {{/each}}
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    {{/each}}
+    <div class="actions">
+      <button class="play-button pixelartacademy-pixeltosh-os-interface-button">Play</button>
+    </div>
   </div>
 </template>

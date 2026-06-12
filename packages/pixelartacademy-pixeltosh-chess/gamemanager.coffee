@@ -57,15 +57,14 @@ class Chess.GameManager
         return unless @displayingLivePosition()
 
         # Determine whether it's computer's turn.
-        options = @gameOptions()
-        currentPlayerType = if state.turn() is Chess.Piece.Colors.White then options.whitePlayerType else options.blackPlayerType
-        return unless currentPlayerType is @constructor.PlayerTypes.Computer
+        currentPlayer = @currentPlayer()
+        return unless currentPlayer.type is @constructor.PlayerTypes.Computer
         
         # Make a move, but simulate as if it took a second to calculate.
         osCursor = @chess.os.cursor()
         osCursor.wait @
         startTime = Date.now()
-        move = Chess.Move.fromEngine game.aiMove options.difficulty
+        move = Chess.Move.fromEngine game.aiMove currentPlayer.level
         elapsedTime = (Date.now() - startTime) / 1000
         
         await _.waitForSeconds Math.max 0, 1 - elapsedTime
@@ -127,7 +126,7 @@ class Chess.GameManager
     @promotionGameState null
 
     # Determine the starting board orientation.
-    @chess.interfaceManager().flippedBoard options.whitePlayerType is @constructor.PlayerTypes.Computer and options.blackPlayerType is @constructor.PlayerTypes.Human
+    @chess.interfaceManager().flippedBoard options.white.type is @constructor.PlayerTypes.Computer and options.black.type is @constructor.PlayerTypes.Human
 
     # Create a new game with white able to make an ambiguous knight move.
     @game new ChessEngine.Game
@@ -206,11 +205,13 @@ class Chess.GameManager
     else
       @previewedHistoryPlyNumber plyNumber
 
-  currentPlayerType: ->
+  currentPlayer: ->
     return unless state = @gameState()
     return unless options = @gameOptions()
 
-    if state.turn() is Chess.Piece.Colors.White then options.whitePlayerType else options.blackPlayerType
+    if state.turn() is Chess.Piece.Colors.White then options.white else options.black
+
+  currentPlayerType: -> @currentPlayer()?.type
 
   humanCanMove: ->
     return unless @displayingLivePosition()
