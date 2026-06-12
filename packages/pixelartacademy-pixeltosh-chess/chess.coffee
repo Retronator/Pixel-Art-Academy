@@ -40,6 +40,10 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     Light: 'Light'
     Contrast: 'Contrast'
     Dark: 'Dark'
+
+  @InterfaceThemes:
+    Light: 'Light'
+    Dark: 'Dark'
   
   @boardDisplayType = @state.field 'boardDisplayType', default: @BoardDisplayTypes.TwoDimensional
   @displayBoardCoordinates = @state.field 'displayBoardCoordinates', default: false

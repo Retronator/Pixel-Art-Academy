@@ -70,6 +70,8 @@ class LOI.Assets.SpriteEditor.MipLoader extends FM.Loader
         @spriteData()?.customPalette
 
   destroy: ->
+    super arguments...
+    
     @_subscription.stop()
     @spriteData.stop()
     @paletteId.stop()

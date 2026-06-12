@@ -39,6 +39,9 @@ class Chess.Interface
         Chess.Interface.Actions.LightChessboard.id()
         Chess.Interface.Actions.ContrastChessboard.id()
         Chess.Interface.Actions.DarkChessboard.id()
+        null
+        Chess.Interface.Actions.LightInterface.id()
+        Chess.Interface.Actions.DarkInterface.id()
       ]
     ,
       caption: 'Play'

@@ -68,6 +68,16 @@ class Chess.InterfaceManager
       
       Tracker.nonreactive => window.data().set 'contentArea', layout
       
+    @_themeAutorun = @chess.autorun (computation) =>
+      layoutData = @chess.os.interface.currentLayoutData()
+      windows = layoutData.get 'windows'
+      styleClass = "#{_.kebabCase @interfaceTheme()}-interface"
+      
+      Tracker.nonreactive =>
+        chessWindows = _.filter windows, (window) => window.programId is Chess.id()
+        window.styleClass = styleClass for window in chessWindows
+        layoutData.set 'windows', windows
+        
     @_boardDisplayChoiceAutorun = @chess.autorun =>
       return unless LOI.adventure.gameState()
       return unless @window()
@@ -90,6 +100,7 @@ class Chess.InterfaceManager
   destroy: ->
     @window.stop()
     @_layoutAutorun.stop()
+    @_themeAutorun.stop()
     @_boardDisplayChoiceAutorun.stop()
     @_earningsAutorun.stop()
     
@@ -144,6 +155,8 @@ class Chess.InterfaceManager
     @chess.os.activateWindow @windowId
     
   displayBoardCoordinates: -> Chess.displayBoardCoordinates() or @inLesson()
+
+  interfaceTheme: -> Chess.currentProject()?.interfaceTheme or Chess.InterfaceThemes.Light
 
   chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Light
   

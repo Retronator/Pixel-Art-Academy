@@ -76,6 +76,9 @@ class Chess.Interface.Lessons extends AM.Component
     @chess.interfaceManager().enterScreen Chess.InterfaceManager.Screens.Lesson
   
   onPointerEnterLesson: (event) ->
+    # Note: When using escape to get back, this even can run sooner than onRendered, so we have to guard for it.
+    return unless @$lessons
+    
     lesson = @currentData()
     
     # Calculate vertical offset between lesson element and scroll container

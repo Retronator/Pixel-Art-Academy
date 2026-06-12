@@ -17,7 +17,7 @@
     z-index 1
 
   &.selected::before
-    background black
+    background-color black
 
   &.legal-move
     &:hover::before
@@ -32,7 +32,34 @@
   .contrast.board &
   .dark.board &
     &.dark
-      background black
+      background-color black
+      background-image none
+
+  .contrast.board &
+    &.selected::before
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-selected-contrast.png')
+
+    &.legal-move
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover-contrast.png')
+
+      &.dark
+        &:hover::before
+          background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover-contrast-dark.png')
+
+        &::before
+          background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-dark.png')
 
   .dark.board &
     background image('/pixelartacademy/pixeltosh/os/dither.png') 0 0 / 2rem 2rem
+
+    &.selected::before
+      background white
+      border 2rem solid black
+
+    &.legal-move
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover-dark.png')
+
+      &::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-dark.png')

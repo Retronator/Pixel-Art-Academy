@@ -32,6 +32,8 @@ class LOI.Assets.SpriteEditor.SpriteLoader extends FM.Loader
       LOI.Assets.Palette.forIds.subscribe paletteIds
 
   destroy: ->
+    super arguments...
+    
     @_subscription.stop()
     @spriteData.stop()
     @paletteIds.stop()

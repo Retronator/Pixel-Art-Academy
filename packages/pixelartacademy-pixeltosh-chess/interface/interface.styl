@@ -2,6 +2,12 @@
 
 .pixelartacademy-pixeltosh-program-view.chess
 .pixelartacademy-pixeltosh-chess
+  .dark-interface &
+    color white
+
+    .currency::before
+      filter invert(1)
+
   .currency::before
     content ''
     display inline-block
@@ -12,7 +18,26 @@
     background-image image('/pixelartacademy/pixeltosh/programs/chess/currency.png')
 
 .pixelartacademy-pixeltosh-program-view.chess
-  background-image image('/pixelartacademy/pixeltosh/os/program-background.png')
+  .light-interface &
+    background-image image('/pixelartacademy/pixeltosh/os/program-background.png')
+
+  .dark-interface &
+    background-color black
+
+    .fatamorgana-tabbedview
+      .tabs
+        border-bottom-color white
+
+        .tab
+          background black
+          border-color white
+
+          &.active
+            &::after
+              background black
+
+    .pixelartacademy-pixeltosh-chess-interface-sidebar
+      border-left-color white
 
   .fatamorgana-tabbedview
     display flex

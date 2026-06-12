@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.Earnings extends FM.View
+class Chess.Interface.Earnings extends PAA.Pixeltosh.Program.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Earnings'
   @register @id()
 

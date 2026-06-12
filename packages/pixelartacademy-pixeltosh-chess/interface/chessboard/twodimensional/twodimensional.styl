@@ -28,11 +28,21 @@
 
     &.dark
       background-color black
-      border 1rem solid black
 
       .squares
-        background-color white
         border-color white
+
+    .dark-interface &
+      border-color white
+
+      &.contrast
+      &.dark
+        .squares
+          border-color white
+
+      .coordinates
+        color white
+        pixel-text-outline black true 1
 
     .squares
       display flex

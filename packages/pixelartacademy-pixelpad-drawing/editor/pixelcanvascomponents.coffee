@@ -40,4 +40,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
       true
     
   destroy: ->
+    super arguments...
+    
     @components.stop()

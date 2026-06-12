@@ -101,12 +101,23 @@ class FM.Interface extends AM.Component
       removed: (file) =>
         @_loaders[file.id].destroy()
         delete @_loaders[file.id]
+        @_destroyHelperInstancesForFile file.id
         @_loadersUpdatedDependency.changed()
 
   onDestroyed: ->
     super arguments...
 
     @data.destroy()
+    
+    dialogData.destroy() for dialogData in @dialogs()
+  
+    helperInstance.destroy() for helperId, helperInstance of @_helperInstances
+  
+    for fileId, helperInstances of @_helperForFileInstances
+      helperInstance.destroy() for helperId, helperInstance of helperInstances
+    
+    loader.destroy() for fileId, loader of @_loaders
+    
     @files.stop()
 
   getComponentData: (componentClassOrId) ->
@@ -184,6 +195,12 @@ class FM.Interface extends AM.Component
 
     @_helperForFileInstances[fileId][helperId]
 
+  _destroyHelperInstancesForFile: (fileId) ->
+    return unless helperInstances = @_helperForFileInstances[fileId]
+    
+    helperInstance.destroy() for helperId, helperInstance of helperInstances
+    delete @_helperForFileInstances[fileId]
+
   getHelperForActiveFile: (helperClassOrId) ->
     fileId = @activeFileId()
     return unless fileId?
@@ -212,7 +229,10 @@ class FM.Interface extends AM.Component
   closeDialog: (dialog) ->
     Tracker.nonreactive =>
       dialogs = @dialogs()
+
       _.pull dialogs, dialog
+      dialog.destroy()
+
       @dialogs dialogs
     
   addWindow: (window) ->
@@ -235,6 +255,7 @@ class FM.Interface extends AM.Component
       delete windows[id]
       
       windowsData.value windows
+      windowsData.destroyChild id
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'

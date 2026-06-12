@@ -11,6 +11,11 @@ class FM.Interface.Data
     @value.stop()
     child.destroy() for name, child of @_children
 
+  destroyChild: (field) ->
+    field = field.toString()
+    @_children[field]?.destroy()
+    delete @_children[field]
+
   child: (field) ->
     field = field.toString()
     

@@ -74,6 +74,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/displayboardcoordinates');
   api.addFile('interface/actions/flipboard');
   api.addFile('interface/actions/boarddisplaytype');
+  api.addFile('interface/actions/interfacetheme');
   api.addFile('interface/actions/chessboardtheme');
   api.addFile('interface/actions/autopromotion');
 

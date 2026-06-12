@@ -112,6 +112,8 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @_pictureThumbnails = []
 
   destroy: ->
+    super arguments...
+    
     @_subscription.stop()
     @_paletteSubscriptionAutorun.stop()
     @_textureSpritesSubscriptionAutorun.stop()
