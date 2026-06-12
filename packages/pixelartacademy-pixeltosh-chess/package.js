@@ -77,6 +77,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/interfacetheme');
   api.addFile('interface/actions/chessboardtheme');
   api.addFile('interface/actions/autopromotion');
+  api.addFile('interface/actions/autoflipboard');
 
   api.addFile('lesson..');
   api.addFile('lesson/lesson-ai');

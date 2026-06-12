@@ -6,7 +6,7 @@ Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Interface.Actions.DisplayBoardCoordinates extends Chess.Interface.Actions.Action
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.DisplayBoardCoordinates'
-  @displayName: -> "Board coordinates"
+  @displayName: -> "Board Coordinates"
 
   @initialize()
   

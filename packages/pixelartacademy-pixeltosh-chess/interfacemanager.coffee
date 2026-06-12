@@ -87,6 +87,15 @@ class Chess.InterfaceManager
       return if @_boardDisplayChoiceWindowId()
       
       @_boardDisplayChoiceWindowId @chess.os.addWindow Chess.Interface.BoardDisplayChoice.createInterfaceData()
+
+    @_autoFlipBoardAutorun = @chess.autorun =>
+      return unless gameManager = @chess.gameManager()
+      return unless gameState = gameManager.gameState()
+      
+      flippedBoard = @automaticBoardOrientationForGameState gameState
+      return unless flippedBoard?
+
+      @flippedBoard flippedBoard
       
     @_earningsAutorun = @chess.autorun =>
       return unless @window()
@@ -102,6 +111,7 @@ class Chess.InterfaceManager
     @_layoutAutorun.stop()
     @_themeAutorun.stop()
     @_boardDisplayChoiceAutorun.stop()
+    @_autoFlipBoardAutorun.stop()
     @_earningsAutorun.stop()
     
   inMenu: -> @screen() is @constructor.Screens.Menu
@@ -161,3 +171,16 @@ class Chess.InterfaceManager
   chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Light
   
   autoPromotion: -> Chess.autoPromotion() and not @inLesson()
+
+  automaticBoardOrientationForGameState: (gameState) ->
+    # Automatic orientation is only active for a human player at a live, unfinished position.
+    return unless Chess.autoFlipBoard()
+    return if gameState.finished()
+    return unless gameManager = @chess.gameManager()
+    return unless gameManager.displayingLivePosition()
+    return unless options = gameManager.gameOptions()
+
+    currentPlayer = if gameState.turn() is Chess.Piece.Colors.White then options.white else options.black
+    return unless currentPlayer.type is Chess.GameManager.PlayerTypes.Human
+
+    gameState.turn() is Chess.Piece.Colors.Black

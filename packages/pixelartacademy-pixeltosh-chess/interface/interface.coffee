@@ -47,6 +47,7 @@ class Chess.Interface
       caption: 'Play'
       items: [
         Chess.Interface.Actions.AutoPromotion.id()
+        Chess.Interface.Actions.AutoFlipBoard.id()
       ]
     ]
     

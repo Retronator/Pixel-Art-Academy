@@ -52,14 +52,21 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
     piece = gameState.getPieceAtSquare square
     piece?.color is gameState.turn() and provider.getLegalDestinationsFromSquare(square).length
     
-  performMoveTo: (square) ->
+  performMoveTo: (square, moveWasDragged = false) ->
     selectedSquare = @selectedSquare()
     provider = @provider()
     gameState = provider.gameState()
     piece = gameState.getPieceAtSquare selectedSquare
     move = new Chess.Move selectedSquare, square
+    showPromotion = piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7] and not @chess.interfaceManager().autoPromotion()
     
-    if piece.type is Chess.Piece.Types.Pawn and move.to.rankIndex in [0, 7] and not @chess.interfaceManager().autoPromotion()
+    if moveWasDragged
+      # Skip animating a dragged piece when promoting and when the board will not automatically flip.
+      interfaceManager = @chess.interfaceManager()
+      automaticFlippedBoard = interfaceManager.automaticBoardOrientationForGameState gameState.applyMove move
+      @_skipMoveAnimationTo = square if showPromotion or not automaticFlippedBoard?
+
+    if showPromotion
       @promotionInfo
         move: move
         color: piece.color

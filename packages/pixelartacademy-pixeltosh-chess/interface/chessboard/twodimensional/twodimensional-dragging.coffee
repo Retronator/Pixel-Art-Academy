@@ -81,7 +81,6 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
       destinationSquare = Chess.Square[$destinationSquare.data 'square-name']
 
       if destinationSquare in @provider().getLegalDestinationsFromSquare square
-        @_skipMoveAnimationTo = destinationSquare
-        @performMoveTo destinationSquare
+        @performMoveTo destinationSquare, true
 
       @selectedSquare null
