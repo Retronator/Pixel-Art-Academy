@@ -20,6 +20,23 @@ class Chess.GameState
     new @ _.extend @getEmptyData(), {pieces}
 
   constructor: (@data) ->
+  
+  getPositionKey: ->
+    return @_positionKey if @_positionKey
+    
+    pieces = ("#{squareName}:#{pieceLetter}" for squareName, pieceLetter of @data.pieces)
+    pieces.sort()
+    
+    castling = []
+    castling.push "#{key}:#{value}" for key, value of @data.castling
+    castling.sort()
+    
+    @_positionKey = [
+      pieces.join ','
+      @data.turn
+      castling.join ','
+      @data.enPassant or ''
+    ].join '|'
 
   turn: -> if @data.turn is 'white' then Chess.Piece.Colors.White else Chess.Piece.Colors.Black
 
@@ -34,6 +51,8 @@ class Chess.GameState
   staleMate: -> @data.staleMate
 
   finished: -> @data.isFinished
+  
+  halfMove: -> @data.halfMove
 
   enPassantSquare: -> Chess.Square[@data.enPassant] if @data.enPassant
 
@@ -62,7 +81,11 @@ class Chess.GameState
 
   hasPieceAtSquare: (piece, square) -> @data.pieces[square.engineName] is piece?.letter
 
-  getPiecesOfColor: (color) -> (@getPieceAtSquare square for square in @occupiedSquaresOfColor color)
+  getPieces: -> (Chess.Piece.fromLetter pieceLetter for squareName, pieceLetter of @data.pieces)
+  
+  getPiecesOfColor: (color) -> _.filter @getPieces(), (piece) => piece.color is color
+  
+  getPiecesOfTypeAndColor: (pieceType, color) -> _.filter @getPieces(), (piece) => piece.type is pieceType and piece.color is color
 
   hasSamePiecePlacementAs: (gameState) -> EJSON.equals @data.pieces, gameState.data.pieces
 
@@ -174,3 +197,40 @@ class Chess.GameState
     delete data.pieces[move.from.engineName]
     
     new @constructor data
+
+  hasInsufficientMaterial: ->
+    pieces = {}
+
+    for color in Chess.Piece.AllColors
+      pieces[color] = {}
+  
+      for pieceType in Chess.Piece.AllTypes
+        pieces[color][pieceType] = @occupiedSquaresByPiecesOfColor pieceType, color
+
+    # Insufficient material only applies to legal positions with both kings on the board.
+    return unless pieces[Chess.Piece.Colors.White][Chess.Piece.Types.King].length
+    return unless pieces[Chess.Piece.Colors.Black][Chess.Piece.Types.King].length
+
+    # Pawns, rooks, and queens can always provide mating material.
+    for color in Chess.Piece.AllColors
+      return if pieces[color][Chess.Piece.Types.Pawn].length
+      return if pieces[color][Chess.Piece.Types.Rook].length
+      return if pieces[color][Chess.Piece.Types.Queen].length
+
+    minorPieces = []
+
+    for color in Chess.Piece.AllColors
+      for square in pieces[color][Chess.Piece.Types.Bishop]
+        minorPieces.push {type: Chess.Piece.Types.Bishop, square}
+
+      for square in pieces[color][Chess.Piece.Types.Knight]
+        minorPieces.push {type: Chess.Piece.Types.Knight}
+
+    # A single bishop or knight cannot force a checkmate.
+    return true if minorPieces.length <= 1
+    
+    # Same-colored bishops cannot force a checkmate.
+    if minorPieces.length is 2 and minorPieces[0].type is Chess.Piece.Types.Bishop and minorPieces[1].type is Chess.Piece.Types.Bishop
+      return minorPieces[0].square.color is minorPieces[1].square.color
+
+    false

@@ -48,11 +48,16 @@ class Chess.Interface
       items: [
         Chess.Interface.Actions.AutoPromotion.id()
         Chess.Interface.Actions.AutoFlipBoard.id()
+        null
+        Chess.Interface.Actions.HistoryBack.id()
+        Chess.Interface.Actions.HistoryForward.id()
       ]
     ]
     
   @createShortcuts: ->
     "#{Chess.Interface.Actions.FlipBoard.id()}": key: AC.Keys.f
+    "#{Chess.Interface.Actions.HistoryBack.id()}": key: AC.Keys.left
+    "#{Chess.Interface.Actions.HistoryForward.id()}": key: AC.Keys.right
     
   @createInterfaceData: ->
     type: PAA.Pixeltosh.Program.View.id()

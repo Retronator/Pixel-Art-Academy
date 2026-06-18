@@ -16,8 +16,7 @@ class Chess.Interface.Chessboard.TwoDimensional.Square extends AM.Component
   
   legalMove: -> @square in @chessboard.legalMoveSquares()
 
-  typeClass: ->
-    if (@fileIndex + @rankIndex) % 2 then 'light' else 'dark'
+  colorClass: -> _.kebabCase @square.color
 
   selectedClass: ->
     'selected' if @chessboard.selectedSquare() is @square

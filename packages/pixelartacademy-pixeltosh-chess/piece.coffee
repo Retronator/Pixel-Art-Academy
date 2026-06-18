@@ -5,6 +5,8 @@ class Chess.Piece
   @Colors =
     White: 'White'
     Black: 'Black'
+    
+  @AllColors = _.values @Colors
   
   @Types =
     Pawn: 'Pawn'
@@ -13,6 +15,8 @@ class Chess.Piece
     Rook: 'Rook'
     Queen: 'Queen'
     King: 'King'
+    
+  @AllTypes = _.values @Types
     
   @PromotionTypes = [
     @Types.Knight

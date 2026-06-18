@@ -76,6 +76,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/boarddisplaytype');
   api.addFile('interface/actions/interfacetheme');
   api.addFile('interface/actions/chessboardtheme');
+  api.addFile('interface/actions/history');
   api.addFile('interface/actions/autopromotion');
   api.addFile('interface/actions/autoflipboard');
 

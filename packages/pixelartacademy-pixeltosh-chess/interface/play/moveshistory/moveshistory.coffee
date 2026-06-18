@@ -63,13 +63,13 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     'active' if plyInfo.ply.number is gameManager.currentDisplayedPlyNumber()
 
   endingStatus: ->
-    return unless gameState = @chess.gameManager()?.liveGameState()
-    return unless gameState.finished()
+    return unless gameManager = @chess.gameManager()
+    return unless gameState = gameManager.liveGameState()
 
     if gameState.checkMate()
       if gameState.turn() is Chess.Piece.Colors.White then '0-1' else '1-0'
 
-    else if gameState.staleMate()
+    else if gameManager.draw()
       '½-½'
 
   moveText: ->

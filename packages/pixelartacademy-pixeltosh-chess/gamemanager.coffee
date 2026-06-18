@@ -31,6 +31,30 @@ class Chess.GameManager
       return unless game = @game.withUpdates()
       boardConfig = game.exportJson()
       new Chess.GameState boardConfig
+      
+    @draw = new AE.LiveComputedField =>
+      return unless gameState = @gameState()
+      return false if gameState.checkMate()
+
+      # Stale mate is a draw.
+      return true if gameState.staleMate()
+      
+      # Check the fifty-move rule.
+      return true if gameState.halfMove() >= 100
+      
+      # Check if there is sufficient material.
+      return true if gameState.hasInsufficientMaterial()
+      
+      # Check for threefold repetition.
+      positionCounts = {}
+      
+      for ply in @plyHistory()
+        positionKey = ply.gameState.getPositionKey()
+        positionCounts[positionKey] ?= 0
+        positionCounts[positionKey]++
+        return true if positionCounts[positionKey] is 3
+      
+      false
 
     # Give the player the first currency if they have no pieces.
     Tracker.autorun (computation) =>
@@ -51,6 +75,7 @@ class Chess.GameManager
     @_playAutorun = @chess.autorun (computation) =>
       return unless state = @gameState()
       return if state.finished()
+      return if @draw()
       
       Tracker.nonreactive =>
         return unless game = @game()
@@ -64,9 +89,14 @@ class Chess.GameManager
         osCursor = @chess.os.cursor()
         osCursor.wait @
         startTime = Date.now()
-        move = Chess.Move.fromEngine game.aiMove currentPlayer.level
-        elapsedTime = (Date.now() - startTime) / 1000
         
+        aiAnswer = game.ai
+          level: currentPlayer.level
+          randomness: 5
+          
+        move = Chess.Move.fromEngine aiAnswer.move
+        
+        elapsedTime = (Date.now() - startTime) / 1000
         await _.waitForSeconds Math.max 0, 1 - elapsedTime
         
         osCursor.endWait @
@@ -74,6 +104,9 @@ class Chess.GameManager
         @_recordMove move
 
   destroy: ->
+    @gameState.stop()
+    @draw.stop()
+    
     @_missingAssetsAutorun.stop()
     @_playAutorun.stop()
     
@@ -205,6 +238,12 @@ class Chess.GameManager
     else
       @previewedHistoryPlyNumber plyNumber
 
+  displayPreviousPosition: ->
+    @displayPosition @currentDisplayedPlyNumber() - 1
+
+  displayNextPosition: ->
+    @displayPosition @currentDisplayedPlyNumber() + 1
+
   currentPlayer: ->
     return unless state = @gameState()
     return unless options = @gameOptions()
@@ -215,6 +254,7 @@ class Chess.GameManager
 
   humanCanMove: ->
     return unless @displayingLivePosition()
+    return if @draw()
 
     @currentPlayerType() is @constructor.PlayerTypes.Human
 
