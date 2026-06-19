@@ -83,4 +83,13 @@ Package.onUse(function(api) {
   api.addStyle('fundamentals/publications/pinballmagazine/issues/1/gobbleholes')
   api.addStyle('fundamentals/publications/pinballmagazine/issues/1/bumpers')
   api.addStyle('fundamentals/publications/pinballmagazine/issues/1/gates')
+
+  api.addStyledFile('fundamentals/publications/sixtyfoursquares..')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/sixtyfoursquares-cover')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/sixtyfoursquares-tableofcontents')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/sixtyfoursquares-headerfooter')
+
+  api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/headerfooter')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/tableofcontents')
 });

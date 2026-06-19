@@ -24,6 +24,7 @@ Package.onUse(function(api) {
   api.addFile('methods');
   api.addFile('subscriptions');
   api.addFile('location');
+  api.addFile('header');
 
   api.addFile('part..');
   api.addFile('part/methods');
@@ -36,6 +37,7 @@ Package.onUse(function(api) {
 
   api.addComponent('component..');
   api.addClientComponent('component/article-client/article');
+  api.addClientComponent('component/header-client/header');
 
   api.addFile('article..');
 
@@ -56,4 +58,5 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/admin/publications..');
   api.addComponent('pages/admin/publications/publication');
+  api.addClientComponent('pages/admin/publications/header-client/header');
 });

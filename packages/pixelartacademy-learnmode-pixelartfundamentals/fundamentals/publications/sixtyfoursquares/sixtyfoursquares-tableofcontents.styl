@@ -1,0 +1,110 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "sixtyfoursquares.import"
+
+.publication.sixty-four-squares.table-of-contents
+  .contents-area
+    &.read-only
+      .contents
+        position absolute
+        left 13rem
+        top 30rem
+        // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+        width 514rem
+        height 320rem
+        column-width 240rem
+        column-gap 34rem
+        column-fill auto
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .ql-editor
+          .pixelartacademy-publication-article-header
+            text-transform uppercase
+
+            h1
+              margin 10rem 0 0
+              ebook-roman()
+              line-height 24rem
+              color atariGray(0)
+
+            h2
+              daily()
+              margin-top 0
+
+          > h1
+            position relative
+            margin-bottom 0
+            border-bottom 1rem solid atariGray(0)
+            color white
+            thintel()
+
+            u
+              display inline-block
+              padding 3rem 4rem 0 5rem
+              background atariGray(0)
+              text-decoration none
+
+          .table-of-contents
+            list-style none
+            padding 0
+            thintel()
+            text-transform uppercase
+            color atariGray(3)
+            counter-reset content-item-counter
+
+            .content-item
+              position relative
+              height 42rem
+              margin 0
+              padding 16rem 0 16rem 70rem
+              border-bottom 1rem dashed atariGray(0)
+              counter-increment content-item-counter
+
+              &.unlocked
+                cursor pointer
+                color atariGray(0)
+
+                &.unread
+                  padding-top 14rem
+
+                  .title::after
+                    content ''
+                    display inline-block
+                    width 7rem
+                    height 10rem
+                    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/content-unlocked.png')
+
+              &:not(.unlocked)
+                padding-top 15rem
+                color atariGray(3)
+
+                .title::after
+                  content ''
+                  display inline-block
+                  width 7rem
+                  height 9rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/content-locked.png')
+
+              &::before
+                content counter(content-item-counter)
+                position absolute
+                top 8rem
+                left 32rem
+                width 38rem
+                text-align center
+                ebook-roman()
+
+              &::after
+                content ''
+                position absolute
+                top 6rem
+                left 0
+                width 30rem
+                height 30rem
+                background-repeat no-repeat
+                background-position center
+                border 1rem solid atariGray(0)
+
+              .title::after
+                margin-left 1rem

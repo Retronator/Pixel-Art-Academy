@@ -40,9 +40,17 @@ The project is using these fonts:
 
   Custom, 2px tall, abstractly represents lines of text
 
+- **Chicago Mini** and **Geneva Mini** by Matej Jan (www.retronator.com)
+
+  Custom, Pixeltosh fonts inspired by the Macintosh Geneva and Chicago typefaces, but smaller
+
 - **Serif 23** by Matej Jan (www.retronator.com)
 
   Custom, large title font inspired by the Marion typeface
+
+- **Chronoscope** by Matej Jan (www.retronator.com)
+
+  Custom, large title font for the Chronoscope publication
 
 - **Study Plan** by Matej Jan (www.retronator.com)
 
@@ -51,6 +59,10 @@ The project is using these fonts:
 - **Quaternary** by Matej Jan (www.retronator.com)
 
   Custom, 4x3 fixed-width font with a digital style
+
+- **Square 4** and **Square 9** by Matej Jan (www.retronator.com)
+
+  Custom, 4x4 and 9x9 fixed-width font for the 64 Squares publication
 
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
@@ -90,6 +102,10 @@ The project is using these fonts:
 
   Permission granted by the authors for use in this specific repository.
   Any forks of this repository and other derivative works must obtain their own license to use this font.
+
+- **ebook roman** by maumorgo (https://fontstruct.com/fontstructors/205448/maumorgo)
+
+  Creative Commons Attribution Share Alike
 
 Fonts are served in the WOFF cross-browser format as base64 encoded data URIs directly inside the CSS.
 

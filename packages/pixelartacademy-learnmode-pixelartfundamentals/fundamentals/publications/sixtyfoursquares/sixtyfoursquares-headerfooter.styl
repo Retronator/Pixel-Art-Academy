@@ -1,0 +1,64 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+
+.publication.sixty-four-squares
+  .running-header
+  .running-footer
+    position absolute
+    z-index 1
+    left 0
+    right -100%
+
+  .running-header
+    text-transform uppercase
+
+    p
+      margin 0
+      position absolute
+      top 11rem
+      width 240rem
+      height 14rem
+      border-bottom 2rem solid atariGray(0)
+
+      &:first-child
+        left 13rem
+        squares-9()
+        color atariGray(0)
+
+        em
+          display inline-block
+          position relative
+          width 10rem
+          height 9rem
+          margin-right 1rem
+          font-style normal
+          squares-4()
+          text-align left
+          text-align-last right
+          line-height 5rem
+
+          &::before
+          &::after
+            content ''
+            position absolute
+            width 4rem
+            height 4rem
+            background-color atariGray(0)
+
+          &::before
+            top 0.5rem
+            right 1rem
+
+          &::after
+            bottom -0.5rem
+            left 0
+
+      &:last-child
+        right 13rem
+        daily()
+        font-weight bold
+        text-align right
+
+  .running-footer
+    bottom 0

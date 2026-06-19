@@ -52,7 +52,7 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
 
     # Place the item in between two items above.
     orderAbove = contentItems[contentItem.sortedIndex - 1].order
-    orderTwoAbove = contentItems[contentItem.sortedIndex - 2]?.order or orderAbove - 2
+    orderTwoAbove = contentItems[contentItem.sortedIndex - 2]?.order ? orderAbove - 2
     order = (orderAbove + orderTwoAbove) / 2
 
     PAA.Publication.updateContentItem publication._id, contentItem.index, {order}
@@ -64,7 +64,7 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
 
     # Place the item in between two items below.
     orderBelow = contentItems[contentItem.sortedIndex + 1].order
-    orderTwoBelow = contentItems[contentItem.sortedIndex + 2]?.order or orderBelow + 2
+    orderTwoBelow = contentItems[contentItem.sortedIndex + 2]?.order ? orderBelow + 2
     order = (orderBelow + orderTwoBelow) / 2
 
     PAA.Publication.updateContentItem publication._id, contentItem.index, {order}
@@ -102,7 +102,9 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
       @publicationComponent = @ancestorComponentOfType PAA.Publication.Pages.Admin.Publications.Publication
 
     options: ->
-      parts = PAA.Publication.Part.documents.fetch()
+      parts = PAA.Publication.Part.documents.fetch {},
+        sort:
+          referenceId: 1
       
       for part in parts
         name: part.referenceId

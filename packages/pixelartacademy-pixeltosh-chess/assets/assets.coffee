@@ -14,6 +14,10 @@ class Chess.Assets
     
     @briefComponentClass: -> Chess.Assets.BriefComponent
 
+    @availablePublications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard'
+    ]
+
     @copySourceAsset: -> # Override if you can copy this asset's art from another asset.
 
     @addToProject: (projectId) ->
@@ -114,6 +118,14 @@ class Chess.Assets
         """
         
         @initialize()
+        
+        @unlockedPublications: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard'
+        ]
+        
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.Print'
+        ]
       
       class @Black extends TwoDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.Pawn.Black'
@@ -303,6 +315,10 @@ class Chess.Assets
         
         @initialize()
       
+        @unlockedPublications: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard'
+        ]
+        
       class @Black extends ThreeDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.ThreeDimensional.Pawn.Black'
         

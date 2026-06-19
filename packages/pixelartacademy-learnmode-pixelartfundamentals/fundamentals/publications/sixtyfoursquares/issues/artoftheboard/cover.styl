@@ -1,0 +1,130 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/artoftheboard.import"
+
+.publication.sixty-four-squares.art-of-the-board.cover
+  &::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover.png')
+
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        header
+          h1
+            color atariGray(0)
+
+            em
+              color artOfTheBoardColorHeader
+
+          h2
+            color artOfTheBoardColor
+
+  .pixelartacademy-publication-article.ql-container
+    .pixelartacademy-publication-article-customclass-container
+      &:has(.sixtyfoursquares-cover-specialeditiontitle)
+        position absolute
+        left 17rem
+        top 67rem
+        width 72rem
+
+        .sixtyfoursquares-cover-specialeditiontitle
+          margin 0
+          color atariGray(0)
+          ebook-roman()
+          line-height 24rem
+
+        .sixtyfoursquares-cover-specialeditiondescription
+          margin 0 0 4rem
+          small-print()
+          width 55rem
+
+          strong
+            color artOfTheBoardColor
+            daily()
+            font-weight normal
+            text-transform uppercase
+
+            &::before
+              content ''
+              display inline-block
+              width 51rem
+              height 1rem
+              margin 3rem 0 8rem
+              background-color artOfTheBoardColor
+
+      &:has(.sixtyfoursquares-cover-article)
+        position absolute
+        left 17rem
+        top 292rem
+        right 13rem
+        columns 3
+        column-rule 1rem solid artOfTheBoardColor
+        small-print()
+        line-height 6rem
+
+        .sixtyfoursquares-cover-article
+          margin 0
+          break-before column
+
+          &::before
+            content ''
+            display block
+            float left
+            height 54rem
+            background-size 100% 24rem
+            background-repeat no-repeat
+            background-attachment top
+            margin 0 6rem 0 3rem
+
+          strong
+            display block
+            color atariGray(0)
+            thintel()
+            line-height 10rem
+            text-transform uppercase
+
+          &.sixtyfoursquares-cover-article-1::before
+            margin-left 0
+            width 22rem
+            background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover-knight.png')
+
+          &.sixtyfoursquares-cover-article-2::before
+            width 18rem
+            background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover-rook.png')
+
+          &.sixtyfoursquares-cover-article-3::before
+            width 14rem
+            background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover-pawn.png')
+
+      &:has(.sixtyfoursquares-cover-line)
+        position absolute
+        width 50rem
+        transform translateX(-50%)
+        text-align center
+        small-print()
+        line-height 6rem
+        text-transform uppercase
+        color artOfTheBoardColor
+        pixel-text-outline atariOrange(7) true 1
+
+        .sixtyfoursquares-cover-line
+          margin -0.5rem 0 0
+
+      &:has(.sixtyfoursquares-cover-line-1)
+        left 170rem
+
+      &:has(.sixtyfoursquares-cover-line-2)
+      &:has(.sixtyfoursquares-cover-line-3)
+      &:has(.sixtyfoursquares-cover-line-4)
+        left 233rem
+
+      &:has(.sixtyfoursquares-cover-line-1)
+      &:has(.sixtyfoursquares-cover-line-2)
+        top 60rem
+
+      &:has(.sixtyfoursquares-cover-line-3)
+        top 146rem
+
+      &:has(.sixtyfoursquares-cover-line-4)
+        top 223rem

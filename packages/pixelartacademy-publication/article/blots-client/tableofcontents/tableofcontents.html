@@ -3,7 +3,9 @@
     <ol class="table-of-contents">
     {{#each contentItems}}
       <li class="content-item {{unlockedClass}} {{unreadClass}}">
-        {{part.title}}
+        <div class="title">
+          {{part.title}}
+        </div>
       </li>
     {{/each}}
     </ol>

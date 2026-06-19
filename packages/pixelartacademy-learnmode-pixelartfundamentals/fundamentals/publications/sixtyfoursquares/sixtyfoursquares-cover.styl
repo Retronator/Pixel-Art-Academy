@@ -1,0 +1,76 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.publication.sixty-four-squares.cover
+  &::before
+    content ''
+    position absolute
+    inset -4rem 0 0
+
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        padding-left 7rem
+
+        header
+          position relative
+          text-transform uppercase
+          color atariGray(6)
+          text-align center
+
+          h1
+            squares-9()
+            font-size 27rem
+            margin 11rem 0 4rem
+
+            em
+              display inline-block
+              position relative
+              width 30rem
+              height 27rem
+              margin-right 3rem
+              font-style normal
+              squares-4()
+              font-size 12rem
+              text-align left
+              text-align-last right
+              line-height 15rem
+
+              &::before
+              &::after
+                content ''
+                position absolute
+                width 12rem
+                height 12rem
+                background-color atariGray(0)
+
+              &::before
+                top 1.5rem
+                right 3rem
+
+              &::after
+                bottom -1.5rem
+                left 0
+
+          h2
+            display inline-block
+            position relative
+            margin 0
+            thintel()
+            letter-spacing 1rem
+
+            &::before
+            &::after
+              content ''
+              position absolute
+              top 4rem
+              height 1rem
+              background-color atariGray(0)
+
+            &::before
+              left -47rem
+              width 41rem
+
+            &::after
+              right -48rem
+              width 44rem

@@ -39,6 +39,10 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
   _endEvents: ->
     $(document).off '.pixelartacademy-pixeltosh-os-interface-window'
   
+  scrollToElement: (element, options) ->
+    scrollableArea = @childComponentsOfType(PAA.Pixeltosh.OS.Interface.ScrollableArea)[0]
+    scrollableArea.scrollToElement element, options
+    
   programViewActive: ->
     programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
     programView.active()

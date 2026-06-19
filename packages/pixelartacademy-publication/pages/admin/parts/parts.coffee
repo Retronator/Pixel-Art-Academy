@@ -10,7 +10,9 @@ class PAA.Publication.Pages.Admin.Parts extends Artificial.Mummification.Admin.C
     super
       documentClass: PAA.Publication.Part
       adminComponentClass: PAA.Publication.Pages.Admin.Parts.Part
+      sortField: 'referenceId'
       nameFunction: (part) =>
+        return part._id unless part.referenceId
         parts = part.referenceId.split('.')
         publicationsPartIndex = _.indexOf parts, 'Publications'
         parts[publicationsPartIndex + 1..].join ' '

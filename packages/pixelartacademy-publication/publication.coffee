@@ -23,6 +23,7 @@ class PAA.Publication extends AM.Document
   #     height: the height of the cover in pixels (any size)
   #   spreadPagesCount: how many pages are visible at the same time
   #   class: string of the CSS class (or classes) that define the look
+  #   [header]: array of delta operations for the content in the header
   @Meta
     name: @id()
     fields: =>
@@ -48,6 +49,8 @@ class PAA.Publication extends AM.Document
   @addContentItem = @method 'addContentItem'
   @updateContentItem = @method 'updateContentItem'
   @removeContentItem = @method 'removeContentItem'
+  
+  @updateHeader = @method 'updateHeader'
 
   # Subscriptions
   @all = @subscription 'all'

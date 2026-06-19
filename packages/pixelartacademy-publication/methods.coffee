@@ -3,6 +3,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Delta = require 'quill-delta'
+
 PAA.Publication.insert.method ->
   LOI.Authorize.admin()
 
@@ -132,3 +134,21 @@ PAA.Publication.removeContentItem.method (publicationId, contentItemIndex) ->
     $set:
       lastEditTime: new Date
       contents: publication.contents
+
+PAA.Publication.updateHeader.method (publicationId, updateDeltaOperations) ->
+  check publicationId, Match.DocumentId
+  check updateDeltaOperations, Array
+  LOI.Authorize.admin()
+  
+  publication = PAA.Publication.documents.findOne publicationId
+  throw new AE.ArgumentException "Publication does not exist." unless publication
+  
+  contentDelta = new Delta publication.design?.header or [insert: '\n']
+  updateDelta = new Delta updateDeltaOperations
+  newContentDelta = contentDelta.compose updateDelta
+  
+  # Update the text.
+  PAA.Publication.getServerDocuments().update publicationId,
+    $set:
+      'design.header': newContentDelta.ops
+      lastEditTime: new Date
