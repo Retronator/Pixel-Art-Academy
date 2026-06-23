@@ -171,6 +171,14 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
 
           @property = 'height'
 
+      class @OffsetWidth extends @Property
+        @register 'PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.Size.OffsetWidth'
+        
+        constructor: ->
+          super arguments...
+          
+          @property = 'offsetWidth'
+          
     class @SpreadPagesCount extends AM.DataInputComponent
       @register 'PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.SpreadPagesCount'
 

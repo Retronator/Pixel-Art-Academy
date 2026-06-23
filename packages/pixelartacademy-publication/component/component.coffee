@@ -345,7 +345,8 @@ class PAA.Publication.Component extends LOI.Component
     return unless publication = @publication()
     leftPageIndex = @leftPageIndex()
     
-    offset = -leftPageIndex * publication.design.size.width
+    offsetWidth = publication.design.size.offsetWidth or publication.design.size.width
+    offset = -leftPageIndex * offsetWidth
     
     transform: "translateX(#{offset}rem)"
     

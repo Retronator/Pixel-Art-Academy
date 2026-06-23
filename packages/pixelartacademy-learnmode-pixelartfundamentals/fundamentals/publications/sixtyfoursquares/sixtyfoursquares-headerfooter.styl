@@ -62,3 +62,20 @@
 
   .running-footer
     bottom 0
+    thintel()
+    color atariGray(0)
+
+    .page-numbers
+      .page-number
+        position absolute
+        bottom 11rem
+        width 240rem
+        padding-top 5rem
+        border-top 1rem solid atariGray(0)
+
+        &.spread-page-1
+          left 13rem
+
+        &.spread-page-2
+          right 13rem
+          text-align right

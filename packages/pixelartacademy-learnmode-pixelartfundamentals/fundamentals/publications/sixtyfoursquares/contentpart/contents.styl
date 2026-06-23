@@ -1,0 +1,40 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+
+.publication.sixty-four-squares.content-part
+  .contents-area
+    &.read-only
+      .contents
+        position absolute
+        left 13rem
+        top 35rem
+        // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+        width 8186rem
+        height 280rem
+        column-width 240rem
+        column-gap 34rem
+        column-fill auto
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        daily()
+
+        h1
+          margin 0
+          ebook-roman()
+          line-height 24rem
+          color atariGray(0)
+
+        h2
+          margin 10rem 0 5rem 0
+          clear both
+          pixolde()
+          font-weight bold
+          color atariGray(0)
+
+        p
+          margin 5rem 0 10rem
+
+          &:last-child:has(br)
+            display none

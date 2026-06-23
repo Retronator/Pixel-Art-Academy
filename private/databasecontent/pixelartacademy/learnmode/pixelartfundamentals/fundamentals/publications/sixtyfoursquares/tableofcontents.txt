@@ -1,0 +1,7 @@
+64 Squares Contents
+Contents
+The Art of the Board
+Features
+
+
+{"_id":"cZJtmwgWKJMrhY594","lastEditTime":{"$date":1781879687262},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.TableOfContents","title":"64 Squares Contents","article":[{"insert":"Contents"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":"The Art of the Board"},{"attributes":{"publication-header-heading":2},"insert":"\n"},{"insert":"Features","attributes":{"underline":true}},{"attributes":{"header":1},"insert":"\n"},{"insert":{"publication-tableofcontents":{}}},{"insert":"\n"}]}

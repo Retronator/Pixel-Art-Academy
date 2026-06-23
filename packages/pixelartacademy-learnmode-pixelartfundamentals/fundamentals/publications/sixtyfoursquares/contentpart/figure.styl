@@ -1,0 +1,53 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+
+.publication.sixty-four-squares.content-part
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-figure
+          adventure()
+          padding 8rem 0
+
+          &:has(.float-left)
+          &:has(.float-right)
+            margin-top 0
+            clear both
+
+          &:has(.float-left)
+            margin-right 10rem
+
+          &:has(.float-right)
+            margin-left 10rem
+
+          .elements
+            border 1rem solid atariGray(0)
+
+            .element
+              border 1rem solid atariGray(0)
+
+              .pixelartacademy-publication-article-figure-image
+                position relative
+
+                &:hover
+                  z-index 2
+
+                &.added-to-references
+                  border none
+
+                  .image
+                  .credit
+                    opacity 0.1
+
+                .cutout
+                  .cut-icon
+                    top -1rem
+                    width 18rem
+
+                .added-to-references-info
+                  text-transform uppercase
+                  color atariGray(2)
+
+                .credit
+                  text-align center

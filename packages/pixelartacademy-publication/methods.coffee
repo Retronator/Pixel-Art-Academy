@@ -21,6 +21,7 @@ PAA.Publication.update.method (publicationId, data) ->
     'tableOfContentsPart._id': Match.OptionalOrNull Match.DocumentId
     'design.size.width': Match.OptionalOrNull Match.IntegerMax 300
     'design.size.height': Match.OptionalOrNull Match.Integer
+    'design.size.offsetWidth': Match.OptionalOrNull Match.Integer
     'design.spreadPagesCount': Match.OptionalOrNull Match.PositiveInteger
     'design.class': Match.OptionalOrNull String
     'position.groupIndex': Match.OptionalOrNull Match.NonNegativeInteger

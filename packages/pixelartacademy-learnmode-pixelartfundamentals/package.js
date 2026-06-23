@@ -89,7 +89,11 @@ Package.onUse(function(api) {
   api.addStyle('fundamentals/publications/sixtyfoursquares/sixtyfoursquares-tableofcontents')
   api.addStyle('fundamentals/publications/sixtyfoursquares/sixtyfoursquares-headerfooter')
 
+  api.addStyle('fundamentals/publications/sixtyfoursquares/contentpart/contents')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/contentpart/figure')
+
   api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/cover')
   api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/headerfooter')
   api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/tableofcontents')
+  api.addStyle('fundamentals/publications/sixtyfoursquares/issues/artoftheboard/figure')
 });

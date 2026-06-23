@@ -21,6 +21,7 @@ class PAA.Publication extends AM.Document
   #   size: the size at which to display the book at
   #     width: the width of the cover in pixels (max 300)
   #     height: the height of the cover in pixels (any size)
+  #     offsetWidth: the amount by which to offset the content per page, if different than width
   #   spreadPagesCount: how many pages are visible at the same time
   #   class: string of the CSS class (or classes) that define the look
   #   [header]: array of delta operations for the content in the header
