@@ -38,3 +38,13 @@
 
           &:last-child:has(br)
             display none
+
+          &:has(+ figure)
+            margin-bottom 2rem
+
+          &:has(+ figure .screenshots)
+            margin-bottom 6rem
+
+          strong
+            font-weight normal
+            color atariGray(0)

@@ -8,12 +8,12 @@
       .pixelartacademy-publication-article.ql-container
         .pixelartacademy-publication-article-figure
           adventure()
-          padding 8rem 0
+          padding-top 8rem
+          clear both
 
           &:has(.float-left)
           &:has(.float-right)
             margin-top 0
-            clear both
 
           &:has(.float-left)
             margin-right 10rem
@@ -21,8 +21,27 @@
           &:has(.float-right)
             margin-left 10rem
 
+          &:has(.screenshots)
+            padding-top 4rem
+
+          &:has(.flush-top)
+            padding-top 0
+
+          &:has(.flush-bottom)
+            margin-bottom 0
+
           .elements
             border 1rem solid atariGray(0)
+
+            &.screenshots
+              border-width 2rem
+              padding 1rem
+
+              .element
+                border none
+
+                .pixelartacademy-publication-article-figure-image
+                  padding 1rem
 
             .element
               border 1rem solid atariGray(0)

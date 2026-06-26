@@ -158,6 +158,10 @@ class Chess.Assets
 
         @initialize()
       
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.ComputerChess'
+        ]
+        
       class @Black extends TwoDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.Knight.Black'
         
