@@ -8,21 +8,42 @@ class Chess.Lessons.BlockingCheck extends Chess.Lesson
   @category: -> Chess.Lessons.Categories.King
 
   @steps: -> [
+    @RookMove
     @BlockAttack
     @End
   ]
 
-  @startingPosition: ->
-    e1: 'K'
-    d2: 'R'
-    e4: 'r'
-    e8: 'k'
-
+  @startingGameState: ->
+    state = Chess.GameState.fromPosition
+      e1: 'K'
+      d2: 'R'
+      a4: 'r'
+      e8: 'k'
+    
+    state.setTurn Chess.Piece.Colors.Black
+    
+    state
+  
   @initialize()
   
-  aiMove: -> @randomAIMoveByPiece Chess.Piece.Types.King
+  aiMove: ->
+    gameState = @lessonManager.gameState()
+    
+    if gameState.getPieceAtSquare(Chess.Square.a4)?.type is Chess.Piece.Types.Rook
+      new Chess.Move Chess.Square.a4, Chess.Square.e4
+    
+    else
+      @lessonManager.gameState().aiMove()
 
   Lesson = @
+  
+  class @RookMove extends Chess.Lesson.PositionStep
+    @id: -> "#{Lesson.id()}.RookMove"
+    
+    @initialize()
+    
+    @requiredPosition: ->
+      e4: 'r'
 
   class @BlockAttack extends Chess.Lesson.PositionStep
     @id: -> "#{Lesson.id()}.BlockAttack"

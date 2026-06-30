@@ -17,4 +17,5 @@ class Chess.Lesson.EndStep extends Chess.Lesson.Step
       'click .end-button': @onClickEndButton
 
   onClickEndButton: (event) ->
+    @chess.audioManager().lessonComplete()
     @chess.interfaceManager().enterScreen Chess.InterfaceManager.Screens.Menu

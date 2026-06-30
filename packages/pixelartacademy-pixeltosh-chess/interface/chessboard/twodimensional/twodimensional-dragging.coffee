@@ -23,6 +23,8 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
     previousSelectedSquare = @selectedSquare()
     @selectedSquare square
 
+    @chess.audio.pickUp() if square isnt previousSelectedSquare
+
     @_endDraggingEvents()
 
     cursor = @os.cursor()
@@ -82,5 +84,8 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
 
       if destinationSquare in @provider().getLegalDestinationsFromSquare square
         @performMoveTo destinationSquare, true
+        
+      else
+        @chess.audio.drop()
 
       @selectedSquare null

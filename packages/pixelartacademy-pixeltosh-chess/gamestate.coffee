@@ -46,9 +46,9 @@ class Chess.GameState
 
   check: -> @data.check
 
-  checkMate: -> @data.checkMate
+  checkmate: -> @data.checkMate
 
-  staleMate: -> @data.staleMate
+  stalemate: -> @data.staleMate
 
   finished: -> @data.isFinished
   
@@ -87,7 +87,7 @@ class Chess.GameState
   
   getPiecesOfTypeAndColor: (pieceType, color) -> _.filter @getPieces(), (piece) => piece.type is pieceType and piece.color is color
 
-  hasSamePiecePlacementAs: (gameState) -> EJSON.equals @data.pieces, gameState.data.pieces
+  hasSamePiecePlacementAs: (gameState) -> _.isEqual @data.pieces, gameState.data.pieces
 
   getLegalDestinationsFromSquare: (square) ->
     if engineMoves = @_getEngineMoves()

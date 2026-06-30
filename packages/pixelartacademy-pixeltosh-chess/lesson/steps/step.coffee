@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Lesson.Step extends AM.Component
+  @message: -> # Override if the step displays an instruction message.
   @retryMessage: -> # Override if the step has a message for failed attempts.
   @retryPosition: -> # Override to retry from a specific position after failure.
   
@@ -49,7 +50,7 @@ class Chess.Lesson.Step extends AM.Component
   id: -> @constructor.id()
   retryGameState: -> @constructor.retryGameState()
   
-  message: -> @translate('message').text
+  message: -> @translate('message').text if @messageTranslation()
   messageTranslation: -> @translation 'message'
   
   retryMessage: -> @translate('retryMessage').text

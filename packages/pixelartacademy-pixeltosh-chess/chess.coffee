@@ -1,5 +1,7 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 AB = Artificial.Base
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
@@ -46,6 +48,12 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     Light: 'Light'
     Dark: 'Dark'
   
+  @DrawTypes =
+    Stalemate: 'Stalemate'
+    FiftyMoveRule: 'FiftyMoveRule'
+    InsufficientMaterial: 'InsufficientMaterial'
+    ThreefoldRepetition: 'ThreefoldRepetition'
+    
   @boardDisplayType = @state.field 'boardDisplayType', default: @BoardDisplayTypes.TwoDimensional
   @displayBoardCoordinates = @state.field 'displayBoardCoordinates', default: false
   @autoPromotion = @state.field 'autoPromotion', default: false
@@ -101,10 +109,25 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
     bitmap.historyPosition
   
-  @pawnAssetsMissing: ->
+  @pawnAssetMissing: ->
     return unless @ownedPiecesCount Chess.Piece.Types.Pawn
-    not (@activeAssetIsDrawn(Chess.Piece.Types.Pawn, Chess.Piece.Colors.White) and @activeAssetIsDrawn(Chess.Piece.Types.Pawn, Chess.Piece.Colors.Black))
+    not @activeAssetIsDrawn Chess.Piece.Types.Pawn, Chess.Piece.Colors.White
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      pickUp:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      drop:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      capture:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      promote:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+
   constructor: ->
     super arguments...
     
@@ -117,6 +140,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @gameManager = new ReactiveField null
     @lessonManager = new ReactiveField null
     @rewardsManager = new ReactiveField null
+    @audioManager = new ReactiveField null
     
   load: ->
     super arguments...
@@ -126,6 +150,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @gameManager new @constructor.GameManager @
     @lessonManager new @constructor.LessonManager @
     @rewardsManager new @constructor.RewardsManager @
+    @audioManager new @constructor.AudioManager @
     
     # Subscribe to the macintosh palette.
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
@@ -135,11 +160,13 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @gameManager()?.destroy()
     @lessonManager()?.destroy()
     @rewardsManager()?.destroy()
+    @audioManager()?.destroy()
     
     @interfaceManager null
     @gameManager null
     @lessonManager null
     @rewardsManager null
+    @audioManager null
     
     @_macintoshPaletteSubscription.stop()
   

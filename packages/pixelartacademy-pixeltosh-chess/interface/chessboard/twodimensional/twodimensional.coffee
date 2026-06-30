@@ -66,6 +66,8 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
       automaticFlippedBoard = interfaceManager.automaticBoardOrientationForGameState gameState.applyMove move
       @_skipMoveAnimationTo = square if showPromotion or not automaticFlippedBoard?
 
+    @_skipPickUpSoundTo = square
+    
     if showPromotion
       @promotionInfo
         move: move
@@ -76,6 +78,13 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
     else
       @performMove move
 
+      if moveWasDragged
+        if gameState.getPieceAtSquare square
+          @chess.audio.capture()
+          
+        else
+          @chess.audio.drop()
+  
   performMove: (move) ->
     @provider().move move
     @selectedSquare null
@@ -119,23 +128,13 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
 
     return unless provider = @provider()
     return unless provider.humanCanMove()
+    return unless @selectedSquare()
+    
+    # If the player clicked one of the legal destination squares, move the selected piece.
+    if square in @legalMoveSquares()
+      @performMoveTo square
+      return
 
-    selectedSquare = @selectedSquare()
-
-    if selectedSquare
-      # Clicking the selected square cancels the current move.
-      if square is selectedSquare
-        @selectedSquare null
-        return
-        
-      # If the player clicked one of the legal destination squares, move the selected piece.
-      if square in @legalMoveSquares()
-        @performMoveTo square
-        return
-
-    # Do piece selection or deselection.
-    if @humanCanMovePieceOnSquare square
-      @selectedSquare square
-
-    else
-      @selectedSquare null
+    # Otherwise, we deselect the square.
+    @selectedSquare null
+    @chess.audio.drop()

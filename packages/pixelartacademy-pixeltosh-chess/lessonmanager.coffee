@@ -32,7 +32,14 @@ class Chess.LessonManager
 
   startLesson: (lesson) ->
     @lesson lesson
-    @gameState lesson.startingGameState()
+    startingGameState = lesson.startingGameState()
+    @gameState startingGameState
+    
+    for piece in startingGameState.getPieces()
+      return unless @chess.gameManager().assertDrawnPieces [piece.type], piece.color
+    
+    if startingGameState.turn() is Chess.Piece.Colors.Black
+      @aiMove()
 
   endLesson: ->
     @lesson null
@@ -42,30 +49,41 @@ class Chess.LessonManager
   
   move: (move) ->
     Tracker.nonreactive =>
+      @chess.audio.promote() if @_prePromotionGameState
+      
       @_previousGameState = @_prePromotionGameState or @gameState()
       @_prePromotionGameState = null
       
       newGameState = @_previousGameState.applyMove move
       @gameState newGameState
       
+      @chess.audioManager().announceState newGameState
+      
       return if newGameState.finished()
       
-      unless aiMove = @lesson().aiMove()
-        newGameState.setTurn Chess.Piece.Colors.White
-        @gameState newGameState
-        return
+      @aiMove()
       
-      @moving true
-      osCursor = @chess.os.cursor()
-      osCursor.wait @
-      
-      await _.waitForSeconds 0.5
-      
-      newGameState = newGameState.applyMove aiMove
-      @gameState newGameState
-      
-      osCursor.endWait @
-      @moving false
+  aiMove: ->
+    gameState = @gameState()
+    
+    unless aiMove = @lesson().aiMove()
+      gameState.setTurn Chess.Piece.Colors.White
+      @gameState gameState
+      return
+    
+    @moving true
+    osCursor = @chess.os.cursor()
+    osCursor.wait @
+    
+    await _.waitForSeconds 0.5
+    
+    newGameState = gameState.applyMove aiMove
+    @gameState newGameState
+    
+    @chess.audioManager().announceState newGameState
+    
+    osCursor.endWait @
+    @moving false
       
   startPromotion: (move) ->
     Tracker.nonreactive =>

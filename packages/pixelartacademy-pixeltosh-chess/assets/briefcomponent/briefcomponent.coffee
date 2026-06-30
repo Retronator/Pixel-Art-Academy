@@ -1,4 +1,4 @@
-AM = Artificial.Mirage
+AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -37,8 +37,19 @@ class Chess.Assets.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.Brie
 
   onClickCopyButton: (event) ->
     sourceAsset = @copySourceAsset()
-    bitmap = sourceAsset.bitmap()
-    layer = bitmap.layers[0]
+    sourceBitmap = sourceAsset.bitmap()
+    layer = sourceBitmap.layers[0]
+
+    destinationBitmap = @bitmap.bitmap()
+
+    action = new AM.Document.Versioning.Action @bitmap.id()
+    
+    for reference in sourceBitmap.references
+      continue if _.find destinationBitmap.references, (existingReference) => existingReference.image.url is reference.image.url
+      
+      addReferenceAction = new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @bitmap.id(), destinationBitmap, reference.image.url, reference
+      AM.Document.Versioning.executePartialAction destinationBitmap, addReferenceAction
+      action.append addReferenceAction
     
     pixels = []
     
@@ -46,4 +57,4 @@ class Chess.Assets.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.Brie
       for y in [0...layer.height]
         pixels.push layer.getPixel(x, y) or {x, y}
     
-    @bitmap._setPixels pixels
+    @bitmap._setPixels pixels, action

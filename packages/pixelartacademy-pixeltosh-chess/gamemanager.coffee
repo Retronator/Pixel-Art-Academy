@@ -34,16 +34,16 @@ class Chess.GameManager
       
     @draw = new AE.LiveComputedField =>
       return unless gameState = @gameState()
-      return false if gameState.checkMate()
+      return false if gameState.checkmate()
 
       # Stale mate is a draw.
-      return true if gameState.staleMate()
+      return Chess.DrawTypes.Stalemate if gameState.stalemate()
       
       # Check the fifty-move rule.
-      return true if gameState.halfMove() >= 100
+      return Chess.DrawTypes.FiftyMoveRule if gameState.halfMove() >= 100
       
       # Check if there is sufficient material.
-      return true if gameState.hasInsufficientMaterial()
+      return Chess.DrawTypes.InsufficientMaterial if gameState.hasInsufficientMaterial()
       
       # Check for threefold repetition.
       positionCounts = {}
@@ -52,7 +52,7 @@ class Chess.GameManager
         positionKey = ply.gameState.getPositionKey()
         positionCounts[positionKey] ?= 0
         positionCounts[positionKey]++
-        return true if positionCounts[positionKey] is 3
+        return Chess.DrawTypes.ThreefoldRepetition if positionCounts[positionKey] is 3
       
       false
 
@@ -70,7 +70,7 @@ class Chess.GameManager
       return unless LOI.adventure.gameState()
       
       ownedPieceTypes = (pieceType for pieceType, count of Chess.ownedPieceTypeCounts() when count)
-      @assertDrawnPieces ownedPieceTypes
+      @assertDrawnPieces ownedPieceTypes, Chess.Piece.Colors.White
   
     @_playAutorun = @chess.autorun (computation) =>
       return unless state = @gameState()
@@ -90,18 +90,25 @@ class Chess.GameManager
         osCursor.wait @
         startTime = Date.now()
         
+        # Let animations run.
+        await _.waitForSeconds 0.5
+        return if @_destroyed
+        
         aiAnswer = game.ai
           level: currentPlayer.level
-          randomness: 5
           
         move = Chess.Move.fromEngine aiAnswer.move
         
         elapsedTime = (Date.now() - startTime) / 1000
         await _.waitForSeconds Math.max 0, 1 - elapsedTime
+        return if @_destroyed
         
         osCursor.endWait @
         @game.updated()
         @_recordMove move
+        
+        newState = new Chess.GameState game.exportJson()
+        @chess.audioManager().announceState newState
 
   destroy: ->
     @gameState.stop()
@@ -109,6 +116,8 @@ class Chess.GameManager
     
     @_missingAssetsAutorun.stop()
     @_playAutorun.stop()
+    
+    @_destroyed = true
     
   _generateMenuGameState: ->
     data = Chess.GameState.getEmptyData()
@@ -133,7 +142,7 @@ class Chess.GameManager
     
     new Chess.GameState data
     
-  assertDrawnPieces: (pieceTypes) ->
+  assertDrawnPieces: (pieceTypes, pieceColor) ->
     throwError = (color, pieceType) =>
       @chess.os.throwError
         reason: "file not found"
@@ -144,15 +153,22 @@ class Chess.GameManager
       @chess.os.cursor().setClass null
     
     for pieceType in pieceTypes
-      unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
-        throwError 'white', pieceType
-        return
-      
-      unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.Black
-        throwError 'black', pieceType
-        return
+      if pieceColor is Chess.Piece.Colors.White
+        unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
+          throwError 'white', pieceType
+          return false
+          
+      if pieceColor is Chess.Piece.Colors.Black
+        unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.Black
+          throwError 'black', pieceType
+          return false
+          
+    true
     
   startGame: (options) ->
+    for color in Chess.Piece.AllColors
+      return unless @assertDrawnPieces Chess.Piece.AllTypes, color
+    
     @gameOptions options
     @plyHistory []
     @previewedHistoryPlyNumber null
@@ -169,8 +185,11 @@ class Chess.GameManager
       gameState: new Chess.GameState EJSON.clone @game().exportJson()
     ]
 
+    Chess.state 'playStarted', true
+
   endGame: ->
     @game null
+    @gameOptions null
     @plyHistory []
     @previewedHistoryPlyNumber null
     @promotionGameState null
@@ -203,6 +222,8 @@ class Chess.GameManager
     game.move move.from.engineName, move.to.engineName
 
     if @promotionGameState()
+      @chess.audio.promote()
+      
       if move.promotionPieceType and move.promotionPieceType isnt Chess.Piece.Types.Queen
         # JS Chess Engine automatically promotes pawns to queens, so we have to override the piece.
         piece = @promotionGameState().getPieceAtSquare move.to
@@ -211,6 +232,9 @@ class Chess.GameManager
 
       @promotionGameState null
 
+    newState = new Chess.GameState game.exportJson()
+    @chess.audioManager().announceState newState
+    
     @game.updated()
 
     @_recordMove move

@@ -42,7 +42,7 @@ Package.onUse(function(api) {
   api.addFile('article..');
 
   api.addClientFile('article/blots-client/header..');
-  api.addClientFile('article/blots-client/customclass..');
+  api.addStyledClientFile('article/blots-client/customclass..');
   api.addClientUnstyledComponent('article/blots-client/tableofcontents..');
 
   api.addClientComponent('article/blots-client/figure..');

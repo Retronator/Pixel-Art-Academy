@@ -41,6 +41,7 @@ Package.onUse(function(api) {
   api.addFile('gamemanager');
   api.addFile('lessonmanager');
   api.addFile('rewardsmanager');
+  api.addFile('audiomanager');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/intro..');

@@ -43,7 +43,7 @@ class Chess.Lessons.Checkmate extends Chess.Lesson
 
     @initialize()
 
-    completed: -> @gameState().checkMate()
+    completed: -> @gameState().checkmate()
     
     failed: -> @positionAchieved(f7: null) or @positionAchieved(g7: null) or @positionAchieved(h7: null)
 

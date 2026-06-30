@@ -12,6 +12,7 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
     @autorun =>
       return unless provider = @provider()
       gameState = provider.gameState()
+      soundCaptures = not provider.displayingLivePosition or provider.displayingLivePosition()
 
       # Reset animations when we don't have a game state anymore.
       unless gameState
@@ -25,20 +26,21 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
       previousGameState = @_previousGameState
       @_previousGameState = gameState
 
-      @_animateGameStateChange previousGameState, gameState
+      @_animateGameStateChange previousGameState, gameState, soundCaptures
 
-  _animateGameStateChange: (previousGameState, nextGameState) ->
+  _animateGameStateChange: (previousGameState, nextGameState, soundCaptures) ->
     return if previousGameState.hasSamePiecePlacementAs nextGameState
 
-    pieceAnimations = @_createPieceAnimations previousGameState, nextGameState
+    pieceAnimations = @_createPieceAnimations previousGameState, nextGameState, soundCaptures
     @_skipMoveAnimationTo = null
+    @_skipPickUpSoundTo = null
 
     return unless pieceAnimations.length
 
     Tracker.afterFlush =>
       @pieceAnimation pieceAnimation for pieceAnimation in pieceAnimations
 
-  _createPieceAnimations: (previousGameState, nextGameState) ->
+  _createPieceAnimations: (previousGameState, nextGameState, soundCaptures) ->
     usedPreviousSquares = {}
     pieceAnimations = []
 
@@ -56,6 +58,8 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
       pieceAnimations.push
         move: new Chess.Move fromSquare, toSquare
         promotion: previousGameState.getPieceAtSquare(fromSquare).type is Chess.Piece.Types.Pawn and piece.type in Chess.Piece.PromotionTypes
+        skipPickUpSound: toSquare is @_skipPickUpSoundTo
+        capture: previousGameState.getPieceAtSquare(toSquare) and soundCaptures
 
     pieceAnimations
 

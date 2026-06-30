@@ -136,13 +136,4 @@ class Chess.Interface
         contentComponentData: @Chessboard.Providers.GameManager
         width: 199
       remainingArea:
-        type: FM.TabbedView.id()
-        styleClass: 'pixelartacademy-pixeltosh-chess-interface-sidebar'
-        tabs: [
-          name: 'Play'
-          contentComponentId: @Play.id()
-          active: true
-        ,
-          name: 'Overlays'
-        ]
-        allowClosing: false
+        contentComponentId: @Play.id()

@@ -8,18 +8,41 @@ class Chess.Lessons.CapturingAttacker extends Chess.Lesson
   @category: -> Chess.Lessons.Categories.King
 
   @steps: -> [
+    @RookMove
     @CaptureAttacker
     @End
   ]
 
-  @startingPosition: ->
-    e1: 'K'
-    e2: 'r'
-    e8: 'k'
-
+  @startingGameState: ->
+    state = Chess.GameState.fromPosition
+      e1: 'K'
+      a2: 'r'
+      e8: 'k'
+    
+    state.setTurn Chess.Piece.Colors.Black
+    
+    state
+  
   @initialize()
   
-  aiMove: -> @lessonManager.gameState().aiMove()
+  aiMove: ->
+    gameState = @lessonManager.gameState()
+    
+    if gameState.getPieceAtSquare(Chess.Square.a2)?.type is Chess.Piece.Types.Rook
+      new Chess.Move Chess.Square.a2, Chess.Square.e2
+    
+    else
+      @lessonManager.gameState().aiMove()
+
+  Lesson = @
+
+  class @RookMove extends Chess.Lesson.PositionStep
+    @id: -> "#{Lesson.id()}.RookMove"
+    
+    @initialize()
+    
+    @requiredPosition: ->
+      e2: 'r'
 
   Lesson = @
 

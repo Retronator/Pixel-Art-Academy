@@ -55,10 +55,10 @@ class Chess.Instructions
     @activeConditions: ->
       return unless chess = @getChess()
       
-      Chess.pawnAssetsMissing()
+      Chess.pawnAssetMissing()
 
     @message: -> """
-      Oh no! The game is missing the pawn sprites! You can draw them in the Drawing app.
+      Oh no! The game is missing the pawn sprite! You can draw it in the Drawing app.
     """
 
     @delayDuration: -> 2

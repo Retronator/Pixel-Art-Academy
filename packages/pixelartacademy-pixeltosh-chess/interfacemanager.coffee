@@ -106,6 +106,18 @@ class Chess.InterfaceManager
 
       @_earningsWindowId @chess.os.addWindow Chess.Interface.Earnings.createInterfaceData()
 
+    @_introAudioAutorun = @chess.autorun (computation) =>
+      return unless LOI.adventure.gameState()
+      return unless @window()
+      
+      if Chess.ownedPiecesCount()
+        computation.stop()
+        return
+        
+      return if @_boardDisplayChoiceWindowId()
+      return unless @chess.audioManager().introWhenReady()
+      computation.stop()
+  
   destroy: ->
     @window.stop()
     @_layoutAutorun.stop()
@@ -113,6 +125,7 @@ class Chess.InterfaceManager
     @_boardDisplayChoiceAutorun.stop()
     @_autoFlipBoardAutorun.stop()
     @_earningsAutorun.stop()
+    @_introAudioAutorun.stop()
     
   inMenu: -> @screen() is @constructor.Screens.Menu
   inLesson: -> @screen() is @constructor.Screens.Lesson
@@ -126,9 +139,6 @@ class Chess.InterfaceManager
       when @constructor.Screens.Menu
         @chess.gameManager().endGame()
         @chess.lessonManager().endLesson()
-        
-      when @constructor.Screens.Play
-        Chess.state 'playStarted', true
 
   openShop: ->
     @_shopWindowId @chess.os.addWindow Chess.Interface.Shop.createInterfaceData()

@@ -17,9 +17,10 @@ AS.PixelArt.detectPixelScale = (imageSource, options = {}) ->
   {width, height} = imageData
 
   samePixelCount = 0
-  samePixelCountHistogram = []
+  samePixelCountHistogramHorizontal = []
+  samePixelCountHistogramVertical = []
 
-  analyzeDifference = (offset1, offset2) ->
+  analyzeDifference = (offset1, offset2, histogram) ->
     shadeIsDifferent = false
 
     # Calculate difference in each of the RGB channels.
@@ -40,8 +41,8 @@ AS.PixelArt.detectPixelScale = (imageSource, options = {}) ->
     # being a multiple of scale) to impact our decision.
     if shadeIsDifferent
       if samePixelCount < options.maxPixelScale
-        samePixelCountHistogram[samePixelCount] ?= samePixelCount: samePixelCount, occurrenceCount: 0
-        samePixelCountHistogram[samePixelCount].occurrenceCount++
+        histogram[samePixelCount] ?= {samePixelCount, occurrenceCount: 0}
+        histogram[samePixelCount].occurrenceCount++
 
       # Reset the same pixel count for the next cluster.
       samePixelCount = 1
@@ -53,7 +54,7 @@ AS.PixelArt.detectPixelScale = (imageSource, options = {}) ->
     for x in [1...width]
       pixelOffset = (y * width + x) * 4
       previousPixelOffset = pixelOffset - 4
-      analyzeDifference pixelOffset, previousPixelOffset
+      analyzeDifference pixelOffset, previousPixelOffset, samePixelCountHistogramHorizontal
 
   # Perform a vertical analysis.
   for x in [0...width]
@@ -62,33 +63,39 @@ AS.PixelArt.detectPixelScale = (imageSource, options = {}) ->
     for y in [1...height]
       pixelOffset = (y * width + x) * 4
       previousPixelOffset = pixelOffset - width * 4
-      analyzeDifference pixelOffset, previousPixelOffset
-
-  # Sort the histogram to find the same pixel count with the highest occurrence.
-  samePixelCountHistogram.sort (a, b) =>
-    b.occurrenceCount - a.occurrenceCount
+      analyzeDifference pixelOffset, previousPixelOffset, samePixelCountHistogramVertical
 
   # Make sure we got any useful data at all.
-  return unless samePixelCountHistogram[0]
+  return unless samePixelCountHistogramHorizontal.length and samePixelCountHistogramVertical.length
+  
+  # Sort the histograms to find the same pixel count with the highest occurrence.
+  samePixelCountHistogramHorizontal.sort (a, b) => b.occurrenceCount - a.occurrenceCount
+  samePixelCountHistogramVertical.sort (a, b) => b.occurrenceCount - a.occurrenceCount
 
   # By default, the most frequent same pixel count is considered the artwork's pixel scale.
-  pixelScale = samePixelCountHistogram[0].samePixelCount
-
-  # Further analysis depends on multiple counts so make sure they exist.
-  return pixelScale unless samePixelCountHistogram[1]
-
-  # If the top two counts have a common divisor larger than 1, the divisor should be
-  # the image scale. This helps detect proper pixel scale in images with big clusters.
-  greatestCommonDivisor = _.greatestCommonDivisor pixelScale, samePixelCountHistogram[1].samePixelCount
-  pixelScale = greatestCommonDivisor if greatestCommonDivisor > 1
-
-  # If an image is compressed and pixel scale is 1, we check for non-pixel art content.
-  if options.compressed and pixelScale is 1
-    # If the image has pixel art content, the next two pixel counts should include the actual pixel sizes.
-    pixelScale = _.greatestCommonDivisor samePixelCountHistogram[1].samePixelCount, samePixelCountHistogram[2].samePixelCount
-
-    # If the scale is still one, it probably isn't pixel art.
-    return if pixelScale is 1
-
-  # Return the calculated pixel scale.
-  pixelScale
+  calculatePixelScale = (histogram) =>
+    pixelScale = histogram[0].samePixelCount
+  
+    # Further analysis depends on multiple counts so make sure they exist.
+    return pixelScale unless histogram[1]
+  
+    # If the top two counts have a common divisor larger than 1, the divisor should be
+    # the image scale. This helps detect proper pixel scale in images with big clusters.
+    greatestCommonDivisor = _.greatestCommonDivisor pixelScale, histogram[1].samePixelCount
+    pixelScale = greatestCommonDivisor if greatestCommonDivisor > 1
+  
+    # If an image is compressed and pixel scale is 1, we check for non-pixel art content.
+    if options.compressed and pixelScale is 1
+      # If the image has pixel art content, the next two pixel counts should include the actual pixel sizes.
+      pixelScale = _.greatestCommonDivisor histogram[1].samePixelCount, histogram[2].samePixelCount
+  
+      # If the scale is still one, it probably isn't pixel art.
+      return if pixelScale is 1
+  
+    # Return the calculated pixel scale.
+    pixelScale
+    
+  return unless horizontal = calculatePixelScale samePixelCountHistogramHorizontal
+  return unless vertical = calculatePixelScale samePixelCountHistogramVertical
+  
+  {horizontal, vertical}

@@ -11,7 +11,7 @@ class Chess.Interface.Chessboard.TwoDimensional.Promotion extends AM.Component
 
     @chessboard = @ancestorComponentOfType Chess.Interface.Chessboard.TwoDimensional
     
-    @chessboard.chess.gameManager().assertDrawnPieces Chess.Piece.PromotionTypes
+    @chessboard.chess.gameManager().assertDrawnPieces Chess.Piece.PromotionTypes, Chess.Piece.Colors.White
   
   pieces: ->
     promotionInfo = @data()

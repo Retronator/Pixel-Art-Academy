@@ -21,8 +21,10 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
 
       if @_previousPlyHistoryLength? and plyHistoryLength > @_previousPlyHistoryLength
         Tracker.afterFlush => Meteor.setTimeout =>
-          scrollableArea = @childComponentsOfType(PAA.Pixeltosh.OS.Interface.ScrollableArea)[0]
+          return unless scrollableArea = @childComponentsOfType(PAA.Pixeltosh.OS.Interface.ScrollableArea)[0]
           scrollableArea.scrollToBottom()
+        ,
+          500
 
       @_previousPlyHistoryLength = plyHistoryLength
 
@@ -66,7 +68,7 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     return unless gameManager = @chess.gameManager()
     return unless gameState = gameManager.liveGameState()
 
-    if gameState.checkMate()
+    if gameState.checkmate()
       if gameState.turn() is Chess.Piece.Colors.White then '0-1' else '1-0'
 
     else if gameManager.draw()
@@ -89,7 +91,7 @@ class Chess.Interface.Play.MovesHistory extends AM.Component
     else
       moveText = @_normalMoveText movingPiece, piece, ply.move, plyInfo.previousGameState, capturedPiece
 
-    if ply.gameState.checkMate()
+    if ply.gameState.checkmate()
       moveText += '#'
 
     else if ply.gameState.check()

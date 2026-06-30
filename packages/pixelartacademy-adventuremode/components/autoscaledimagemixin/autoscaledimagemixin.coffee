@@ -29,8 +29,8 @@ class PAA.Components.AutoScaledImageMixin extends AM.Component
     desiredPixelScale = displayScale
 
     # If the image is bigger than max size, we want to use a smaller scale.
-    sourceHeight = height / pixelScale
-    sourceWidth = width / pixelScale
+    sourceHeight = height / pixelScale.vertical
+    sourceWidth = width / pixelScale.horizontal
 
     if maxHeight and sourceHeight > maxHeight
       cssScale = maxHeight * displayScale / height
@@ -41,7 +41,8 @@ class PAA.Components.AutoScaledImageMixin extends AM.Component
       cssScale = Math.min newCssScale, cssScale or newCssScale
 
     # If we haven't set the scale yet, we can use the desired scale.
-    cssScale ?= desiredPixelScale / pixelScale
+    # TODO: Improve choosing the pixel scale for images with unequal scale factors.
+    cssScale ?= desiredPixelScale / Math.max pixelScale.vertical, pixelScale.horizontal
 
     # Account for padding.
     padding = @mixinParent().callFirstWith null, 'autoScaledImagePadding'

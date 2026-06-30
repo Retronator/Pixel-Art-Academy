@@ -84,11 +84,11 @@ class Chess.Assets
           
       @_setPixels pixels
       
-    _setPixels: (pixels) ->
+    _setPixels: (pixels, action) ->
       assetId = @id()
       bitmap = @bitmap()
       layerAddress = [0]
-      action = new AM.Document.Versioning.Action assetId
+      action ?= new AM.Document.Versioning.Action assetId
     
       unless bitmap.getLayer [0]
         addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer assetId, bitmap, []

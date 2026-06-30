@@ -76,6 +76,9 @@ class Chess.Interface.Chessboard.TwoDimensional.Piece extends AM.Component
     @_animatePieceAnimation animation
 
   _animatePieceAnimation: (animation) ->
+    @chessboard.chess.audio.pickUp() unless animation.skipPickUpSound
+    @chessboard.chess.audio.capture() if animation.capture
+
     @promoting true if animation.promotion
     
     # Determine where we should animate from.
@@ -125,3 +128,9 @@ class Chess.Interface.Chessboard.TwoDimensional.Piece extends AM.Component
         
         @promoting false
         @animating false
+        
+        if animation.promotion
+          @chessboard.chess.audio.promote()
+  
+        else
+          @chessboard.chess.audio.drop()

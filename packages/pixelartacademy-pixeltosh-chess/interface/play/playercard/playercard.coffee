@@ -48,8 +48,8 @@ class Chess.Interface.Play.PlayerCard extends AM.Component
     @capturedPieces = new ComputedField =>
       color = @color()
       opponentColor = @_opponentColor color
-      playerCapturedPieceCounts = @_capturedPieceCountsForColor opponentColor
-      opponentCapturedPieceCounts = @_capturedPieceCountsForColor color
+      return unless playerCapturedPieceCounts = @_capturedPieceCountsForColor opponentColor
+      return unless opponentCapturedPieceCounts = @_capturedPieceCountsForColor color
 
       pieces = []
 
