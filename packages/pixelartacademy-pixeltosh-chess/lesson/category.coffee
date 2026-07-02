@@ -32,6 +32,9 @@ class Chess.Lesson.Category
       return unless lessonClass.state 'completedCount'
       
     true
+  
+  @completedLessonsCount: ->
+    _.filter((Chess.Lesson.getClassesForCategory @id()), (lessonClass) => lessonClass.state 'completedCount').length
 
   constructor: (@lessonManager) ->
     # Subscribe to this category's translations.

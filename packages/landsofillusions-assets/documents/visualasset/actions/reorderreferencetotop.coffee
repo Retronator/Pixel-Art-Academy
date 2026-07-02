@@ -5,11 +5,11 @@ class LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop extends AM.Document.V
   constructor: (operatorId, asset, imageId) ->
     super arguments...
     
-    index = _.findIndex asset.references, (reference) -> reference.image._id is imageId
+    index = _.findIndex asset.references, (reference) => reference.image._id is imageId
     throw new AE.ArgumentException "Image is not one of the references." if index is -1
     
     # Find current highest order.
-    highestOrder = _.max _.map asset.references, (reference) -> reference.order or 0
+    highestOrder = _.max _.map asset.references, (reference) => reference.order or 0
 
     # Forward operation sets the order field.
     forwardOperation = new LOI.Assets.VisualAsset.Operations.UpdateReference

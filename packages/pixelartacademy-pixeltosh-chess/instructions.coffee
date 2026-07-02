@@ -72,6 +72,10 @@ class Chess.Instructions
   class @RepeatLessons extends @Instruction
     @id: -> "PixelArtAcademy.Pixeltosh.Programs.Chess.Instructions.RepeatLessons"
     
+    @message: -> """
+      You can repeat each lesson once to gain more currency.
+    """
+
     @activeConditions: ->
       return unless chess = @getChess()
       return unless interfaceManager = chess.interfaceManager()
@@ -98,10 +102,6 @@ class Chess.Instructions
         # This is the cheapest needed piece. Show instruction if we can't cover its value.
         return currency < pieceInfo.value
     
-    @message: -> """
-      You can repeat each lesson once to gain more currency.
-    """
-    
     @initialize()
     
     bodyClass: -> PAA.Pixeltosh.Instructions.BodyClasses.Exclamation
@@ -109,3 +109,30 @@ class Chess.Instructions
     faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.Thoughtful
     
     customClass: -> 'pixelartacademy-pixeltosh-programs-chess-instructions-narrow'
+
+  class @ChangeTheme extends @Instruction
+    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Chess.Instructions.ChangeTheme"
+    
+    @message: -> """
+      You can change the look of the board in the Theme menu.
+    """
+    
+    @activeConditions: ->
+      # Don't show if you've changed any of the themes.
+      if project = Chess.currentProject()
+        return if project.interfaceTheme or project.chessboardTheme
+      
+      # Show in the menu when you've completed 3 pawn lessons.
+      return unless chess = @getChess()
+      return unless interfaceManager = chess.interfaceManager()
+      return unless interfaceManager.inMenu()
+      
+      Chess.Lessons.Categories.Pawn.completedLessonsCount() is 3
+    
+    @delayDuration: -> 2
+    
+    @initialize()
+    
+    bodyClass: -> PAA.Pixeltosh.Instructions.BodyClasses.Exclamation
+    
+    faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.Thoughtful

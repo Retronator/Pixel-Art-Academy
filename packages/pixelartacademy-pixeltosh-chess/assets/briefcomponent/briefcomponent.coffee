@@ -44,12 +44,13 @@ class Chess.Assets.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.Brie
 
     action = new AM.Document.Versioning.Action @bitmap.id()
     
-    for reference in sourceBitmap.references
-      continue if _.find destinationBitmap.references, (existingReference) => existingReference.image.url is reference.image.url
-      
-      addReferenceAction = new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @bitmap.id(), destinationBitmap, reference.image.url, reference
-      AM.Document.Versioning.executePartialAction destinationBitmap, addReferenceAction
-      action.append addReferenceAction
+    if sourceBitmap.references
+      for reference in sourceBitmap.references
+        continue if _.find destinationBitmap.references, (existingReference) => existingReference.image.url is reference.image.url
+        
+        addReferenceAction = new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @bitmap.id(), destinationBitmap, reference.image.url, reference
+        AM.Document.Versioning.executePartialAction destinationBitmap, addReferenceAction
+        action.append addReferenceAction
     
     pixels = []
     

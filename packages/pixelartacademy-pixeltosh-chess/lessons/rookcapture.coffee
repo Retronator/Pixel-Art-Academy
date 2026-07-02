@@ -9,7 +9,7 @@ class Chess.Lessons.RookCapture extends Chess.Lesson
 
   @steps: -> [
     @CapturePawn
-    @End
+    Chess.Lessons.DefaultEndStep
   ]
 
   @startingPosition: ->
@@ -29,17 +29,6 @@ class Chess.Lessons.RookCapture extends Chess.Lesson
       The rook captures by sliding onto an enemy in its path.
 
       Capture the pawn.
-    """
-
-    @initialize()
-
-  class @End extends Chess.Lesson.EndStep
-    @id: -> "#{Lesson.id()}.End"
-
-    @message: -> """
-      Well done!
-
-      On an open line nothing escapes a rook except a piece that blocks the way.
     """
 
     @initialize()

@@ -114,7 +114,7 @@ class Chess.Assets
         @description: -> """
           The simplest of the chess pieces.
           
-          It is recommended to use dark line art filled with a light color, as well as an additional light outline around the whole piece to make it stand out on dark squares.
+          It is recommended to use dark line art filled with a light color, as well as an additional thick light outline around the whole piece to make it stand out on dark squares.
         """
         
         @initialize()
@@ -192,6 +192,10 @@ class Chess.Assets
         @copySourceAsset: -> TwoDimensional.Pawn.White
 
         @initialize()
+        
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.ComputerChess'
+        ]
       
       class @Black extends TwoDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.Bishop.Black'
@@ -224,6 +228,10 @@ class Chess.Assets
 
         @initialize()
       
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.ComputerChess'
+        ]
+        
       class @Black extends TwoDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.Rook.Black'
         
@@ -254,6 +262,10 @@ class Chess.Assets
         @copySourceAsset: -> TwoDimensional.Pawn.White
 
         @initialize()
+        
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.ComputerChess'
+        ]
       
       class @Black extends TwoDimensional.Asset
         @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.TwoDimensional.Queen.Black'
@@ -284,6 +296,10 @@ class Chess.Assets
 
         @copySourceAsset: -> TwoDimensional.Pawn.White
 
+        @unlockedPublicationParts: -> [
+          'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.ComputerChess'
+        ]
+        
         @initialize()
       
       class @Black extends TwoDimensional.Asset
@@ -314,7 +330,7 @@ class Chess.Assets
         @description: -> """
           The simplest of the chess pieces.
           
-          It is recommended to use dark line art filled with a light color, as well as an additional light outline around the whole piece to make it stand out on dark squares.
+          It is recommended to use dark line art filled with a light color, as well as an additional thick light outline around the whole piece to make it stand out on dark squares.
         """
         
         @initialize()

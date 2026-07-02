@@ -15,6 +15,15 @@ class Chess.Interface.Shop extends PAA.Pixeltosh.Program.View
     top: 0
     right: 0
     bottom: 0
+    
+  @StorePieces = [
+    Chess.Piece.Types.Pawn
+    Chess.Piece.Types.Bishop
+    Chess.Piece.Types.Knight
+    Chess.Piece.Types.Rook
+    Chess.Piece.Types.Queen
+    Chess.Piece.Types.King
+  ]
 
   onCreated: ->
     super arguments...
@@ -23,7 +32,7 @@ class Chess.Interface.Shop extends PAA.Pixeltosh.Program.View
     @chess = @os.getProgram Chess
 
   pieces: ->
-    for pieceType in _.values Chess.Piece.Types
+    for pieceType in @constructor.StorePieces
       pieceData = Chess.Piece.InfoForType[pieceType]
 
       _.extend {type: pieceType}, pieceData

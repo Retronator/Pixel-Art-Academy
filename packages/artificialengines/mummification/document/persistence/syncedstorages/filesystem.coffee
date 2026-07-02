@@ -194,4 +194,5 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       path = @_getDocumentPath document
       await Desktop.fetch 'filesystem', 'deleteFile', 60000, path
     
+      documentClassId = document.constructor.id()
       delete @lastEditTimes[documentClassId][document._id]

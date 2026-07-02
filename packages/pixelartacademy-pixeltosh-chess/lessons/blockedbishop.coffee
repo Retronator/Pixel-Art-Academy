@@ -27,7 +27,7 @@ class Chess.Lessons.BlockedBishop extends Chess.Lesson
     @message: -> """
       The bishop moves as far as it wants, but it can't jump over pieces.
 
-      To reach the target, you will have to go around, or push the pawn.
+      To reach the target, you will have to go around, or move the pawn.
     """
 
     @initialize()

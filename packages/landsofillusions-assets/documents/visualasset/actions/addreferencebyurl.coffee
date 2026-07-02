@@ -22,8 +22,14 @@ class LOI.Assets.VisualAsset.Actions.AddReferenceByUrl extends AM.Document.Versi
         _id: imageId
         # Also inject the URL so we don't have to wait for reference to kick in.
         url: url
+        order: highestOrder + 1
     ,
       properties
+    
+    # Place the new reference on top of existing references.
+    if asset.references
+      highestOrder = _.max _.map asset.references, (reference) => reference.order or 0
+      reference.order = highestOrder + 1
     
     # Forward operation adds the reference.
     forwardOperation = new LOI.Assets.VisualAsset.Operations.AddReference {reference}
