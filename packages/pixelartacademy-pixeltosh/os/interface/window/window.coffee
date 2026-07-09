@@ -112,7 +112,7 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     delay = 0
     delay = PAA.Pixeltosh.OS.Interface.slowCPUEmulationLargeFrameDelay * 1000 if LOI.settings.graphics.slowCPUEmulation.value()
     
-    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', _.throttle (event) =>
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', throttledMove = _.throttle (event) =>
       return unless coordinates = cursor.coordinates()
       
       @windowMoveDelta
@@ -124,6 +124,7 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
       # End drag mode.
       @_endEvents()
+      throttledMove.cancel()
 
       delta = @windowMoveDelta()
       @windowMoveDelta null

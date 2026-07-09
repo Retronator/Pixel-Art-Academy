@@ -103,6 +103,16 @@ class FM.Interface extends AM.Component
         delete @_loaders[file.id]
         @_destroyHelperInstancesForFile file.id
         @_loadersUpdatedDependency.changed()
+        
+    # Sort windows.
+    @sortedWindowIds = new ComputedField =>
+      windowsData = @currentLayoutData().child 'windows'
+      return [] unless windows = windowsData.value()
+      
+      sortedWindows = _.orderBy _.values(windows), [((window) => Boolean window.alwaysOnTop), 'order']
+      window.id for window in sortedWindows
+    ,
+      EJSON.equals
 
   onDestroyed: ->
     super arguments...
@@ -259,14 +269,11 @@ class FM.Interface extends AM.Component
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'
-    return unless windows = windowsData.value()
-    
-    sortedWindows = _.orderBy _.values(windows), [((window) => Boolean window.alwaysOnTop), 'order']
     
     # Create child data objects to send as data.
-    for window in sortedWindows
-      windowData = windowsData.child window.id
-      windowData._id = window.id
+    for windowId in @sortedWindowIds()
+      windowData = windowsData.child windowId
+      windowData._id = windowId
       windowData
   
   overlays: ->

@@ -5,6 +5,24 @@
   inset 5rem
   background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem !important
 
+  .dark-interface &
+    background-image image('/pixelartacademy/pixeltosh/os/dither-black.png') !important
+
+    .window
+      .options
+        border-color white
+
+        .option
+          &.active
+            .option-button
+              background-color white
+
+          & + .option
+            border-left-color white
+
+          .option-button
+            background-color black
+
   .window
     position absolute
     top 114rem

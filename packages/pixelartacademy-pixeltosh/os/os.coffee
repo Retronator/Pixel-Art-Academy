@@ -146,7 +146,16 @@ class PAA.Pixeltosh.OS extends LOI.Component
     @activeWindowId windowId
     
     # Activating a window also activates its program.
-    programView = await @getProgramViewForWindowIdAsync windowId
+    @_lastActivatedWindowId = windowId
+
+    try
+      programView = await @getProgramViewForWindowIdAsync windowId
+      
+    catch
+      return
+
+    # Make sure we're not waiting to activate a different window by now.
+    return unless windowId is @_lastActivatedWindowId
     
     # Make sure the data of this view is still there (or the program will be empty).
     @activateProgram program if program = programView.program()
@@ -162,12 +171,22 @@ class PAA.Pixeltosh.OS extends LOI.Component
     window.childComponentsOfType(PAA.Pixeltosh.Program.View)[0]
     
   getProgramViewForWindowIdAsync: (windowId) ->
-    new Promise (resolve) =>
-      Tracker.autorun (computation) =>
-        return unless programView = @getProgramViewForWindowId windowId
-        computation.stop()
-        resolve programView
-  
+    new Promise (resolve, reject) =>
+      Tracker.nonreactive =>
+        programView = null
+        
+        # Wait until the program view has been rendered.
+        getViewAutorun = Tracker.autorun (computation) =>
+          programView = @getProgramViewForWindowId windowId
+          return unless programView
+
+          computation.stop()
+          resolve programView
+    
+        # If the autorun stops before the view could be found, we report failure.
+        getViewAutorun.onStop =>
+          reject() unless programView
+
   _getMaxWindowOrder: ->
     windows = @interface.currentLayoutData().get 'windows'
     normalWindows = _.filter _.values(windows), (window) => not window.alwaysOnTop

@@ -141,6 +141,10 @@ class Chess.InterfaceManager
       when @constructor.Screens.Menu
         @chess.gameManager().endGame()
         @chess.lessonManager().endLesson()
+        
+    # Reset temporary chessboard data.
+    chessboardData = @chess.os.interface.getComponentData Chess.Interface.Chessboard
+    chessboardData.value {}
 
   openShop: ->
     @_shopWindowId @chess.os.addWindow Chess.Interface.Shop.createInterfaceData()

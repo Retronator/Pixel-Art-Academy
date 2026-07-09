@@ -11,7 +11,7 @@ class FM.Interface.Data.Value
 
       # We store a copy of the current field so that if the source object
       # gets modified, we have the original value to compare equality to.
-      oldValue = _.cloneDeep value
+      oldValue = EJSON.clone value
 
       field value
       

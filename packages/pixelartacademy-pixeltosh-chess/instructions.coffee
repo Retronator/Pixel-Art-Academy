@@ -129,7 +129,7 @@ class Chess.Instructions
       
       Chess.Lessons.Categories.Pawn.completedLessonsCount() is 3
     
-    @delayDuration: -> 2
+    @delayDuration: -> 1
     
     @initialize()
     

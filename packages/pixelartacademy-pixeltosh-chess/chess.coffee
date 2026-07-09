@@ -60,7 +60,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   @boardDisplayType = @state.field 'boardDisplayType', default: @BoardDisplayTypes.TwoDimensional
   @displayBoardCoordinates = @state.field 'displayBoardCoordinates', default: false
   @autoPromotion = @state.field 'autoPromotion', default: false
-  @autoFlipBoard = @state.field 'autoFlipBoard', default: false
+  @autoFlipBoard = @state.field 'autoFlipBoard', default: true
   @audioBoard = @state.field 'audioBoard', default: true
   @audioVoice = @state.field 'audioVoice', default: true
   

@@ -12,8 +12,6 @@ class PAA.Pixeltosh.Program.View extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Program.View'
   @register @id()
   
-  @_lastDOMElementInsertedTime = Date.now()
-
   onCreated: ->
     super arguments...
     

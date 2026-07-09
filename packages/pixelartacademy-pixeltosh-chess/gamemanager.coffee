@@ -147,7 +147,7 @@ class Chess.GameManager
       @chess.os.throwError
         reason: "file not found"
         details: "#{color} #{pieceType.toLowerCase()}"
-        shutDownProgram: @chess
+        shutDownProgramId: @chess.id()
 
       # Reset any cursor changes since pointer leave will not fire once the error overlay is displayed.
       @chess.os.cursor().setClass null
