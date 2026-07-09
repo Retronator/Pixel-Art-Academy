@@ -1,15 +1,16 @@
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Interface.PlayStart extends LOI.View
+class Chess.Interface.PlayStart extends AM.Component
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.PlayStart'
   @register @id()
   
   onCreated: ->
     super arguments...
     
-    @os = @interface.parent
+    @os = @ancestorComponentOfType PAA.Pixeltosh.OS
     @chess = @os.getProgram Chess
     
     @players = @data().child('players').value

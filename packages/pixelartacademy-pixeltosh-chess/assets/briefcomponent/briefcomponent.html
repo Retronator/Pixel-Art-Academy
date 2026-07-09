@@ -6,11 +6,11 @@
     {{else}}
       <ul class="actions">
         {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.DefaultActions}}
-        {{#if copySourceAsset}}
+        {{#each copySourceAssets}}
           <li class="action">
-            <button class="button copy-button">Copy {{copySourceAsset.displayName}}</button>
+            <button class="button copy-button">Copy {{displayName}}</button>
           </li>
-        {{/if}}
+        {{/each}}
       </ul>
     {{/if}}
   {{/with}}

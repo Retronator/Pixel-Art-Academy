@@ -17,12 +17,12 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Chess extends PAA.Learning.Goal
     @DrawWhitePawn
     @DrawBlackPawn
     @PawnLessons
-    @BuyKnight
-    @DrawKnight
-    @BuySecondKnight
     @BuyBishop
     @DrawBishop
     @BuySecondBishop
+    @BuyKnight
+    @DrawKnight
+    @BuySecondKnight
     @BuyRook
     @DrawRook
     @BuySecondRook
@@ -44,9 +44,11 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Chess extends PAA.Learning.Goal
   reset: ->
     super arguments...
     
-    PAA.Pixeltosh.Programs.Chess.state 'ownedPieceTypeCounts', null
-    PAA.Pixeltosh.Programs.Chess.state 'currency', null
     PAA.Pixeltosh.Programs.Chess.state 'boardDisplayType', null
+    PAA.Pixeltosh.Programs.Chess.state 'projectId2D', null
+    PAA.Pixeltosh.Programs.Chess.state 'currency', null
+    PAA.Pixeltosh.Programs.Chess.state 'ownedPieceTypeCounts', null
+    PAA.Pixeltosh.Programs.Chess.state 'pendingRewards', null
     PAA.Pixeltosh.Programs.Chess.state 'playStarted', null
     PAA.Pixeltosh.Programs.Chess.state 'Lessons', null
     PAA.Pixeltosh.Programs.Chess.state 'Rewards', null

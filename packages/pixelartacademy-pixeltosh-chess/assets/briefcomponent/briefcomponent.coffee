@@ -24,19 +24,22 @@ class Chess.Assets.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.Brie
       
       workbenchSituation.things()
   
-  copySourceAsset: ->
-    return unless sourceAsset = @bitmap.constructor.copySourceAsset()
+  copySourceAssets: ->
+    sourceAssetClasses = @bitmap.constructor.copySourceAssets()
+    return [] unless sourceAssetClasses.length
     
-    project = _.find @projects(), (project) -> project instanceof Chess.Project.TwoDimensional
+    projectClass = @bitmap.constructor.projectClass()
+    project = _.find @projects(), (project) -> project instanceof projectClass
     
-    _.find project.assets(), (asset) => asset instanceof sourceAsset
+    _.filter project.assets(), (asset) =>
+      _.find sourceAssetClasses, (sourceAssetClass) => asset instanceof sourceAssetClass
   
   events: ->
     super(arguments...).concat
       'click .copy-button': @onClickCopyButton
 
   onClickCopyButton: (event) ->
-    sourceAsset = @copySourceAsset()
+    sourceAsset = @currentData()
     sourceBitmap = sourceAsset.bitmap()
     layer = sourceBitmap.layers[0]
 

@@ -58,6 +58,15 @@ class LM.App extends Artificial.Base.App
         
       # Start in preferred fullscreen mode.
       Desktop.send 'window', 'setFullscreen', LOI.settings.graphics.preferFullscreen.value()
+      
+  events: ->
+    super(arguments...).concat
+      'pointerup': @onPointerUp
+      
+  onPointerUp: (event) ->
+    switch event.button
+      # Prevent default history-navigation behavior.
+      when 3, 4 then event.preventDefault()
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer

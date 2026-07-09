@@ -36,6 +36,16 @@ class Chess.Lessons.KnightInPursuit extends Chess.Lessons.KnightCapture
     @retryPosition: -> Lesson.startingPosition()
 
     @initialize()
+    
+    markup: ->
+      gameState = @gameState()
+      return unless gameState.getPiecesOfTypeAndColor(Chess.Piece.Types.Pawn, Chess.Piece.Colors.Black).length
+      
+      [
+        arrow:
+          from: Chess.Square.g3
+          to: Chess.Square.g1
+      ]
 
   class @End extends Chess.Lesson.EndStep
     @id: -> "#{Lesson.id()}.End"

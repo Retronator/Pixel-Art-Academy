@@ -9,5 +9,5 @@ class Chess.Interface.Chessboard.Component extends AM.Component
     super arguments...
     
     @interface = @ancestorComponentOfType FM.Interface
-    @os = @interface.parent
+    @os = @ancestorComponentOfType PAA.Pixeltosh.OS
     @chess = @os.getProgram Chess

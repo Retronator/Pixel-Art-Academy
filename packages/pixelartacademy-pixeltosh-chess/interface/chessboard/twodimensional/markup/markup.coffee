@@ -13,6 +13,10 @@ class Chess.Interface.Chessboard.TwoDimensional.Markup extends AM.Component
     
   markup: -> @chessboard.provider()?.markup?()
   
+  targetLegalMoveClass: ->
+    target = @currentData()
+    'legal-move' if target.position in @chessboard.legalMoveSquares()
+  
   squarePosition: (square) ->
     left = square.fileIndex * 21
     top = square.rankIndex * 21

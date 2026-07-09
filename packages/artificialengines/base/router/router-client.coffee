@@ -99,9 +99,9 @@ class AB.Router extends AB.Router
     # By default changing routes gets written to browser history.
     options.createHistory ?= true
 
-    [match, host, path] = url.match /(.*?)(\/.*)/
+    [match, protocol, host, path] = url.match /^(\w+:\/\/)?(.*?)(\/.*)/
 
-    if host
+    if host and host isnt location.host
       # Since the host changed, we can't use pushState. Do a hard url change.
       window.location = url
 
@@ -168,8 +168,10 @@ class AB.Router extends AB.Router
       
       # Do a soft link change when we're staying within the same host.
       if link.hostname is location.hostname
-        # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
-        return if event.metaKey or event.ctrlKey or event.shiftKey
+        # Do not react if modifier keys are present (the user might be trying to open the link in a new tab), but don't
+        # allow this on Desktop since that would open a new game window. External links are handled below to open in the
+        # default browser.
+        return if (event.metaKey or event.ctrlKey or event.shiftKey) and not Meteor.isDesktop
     
         # Do not act on download links.
         return if link.download
@@ -231,3 +233,8 @@ class AB.Router extends AB.Router
       title = result if result
 
     document.title = title if title
+
+if Meteor.isDesktop
+  # Listen to URL request from the main process.
+  Desktop.on 'window', 'goToUrl', (event, url) =>
+    AB.Router.goToUrl url

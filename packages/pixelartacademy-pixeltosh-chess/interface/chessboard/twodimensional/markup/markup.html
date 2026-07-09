@@ -2,7 +2,7 @@
   <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-markup">
     {{#each markup}}
       {{#with target}}
-        <div class="target" {{style (positionStyle position)}}></div>
+        <div class="target {{targetLegalMoveClass}}" {{style (positionStyle position)}}></div>
       {{/with}}
       {{#with arrow}}
         {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup.Arrow}}

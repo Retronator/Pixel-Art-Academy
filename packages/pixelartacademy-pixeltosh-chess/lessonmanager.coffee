@@ -104,6 +104,9 @@ class Chess.LessonManager
       
       @gameState gameState or @_previousGameState
       @rewinding false
+      
+      await _.waitForSeconds 0.5
+      @chess.audioManager().tryAgain()
   
   humanCanMove: ->
     # Prevent movement while rewinding.

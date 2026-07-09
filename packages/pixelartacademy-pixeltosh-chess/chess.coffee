@@ -9,6 +9,8 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   # displayBoardCoordinates: boolean whether to display the files and ranks along the border of the board
   # autoPromotion: boolean whether to automatically promote a pawn to a queen
   # autoFlipBoard: boolean whether to automatically orient the board for the human player on turn
+  # audioBoard: boolean whether to play board interaction sounds
+  # audioVoice: boolean whether Pixeltosh should make spoken announcements
   # projectId2D: the project ID of the currently chosen 2D chess set
   # TODO: projectId3D: the project ID of the currently chosen 3D chess set
   # currency: number of currency the player has
@@ -40,6 +42,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     ThreeDimensional: 'ThreeDimensional'
 
   @ChessboardThemes:
+    Newspaper: 'Newspaper'
     Light: 'Light'
     Contrast: 'Contrast'
     Dark: 'Dark'
@@ -58,6 +61,8 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   @displayBoardCoordinates = @state.field 'displayBoardCoordinates', default: false
   @autoPromotion = @state.field 'autoPromotion', default: false
   @autoFlipBoard = @state.field 'autoFlipBoard', default: false
+  @audioBoard = @state.field 'audioBoard', default: true
+  @audioVoice = @state.field 'audioVoice', default: true
   
   @projectId2D: -> @state('projectId2D') or @Project.TwoDimensional.state 'activeProjectId'
   @projectId3D: -> @state('projectId3D') or @Project.ThreeDimensional.state 'activeProjectId'
@@ -127,6 +132,7 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
       promote:
         valueType: AEc.ValueTypes.Trigger
         throttle: 100
+      enabled: AEc.ValueTypes.Boolean
 
   constructor: ->
     super arguments...

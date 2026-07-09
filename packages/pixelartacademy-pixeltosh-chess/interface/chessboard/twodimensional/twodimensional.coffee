@@ -12,8 +12,10 @@ class Chess.Interface.Chessboard.TwoDimensional extends Chess.Interface.Chessboa
   onCreated: ->
     super arguments...
     
-    @selectedSquare = new ReactiveField null
-    @promotionInfo = new ReactiveField null
+    chessboardData = @interface.getComponentData Chess.Interface.Chessboard
+
+    @selectedSquare = chessboardData.child('selectedSquare').value
+    @promotionInfo = chessboardData.child('promotionInfo').value
 
     # Create board squares.
     @squares = []

@@ -34,8 +34,15 @@ class Chess.Interface
         Chess.Interface.Actions.FlipBoard.id()
       ]
     ,
+      caption: 'Audio'
+      items: [
+        Chess.Interface.Actions.AudioBoard.id()
+        Chess.Interface.Actions.AudioVoice.id()
+      ]
+    ,
       caption: 'Theme'
       items: [
+        Chess.Interface.Actions.NewspaperChessboard.id()
         Chess.Interface.Actions.LightChessboard.id()
         Chess.Interface.Actions.ContrastChessboard.id()
         Chess.Interface.Actions.DarkChessboard.id()

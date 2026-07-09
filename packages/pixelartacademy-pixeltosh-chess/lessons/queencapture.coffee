@@ -9,7 +9,7 @@ class Chess.Lessons.QueenCapture extends Chess.Lesson
 
   @steps: -> [
     @CapturePawn
-    @End
+    Chess.Lessons.DefaultEndStep
   ]
 
   @startingPosition: ->
@@ -29,17 +29,6 @@ class Chess.Lessons.QueenCapture extends Chess.Lesson
       The queen captures along any of her lines, straight or diagonal.
 
       Capture the pawn.
-    """
-
-    @initialize()
-
-  class @End extends Chess.Lesson.EndStep
-    @id: -> "#{Lesson.id()}.End"
-
-    @message: -> """
-      Well done!
-
-      The queen holds the power of a rook and a bishop in one piece. Across an open board, few squares are safe from her.
     """
 
     @initialize()

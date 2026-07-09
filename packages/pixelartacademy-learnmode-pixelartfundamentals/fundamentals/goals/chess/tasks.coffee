@@ -423,7 +423,7 @@ class Goal.BuyPawns extends Goal.Task
   
   @initialize()
   
-  @completedConditions: -> Chess.ownedPiecesCount(Chess.Piece.Types.Bishop) is 2
+  @completedConditions: -> Chess.ownedPiecesCount(Chess.Piece.Types.Pawn) is 8
   
 class Goal.PlayGame extends Goal.Task
   @id: -> "#{Goal.id()}.PlayGame"

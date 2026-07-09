@@ -5,27 +5,38 @@
   inset 4rem
   pointer-events none
 
+  .newspaper.board &
+    .legal-move-square
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-legalmove-hover.png')
+
+    .target.legal-move::before
+      content ''
+      absolute-cover()
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-legalmove-piece.png')
+
+  .light.board &
+    .legal-move-square
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-light-legalmove-hover.png')
+
   .contrast.board &
     .legal-move-square
-      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-selected-contrast.png')
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-legalmove-hover.png')
 
   .dark.board &
     .legal-move-square
-      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover-dark.png')
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-dark-legalmove-hover.png')
 
   .target
   .legal-move-square
     position absolute
     width 20rem
     height 20rem
+    z-index 1
 
   .target
     position relative
     z-index 3
     background-image image('/pixelartacademy/pixeltosh/programs/chess/target.png')
-
-  .legal-move-square
-    background-image image('/pixelartacademy/pixeltosh/programs/chess/square-legalmove-hover.png')
 
   .arrow
     position absolute
@@ -86,13 +97,13 @@
         background image('/pixelartacademy/pixeltosh/programs/chess/arrow-diagonal.png') 0 0 / 160rem 160rem
 
   .arrows
+    z-index 2
+
     .outline
     .fill
       absolute-cover()
 
     .outline
-      z-index 1
-
       .arrow
         .straight
         .orthogonal
@@ -101,8 +112,6 @@
             display none
 
     .fill
-      z-index 2
-
       .arrow
         .straight
         .orthogonal

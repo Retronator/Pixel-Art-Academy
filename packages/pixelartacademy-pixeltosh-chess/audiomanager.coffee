@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.AudioManager
-  @maxVolume = 1
+  @maxVolume = 0.7
   @soundsPath = '/pixelartacademy/pixeltosh/programs/chess'
 
   constructor: (@chess) ->
@@ -21,14 +21,21 @@ class Chess.AudioManager
       @introSound = @_createSound 'intro.wav', audioOutputNode
       @lessonCompleteSound = @_createSound 'lessoncomplete.wav', audioOutputNode
       @stalemateSound = @_createSound 'stalemate.wav', audioOutputNode
+      @tryAgainSound = @_createSound 'tryagain.wav', audioOutputNode
       @winBlackSound = @_createSound 'win-black.wav', audioOutputNode
       @winWhiteSound = @_createSound 'win-white.wav', audioOutputNode
       @youWinSound = @_createSound 'youwin.wav', audioOutputNode
 
       computation.stop()
+    
+    @_soundsEnabledAutorun = @chess.autorun =>
+      return unless LOI.adventure.gameState()
+      
+      @chess.audio.enabled Chess.audioBoard()
 
   destroy: ->
     @_loadSoundsAutorun.stop()
+    @_soundsEnabledAutorun.stop()
 
     @checkSound?.destroy()
     @checkmateSound?.destroy()
@@ -39,6 +46,7 @@ class Chess.AudioManager
     @introSound?.destroy()
     @lessonCompleteSound?.destroy()
     @stalemateSound?.destroy()
+    @tryAgainSound?.destroy()
     @winBlackSound?.destroy()
     @winWhiteSound?.destroy()
     @youWinSound?.destroy()
@@ -94,14 +102,16 @@ class Chess.AudioManager
     true
 
   lessonComplete: ->
-    return if @_playedLessonComplete
-    
     @_play @lessonCompleteSound
-    @_playedLessonComplete = true
+
+  tryAgain: ->
+    @_play @tryAgainSound
 
   _createSound: (fileName, audioOutputNode) ->
     new AEc.Sound "#{@constructor.soundsPath}/#{fileName}", LOI.adventure.audioManager, audioOutputNode
 
   _play: (sound) ->
+    return unless Chess.audioVoice()
+
     sound?.play
       volume: @constructor.maxVolume

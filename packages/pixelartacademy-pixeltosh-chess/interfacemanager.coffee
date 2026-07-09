@@ -39,13 +39,15 @@ class Chess.InterfaceManager
       
       switch @screen()
         when @constructor.Screens.Menu
-          if Chess.ownedPiecesCount()
+          ownedPiecesCount = Chess.ownedPiecesCount()
+          
+          if ownedPiecesCount
             layout = layouts[Chess.Interface.Layouts.Menu]
             
             tabs = [_.cloneDeep menuTabs.lessons]
             
-            # Play is available once king lessons are completed.
-            if Chess.Lessons.Categories.King.completed()
+            # Play is available once you have 16 pieces and king lessons are completed.
+            if ownedPiecesCount is 16 and Chess.Lessons.Categories.King.completed()
               tabs.push _.cloneDeep menuTabs.play
 
             # Persist active tab across reflows.
@@ -178,7 +180,7 @@ class Chess.InterfaceManager
 
   interfaceTheme: -> Chess.currentProject()?.interfaceTheme or Chess.InterfaceThemes.Light
 
-  chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Light
+  chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Contrast
   
   autoPromotion: -> Chess.autoPromotion() and not @inLesson()
 

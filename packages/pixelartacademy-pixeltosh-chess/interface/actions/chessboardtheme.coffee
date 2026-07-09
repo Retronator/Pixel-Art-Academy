@@ -17,6 +17,14 @@ class ChessboardTheme extends Chess.Interface.Actions.Action
         chessboardTheme: @constructor.chessboardTheme()
         lastEditTime: new Date
 
+class Chess.Interface.Actions.NewspaperChessboard extends ChessboardTheme
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.NewspaperChessboard'
+  @displayName: -> "Newspaper Chessboard"
+  
+  @chessboardTheme: -> Chess.ChessboardThemes.Newspaper
+  
+  @initialize()
+  
 class Chess.Interface.Actions.LightChessboard extends ChessboardTheme
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.LightChessboard'
   @displayName: -> "Light Chessboard"
