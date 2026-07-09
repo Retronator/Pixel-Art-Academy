@@ -120,7 +120,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @predecessors: -> [Goal.Lines]
     
-    @level: -> 2
+    @level: -> 3
     
     @studyPlanBuilding: -> 'SimCityChurch'
     
