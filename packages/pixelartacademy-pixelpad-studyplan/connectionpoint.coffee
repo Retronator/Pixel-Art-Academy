@@ -6,8 +6,8 @@ IL = Illustrapedia
 StudyPlan = PAA.PixelPad.Apps.StudyPlan
 
 class StudyPlan.ConnectionPoint
-  @createLocal: (goalNode, x=0, y=0) ->
-    connectionPoint = new @
+  @createLocal: (goalNode, x=0, y=0, name) ->
+    connectionPoint = new @ name
     connectionPoint.goalNode = goalNode
     connectionPoint.localPosition.set x, y
     connectionPoint
@@ -32,7 +32,7 @@ class StudyPlan.ConnectionPoint
     @potentialIncomingPathways = []
     
   clone: ->
-    connectionPoint = new @constructor
+    connectionPoint = new @constructor @name
     
     connectionPoint.localPosition.copy @localPosition
     

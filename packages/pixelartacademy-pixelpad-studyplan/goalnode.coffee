@@ -50,16 +50,18 @@ class StudyPlan.GoalNode
       console.warn "Unrecognized goal present in study plan.", @goalId
       return
     
+    connectionName = (names...) => "#{_.last(@goalId.split('.'))} goal #{names.join ' '}"
+    
     @goal = new @goalClass
     
-    @entryPoint = StudyPlan.ConnectionPoint.createLocal @
-    @exitPoint = StudyPlan.ConnectionPoint.createLocal @
+    @entryPoint = StudyPlan.ConnectionPoint.createLocal @, 0, 0, connectionName 'entry'
+    @exitPoint = StudyPlan.ConnectionPoint.createLocal @, 0, 0, connectionName 'exit'
     
     tasks = @goal.tasks()
     
     # Create task points.
     for task in tasks
-      taskPoint = new StudyPlan.TaskPoint
+      taskPoint = new StudyPlan.TaskPoint connectionName task.id()
       taskPoint.initializeTask task, @
       
       @taskPoints.push taskPoint
@@ -77,7 +79,7 @@ class StudyPlan.GoalNode
           taskPoint.predecessors.push predecessorTaskPoint
           
     # Create start task point.
-    @startTaskPoint = new StudyPlan.TaskPoint
+    @startTaskPoint = new StudyPlan.TaskPoint connectionName 'start task'
     @startTaskPoint.initializeDummyTask @
     @startTaskPoint.groupNumber = 0
     @taskPoints.push @startTaskPoint
@@ -87,7 +89,7 @@ class StudyPlan.GoalNode
       taskPoint.predecessors.push @startTaskPoint
     
     # Create end task point.
-    @endTaskPoint = new StudyPlan.TaskPoint
+    @endTaskPoint = new StudyPlan.TaskPoint connectionName 'end task'
     @endTaskPoint.initializeEndTask @
     @endTaskPoint.groupNumber = @goal.finalGroupNumber()
     @taskPoints.push @endTaskPoint
@@ -221,7 +223,7 @@ class StudyPlan.GoalNode
       level = {entryTileX, exitTileX, maxGroupNumberRequiringExit}
       
       if exitRequired and (levelIndex < @maxLevel - 1 or not @goalClass.doesCompletingAnyFinalTaskCompleteTheGoal())
-        level.sideExitPoint = StudyPlan.ConnectionPoint.createLocal @, exitTileX
+        level.sideExitPoint = StudyPlan.ConnectionPoint.createLocal @, exitTileX, 0, connectionName 'side exit', @sidewaysPoints.length
         @sidewaysPoints.push level.sideExitPoint
         
       @levels.push level
