@@ -29,7 +29,7 @@ class LM.Intro.Tutorial extends LM.Chapter
 
     # Add intro goals to the Study Plan app.
     @_initializeStudyPlanAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return if PAA.PixelPad.Apps.StudyPlan.state 'goals'
       
       toDoTasksId = LM.Intro.Tutorial.Goals.ToDoTasks.id()

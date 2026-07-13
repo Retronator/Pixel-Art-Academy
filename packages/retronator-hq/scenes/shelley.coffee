@@ -21,7 +21,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
     # Set starting location and start moving around.
     @autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       computation.stop()
 
       @state 'currentLocation', HQ.GalleryEast.id() unless @state 'currentLocation'

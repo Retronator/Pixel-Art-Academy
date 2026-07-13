@@ -81,7 +81,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.Project.Thing
     @translations()?.noAssetsInstructions
 
   assetsData: ->
-    return unless LOI.adventure.gameState()
+    return unless LOI.adventure.gameStateAvailable()
 
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.

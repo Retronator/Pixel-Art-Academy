@@ -81,7 +81,7 @@ class Chess.InterfaceManager
         layoutData.set 'windows', windows
         
     @_boardDisplayChoiceAutorun = @chess.autorun =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless @window()
       
       # Note: We want to compare to the raw state value to not take the default into account.
@@ -109,7 +109,7 @@ class Chess.InterfaceManager
       @_earningsWindowId @chess.os.addWindow Chess.Interface.Earnings.createInterfaceData()
 
     @_introAudioAutorun = @chess.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless @window()
       
       if Chess.ownedPiecesCount()

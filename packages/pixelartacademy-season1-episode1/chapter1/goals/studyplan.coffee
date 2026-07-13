@@ -15,7 +15,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
   
     # Add Study Plan goal to the Study Plan app.
     Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       computation.stop()
     
       return if PAA.PixelPad.Apps.StudyPlan.state 'goals'

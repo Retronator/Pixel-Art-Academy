@@ -14,15 +14,22 @@ class LM.PixelArtFundamentals.Fundamentals.ChallengesDrawing extends LOI.Adventu
     
     # Add/remove the reference selection asset to the pixel art line art challenge.
     @_referenceSelectionAutorun = Tracker.autorun =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       assets = PAA.Challenges.Drawing.PixelArtLineArt.state('assets') or []
       
       remainingAssetsCount = PAA.Challenges.Drawing.PixelArtLineArt.remainingDrawLineArtClasses().length
       referenceSelectionId = PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.id()
       referenceSelection = _.find assets, (asset) => asset.id is referenceSelectionId
   
-      assets.unshift id: referenceSelectionId if remainingAssetsCount > 0 and not referenceSelection
-      _.pull assets, referenceSelection if remainingAssetsCount is 0 and referenceSelection
+      if remainingAssetsCount > 0 and not referenceSelection
+        assets.unshift id: referenceSelectionId
+        assetsChanged = true
+      
+      if remainingAssetsCount is 0 and referenceSelection
+        _.pull assets, referenceSelection
+        assetsChanged = true
+      
+      return unless assetsChanged
       
       Tracker.nonreactive => PAA.Challenges.Drawing.PixelArtLineArt.state 'assets', assets
 

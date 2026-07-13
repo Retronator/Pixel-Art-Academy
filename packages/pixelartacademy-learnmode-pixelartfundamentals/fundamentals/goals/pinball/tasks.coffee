@@ -54,7 +54,7 @@ class Goal.DrawBall extends Goal.AssetsTask
   
   Task = @
   
-  class @RedrawBall extends PAA.PixelPad.Systems.Instructions.Instruction
+  class @RedrawBall extends PAA.Pixeltosh.Instructions.Instruction
     @id: -> "#{Task.id()}.RedrawBall"
     
     @message: -> """

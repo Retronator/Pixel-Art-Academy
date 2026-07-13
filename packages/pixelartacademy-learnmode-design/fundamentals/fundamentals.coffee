@@ -32,7 +32,7 @@ class LM.Design.Fundamentals extends LM.Chapter
     
     # Create the invasion project when it is enabled.
     @_createInvasionProjectAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless LM.Design.invasionEnabled()
       return if PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
       

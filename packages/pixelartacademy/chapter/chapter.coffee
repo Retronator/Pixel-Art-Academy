@@ -30,7 +30,7 @@ class PAA.Chapter extends LOI.Adventure.Chapter
 
     # Listen to all active automatic tasks.
     @_automaticTasksAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
 
       for task in automaticTasks when task.active()
         if task.completedConditions()

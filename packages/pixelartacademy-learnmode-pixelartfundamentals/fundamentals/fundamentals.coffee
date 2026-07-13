@@ -39,7 +39,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     
     # Create the pinball project when the application is enabled.
     @_createPinballProjectAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless LM.PixelArtFundamentals.pinballEnabled()
       return if Pinball.Project.state 'activeProjectId'
       
@@ -47,7 +47,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
 
     # Create the chess projects when the content is unlocked.
     @_createChess2DProjectAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless LM.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.getAdventureInstance().status() is LM.Content.Status.Unlocked
       return if Chess.Project.TwoDimensional.state 'activeProjectId'
       
@@ -55,7 +55,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     
     # Create assets for the pieces the player owns.
     @_createChessAssetsAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return unless projectId = Chess.Project.TwoDimensional.state 'activeProjectId'
       return unless project = PAA.Practice.Project.documents.findOne projectId
       return unless ownedPieceTypeCounts = Chess.state 'ownedPieceTypeCounts'

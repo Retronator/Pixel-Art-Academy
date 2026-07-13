@@ -14,15 +14,22 @@ class LM.Intro.ChallengesDrawing extends LOI.Adventure.Scene
     
     # Add/remove the reference selection asset to the copy reference challenge.
     @_referenceSelectionAutorun = Tracker.autorun =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       assets = PAA.Challenges.Drawing.PixelArtSoftware.state('assets') or []
       
       remainingAssetsCount = PAA.Challenges.Drawing.PixelArtSoftware.remainingCopyReferenceClasses().length
       referenceSelectionId = PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.id()
       referenceSelection = _.find assets, (asset) => asset.id is referenceSelectionId
   
-      assets.unshift id: referenceSelectionId if remainingAssetsCount > 0 and not referenceSelection
-      _.pull assets, referenceSelection if remainingAssetsCount is 0 and referenceSelection
+      if remainingAssetsCount > 0 and not referenceSelection
+        assets.unshift id: referenceSelectionId
+        assetsChanged = true
+      
+      if remainingAssetsCount is 0 and referenceSelection
+        _.pull assets, referenceSelection
+        assetsChanged = true
+      
+      return unless assetsChanged
       
       Tracker.nonreactive => PAA.Challenges.Drawing.PixelArtSoftware.state 'assets', assets
 

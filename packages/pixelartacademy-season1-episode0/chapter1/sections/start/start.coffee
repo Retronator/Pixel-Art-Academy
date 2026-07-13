@@ -14,7 +14,7 @@ class C1.Start extends LOI.Adventure.Section
   @started: -> true
 
   @finished: ->
-    return unless LOI.adventure.gameState()
+    return unless LOI.adventure.gameStateAvailable()
 
     # Intro section is over when the player has left the terrace. Make sure we don't return undefined though.
     @state('leftTerrace') is true

@@ -58,7 +58,7 @@ class Chess.GameManager
 
     # Give the player the first currency if they have no pieces.
     Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       computation.stop()
       
       Chess.currency 1 unless Chess.ownedPiecesCount() or Chess.currency()
@@ -67,7 +67,7 @@ class Chess.GameManager
     @_missingAssetsAutorun = @chess.autorun (computation) =>
       return if @chess.os.interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
       
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       
       ownedPieceTypes = (pieceType for pieceType, count of Chess.ownedPieceTypeCounts() when count)
       @assertDrawnPieces ownedPieceTypes, Chess.Piece.Colors.White

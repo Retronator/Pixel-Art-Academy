@@ -29,7 +29,7 @@ class Chess.AudioManager
       computation.stop()
     
     @_soundsEnabledAutorun = @chess.autorun =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       
       @chess.audio.enabled Chess.audioBoard()
 
