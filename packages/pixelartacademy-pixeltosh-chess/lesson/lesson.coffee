@@ -65,9 +65,15 @@ class Chess.Lesson
   completedCount: -> @state('completedCount') or 0
   
   requiredPieceTypeCounts: ->
+    # You need as many white pieces as there are in the tutorial.
     whitePieces = @startingGameState().getPiecesOfColor Chess.Piece.Colors.White
     pieceTypeCounts = _.countBy whitePieces, (piece) => piece.type
     
+    # You need at least one of the pieces the opponent has, since otherwise we wouldn't have drawn that piece yet.
+    blackPieces = @startingGameState().getPiecesOfColor Chess.Piece.Colors.Black
+    pieceTypeCounts[piece.type] = 1 for piece in blackPieces when not pieceTypeCounts[piece.type]
+
+    # Add any extra pieces that can appear in the tutorial.
     for pieceType in @constructor.additionalRequiredPieces()
       pieceTypeCounts[pieceType] = (pieceTypeCounts[pieceType] or 0) + 1
     
