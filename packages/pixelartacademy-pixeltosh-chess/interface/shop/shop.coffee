@@ -57,10 +57,12 @@ class Chess.Interface.Shop extends PAA.Pixeltosh.Program.View
 
   onClickBuyButton: (event) ->
     piece = @currentData()
+
+    # Prevent purchasing more than the required amount with fast clicking.
+    ownedPieceTypeCounts = Chess.ownedPieceTypeCounts()
+    return if ownedPieceTypeCounts[piece.type] >= piece.requiredCount
     
     Chess.currency Chess.currency() - piece.value
-
-    ownedPieceTypeCounts = Chess.ownedPieceTypeCounts()
     ownedPieceTypeCounts[piece.type] = (ownedPieceTypeCounts[piece.type] or 0) + 1
     Chess.ownedPieceTypeCounts ownedPieceTypeCounts
 
