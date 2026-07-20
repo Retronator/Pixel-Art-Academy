@@ -103,6 +103,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       
       @deactivate()
       
+    # Automatically deactivate if the editor deactivates.
+    @autorun (computation) =>
+      return if @desktop.active()
+      
+      @deactivate()
+      
   onBackButton: ->
     return unless currentPublication = @currentPublication()
     currentPublication.component.back()

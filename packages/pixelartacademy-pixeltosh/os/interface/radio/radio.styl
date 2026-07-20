@@ -1,0 +1,20 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-radio
+  .type-input
+    display none
+
+    &:checked ~ .radio
+      background-image image('/pixelartacademy/pixeltosh/os/radio-checked.png')
+
+  .radio
+    display inline-block
+    position relative
+    vertical-align baseline
+    top 2rem
+    width 9rem
+    height 9rem
+    background-image image('/pixelartacademy/pixeltosh/os/radio.png')
+
+    .dark-interface &
+      filter invert(1)

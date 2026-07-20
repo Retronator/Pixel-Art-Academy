@@ -10,7 +10,12 @@ class PAA.Publication.Pages.Admin.Publications extends Artificial.Mummification.
     super
       documentClass: PAA.Publication
       adminComponentClass: PAA.Publication.Pages.Admin.Publications.Publication
-      nameField: 'referenceId'
+      sortField: 'referenceId'
+      nameFunction: (publication) =>
+        return publication._id unless publication.referenceId
+        parts = publication.referenceId.split('.')
+        publicationsPartIndex = _.indexOf parts, 'Publications'
+        parts[publicationsPartIndex + 1..].join ' '
       singularName: 'publication'
       pluralName: 'publications'
       

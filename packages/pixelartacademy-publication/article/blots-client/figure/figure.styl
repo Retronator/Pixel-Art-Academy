@@ -2,8 +2,8 @@
 
 .pixelartacademy-publication-article-figure
   white-space normal
-  margin 0
-  padding 7rem 0
+  margin 0 auto 7rem
+  padding-top 7rem
   width 100%
   break-inside avoid
 
@@ -19,11 +19,35 @@
   &:has(.third-width)
     width 33%
 
+  &:has(.width-40)
+    width 40%
+
+  &:has(.width-45)
+    width 45%
+
   &:has(.half-width)
     width 50%
 
+  &:has(.width-55)
+    width 55%
+
+  &:has(.width-60)
+    width 60%
+
   &:has(.two-thirds-width)
     width 66%
+
+  &:has(.inline)
+    display inline-block
+
+  &:has(.margin-bottom-10)
+    margin-bottom 10rem
+
+  &:has(.margin-bottom-15)
+    margin-bottom 15rem
+
+  &:has(.margin-bottom-20)
+    margin-bottom 20rem
 
   .elements
     width 100%
@@ -56,6 +80,7 @@
     padding 5rem 3rem 3rem
     text-align center
     line-height 8rem
+    text-wrap balance
 
     textarea
       width 100%

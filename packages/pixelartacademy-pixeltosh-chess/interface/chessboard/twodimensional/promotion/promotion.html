@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Promotion">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-promotion" data-cursor="default">
+    <div class="promotion pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="prompt">Promote pawn to</div>
+      <ul class="pieces">
+        {{#each pieces}}
+          <li class="piece">
+            {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Piece this}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

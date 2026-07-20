@@ -25,11 +25,15 @@ Package.onUse(function(api) {
 
   // Interface needs to be added before programs.
   api.addFile('os/interface..');
+  api.addComponent('os/interface/errordialog..');
   api.addComponent('os/interface/cursor..');
   api.addComponent('os/interface/titlebar..');
   api.addComponent('os/interface/window..');
   api.addStyle('os/interface/rectanglearea..');
   api.addStyle('os/interface/button..');
+  api.addComponent('os/interface/scrollablearea..');
+  api.addStyle('os/interface/radio..');
+  api.addStyle('os/interface/segmentedcontrol..');
 
   api.addFile('os/interface/actions..');
   api.addFile('os/interface/actions/action');

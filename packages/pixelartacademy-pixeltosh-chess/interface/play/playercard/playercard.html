@@ -1,0 +1,22 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Play.PlayerCard">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-play-playercard">
+    <div class="king">
+      {{#with kingPiece}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Piece}}
+      {{/with}}
+    </div>
+    <div class="details">
+      <div class="name">{{name}}</div>
+      <div class="captured-pieces">
+        {{#each capturedPieces}}
+          <div class="captured-piece" {{style this.style}}>
+            {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Piece piece}}
+          </div>
+        {{/each}}
+        {{#if materialDifferenceText}}
+          <span class="material-difference">{{materialDifferenceText}}</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

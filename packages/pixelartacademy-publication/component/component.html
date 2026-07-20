@@ -11,7 +11,9 @@
         {{#with publication}}
           <div class="publication-area" {{style publicationAreaStyle}}>
             <div class="publication {{pageClasses}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
-              <div class="running-header"></div>
+              <div class="running-header">
+                {{> PixelArtAcademy.Publication.Component.Header}}
+              </div>
               {{#with activeContentItem}}
                 <div class="read-only contents-area">
                   <div class="contents" {{style contentsStyle}}>

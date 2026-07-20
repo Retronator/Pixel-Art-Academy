@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.BoardDisplayChoice">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-boarddisplaychoice">
+    <div class="window pixelartacademy-pixeltosh-chess pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="title">Choose board style</div>
+      <div class="options">
+        {{#each options}}
+          <div class="option {{boardDisplayTypeClass}} {{activeClass}}">
+            <button class="option-button">
+              <span class="preview"></span>
+            </button>
+            <span class="label">{{label}}</span>
+          </div>
+        {{/each}}
+      </div>
+      <div class="actions">
+        <button class="done-button pixelartacademy-pixeltosh-os-interface-button" {{doneButtonDisabledAttribute}}>Done</button>
+      </div>
+    </div>
+  </div>
+</template>

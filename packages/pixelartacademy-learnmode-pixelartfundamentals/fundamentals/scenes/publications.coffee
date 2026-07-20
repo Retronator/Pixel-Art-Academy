@@ -13,18 +13,23 @@ class LM.PixelArtFundamentals.Fundamentals.Publications extends LOI.Adventure.Sc
     publications = []
     publicationParts = []
     
-    activePinballProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    activeProjectIds = [
+      PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+      PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.state 'activeProjectId'
+      PAA.Pixeltosh.Programs.Chess.Project.ThreeDimensional.state 'activeProjectId'
+    ]
 
-    if activePinballProjectId
-      if pinballProject = PAA.Practice.Project.documents.findOne activePinballProjectId
-        for asset in pinballProject.assets
-          assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
-          
-          if unlockedPublications = assetClass.unlockedPublications?()
-            publications.push unlockedPublications...
-          
-          if unlockedPublicationParts = assetClass.unlockedPublicationParts?()
-            publicationParts.push unlockedPublicationParts...
+    for activeProjectId in activeProjectIds when activeProjectId
+      continue unless project = PAA.Practice.Project.documents.findOne activeProjectId
+
+      for asset in project.assets
+        assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+
+        if unlockedPublications = assetClass.unlockedPublications?()
+          publications = _.union publications, unlockedPublications
+
+        if unlockedPublicationParts = assetClass.unlockedPublicationParts?()
+          publicationParts = _.union publicationParts, unlockedPublicationParts
     
     {publications, publicationParts}
 

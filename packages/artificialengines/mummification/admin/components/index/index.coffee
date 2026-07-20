@@ -28,8 +28,11 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
   showRemoveButton: -> @options.documentClass.remove and AB.Router.getParameter 'documentId'
 
   documents: ->
-    sort = _id: 1
-    sort[@options.nameField] = 1
+    if @options.sortField
+      sort = "#{@options.sortField}": 1
+      
+    else
+      sort = _id: 1
 
     @options.documentClass.documents.find {},
       sort: sort

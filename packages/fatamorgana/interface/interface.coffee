@@ -101,12 +101,33 @@ class FM.Interface extends AM.Component
       removed: (file) =>
         @_loaders[file.id].destroy()
         delete @_loaders[file.id]
+        @_destroyHelperInstancesForFile file.id
         @_loadersUpdatedDependency.changed()
+        
+    # Sort windows.
+    @sortedWindowIds = new ComputedField =>
+      windowsData = @currentLayoutData().child 'windows'
+      return [] unless windows = windowsData.value()
+      
+      sortedWindows = _.orderBy _.values(windows), [((window) => Boolean window.alwaysOnTop), 'order']
+      window.id for window in sortedWindows
+    ,
+      EJSON.equals
 
   onDestroyed: ->
     super arguments...
 
     @data.destroy()
+    
+    dialogData.destroy() for dialogData in @dialogs()
+  
+    helperInstance.destroy() for helperId, helperInstance of @_helperInstances
+  
+    for fileId, helperInstances of @_helperForFileInstances
+      helperInstance.destroy() for helperId, helperInstance of helperInstances
+    
+    loader.destroy() for fileId, loader of @_loaders
+    
     @files.stop()
 
   getComponentData: (componentClassOrId) ->
@@ -184,6 +205,12 @@ class FM.Interface extends AM.Component
 
     @_helperForFileInstances[fileId][helperId]
 
+  _destroyHelperInstancesForFile: (fileId) ->
+    return unless helperInstances = @_helperForFileInstances[fileId]
+    
+    helperInstance.destroy() for helperId, helperInstance of helperInstances
+    delete @_helperForFileInstances[fileId]
+
   getHelperForActiveFile: (helperClassOrId) ->
     fileId = @activeFileId()
     return unless fileId?
@@ -198,50 +225,55 @@ class FM.Interface extends AM.Component
     @getLoaderForFile @activeFileId()
 
   displayDialog: (dialog) ->
-    # Wrap the plain object into data for compatibility.
-    dialogData = new FM.Interface.Data load: => dialog
-
-    # Add ID to minimize reactivity.
-    dialogData._id ?= Random.id()
-
-    dialogs = @dialogs()
-    dialogs.push dialogData
-    @dialogs dialogs
+    Tracker.nonreactive =>
+      # Wrap the plain object into data for compatibility.
+      dialogData = new FM.Interface.Data load: => dialog
+  
+      # Add ID to minimize reactivity.
+      dialogData._id ?= Random.id()
+  
+      dialogs = @dialogs()
+      dialogs.push dialogData
+      @dialogs dialogs
 
   closeDialog: (dialog) ->
-    dialogs = @dialogs()
-    _.pull dialogs, dialog
-    @dialogs dialogs
+    Tracker.nonreactive =>
+      dialogs = @dialogs()
+
+      _.pull dialogs, dialog
+      dialog.destroy()
+
+      @dialogs dialogs
     
   addWindow: (window) ->
-    windowsData = @currentLayoutData().child 'windows'
-
-    windows = windowsData.value() or {}
-    window.id ?= Random.id()
-    windows[window.id] = window
-
-    windowsData.value windows
-    
-    window.id
+    Tracker.nonreactive =>
+      windowsData = @currentLayoutData().child 'windows'
+  
+      windows = windowsData.value() or {}
+      window.id ?= Random.id()
+      windows[window.id] = window
+  
+      windowsData.value windows
+      
+      window.id
     
   removeWindow: (id) ->
-    windowsData = @currentLayoutData().child 'windows'
-    
-    windows = windowsData.value() or {}
-    delete windows[id]
-    
-    windowsData.value windows
+    Tracker.nonreactive =>
+      windowsData = @currentLayoutData().child 'windows'
+      
+      windows = windowsData.value() or {}
+      delete windows[id]
+      
+      windowsData.value windows
+      windowsData.destroyChild id
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'
-    return unless windows = windowsData.value()
-    
-    sortedWindows = _.orderBy _.values(windows), ['alwaysOnTop', 'order']
     
     # Create child data objects to send as data.
-    for window in sortedWindows
-      windowData = windowsData.child window.id
-      windowData._id = window.id
+    for windowId in @sortedWindowIds()
+      windowData = windowsData.child windowId
+      windowData._id = windowId
       windowData
   
   overlays: ->

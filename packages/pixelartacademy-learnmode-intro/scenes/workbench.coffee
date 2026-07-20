@@ -19,8 +19,9 @@ class LM.Intro.Workbench extends LOI.Adventure.Scene
 
     if LM.Intro.Tutorial.Goals.Snake.available()
       if projectId = PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
-        @_snake?.destroy()
-        @_snake = new PAA.Pico8.Cartridges.Snake.Project projectId
+        if @_snake?.projecId isnt projectId
+          @_snake?.destroy()
+          @_snake = Tracker.nonreactive => new PAA.Pico8.Cartridges.Snake.Project projectId
   
         things.push @_snake
 

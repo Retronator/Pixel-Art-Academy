@@ -1,0 +1,21 @@
+64 Squares Art of the Board Cover
+6 4Squares
+Special Edition
+
+The Art of the Board
+History. Design. Elegance. Timeless quest for perfection.
+Get to know chess in its most aesthetic form.
+
+Chessmen Through Time Before and after Staunton
+Chess in Print From Da Vinci to the Internet
+The 8-bit Revolution Chess on the home computer
+
+Axial Symmetry
+
+Proportion Study
+
+Bishop Variants
+
+Cross sections
+
+{"_id":"dmFtGL5N9eHskxhLk","lastEditTime":{"$date":1781880430466},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.SixtyFourSquares.ArtOfTheBoard.Cover","title":"64 Squares Art of the Board Cover","design":{"class":""},"article":[{"attributes":{"italic":true},"insert":"6 4"},{"insert":"Squares"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":"Special Edition"},{"attributes":{"publication-header-heading":2},"insert":"\n"},{"insert":"\nThe Art of the Board"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-specialeditiontitle"},"insert":"\n"},{"attributes":{"bold":true},"insert":"History. Design. Elegance. Timeless quest for perfection."},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-specialeditiondescription"},"insert":"\n"},{"insert":"Get to know chess in its most aesthetic form."},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-specialeditiondescription"},"insert":"\n"},{"insert":"\n"},{"attributes":{"bold":true},"insert":"Chessmen Through Time"},{"insert":" Before and after Staunton"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-article sixtyfoursquares-cover-article-1"},"insert":"\n"},{"attributes":{"bold":true},"insert":"Chess in Print"},{"insert":" From Da Vinci to the Internet"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-article sixtyfoursquares-cover-article-2"},"insert":"\n"},{"attributes":{"bold":true},"insert":"The 8-bit Revolution"},{"insert":" Chess on the home computer"},{"insert":"\n","attributes":{"publication-customclass":"sixtyfoursquares-cover-article sixtyfoursquares-cover-article-3"}},{"insert":"\nAxial Symmetry"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-line sixtyfoursquares-cover-line-1"},"insert":"\n"},{"insert":"\nProportion Study"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-line sixtyfoursquares-cover-line-2"},"insert":"\n"},{"insert":"\nBishop Variants"},{"attributes":{"publication-customclass":"sixtyfoursquares-cover-line sixtyfoursquares-cover-line-3"},"insert":"\n"},{"insert":"\nCross sections"},{"insert":"\n","attributes":{"publication-customclass":"sixtyfoursquares-cover-line sixtyfoursquares-cover-line-4"}}]}

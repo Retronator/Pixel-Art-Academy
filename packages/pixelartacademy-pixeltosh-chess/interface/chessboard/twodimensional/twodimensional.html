@@ -1,0 +1,27 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional">
+    <div class="board {{themeClass}} {{flippedClass}}">
+      <div class="squares">
+        {{#each squares}}
+          {{#each this}}
+            {{> Render this}}
+          {{/each}}
+        {{/each}}
+      </div>
+      {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Markup}}
+      <div class="coordinates {{coordinatesVisibleClass}}">
+        <div class="files">
+          <div class="top border"></div>
+          <div class="bottom border"></div>
+        </div>
+        <div class="ranks">
+          <div class="left border"></div>
+          <div class="right border"></div>
+        </div>
+      </div>
+    </div>
+    {{#with promotionInfo}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Chessboard.TwoDimensional.Promotion}}
+    {{/with}}
+  </div>
+</template>

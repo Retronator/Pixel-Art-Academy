@@ -118,39 +118,49 @@ class PADB.Components.Stream.Artwork extends AM.Component
 
     # Calculate how much the image should be upscaled.
     desiredImageScale = 1
-    sourceWidth = image.naturalWidth / imageScale
-    sourceHeight = image.naturalHeight / imageScale
+    sourceWidth = image.naturalWidth / imageScale.horizontal
+    sourceHeight = image.naturalHeight / imageScale.vertical
 
     # Depend on window size changes.
     clientBounds = AM.Window.clientBounds()
     clientHeight = clientBounds.height()
     $artworkFrame = @$('.artwork-frame')
     artworkFrameWidth = $artworkFrame.width()
-    artworkFrameHeight = $artworkFrame.width()
+    maxFullyVisibleHeight = clientHeight * 0.8
 
     # Increase desired image until we reach certain limits.
     loop
       # Don't go over scale of 2 if we'd cover more than the screen height.
       nextDisplayHeight = sourceHeight * (desiredImageScale + 1)
-      break if desiredImageScale >= 2 and nextDisplayHeight > clientHeight
+      if desiredImageScale >= 2 and nextDisplayHeight > maxFullyVisibleHeight
+        desiredVerticalImageScale = desiredImageScale
+        break
 
       # Don't increase scale if we've covered at least half the artwork frame width.
       displayWidth = sourceWidth * desiredImageScale
-      break if displayWidth > artworkFrameWidth * 0.5
+      if displayWidth > artworkFrameWidth * 0.5
+        desiredHorizontalImageScale = desiredImageScale
+        break
       
       # Don't increase scale if we've reached 8x and we've covered at least a third of the artwork frame height.
       displayHeight = sourceHeight * desiredImageScale
-      break if desiredImageScale >= 8 and displayHeight > artworkFrameHeight * 0.33
+      if desiredImageScale >= 8 and displayHeight > clientHeight * 0.33
+        desiredVerticalImageScale = desiredImageScale
+        break
 
       # No limits were reached, increase scale.
       desiredImageScale++
 
     # Don't let the image be bigger than the frame.
-    if sourceWidth * desiredImageScale > artworkFrameWidth
-      desiredImageScale = artworkFrameWidth / sourceWidth
+    if desiredHorizontalImageScale
+      if sourceWidth * desiredImageScale > artworkFrameWidth
+        desiredHorizontalImageScale = artworkFrameWidth / sourceWidth
 
-    # Calculate how much to actually scale the image since the source image already has a certain scale built-in.
-    cssScale = desiredImageScale / imageScale
+      # Calculate how much to actually scale the image since the source image already has a certain scale built-in.
+      cssScale = desiredHorizontalImageScale / imageScale.horizontal
+      
+    else
+      cssScale = desiredVerticalImageScale / imageScale.vertical
 
     # Output the size.
     width: image.naturalWidth * cssScale

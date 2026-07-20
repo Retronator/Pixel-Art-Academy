@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.Pixeltosh.OS.Interface.ErrorDialog">
+  <div class="pixelartacademy-pixeltosh-os-interface-errordialog">
+    <div class="dialog pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="bomb"></div>
+      <div class="text">
+        <div class="error">Sorry, a system error occurred.</div>
+        <div class="reason">{{{reason}}}</div>
+        <div class="details">{{{details}}}</div>
+      </div>
+      <div class="actions">
+        {{#if shutDownProgramId}}
+          <button class="shut-down-button pixelartacademy-pixeltosh-os-interface-button">Shut Down</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

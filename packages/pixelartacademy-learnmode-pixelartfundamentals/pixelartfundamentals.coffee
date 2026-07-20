@@ -44,6 +44,14 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
     
     PAA.Tutorials.Drawing.Simplification.completed()
 
+  @chessEnabled: ->
+    # Allow cheating.
+    return true if LM.PixelArtFundamentals.state 'chessUnlocked'
+    
+    return false unless LM.PixelArtFundamentals.Fundamentals.Goals.Chess.activeOrCompleted()
+    
+    LM.PixelArtFundamentals.Fundamentals.Goals.Size.completed()
+
 if Meteor.isServer
   LOI.initializePackage
     id: 'retronator_pixelartacademy-learnmode-pixelartfundamentals'

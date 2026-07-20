@@ -24,6 +24,7 @@ Package.onUse(function(api) {
   api.addFile('methods');
   api.addFile('subscriptions');
   api.addFile('location');
+  api.addFile('header');
 
   api.addFile('part..');
   api.addFile('part/methods');
@@ -36,11 +37,12 @@ Package.onUse(function(api) {
 
   api.addComponent('component..');
   api.addClientComponent('component/article-client/article');
+  api.addClientComponent('component/header-client/header');
 
   api.addFile('article..');
 
   api.addClientFile('article/blots-client/header..');
-  api.addClientFile('article/blots-client/customclass..');
+  api.addStyledClientFile('article/blots-client/customclass..');
   api.addClientUnstyledComponent('article/blots-client/tableofcontents..');
 
   api.addClientComponent('article/blots-client/figure..');
@@ -56,4 +58,5 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/admin/publications..');
   api.addComponent('pages/admin/publications/publication');
+  api.addClientComponent('pages/admin/publications/header-client/header');
 });

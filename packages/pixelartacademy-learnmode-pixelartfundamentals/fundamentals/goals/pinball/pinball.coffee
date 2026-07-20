@@ -73,6 +73,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
       @_historyPositionOnActive = bitmap.historyPosition
       
     completedConditions: ->
+      return unless @active()
       return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
       return unless project = PAA.Practice.Project.documents.findOne activeProjectId
       
@@ -80,6 +81,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
       return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
       
       # Wait until the history position has changed.
+      return unless @_historyPositionOnActive?
       bitmap.historyPosition isnt @_historyPositionOnActive
   
   class @WIPNotification extends PAA.PixelPad.Systems.Notifications.Notification

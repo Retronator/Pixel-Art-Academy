@@ -1,0 +1,32 @@
+<template name="PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea">
+  <div class="pixelartacademy-pixeltosh-os-interface-scrollablearea">
+    <div class="content-area">
+      <div class="content" {{style contentStyle}}>
+        {{> Template.contentBlock}}
+      </div>
+    </div>
+    {{#if verticalScrollbarVisible}}
+      <div class="vertical-scrollbar {{verticalScrollbarActiveClass}} {{verticalScrollbarDraggingClass}}">
+        {{#if verticalScrollbarEnabled}}
+          <button class="up arrow" {{verticalScrollbarArrowDisabledAttribute}}></button>
+          <div class="position" {{style verticalScrollbarPositionStyle}}></div>
+          <div class="position-move-indicator" {{style verticalScrollbarPositionMoveIndicatorStyle}}></div>
+          <button class="down arrow" {{verticalScrollbarArrowDisabledAttribute}}></button>
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if horizontalScrollbarVisible}}
+      <div class="horizontal-scrollbar {{horizontalScrollbarActiveClass}} {{horizontalScrollbarDraggingClass}}">
+        {{#if horizontalScrollbarEnabled}}
+          <button class="left arrow" {{horizontalScrollbarArrowDisabledAttribute}}></button>
+          <div class="position" {{style horizontalScrollbarPositionStyle}}></div>
+          <div class="position-move-indicator" {{style horizontalScrollbarPositionMoveIndicatorStyle}}></div>
+          <button class="right arrow" {{horizontalScrollbarArrowDisabledAttribute}}></button>
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if resizeControlVisible}}
+      <div class="resize-control"></div>
+    {{/if}}
+  </div>
+</template>

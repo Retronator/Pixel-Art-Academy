@@ -29,7 +29,7 @@ class LM.Intro.Tutorial extends LM.Chapter
 
     # Add intro goals to the Study Plan app.
     @_initializeStudyPlanAutorun = Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
       return if PAA.PixelPad.Apps.StudyPlan.state 'goals'
       
       toDoTasksId = LM.Intro.Tutorial.Goals.ToDoTasks.id()
@@ -58,9 +58,10 @@ class LM.Intro.Tutorial extends LM.Chapter
       return if PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
       return if @snakeDrawTask.completed()
 
-      PAA.Pico8.Cartridges.Snake.Project.start().then =>
-        # Reset high score to force replay.
-        PAA.Pico8.Cartridges.Snake.state 'highScore', 0
+      await PAA.Pico8.Cartridges.Snake.Project.start()
+      
+      # Reset high score to force replay.
+      PAA.Pico8.Cartridges.Snake.state 'highScore', 0
 
   destroy: ->
     super arguments...

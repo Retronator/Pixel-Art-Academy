@@ -60,7 +60,7 @@ class LOI.Assets.Bitmap.Area
     # See if the pixel exists.
     return unless flags = @attributes.flags.getPixel x, y
     
-    pixel = {}
+    pixel = {x, y}
 
     for attributeId in @pixelFormat.attributeIds
       # If the attribute has a flag value, make sure the flag is present for this pixel.
@@ -71,11 +71,23 @@ class LOI.Assets.Bitmap.Area
 
     pixel
 
+  hasPixel: (x, y) ->
+    # Make sure the pixel is in bounds.
+    return false unless 0 <= x < @width and 0 <= y < @height
+
+    # If there are flags, we know if the pixel exists directly.
+    return @attributes.flags.getPixel x, y if @attributes.flags
+    
+    # We don't have flags, so we have to rely on the alpha channel, otherwise all pixels are considered to exist.
+    return true unless alphaAttribute = @attributes[LOI.Assets.Bitmap.Attribute.Ids.Alpha]
+    
+    alphaAttribute.getPixel x, y
+
   getPixelValues: (x, y) ->
     # Make sure the pixel is in bounds.
     return unless 0 <= x < @width and 0 <= y < @height
   
-    pixel = {}
+    pixel = {x, y}
   
     for attributeId in @pixelFormat.attributeIds
       pixel[attributeId] = @attributes[attributeId].getPixel x, y

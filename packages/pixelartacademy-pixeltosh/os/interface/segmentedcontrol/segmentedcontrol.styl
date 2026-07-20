@@ -1,0 +1,27 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-segmentedcontrol
+  display inline-flex
+  position relative
+  border 1rem solid black
+  border-image image('/pixelartacademy/pixeltosh/os/segmentedcontrol-border.png') 2 fill / 2rem
+  geneva-mini()
+  color black
+
+  .dark-interface &
+    filter invert(1)
+
+  .segment
+    display block
+    box-sizing content-box
+    padding 1rem 3rem 0
+    background none
+    border none
+    font inherit
+
+    &:not(:first-child)
+      border-left 1rem solid black
+
+    &.selected
+      color white
+      background-color black

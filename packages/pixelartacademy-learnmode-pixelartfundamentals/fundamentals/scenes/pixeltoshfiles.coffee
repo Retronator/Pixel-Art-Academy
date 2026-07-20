@@ -56,6 +56,22 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
       
     drawQuciklyEnabled = LM.PixelArtFundamentals.drawQuicklyEnabled()
     
+    unless @_chessDisk
+      @_chessDisk = new PAA.Pixeltosh.OS.FileSystem.File
+        id: "#{PAA.Pixeltosh.Programs.Chess.id()}.Disk"
+        path: 'Chess Academy'
+        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+      
+      @_chessDisk.options.disk = @_chessDisk
+    
+    @_chessProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
+      id: PAA.Pixeltosh.Programs.Chess.id()
+      path: 'Chess Academy/Chess Academy'
+      type: PAA.Pixeltosh.Programs.Chess
+      disk: @_chessDisk
+    
+    chessEnabled = LM.PixelArtFundamentals.chessEnabled()
+    
     [
       @_pinballDisk if pinballEnabled
       @_pinballProgram if pinballEnabled
@@ -63,4 +79,6 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
       @_moonShot if pinballEnabled
       @_drawQuicklyDisk if drawQuciklyEnabled
       @_drawQuciklyProgram if drawQuciklyEnabled
+      @_chessDisk if chessEnabled
+      @_chessProgram if chessEnabled
     ]

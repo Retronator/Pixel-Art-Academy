@@ -1,0 +1,86 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-square
+  position relative
+  width 20rem
+  height 20rem
+  background-color white
+
+  &.selected::before
+  &.legal-move::before
+    content ''
+    position absolute
+    inset -1rem
+    background-position 1rem 1rem
+    background-size 20rem 20rem
+    background-repeat no-repeat
+    z-index 1
+
+  &.dark
+    background-color black
+
+  .newspaper.board &
+    &.dark
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-darksquare.png')
+
+    &.selected::before
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-selected.png')
+
+    &.legal-move
+      &::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-legalmove.png')
+
+      &:has(.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional-piece)::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-legalmove-piece.png')
+
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-newspaper-legalmove-hover.png')
+
+  .light.board &
+    &.dark
+      background image('/pixelartacademy/pixeltosh/os/dither.png') 0 0 / 2rem 2rem
+
+    &.selected::before
+      background-color black
+
+    &.legal-move
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-light-legalmove-hover.png')
+
+      &::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-light-legalmove.png')
+
+  .contrast.board &
+    &.selected::before
+      background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-selected.png')
+
+    &.legal-move
+      &::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-legalmove.png')
+
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-legalmove-hover.png')
+
+      &.dark
+        &:hover::before
+          background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-legalmove-darksquare-hover.png')
+
+        &::before
+          background-image image('/pixelartacademy/pixeltosh/programs/chess/square-contrast-legalmove-darksquare.png')
+
+  .dark.board &
+    background image('/pixelartacademy/pixeltosh/os/dither.png') 0 0 / 2rem 2rem
+
+    &.dark
+      background black
+
+    &.selected::before
+      background white
+      border 2rem solid black
+
+    &.legal-move
+      &::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-dark-legalmove.png')
+
+      &:hover::before
+        background-image image('/pixelartacademy/pixeltosh/programs/chess/square-dark-legalmove-hover.png')

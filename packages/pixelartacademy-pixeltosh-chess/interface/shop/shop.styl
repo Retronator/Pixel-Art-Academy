@@ -1,0 +1,42 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-shop
+  position absolute
+  top 114rem
+  left 160rem
+  transform translate(-50%, -50%)
+  padding 6rem 6rem 6rem 12rem
+  display grid
+  grid-template-columns max-content max-content max-content max-content
+  grid-template-rows repeat(6, 19rem) 22rem
+
+  .pieces
+    display contents
+
+    .piece
+      display contents
+
+      .name
+        padding 4rem 12rem 0 0
+        chicago-mini()
+
+      .price
+        padding 5rem 14rem 0 0
+
+      .owned
+        padding 5rem 8rem 0 0
+
+      .purchase
+        text-align center
+
+  .player-status
+    display contents
+
+    .available
+    .currency
+      padding-top 9rem
+
+  .actions
+    text-align center
+    grid-column 4
+    padding-top 5rem

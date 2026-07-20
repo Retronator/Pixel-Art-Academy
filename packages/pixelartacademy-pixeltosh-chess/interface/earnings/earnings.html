@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Earnings">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-earnings pixelartacademy-pixeltosh-chess pixelartacademy-pixeltosh-os-interface-rectanglearea">
+    <div class="title">Earned</div>
+    <ol class="rewards">
+      {{#each pendingRewards}}
+        <li class="reward">
+          <span class="name">{{reward.displayName}}</span>
+          <span class="value currency">{{reward.value data}}</span>
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+</template>

@@ -64,6 +64,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".styl"]);
   };
+  api.constructor.prototype.addStyledClientFile = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + ".styl"], ['client']);
+  };
   api.constructor.prototype.addStyleImport = function(path) {
     path = expandPath(path);
     this.addFiles(path + ".import.styl", ['client'], {isImport: true});

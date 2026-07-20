@@ -29,6 +29,8 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     variables:
       playing: AEc.ValueTypes.Boolean
       seeking: AEc.ValueTypes.Boolean
+    
+  @currentTime = @state.field 'currentTime', lazyUpdates: true
   
   onCreated: ->
     super arguments...
@@ -47,8 +49,6 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
       PAA.Music.Tape.documents.findOne tapeId
     
     # Current time tracks the current song's progress in seconds. We use lazy updates to minimize state reactivity.
-    @currentTime = @state.field 'currentTime', lazyUpdates: true
-    
     @sides = new ComputedField => @tape()?.getSidesWithTapeProgress()
     
     # Tape progress tracks the dimensionless progress along this side of the tape.
@@ -76,7 +76,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
         
         @_currentTrack = new PAA.Music.Track LOI.adventure.audioManager, trackInfo.title, tape.artist, trackInfo.url, tape.gain
 
-        currentTime = @currentTime()
+        currentTime = @constructor.currentTime()
         @_currentTrack.setCurrentTime currentTime if currentTime
 
         @_startTime = sides[sideIndex].tracks[trackIndex].startTime
@@ -211,7 +211,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
       
     else
       currentTime = @_currentTrack.currentTime()
-      @currentTime currentTime
+      @constructor.currentTime currentTime
 
       tapeProgressDuration = @_startTime + currentTime
       @tapeProgress PAA.Music.Tape.durationToTapeProgress tapeProgressDuration

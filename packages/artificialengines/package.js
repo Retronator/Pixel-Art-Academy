@@ -331,6 +331,7 @@ Package.onUse(function(api) {
 
   api.addFile('program/search..');
   api.addFile('program/search/breadthfirstsearch');
+  api.addFile('program/search/dijkstra');
 
   // Artificial Pyramid
   api.addGlsl('pyramid/trigonometry');

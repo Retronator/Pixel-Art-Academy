@@ -25,6 +25,7 @@ class PAA.Pixeltosh.Program extends LOI.Adventure.Thing
     super arguments...
     
     @loaded = new ReactiveField()
+    @audio = @constructor.Audio?.variables
   
   iconUrl: -> @constructor.iconUrl()
   
@@ -32,10 +33,15 @@ class PAA.Pixeltosh.Program extends LOI.Adventure.Thing
     # Extend to perform any logic on startup.
     @loaded true
   
+    if LOI.adventure?.audioManager
+      @constructor.Audio?.load LOI.adventure.audioManager
+    
   unload: ->
     # Extend to perform any cleanup.
     @loaded false
   
+    @constructor.Audio?.unload()
+
   menuItems: -> [] # Override to supply the data used to display the menu when this program is active.
 
   shortcuts: -> {} # Override to supply shortcuts to use when this program is active.

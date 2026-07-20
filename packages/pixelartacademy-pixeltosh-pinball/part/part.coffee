@@ -6,7 +6,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Part extends LOI.Adventure.Item
+class Pinball.Part extends LOI.Adventure.Thing
   @_partClasses = {}
 
   @initialize: ->

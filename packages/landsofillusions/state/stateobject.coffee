@@ -6,15 +6,37 @@ class LOI.StateObject
     options.stateType ?= LOI.GameState.Type.Editable
 
     stateFields = {}
+    stateFieldsWithOptions = {}
 
-    fieldGetter = (fieldName, getterOptions = {}) ->
-      # We want to create a new internal state field that we'll depend upon to isolate reactivity.
-      unless stateFields[fieldName]
-        stateFields[fieldName] = new LOI.StateField _.extend getterOptions,
+    fieldGetter = (fieldName, getterOptions) ->
+      if getterOptions
+        stateFieldsWithOptions[fieldName] ?= [
+          options: getterOptions
+          field: new LOI.StateField _.extend getterOptions,
+            address: options.address.child fieldName
+            stateType: options.stateType
+        ]
+
+        existingField = _.find stateFieldsWithOptions[fieldName], (fieldWithOptions) => EJSON.equals fieldWithOptions.options, getterOptions
+        return existingField.field if existingField
+        
+        newField = new LOI.StateField _.extend {}, getterOptions,
+          address: options.address.child fieldName
+          stateType: options.stateType
+          
+        stateFieldsWithOptions[fieldName].push
+          options: getterOptions
+          field: newField
+          
+        newField
+        
+      else
+        # We want to create a new internal state field that we'll depend upon to isolate reactivity.
+        stateFields[fieldName] ?= new LOI.StateField
           address: options.address.child fieldName
           stateType: options.stateType
 
-      stateFields[fieldName]
+        stateFields[fieldName]
 
     # We want the state node to behave as getter/setter to which we pass a field name and new value.
     stateObject = (classOrFieldName, value) ->

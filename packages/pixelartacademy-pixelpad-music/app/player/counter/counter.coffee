@@ -34,7 +34,7 @@ class PAA.PixelPad.Apps.Music.Player.Counter extends LOI.Component
     
     @autorun (computation) =>
       return unless trackInfo = @trackInfo()
-      currentTime = PAA.PixelPad.Systems.Music.state 'currentTime'
+      currentTime = PAA.PixelPad.Systems.Music.currentTime()
       return unless currentTime?
       
       tapeProgress = PAA.Music.Tape.durationToTapeProgress trackInfo.startTime + currentTime

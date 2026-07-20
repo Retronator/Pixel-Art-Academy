@@ -1,0 +1,39 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-play-moveshistory
+  flex-grow 1
+  margin 4rem 0
+
+  .pixelartacademy-pixeltosh-os-interface-scrollablearea
+    height 100%
+    border 1rem solid black
+
+    .dark-interface &
+      border-color white
+
+    .vertical-scrollbar
+      bottom -1rem
+
+    .content-area
+      bottom 0
+
+    .resize-control
+      display none
+
+  .moves
+    margin 2rem 0
+    padding-left 22rem
+    small-print()
+
+    .move
+      .ply
+        float left
+        margin-left 6rem
+        width 24rem
+
+        &.active
+          text-decoration underline 1rem
+
+  .ending-status
+    text-align center
+    margin 4rem 0 2rem

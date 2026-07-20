@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Instructions
-  class @Instruction extends PAA.PixelPad.Systems.Instructions.Instruction
+  class @Instruction extends PAA.Pixeltosh.Instructions.Instruction
     @getPinball: ->
       return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
       program = os.activeProgram()

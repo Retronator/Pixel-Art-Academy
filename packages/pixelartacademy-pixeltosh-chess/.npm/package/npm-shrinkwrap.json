@@ -1,0 +1,10 @@
+{
+  "lockfileVersion": 1,
+  "dependencies": {
+    "js-chess-engine": {
+      "version": "2.4.6",
+      "resolved": "https://registry.npmjs.org/js-chess-engine/-/js-chess-engine-2.4.6.tgz",
+      "integrity": "sha512-OKvWKICifXLjUilGzT5RstUv9iGpk04PjGpTyVT0lMlxX2HptoXZ2Q9hNicidnYjFcR7FHpnXFVwreDSF6a5Ng=="
+    }
+  }
+}

@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @Jaggies
     @Pinball
     @Simplification
+    @Chess
   ]
   @initialize()
   
@@ -61,3 +62,13 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @initialize()
     
     status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Shape.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+  class @Chess extends LM.Content.GoalContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Chess'
+    @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Chess
+    
+    @unlockInstructions: -> "Complete the Pixel art readability challenge to start drawing chess pieces."
+    
+    @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.Size.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

@@ -38,6 +38,10 @@ class LOI.Adventure extends LOI.Adventure
         $set:
           state: LOI.GameState.prepareStateForDatabase gameState
           lastEditTime: new Date
+          
+    # Boolean field to know when the state has been loaded.
+    # Minimizes reactivity compared to checking the game state itself.
+    @gameStateAvailable = new ComputedField => @gameState()?
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()

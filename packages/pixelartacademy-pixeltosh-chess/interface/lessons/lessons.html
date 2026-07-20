@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Lessons">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-lessons">
+    {{#PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea scrollbars}}
+      <ol class="categories">
+        {{#each categories}}
+          <li class="category">
+            <div class="name">{{displayName}}</div>
+            <ol class="lessons">
+              {{#each lessons}}
+                <li class="lesson {{lessonLockedClass}} {{lessonCompletedClass}}" {{lessonCursorAttribute}}>
+                  <span class="name">{{displayName}}</span>
+                </li>
+              {{/each}}
+            </ol>
+          </li>
+        {{/each}}
+      </ol>
+    {{/PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea}}
+    {{#with lockedLessonInfo}}
+      <div class="locked-lesson-info pixelartacademy-pixeltosh-os-interface-rectanglearea" {{style topStyle}}>
+        <div class="requires">Requires</div>
+        <ul class="required-piece-types">
+          {{#each requiredPieceTypes}}
+            <li class="required-piece-type">
+              <span class="name">{{type}}</span>
+              <span class="owned">{{ownedCount}}/{{requiredCount}}</span>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/with}}
+  </div>
+</template>

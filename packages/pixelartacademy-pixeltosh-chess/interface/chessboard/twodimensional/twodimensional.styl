@@ -1,0 +1,101 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-chessboard-twodimensional
+  position relative
+  z-index 0
+  height 100%
+  padding 11rem 11rem 12rem 11rem
+
+  .board
+    position relative
+    width 177rem
+    height 177rem
+    padding 3rem
+    border 1rem solid black
+
+    &.flipped
+      .squares
+        flex-flow column wrap-reverse
+
+      .coordinates
+        .files
+          .border
+            flex-direction row-reverse
+
+        .ranks
+          .border
+            flex-direction column
+
+    &.newspaper
+      .squares
+        background-color white
+
+    &.dark
+      background-color black
+
+      .squares
+        border-color white
+
+    .dark-interface &
+      border-color white
+
+      &.contrast
+      &.dark
+        .squares
+          border-color white
+
+      .coordinates
+        color white
+        pixel-text-outline black true 1
+
+    .squares
+      display flex
+      width 169rem
+      height 169rem
+      flex-flow column-reverse wrap
+      align-content flex-start
+      gap 1rem
+      background-color black
+      border 1rem solid black
+
+    .coordinates
+      visibility hidden
+      color black
+      pixel-text-outline white true 1
+      small-print()
+
+      &.visible
+        visibility visible
+
+      .files
+      .ranks
+        .border
+          display flex
+          position absolute
+
+      .files
+        .border
+          left 13rem
+
+          .coordinate
+            width 21rem
+
+        .top
+          top -5rem
+
+        .bottom
+          bottom -5rem
+
+      .ranks
+        .border
+          top 11rem
+          flex-direction column-reverse
+
+          .coordinate
+            height 21rem
+
+        .left
+          left -2rem
+
+        .right
+          right -3rem

@@ -67,7 +67,7 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
 
   assetsData: ->
-    return unless LOI.adventure.gameState()
+    return unless LOI.adventure.gameStateAvailable()
 
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.

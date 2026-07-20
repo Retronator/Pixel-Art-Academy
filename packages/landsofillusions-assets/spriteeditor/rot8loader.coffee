@@ -41,6 +41,8 @@ class LOI.Assets.SpriteEditor.Rot8Loader extends FM.Loader
         @spriteData()?.customPalette
 
   destroy: ->
+    super arguments...
+    
     @_subscription.stop()
     @spriteData.stop()
     @paletteId.stop()

@@ -1,0 +1,99 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-lessons
+  height 100%
+
+  .pixelartacademy-pixeltosh-os-interface-scrollablearea
+    height 100%
+    border 1rem solid black
+
+    .dark-interface &
+      border-color white
+
+    .vertical-scrollbar
+      bottom -1rem
+
+    .content-area
+      bottom 0
+
+    .resize-control
+      display none
+
+  .categories
+    list-style none
+    padding 0
+    margin 2rem 4rem
+    counter-reset lesson-counter
+
+    .category
+      margin-bottom 6rem
+
+      .lessons
+        list-style none
+        margin 0
+        padding-left 6rem
+        small-print()
+        line-height 6rem
+
+        .lesson
+          position relative
+          padding 0.5rem 0 2.5rem
+
+          &.locked
+            &::before
+              content ''
+              position absolute
+              left -7rem
+              top 1rem
+              width 5rem
+              height 5rem
+              background-image url('/pixelartacademy/pixeltosh/programs/chess/lock.png')
+
+              .dark-interface &
+                filter invert(1)
+
+          &.completed
+            &::before
+              content '✔'
+              position absolute
+              left -5rem
+              top 0.5rem
+
+            &.twice
+              &::before
+                left -6rem
+
+              &::after
+                content '✔'
+                position absolute
+                left -4rem
+                top 0.5rem
+
+          .title
+            &::before
+              display inline-block
+              counter-increment lesson-counter
+              content counter(lesson-counter) "."
+              margin-right 3rem
+
+  .locked-lesson-info
+    position absolute
+    left -43rem
+    width 44rem
+    padding 3rem
+    small-print()
+
+    .requires
+      margin-bottom 2rem
+
+    .required-piece-types
+      list-style none
+      padding 0
+      margin 0
+
+      .required-piece-type
+        display flex
+        justify-content space-between
+
+        .owned
+          text-align right

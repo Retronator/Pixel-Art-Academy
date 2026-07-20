@@ -120,6 +120,10 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     return unless layer = @getLayer layerAddress
     layer.getPixel x, y
 
+  hasPixelForLayerAtCoordinates: (layerAddress, x, y) ->
+    return false unless layer = @getLayer layerAddress
+    layer.hasPixel x, y
+
   getPixelForLayerAtAbsoluteCoordinates: (layerAddress, absoluteX, absoluteY) ->
     return unless layer = @getLayer layerAddress
     x = absoluteX - (layer.bounds?.x or 0)
@@ -127,11 +131,15 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
     @getPixelForLayerAtCoordinates layerAddress, x, y
 
-  findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
-    # Sort layers and layer groups from high to low order.
-    items = _.sortBy [layerGroup.layers..., layerGroup.layerGroups...], 'order'
+  hasPixelForLayerAtAbsoluteCoordinates: (layerAddress, absoluteX, absoluteY) ->
+    return false unless layer = @getLayer layerAddress
+    x = absoluteX - (layer.bounds?.x or 0)
+    y = absoluteY - (layer.bounds?.y or 0)
 
-    for item in items by -1 when item.visible ? true
+    @hasPixelForLayerAtCoordinates layerAddress, x, y
+
+  findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
+    for item in @_getVisibleOrderedLayerItems layerGroup
       if item instanceof @constructor.Layer
         layer = item
         x = absoluteX - (layer.bounds?.x or 0)
@@ -145,6 +153,71 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
         return pixel if pixel
 
     null
+
+  hasPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
+    for item in @_getVisibleOrderedLayerItems layerGroup
+      if item instanceof @constructor.Layer
+        layer = item
+        x = absoluteX - (layer.bounds?.x or 0)
+        y = absoluteY - (layer.bounds?.y or 0)
+        return true if layer.hasPixel x, y
+        
+      if item instanceof @constructor.LayerGroup
+        layerGroup = item
+        return true if @hasPixelAtAbsoluteCoordinates absoluteX, absoluteY, layerGroup
+
+    false
+    
+  _getOrderedLayerItems: (layerGroup) -> _.reverse _.sortBy [layerGroup.layers..., layerGroup.layerGroups...], 'order'
+  
+  _getVisibleOrderedLayerItems: (layerGroup) -> _.filter @_getOrderedLayerItems(layerGroup), (item) => item.visible ? true
+
+  getContentBounds: ->
+    return unless @bounds
+    
+    top = null
+    bottom = null
+    left = null
+    right = null
+    
+    hasPixelInRow = (y) =>
+      for x in [@bounds.left..@bounds.right]
+        return true if @hasPixelAtAbsoluteCoordinates x, y
+
+      false
+
+    for y in [@bounds.top..@bounds.bottom]
+      if hasPixelInRow y
+        top = y
+        break
+
+    return unless top?
+
+    for y in [@bounds.bottom..top]
+      if hasPixelInRow y
+        bottom = y
+        break
+    
+    hasPixelInColumn = (x) =>
+      for y in [top..bottom]
+        return true if @hasPixelAtAbsoluteCoordinates x, y
+      
+      false
+      
+    for x in [@bounds.left..@bounds.right]
+      if hasPixelInColumn x, top, bottom
+        left = x
+        break
+    
+    for x in [@bounds.right..left]
+      if hasPixelInColumn x, top, bottom
+        right = x
+        break
+
+    x: left
+    y: top
+    width: right - left + 1
+    height: bottom - top + 1
 
   # Database content
   

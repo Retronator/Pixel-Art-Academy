@@ -1,0 +1,45 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/artoftheboard.import"
+
+.publication.sixty-four-squares.table-of-contents.art-of-the-board
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .ql-editor
+          .pixelartacademy-publication-article-header
+            h2
+              color artOfTheBoardColor
+
+          > h1
+            border-bottom-color artOfTheBoardColor
+
+            u
+              background-color artOfTheBoardColor
+
+          .pixelartacademy-publication-article-tableofcontents
+            .table-of-contents
+              .content-item
+                border-bottom-color artOfTheBoardColor
+
+                &.unlocked:hover
+                  color artOfTheBoardColorHeader
+
+                &::before
+                  color artOfTheBoardColor
+
+                &::after
+                  border-color artOfTheBoardColor
+
+                &:nth-child(1)::after
+                  background-size 22rem 24rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/tableofcontents-knight.png')
+
+                &:nth-child(2)::after
+                  background-size 18rem 24rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/tableofcontents-rook.png')
+
+                &:nth-child(3)::after
+                  background-size 14rem 24rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/sixtyfoursquares/issues/artoftheboard/tableofcontents-pawn.png')

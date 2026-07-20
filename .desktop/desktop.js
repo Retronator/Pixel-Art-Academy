@@ -63,6 +63,12 @@ export default class Desktop {
             window.on('leave-full-screen', () => {
                 windowModule.send('isFullscreen', false);
             });
+
+            window.webContents.setWindowOpenHandler(({ url }) => {
+                this.log.verbose('Prevented opening a second window.');
+                windowModule.send('goToUrl', url);
+                return { action: 'deny' };
+            });
         });
     }
 }

@@ -16,6 +16,9 @@
     background-image image('/pixelartacademy/pixeltosh/instructions/retro.png')
     pointer-events none
 
+    &.exclamation
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-exclamation.png')
+
     &::after
       content ''
       position absolute
@@ -42,6 +45,12 @@
       width 7rem
       height 6rem
       background-image image('/pixelartacademy/pixeltosh/instructions/retro-ohno.png')
+
+    &.thoughtful::after
+      top 9rem
+      width 7rem
+      height 6rem
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-thoughtful.png')
 
   .pixelartacademy-pixelpad-components-speechballoon
     position absolute

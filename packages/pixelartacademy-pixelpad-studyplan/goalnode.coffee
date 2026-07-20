@@ -50,16 +50,18 @@ class StudyPlan.GoalNode
       console.warn "Unrecognized goal present in study plan.", @goalId
       return
     
+    connectionName = (names...) => "#{_.last(@goalId.split('.'))} goal #{names.join ' '}"
+    
     @goal = new @goalClass
     
-    @entryPoint = StudyPlan.ConnectionPoint.createLocal @
-    @exitPoint = StudyPlan.ConnectionPoint.createLocal @
+    @entryPoint = StudyPlan.ConnectionPoint.createLocal @, 0, 0, connectionName 'entry'
+    @exitPoint = StudyPlan.ConnectionPoint.createLocal @, 0, 0, connectionName 'exit'
     
     tasks = @goal.tasks()
     
     # Create task points.
     for task in tasks
-      taskPoint = new StudyPlan.TaskPoint
+      taskPoint = new StudyPlan.TaskPoint connectionName task.id()
       taskPoint.initializeTask task, @
       
       @taskPoints.push taskPoint
@@ -75,9 +77,19 @@ class StudyPlan.GoalNode
         for predecessor in predecessors
           predecessorTaskPoint = @taskPointsById[predecessor.id()]
           taskPoint.predecessors.push predecessorTaskPoint
+          
+    # Create start task point.
+    @startTaskPoint = new StudyPlan.TaskPoint connectionName 'start task'
+    @startTaskPoint.initializeDummyTask @
+    @startTaskPoint.groupNumber = 0
+    @taskPoints.push @startTaskPoint
+    
+    for task in @goal.initialTasks()
+      taskPoint = @taskPointsById[task.id()]
+      taskPoint.predecessors.push @startTaskPoint
     
     # Create end task point.
-    @endTaskPoint = new StudyPlan.TaskPoint
+    @endTaskPoint = new StudyPlan.TaskPoint connectionName 'end task'
     @endTaskPoint.initializeEndTask @
     @endTaskPoint.groupNumber = @goal.finalGroupNumber()
     @taskPoints.push @endTaskPoint
@@ -174,7 +186,6 @@ class StudyPlan.GoalNode
     for levelIndex in [0..@maxLevel]
       # Determine how many tiles are needed for this level.
       width = 0
-      entryRequired = false
       exitRequired = false
       maxGroupNumberRequiringExit = Number.NEGATIVE_INFINITY
       
@@ -183,10 +194,9 @@ class StudyPlan.GoalNode
         spaceAfter = 0
         
         if taskPoint.task
-          # Required interests must have space for a gate and an entry access road to get to it.
+          # Required interests must have space for a gate.
           if taskPoint.task.requiredInterests().length
             spaceBefore = 1
-            entryRequired = true
             
           # Tasks that are placed after access roads should have some space
           # before to make it clear we can't get to them from the access road.
@@ -212,12 +222,8 @@ class StudyPlan.GoalNode
       
       level = {entryTileX, exitTileX, maxGroupNumberRequiringExit}
       
-      if entryRequired and levelIndex
-        level.sideEntryPoint = StudyPlan.ConnectionPoint.createLocal @, entryTileX
-        @sidewaysPoints.push level.sideEntryPoint
-      
       if exitRequired and (levelIndex < @maxLevel - 1 or not @goalClass.doesCompletingAnyFinalTaskCompleteTheGoal())
-        level.sideExitPoint = StudyPlan.ConnectionPoint.createLocal @, exitTileX
+        level.sideExitPoint = StudyPlan.ConnectionPoint.createLocal @, exitTileX, 0, connectionName 'side exit', @sidewaysPoints.length
         @sidewaysPoints.push level.sideExitPoint
         
       @levels.push level
@@ -320,13 +326,6 @@ class StudyPlan.GoalNode
     for taskPoint in @taskPoints when taskPoint.task
       level = @levels[taskPoint.level]
       
-      # Add entry roads if there are required interests and we're not the first task of the goal.
-      if taskPoint.task.requiredInterests().length and level.sideEntryPoint
-        pathway = new StudyPlan.Pathway level.sideEntryPoint, taskPoint.entryPoint, @
-        pathway.localWaypointPositions.push new THREE.Vector2 level.entryTileX, pathway.endPoint.localPosition.y
-        @taskPathways.push pathway
-        @tileMap.placeRoad pathway, accessRoad: true
-        
       # Add exit roads if there are interests and it can't lead directly to the exit of the goal.
       if taskPoint.task.interests().length and level.sideExitPoint
         pathway = new StudyPlan.Pathway taskPoint.exitPoint, level.sideExitPoint, @
@@ -450,13 +449,3 @@ class StudyPlan.GoalNode
       return sidewaysExitPathway.endPoint
       
     @exitPoint
-    
-  getEntryPointForInterest: (interest) ->
-    # Find the task that requires this interest.
-    return unless taskPoint = _.find @taskPoints, (taskPoint) => interest in taskPoint.entryPoint.requiredInterests
-    
-    # The entry of this task will either lead to one of the sideways points or towards the entry.
-    if sidewaysExitPathway = _.find taskPoint.exitPoint.incomingPathways, (pathway) => pathway.startPoint in @sidewaysPoints
-      return sidewaysExitPathway.endPoint
-    
-    @entryPoint

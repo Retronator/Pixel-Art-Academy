@@ -10,6 +10,9 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
   @menuId = _.snakeCase 'PixelArtAcademy.Pixeltosh.OS.Interface.Menu'
   @menuHeight = 14
   
+  @slowCPUEmulationSmallFrameDelay = 0.033
+  @slowCPUEmulationLargeFrameDelay = 0.075
+  
   constructor: (parent) ->
     localInterfaceDataField = new ReactiveField null
     

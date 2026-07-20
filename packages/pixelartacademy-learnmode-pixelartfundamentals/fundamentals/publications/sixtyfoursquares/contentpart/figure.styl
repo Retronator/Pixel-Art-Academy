@@ -1,0 +1,72 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/sixtyfoursquares/sixtyfoursquares.import"
+
+.publication.sixty-four-squares.content-part
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-figure
+          small-print()
+          padding-top 8rem
+          clear both
+
+          &:has(.float-left)
+          &:has(.float-right)
+            margin-top 0
+
+          &:has(.float-left)
+            margin-right 10rem
+
+          &:has(.float-right)
+            margin-left 10rem
+
+          &:has(.screenshots)
+            padding-top 4rem
+
+          &:has(.flush-top)
+            padding-top 0
+
+          &:has(.flush-bottom)
+            margin-bottom 0
+
+          .elements
+            border 1rem solid atariGray(0)
+
+            &.screenshots
+              border-width 2rem
+              padding 1rem
+
+              .element
+                border none
+
+                .pixelartacademy-publication-article-figure-image
+                  padding 1rem
+
+            .element
+              border 1rem solid atariGray(0)
+
+              .pixelartacademy-publication-article-figure-image
+                position relative
+
+                &:hover
+                  z-index 2
+
+                &.added-to-references
+                  border none
+
+                  .image
+                  .credit
+                    opacity 0.1
+
+                .cutout
+                  .cut-icon
+                    top -1rem
+                    width 18rem
+
+                .added-to-references-info
+                  text-transform uppercase
+                  color atariGray(2)
+
+                .credit
+                  text-align center

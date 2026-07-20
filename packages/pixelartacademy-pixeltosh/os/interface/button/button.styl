@@ -8,6 +8,9 @@
   padding 3rem
   color black
 
+  .dark-interface &
+    filter invert(1)
+
   &:active:not(:disabled)
     border-image-source image('/pixelartacademy/pixeltosh/os/button-border-active.png')
     color white
@@ -15,8 +18,8 @@
   &:disabled::after
     content ''
     position absolute
-    inset 3rem
-    background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem
+    inset 1rem
+    background image('/pixelartacademy/pixeltosh/os/dither-white-16.png') 0 0 / 2rem 2rem
 
   &.mini
     border-image-source image('/pixelartacademy/pixeltosh/os/button-mini-border.png')

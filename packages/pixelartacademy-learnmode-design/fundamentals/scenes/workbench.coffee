@@ -20,8 +20,9 @@ class LM.Design.Fundamentals.Workbench extends LOI.Adventure.Scene
     if LM.Design.Fundamentals.Goals.Invasion.available()
       if projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
         if LM.Design.Fundamentals.Goals.Invasion.Start.completed()
-          @_invasion?.destroy()
-          @_invasion = new PAA.Pico8.Cartridges.Invasion.Project projectId
+          if @_invasion?.projectId isnt projectId
+            @_invasion?.destroy()
+            @_invasion = Tracker.nonreactive => new PAA.Pico8.Cartridges.Invasion.Project projectId
     
           things.push @_invasion
 

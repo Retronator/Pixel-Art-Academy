@@ -38,3 +38,17 @@ class StudyPlan.Pathway
   calculateGlobalPositions: (origin) ->
     @globalWaypointPositions = for localWaypointPosition in @localWaypointPositions
       localWaypointPosition.clone().add origin
+
+  distance: ->
+    return @_distance if @_distance?
+    
+    unless @localWaypointPositions.length
+      @_distance = @startPoint.localPosition.manhattanDistanceTo @endPoint.localPosition
+      return @_distance
+
+    @_distance = @startPoint.localPosition.manhattanDistanceTo @localWaypointPositions[0]
+    
+    for localWaypointPosition, waypointIndex in @localWaypointPositions
+      @_distance += localWaypointPosition.manhattanDistanceTo @localWaypointPositions[waypointIndex + 1] if waypointIndex < @localWaypointPositions.length - 1
+      
+    @_distance += @localWaypointPositions[@localWaypointPositions.length - 1].manhattanDistanceTo @endPoint.localPosition

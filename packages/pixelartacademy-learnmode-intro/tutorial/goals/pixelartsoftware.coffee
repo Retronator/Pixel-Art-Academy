@@ -98,7 +98,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @interests: -> ['pixel art software']
 
     @predecessors: -> [Goal.Basics, Goal.Helpers, Goal.ColorTools]
-    @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
+    @predecessorsCompleteType: -> @PredecessorsCompleteTypes.Any
     
     @studyPlanBuilding: -> 'SimCityCommercial1'
 

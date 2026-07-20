@@ -141,7 +141,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
       # Make sure we have the game state loaded. This can become null when switching between characters.
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventure.gameStateAvailable()
 
       # We expect completed to return true or false, and undefined if can't yet determine (loading).
       completed = @completed()

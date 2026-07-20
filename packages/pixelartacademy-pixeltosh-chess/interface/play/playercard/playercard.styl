@@ -1,0 +1,48 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-play-playercard
+  position relative
+  z-index 0
+  display flex
+  height 38rem
+  border 1rem solid black
+  padding 3rem 2rem
+
+  .dark-interface &
+    border-color white
+
+  &.top
+    margin-bottom 4rem
+
+  &.bottom
+    margin-top 4rem
+
+  .king
+    width 20rem
+    height 20rem
+
+  .details
+    margin-left 2rem
+
+    .name
+      chicago-mini()
+      margin-bottom 2rem
+
+    .captured-pieces
+      display flex
+      width 80rem
+      align-items center
+
+      .captured-piece
+        position relative
+        min-width 0
+
+        &:last-of-type
+          flex-shrink 0
+
+        canvas
+          display block
+
+      .material-difference
+        height 8rem
+        flex-shrink 0

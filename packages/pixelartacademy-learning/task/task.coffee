@@ -7,7 +7,7 @@ class PAA.Learning.Task
   @_taskClassesById = {}
   @_taskClassesUpdatedDependency = new Tracker.Dependency
 
-  @PredecessorsCompleteType:
+  @PredecessorsCompleteTypes:
     All: 'All'
     Any: 'Any'
 
@@ -58,7 +58,7 @@ class PAA.Learning.Task
 
   # Override to provide the classes of tasks leading to this task.
   @predecessors: -> []
-  @predecessorsCompleteType: -> @PredecessorsCompleteType.All
+  @predecessorsCompleteType: -> @PredecessorsCompleteTypes.All
 
   # Override to specify which building image to use in the Study Plan.
   @studyPlanBuilding: -> ''
@@ -197,10 +197,10 @@ class PAA.Learning.Task
         predecessorsCompletedCount++ if task.completed()
 
       switch @constructor.predecessorsCompleteType()
-        when @constructor.PredecessorsCompleteType.All
+        when @constructor.PredecessorsCompleteTypes.All
           return false unless predecessorsCompletedCount is predecessors.length
 
-        when @constructor.PredecessorsCompleteType.Any
+        when @constructor.PredecessorsCompleteTypes.Any
           return false if predecessorsCompletedCount is 0
 
     # Check that the profile has all required interests.

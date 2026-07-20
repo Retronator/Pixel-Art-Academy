@@ -47,3 +47,5 @@ PAA.Publication.Article.CustomClass.requiredContainer = PAA.Publication.Article.
 
 AM.Quill.register PAA.Publication.Article.CustomClass.Container
 AM.Quill.register PAA.Publication.Article.CustomClass
+
+PAA.Publication.Article.CustomClass.registerClass "column-break-before"

@@ -19,18 +19,29 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
   
   @initialize()
   
+  @BodyClasses =
+    Leaning: 'leaning'
+    Exclamation: 'exclamation'
+  
   @FaceClasses =
     Peaceful: 'peaceful'
     Smirk: 'smirk-up'
     OhNo: 'ohno'
+    Thoughtful: 'thoughtful'
   
   customClass: ->
     return unless instruction = @targetDisplayedInstruction()
     instruction.customClass?()
+    
+  bodyClass: ->
+    if instruction = @targetDisplayedInstruction()
+      return bodyClass if bodyClass = instruction.bodyClass()
+      
+    @constructor.BodyClasses.Leaning
   
   faceClass: ->
     if instruction = @targetDisplayedInstruction()
-      return instruction.faceClass()
+      return faceClass if faceClass = instruction.faceClass()
     
     return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
     return unless os.isCreated()

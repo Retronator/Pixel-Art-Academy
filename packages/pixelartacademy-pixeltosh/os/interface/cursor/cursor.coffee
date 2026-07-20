@@ -24,12 +24,12 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     
     # Create a throttled coordinates update function to emulate a slow CPU.
     @autorun (computation) =>
-      delay = if LOI.settings.graphics.slowCPUEmulation.value() then 33 else 0
+      delay = if LOI.settings.graphics.slowCPUEmulation.value() then PAA.Pixeltosh.OS.Interface.slowCPUEmulationSmallFrameDelay else 0
       
       @_updateCoordinatesThrottled = _.throttle (coordinates) =>
         @coordinates coordinates
       ,
-        delay
+        delay * 1000
     
     @class = new ComputedField => _.last(@desiredClasses()).className
     

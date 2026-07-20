@@ -57,7 +57,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon8'
     @size: -> 8
     
-    @directive: -> "Draw an #{@sizeString()} icon"
+    @directive: -> "Draw an #{@sizeString()} icon (hard)"
     
     @groupNumber: -> 1
     
@@ -69,7 +69,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon16'
     @size: -> 16
     
-    @directive: -> "Draw a #{@sizeString()} icon"
+    @directive: -> "Draw a #{@sizeString()} icon (medium)"
     
     @studyPlanBuilding: -> 'TransportTycoonCinema'
     
@@ -79,7 +79,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon32'
     @size: -> 32
     
-    @directive: -> "Draw a #{@sizeString()} icon"
+    @directive: -> "Draw a #{@sizeString()} icon (easy)"
     
     @groupNumber: -> -1
     
