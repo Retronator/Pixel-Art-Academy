@@ -93,6 +93,7 @@ Package.onUse(function(api) {
   api.addFile('state/migrations/0007-profileids');
   api.addFile('state/migrations/0008-activeprojectid');
   api.addFile('state/migrations/0009-elementsofartsidewaysexitsreindexing');
+  api.addFile('state/migrations/0010-chesspieces');
 
   // Engine
 
