@@ -47,7 +47,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @instructions: -> """
       In the Drawing app, find the Snake art assets in the Projects section.
-      Redraw the sprites for the snake body and the food piece.
+      Change the design of the food and snake body to whatever you want.
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing

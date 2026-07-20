@@ -14,8 +14,8 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
 
     @assets = new ComputedField =>
       [
-        new PAA.Pico8.Cartridges.Snake.Body @
         new PAA.Pico8.Cartridges.Snake.Food @
+        new PAA.Pico8.Cartridges.Snake.Body @
       ]
     ,
       true
