@@ -3,6 +3,9 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Markup = PAA.Practice.Helpers.Drawing.Markup
+InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
+
 class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @displayName: -> "Draw line art"
 
@@ -86,6 +89,8 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
   referenceUrl: ->
     @constructor.references()[0].image.url
     
+  Asset = @
+
   class @CustomSolutionPathStep extends @PathStep
     solve: ->
       bitmap = @tutorialBitmap.bitmap()
@@ -95,6 +100,112 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
       strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
       AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
 
+  class @EvaluationInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when the asset is completed.
+      return unless asset.completed()
+      
+      # Show until pixel art evaluation has been scored.
+      return unless bitmap = asset.bitmap()
+      not bitmap.properties?.pixelArtEvaluation?.score?
+    
+  class @OpenEvaluation extends @EvaluationInstruction
+    @id: -> "PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.DrawLineArt.OpenEvaluation"
+
+    @message: -> """
+      To complete the challenge, enable the pixel art evaluation criteria you want to be graded on.
+    """
+    
+    @assetClass: -> Asset
+  
+    @activeConditions: ->
+      return unless super arguments...
+      
+      # Show when the pixel art evaluation is not opened.
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      not pixelArtEvaluation.active()
+      
+    @initialize()
+    
+    markup: ->
+      PAA.Tutorials.Drawing.Markup.bottomRightClickHereMarkup '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation', -6
+      
+  class @EnableEvaluation extends @EvaluationInstruction
+    @id: -> "PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.DrawLineArt.EnableEvaluation"
+    
+    @message: -> """
+      Place the required checkmark on the criteria you want to be graded on.
+    """
+    
+    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
+    
+    @delayDuration: -> 3
+    
+    @assetClass: -> Asset
+    
+    @activeConditions: ->
+      return unless super arguments...
+      
+      # Show when the pixel art evaluation is opened.
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      pixelArtEvaluation.active()
+    
+    @initialize()
+    
+    markup: ->
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return unless pixelArtEvaluation.active()
+      
+      # Only show on the overview page.
+      return if pixelArtEvaluation.activeCriterion()
+      
+      markupStyle = InterfaceMarking.defaultStyle()
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      criteriaCount = PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria').length
+      
+      arrowY = 2 + 6 * criteriaCount
+      
+      [
+        interface:
+          selector: ".pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation .criterion"
+          delay: 1
+          bounds:
+            x: -50
+            y: -35
+            width: 80
+            height: 90
+          markings: [
+            rectangle:
+              strokeStyle: markupStyle
+              x: -2.5
+              y: 2
+              width: 19
+              height: 1 + 12 * criteriaCount
+            line: _.extend {}, arrowBase,
+              points: [
+                x: -32, y: arrowY - 17
+              ,
+                bezierControlPoints: [
+                  x: -32, y: arrowY - 5
+                ,
+                  x: -15, y: arrowY
+                ]
+                x: -5, y: arrowY
+              ]
+            text: _.extend {}, textBase,
+              position:
+                x: -32, y: arrowY - 19, origin: Markup.TextOriginPosition.BottomCenter
+              value: "click here"
+          ]
+      ]
+      
     ###
   class @EnableEvaluation extends PAA.PixelPad.Systems.Instructions.Instruction
     @criterion: -> throw new AE.NotImplementedException "You must provide which pixel art evaluation criterion this challenge unlocks."
