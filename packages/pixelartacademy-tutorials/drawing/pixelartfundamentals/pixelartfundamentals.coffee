@@ -6,8 +6,6 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals extends PAA.Practice.Tutorials.Drawing.Tutorial
-  @enablePixelArtEvaluation: (criterion, enableCriterion) ->
-
   # The length of the arrow to indicate a pixel move.
   @movePixelArrowLength = 1.2
 

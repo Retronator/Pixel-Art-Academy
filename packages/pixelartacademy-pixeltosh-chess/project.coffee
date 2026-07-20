@@ -18,8 +18,7 @@ class Chess.Project extends PAA.Practice.Project.Thing
     
     @autorun (computation) =>
       activeProjectId = @constructor.state 'activeProjectId'
-      project = PAA.Practice.Project.documents.findOne activeProjectId
-      return unless project
+      return unless project = PAA.Practice.Project.documents.findOne activeProjectId
       
       for asset in project.assets when not @_assets[asset.id]
         assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
