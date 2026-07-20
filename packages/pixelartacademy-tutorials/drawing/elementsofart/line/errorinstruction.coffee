@@ -10,7 +10,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.ErrorInstruction extends PAA.Tuto
   @assetClass: -> PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
   
   @message: -> """
-      You went too far from the line, but don't worry. You can easily fix it with the eraser.
+      You went a bit too far from the line. No worries, you can easily fix it with the eraser.
     """
   
   @initialize()

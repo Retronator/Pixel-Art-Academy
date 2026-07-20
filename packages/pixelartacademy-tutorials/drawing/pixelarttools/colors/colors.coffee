@@ -30,8 +30,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
     @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Colors.ColorHelpInstruction"
     
     @message: -> """
-      You have chosen an incorrect color. If you need help determining colors,
-      press the help button on the palette to explore different assistance options.
+      That color isn't quite right. Close shades can be hard to tell apart,
+      so if you'd like, the help button on the palette can point them out."
     """
     
     @priority: -> 10
