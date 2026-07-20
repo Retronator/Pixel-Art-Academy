@@ -67,9 +67,10 @@ class TutorialBitmap.Step
     @stepArea.activeStepIndex() is @getIndexInArea()
   
   activate: ->
-    return unless @options.startPixels
+    @_addStartPixels() if @options.startPixels
+    @_clearHistory() if @options.clearHistory
     
-    # Add start pixels.
+  _addStartPixels: ->
     bitmap = @tutorialBitmap.bitmap()
     
     if @options.startPixels instanceof TutorialBitmap.Resource.Pixels
@@ -101,6 +102,9 @@ class TutorialBitmap.Step
     # If this was the initial step, make it appear as if the bitmap started with these pixels.
     AM.Document.Versioning.clearHistory bitmap unless appendToLastAction
 
+  _clearHistory: ->
+    AM.Document.Versioning.clearHistory @tutorialBitmap.bitmap()
+  
   drawUnderlyingHints: (context, renderOptions = {}) -> # Override to draw hints under the bitmap.
   drawOverlaidHints: (context, renderOptions = {}) -> # Override to draw hints over the bitmap.
   

@@ -15,6 +15,11 @@ class AbruptSegmentLengthChanges.Steps
       not @tutorialBitmap.bitmap().partialAction
       
   class @OpenEvaluationPaper extends PAA.Tutorials.Drawing.PixelArtFundamentals.OpenEvaluationPaper
+    destroy: ->
+      super arguments...
+      
+      @_clearHistoryAutorun?.stop()
+    
     activate: ->
       super arguments...
       
@@ -29,6 +34,14 @@ class AbruptSegmentLengthChanges.Steps
       
       bitmap.executeAction updatePropertyAction
   
+      # Clear history after pixel art evaluation has calculated.
+      @_clearHistoryAutorun = Tracker.autorun (computation) =>
+        bitmap = @tutorialBitmap.bitmap()
+        return unless bitmap.properties.pixelArtEvaluation.score
+        computation.stop()
+        
+        @_clearHistory()
+        
   class @HoverOverTheCurve extends TutorialBitmap.EphemeralStep
     @timeToHover = 1.2
     
