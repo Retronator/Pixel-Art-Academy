@@ -39,27 +39,14 @@ class Pinball.Part.Avatar.TaperedExtrusion extends Pinball.Part.Avatar.TriangleM
       topPolygon = polygon.getInsetPolygon taperDistanceTop
       bottomPolygon = polygon.getInsetPolygon taperDistanceBottom
 
-      try
-        topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
-        bottomPolygonWithoutHoles = bottomPolygon.getPolygonWithoutHoles()
-        
-      catch error
-        # Looks like the holes weren't able to be removed, so try an inset with just the outer boundary.
-        polygon = new AP.PolygonWithHoles polygon.externalBoundary, []
-        topPolygon = polygon.getInsetPolygon taperDistanceTop
-        bottomPolygon = polygon.getInsetPolygon taperDistanceBottom
-
-        topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
-        bottomPolygonWithoutHoles = bottomPolygon.getPolygonWithoutHoles()
-        
       for boundary, boundaryIndex in polygon.boundaries
         for vertex, vertexIndex in boundary.vertices
           for taperedBoundary in [topPolygon.boundaries[boundaryIndex], bottomPolygon.boundaries[boundaryIndex]]
             taperedBoundary.vertices[vertexIndex].tangent = vertex.tangent
       
       individualGeometryData.push @constructor._createTaperedVerticesAndIndices bottomPolygon.boundaries, topPolygon.boundaries,  -@height, 0, @properties.flipped
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, 0, 1
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices bottomPolygonWithoutHoles, -@height, -1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, 0, 1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices bottomPolygon, -@height, -1
     
       @boundaries.push boundaries...
       @taperedBoundariesTop.push topPolygon.boundaries...

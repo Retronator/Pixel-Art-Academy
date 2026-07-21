@@ -380,10 +380,9 @@ class Pinball.Parts.Bumper extends Pinball.Part
           topBoundaries.push topBoundary
           
         topPolygon = new AP.PolygonWithHoles topBoundaries
-        topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
         individualGeometryData.push @constructor._createExtrudedVerticesAndIndices topPolygon.boundaries,  -ballPositionY, 0, @properties.flipped
-        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, 0, 1
-        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, -ballPositionY, -1
+        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, 0, 1
+        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, -ballPositionY, -1
         
         towerPolygon = topPolygon.getInsetPolygon towerTaperDistance
         

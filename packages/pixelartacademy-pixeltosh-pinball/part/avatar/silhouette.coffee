@@ -24,7 +24,7 @@ class Pinball.Part.Avatar.Silhouette extends Pinball.Part.Avatar.TriangleMesh
       for line in core.outlines
         boundaries.push new AP.PolygonBoundary @_getLinePoints line
       
-      polygon = new AP.PolygonWithHoles(boundaries).getPolygonWithoutHoles()
+      polygon = new AP.PolygonWithHoles boundaries
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, @properties.yOffset or 0, 1
       
     @geometryData = @constructor._mergeGeometryData individualGeometryData

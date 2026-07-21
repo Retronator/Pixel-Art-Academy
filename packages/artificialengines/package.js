@@ -364,6 +364,7 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/beziercurve');
   api.addFile('pyramid/bspline');
+  api.addFile('pyramid/bspline-joinsplines');
 
   api.addFile('pyramid/triangulatedsurface..');
   api.addFile('pyramid/triangulatedsurface/triangulatedsurface-getsilhouette');
@@ -477,6 +478,8 @@ Package.onUse(function(api) {
   api.addFile('spectrum/renderobject..');
   api.addFile('spectrum/animatedmesh..');
   api.addFile('spectrum/imagedatahelpers..');
+  api.addFile('spectrum/imagedatahelpers/imagedatahelpers-expandpixels');
+  api.addFile('spectrum/imagedatahelpers/imagedatahelpers-splitcomponents');
   api.addFile('spectrum/shadowmapdebugmaterial..');
   api.addFile('spectrum/screenquad..');
 
@@ -578,4 +581,6 @@ Package.onTest(function(api) {
   ]);
 
   api.addFile('everywhere/lodash/objects-tests');
+  api.addClientFile('spectrum/imagedatahelpers-tests');
+  api.addFile('pyramid/polygon-tests');
 });

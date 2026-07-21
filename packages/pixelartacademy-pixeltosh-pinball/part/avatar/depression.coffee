@@ -27,7 +27,6 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
         boundaries.push new AP.PolygonBoundary points
       
       polygon = new AP.PolygonWithHoles boundaries
-      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
       
       @holeBoundaries.push polygon.externalBoundary
 
@@ -36,7 +35,7 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
       individualGeometryData.push @constructor._createExtrudedVerticesAndIndices invertedBoundaries,  0, @height, not @properties.flipped
       
       # Bottom of the hole is a normal polygon.
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, 0, 1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, 0, 1
       
       # All the internal islands creat top of the hole polygons.
       for internalBoundary in polygon.internalBoundaries

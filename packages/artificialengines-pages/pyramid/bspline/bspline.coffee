@@ -3,6 +3,7 @@ AP = Artificial.Pyramid
 
 class AP.Pages.BSpline extends AM.Component
   @register 'Artificial.Pyramid.Pages.BSpline'
+  @initializeDataComponent()
 
   constructor: (@app) ->
     super arguments...
@@ -10,13 +11,15 @@ class AP.Pages.BSpline extends AM.Component
   onCreated: ->
     super arguments...
 
+    @degree = new ReactiveField AP.BSpline.Degrees.Quadratic
     @points = new ReactiveField []
 
     @bSpline = new ComputedField =>
       points = @points()
-      return unless points.length in [3, 4]
+      degree = @degree()
+      return unless points.length >= degree + 1
 
-      new AP.BSpline points
+      new AP.BSpline points, degree
 
     @curvePolygonalChain = new ComputedField =>
       return unless bSpline = @bSpline()
@@ -86,7 +89,6 @@ class AP.Pages.BSpline extends AM.Component
 
   onClickGraph: (event) ->
     points = @points()
-    return if points.length >= 4
 
     points.push new THREE.Vector2 event.offsetX, event.offsetY
 
@@ -94,3 +96,24 @@ class AP.Pages.BSpline extends AM.Component
 
   onClickResetButton: (event) ->
     @points []
+
+  class @Degree extends @DataInputComponent
+    @register 'Artificial.Pyramid.Pages.BSpline.Degree'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'degree'
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      [
+        value: AP.BSpline.Degrees.Quadratic
+        name: 'Quadratic'
+      ,
+        value: AP.BSpline.Degrees.Cubic
+        name: 'Cubic'
+      ]
+
+    save: (value) ->
+      super parseInt value, 10

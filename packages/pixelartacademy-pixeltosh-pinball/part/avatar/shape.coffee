@@ -20,7 +20,9 @@ class Pinball.Part.Avatar.Shape
   @roughEdgeMargin = 0.002 # m
   @curveExtraPointsCount = 2
   
-  @detectShape: (pixelArtEvaluation, properties) -> throw new AE.NotImplementedException "A part shape must create a shape instance if it can be detected."
+  @requiresSplines: -> false # Override if the shape can fallback to splines instead of pixel art evaluation.
+
+  @detectShape: (pixelArtEvaluation, properties, splines) -> throw new AE.NotImplementedException "A part shape must create a shape instance if it can be detected."
   
   @_detectCircle: (pixelArtEvaluation) ->
     layer = pixelArtEvaluation.layers[0]
@@ -216,8 +218,8 @@ class Pinball.Part.Avatar.Shape
       
       normalArray[offset + 1] = normalY
     
-    indexBufferArray = polygon.triangulate true
-    console.warn "Shape was not able to be triangulated fully.", polygon if indexBufferArray.error
+    triangles = polygon.triangulate()
+    indexBufferArray = new Uint32Array _.flatten triangles
     _.reverse indexBufferArray unless normalY < 0
     
     {vertexBufferArray, normalArray, indexBufferArray}
@@ -387,6 +389,55 @@ class Pinball.Part.Avatar.Shape
       
     points
     
+  _getSplinePoints: (spline) ->
+    points = []
+
+    return points unless spline?.points?.length >= 3
+
+    addPoint = (coordinates, tangent) =>
+      coordinates = new THREE.Vector2 coordinates.x - @bitmapOrigin.x + 0.5, coordinates.y - @bitmapOrigin.y + 0.5
+      tangent = new THREE.Vector2().copy tangent
+      tangent.normalize() if tangent.lengthSq()
+      points.push _.extend coordinates, {tangent}
+
+    # Sample the B-spline into the same point format used by pixel art evaluation lines.
+    polygonalChain = spline.getPolygonalChain 2
+    splineVertices = polygonalChain.vertices
+    return points unless splineVertices.length
+
+    # Remove the repeated endpoint when the joined spline forms a closed loop.
+    isClosedSpline = splineVertices.length > 1 and splineVertices[0].equals _.last splineVertices
+    splineVertices = splineVertices[...splineVertices.length - 1] if isClosedSpline
+
+    for vertex, vertexIndex in splineVertices
+      if isClosedSpline
+        previousVertex = splineVertices[_.modulo vertexIndex - 1, splineVertices.length]
+        nextVertex = splineVertices[_.modulo vertexIndex + 1, splineVertices.length]
+
+      else
+        previousVertexIndex = Math.max vertexIndex - 1, 0
+        nextVertexIndex = Math.min vertexIndex + 1, splineVertices.length - 1
+        previousVertex = splineVertices[previousVertexIndex]
+        nextVertex = splineVertices[nextVertexIndex]
+
+      # Degenerate closed samples can still produce a zero tangent, so try the non-wrapping segment direction.
+      tangent = new THREE.Vector2().subVectors nextVertex, previousVertex
+      unless tangent.lengthSq()
+        previousVertexIndex = Math.max vertexIndex - 1, 0
+        nextVertexIndex = Math.min vertexIndex + 1, splineVertices.length - 1
+        previousVertex = splineVertices[previousVertexIndex]
+        nextVertex = splineVertices[nextVertexIndex]
+        tangent.subVectors nextVertex, previousVertex
+
+      addPoint vertex, tangent
+
+    if @properties.flipped
+      for point in points
+        point.x *= -1
+        point.tangent.x *= -1
+
+    points
+
   positionSnapping: -> true # Override if the shape prohibits snapping of position to pixels.
   
   rotationStyle: -> @constructor.RotationStyles.Perpendicular

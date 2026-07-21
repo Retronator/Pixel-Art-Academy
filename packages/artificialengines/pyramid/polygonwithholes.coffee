@@ -4,8 +4,6 @@ AP = Artificial.Pyramid
 _bridge = new THREE.Line2
 _externalBoundarySegment = new THREE.Line2
 _I = new THREE.Vector2
-_externalVertexDirection = new THREE.Vector2
-_normal = new THREE.Vector2
 
 class AP.PolygonWithHoles
   constructor: (boundariesOrExternalBoundary, internalBoundaries) ->
@@ -22,6 +20,22 @@ class AP.PolygonWithHoles
     @externalBoundary = externalBoundary.getBoundaryWithOrientation AP.PolygonBoundary.Orientations.CounterClockwise
     @internalBoundaries = (internalBoundary.getBoundaryWithOrientation AP.PolygonBoundary.Orientations.Clockwise for internalBoundary in internalBoundaries)
     @boundaries = [@externalBoundary, @internalBoundaries...]
+    
+    # Have flattened vertices available for use with triangulation (the indices returned from it will match this array).
+    @vertices = _.clone @externalBoundary.vertices
+
+    for internalBoundary in @internalBoundaries
+      @vertices.push internalBoundary.vertices...
+
+  triangulate: ->
+    triangulationVertices = for vertex in @externalBoundary.vertices
+      new THREE.Vector2 vertex.x, vertex.y
+
+    triangulationHoles = for internalBoundary in @internalBoundaries
+      for vertex in internalBoundary.vertices
+        new THREE.Vector2 vertex.x, vertex.y
+
+    THREE.ShapeUtils.triangulateShape triangulationVertices, triangulationHoles
 
   getPolygonWithoutHoles: ->
     remainingInternalBoundaries = _.clone @internalBoundaries

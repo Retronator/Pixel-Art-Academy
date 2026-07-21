@@ -17,6 +17,8 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
   @debugExtrusionLines = false
   @debugBumper = false
   @debugWireBallGuideLines = false
+  @debugGate = false
+  @debugSpinningTarget = false
   
   onCreated: ->
     super arguments...
@@ -32,6 +34,8 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         when AC.Keys.comma then delta = -1
       
       return unless delta
+      
+      delta *= 10 if event
       
       @polygonDebugTrianglesDrawCount @polygonDebugTrianglesDrawCount() + delta
   
@@ -51,7 +55,7 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
       @polygonDebugCanvas.width = $polygonDebug.width() * devicePixelRatio
       @polygonDebugCanvas.height = $polygonDebug.height() * devicePixelRatio
       
-      parts = @pinball.sceneManager().parts()
+      return unless parts = @pinball.sceneManager()?.parts()
       
       context.setTransform 1, 0, 0, 1, 0, 0
       context.clearRect 0, 0, @polygonDebugCanvas.width, @polygonDebugCanvas.height
@@ -83,6 +87,42 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         context.arc point.x, point.y, radius, 0, 2 * Math.PI
         context.fillStyle = style
         context.fill()
+
+      drawShape = (shape) =>
+        displayWidth = Math.max(shape.bitmapRectangle.width(), shape.bitmapRectangle.height()) * 1.5
+        displayHeight = displayWidth / 180 * 200
+        scale = @polygonDebugCanvas.width / displayWidth
+
+        transformX = @polygonDebugCanvas.width / 2
+        transformY = scale * displayHeight / 2
+        context.setTransform scale, 0, 0, scale, transformX, transformY
+
+        for polygon in shape.polygons
+          triangles = polygon.triangulate()
+          color = if triangles.length then 'blue' else 'red'
+
+          drawPolygon color, 8, polygon.externalBoundary, true
+          drawPolygon color, 8, boundary, true for boundary in polygon.internalBoundaries
+
+          trianglesDrawCount = @polygonDebugTrianglesDrawCount()
+
+          for triangle in triangles
+            break unless trianglesDrawCount
+            trianglesDrawCount--
+
+            drawPolygon 'gray', 1, vertices: [
+              polygon.vertices[triangle[0]]
+              polygon.vertices[triangle[1]]
+              polygon.vertices[triangle[2]]
+            ], true
+
+      drawShapeForPart = (partClass) =>
+        part = _.find parts, (candidatePart) => candidatePart instanceof partClass
+        return unless part
+        
+        shape = part.shape()
+        return unless shape instanceof partClass.Shape
+        drawShape shape
         
       if @constructor.debugPlayfieldTriangulation
         scale = @polygonDebugCanvas.width / 0.53
@@ -98,30 +138,24 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
           holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
   
         for holeBoundary in holeBoundaries
-          drawPolygon 'yellow', 8, holeBoundary, true
+          drawPolygon 'blue', 8, holeBoundary, true
           
         return unless playfield.avatar.shape()
         return unless playfieldBoundary = playfield.avatar.playfieldBoundingRectangle()?.getBoundary()
         
         playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-        playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
-        
-        insetPolygonBoundary = playfieldPolygon.boundary.getInsetPolygonBoundary 0.002
-        
-        drawPolygon 'blue', 2, insetPolygonBoundary, true
-        
-        indexBufferArray = playfieldPolygon.triangulate()
+        triangles = playfieldPolygon.triangulate()
         
         trianglesDrawCount = @polygonDebugTrianglesDrawCount()
         
-        for indexOfIndex in [0...indexBufferArray.length] by 3
+        for triangle in triangles
           break unless trianglesDrawCount
           trianglesDrawCount--
   
           drawPolygon 'green', 1, vertices: [
-            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex]]
-            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex + 1]]
-            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex + 2]]
+            playfieldPolygon.vertices[triangle[0]]
+            playfieldPolygon.vertices[triangle[1]]
+            playfieldPolygon.vertices[triangle[2]]
           ], true
           
       if @constructor.debugWallsTriangulation
@@ -136,21 +170,21 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         
         for boundary in shape.boundaries
           wallsPolygon = new AP.Polygon boundary
-          indexBufferArray = wallsPolygon.triangulate true
-          color = if indexBufferArray.error then 'red' else 'blue'
+          triangles = wallsPolygon.triangulate()
+          color = if triangles.length then 'blue' else 'red'
 
           drawPolygon color, 8, boundary, true
 
           trianglesDrawCount = @polygonDebugTrianglesDrawCount()
           
-          for indexOfIndex in [0...indexBufferArray.length] by 3
+          for triangle in triangles
             break unless trianglesDrawCount
             trianglesDrawCount--
     
             drawPolygon 'gray', 1, vertices: [
-              wallsPolygon.vertices[indexBufferArray[indexOfIndex]]
-              wallsPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
-              wallsPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
+              wallsPolygon.vertices[triangle[0]]
+              wallsPolygon.vertices[triangle[1]]
+              wallsPolygon.vertices[triangle[2]]
             ], true
         
       curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
@@ -240,21 +274,21 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
 
         for taperedBoundaryBottom in shape.taperedBoundariesBottom
           taperedPolygon = new AP.Polygon taperedBoundaryBottom
-          indexBufferArray = taperedPolygon.triangulate true
-          color = if indexBufferArray.error then 'red' else 'blue'
+          triangles = taperedPolygon.triangulate()
+          color = if triangles.length then 'blue' else 'red'
           
           drawPolygon color, 8, taperedBoundaryBottom, true
           
           trianglesDrawCount = @polygonDebugTrianglesDrawCount()
           
-          for indexOfIndex in [0...indexBufferArray.length] by 3
+          for triangle in triangles
             break unless trianglesDrawCount
             trianglesDrawCount--
             
             drawPolygon 'gray', 1, vertices: [
-              taperedPolygon.vertices[indexBufferArray[indexOfIndex]]
-              taperedPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
-              taperedPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
+              taperedPolygon.vertices[triangle[0]]
+              taperedPolygon.vertices[triangle[1]]
+              taperedPolygon.vertices[triangle[2]]
             ], true
             
         context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
@@ -274,6 +308,12 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
         
         drawLine line for line in shape.pixelArtEvaluation.layers[0].lines when not line.core
+
+      if @constructor.debugGate
+        drawShapeForPart Pinball.Parts.Gate
+        
+      if @constructor.debugSpinningTarget
+        drawShapeForPart Pinball.Parts.SpinningTarget
   
   onDestroyed: ->
     super arguments...

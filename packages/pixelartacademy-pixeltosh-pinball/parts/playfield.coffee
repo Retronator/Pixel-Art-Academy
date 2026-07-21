@@ -18,6 +18,10 @@ class Pinball.Parts.Playfield extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
+  @avatarShapes: -> [
+    @Avatar.Shape
+  ]
+
   @initialize()
   
   @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0xffffff
@@ -100,7 +104,6 @@ class Pinball.Parts.Playfield extends Pinball.Part
         
         try
           playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-          playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
           
           vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
           normalArray = new Float32Array playfieldPolygon.vertices.length * 3
@@ -112,7 +115,8 @@ class Pinball.Parts.Playfield extends Pinball.Part
             vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
             normalArray[offset + 1] = 1
       
-          indexBufferArray = playfieldPolygon.triangulate()
+          triangles = playfieldPolygon.triangulate()
+          indexBufferArray = new Uint32Array _.flatten triangles
           _.reverse indexBufferArray
           
         catch error

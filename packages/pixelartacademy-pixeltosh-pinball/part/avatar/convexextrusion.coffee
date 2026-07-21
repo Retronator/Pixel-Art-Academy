@@ -8,12 +8,14 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
-  @detectShape: (pixelArtEvaluation, properties) ->
-    return unless pixelArtEvaluation.layers[0].cores.length
-    
-    new @ pixelArtEvaluation, properties
+  @requiresSplines: -> true
+  
+  @detectShape: (pixelArtEvaluation, properties, splines) ->
+    return unless splines.length
 
-  constructor: (@pixelArtEvaluation, @properties) ->
+    new @ pixelArtEvaluation, properties, splines
+
+  constructor: (@pixelArtEvaluation, @properties, @splines) ->
     super arguments...
     
     @bitmapOrigin = @_calculateBitmapOrigin() unless @properties.bitmapOrigin
@@ -22,23 +24,24 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     @bottomY = -@height / 2
     
     @boundaries = []
+    @polygons = []
     individualGeometryData = []
     
-    for core in @pixelArtEvaluation.layers[0].cores
+    for componentSplines in @splines
       boundaries = []
       
-      for line in core.outlines
-        points = @_getLinePoints line
+      for spline in componentSplines
+        points = @_getSplinePoints spline
         boundaries.push new AP.PolygonBoundary points
       
       @boundaries.push boundaries...
       
       polygon = new AP.PolygonWithHoles boundaries
-      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
+      @polygons.push polygon
       
       individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries, @bottomY, @topY, @properties.flipped
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @bottomY, -1
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @topY, 1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, @bottomY, -1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, @topY, 1
     
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 

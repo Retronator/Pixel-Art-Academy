@@ -17,6 +17,10 @@ class Pinball.Parts.WireBallGuides extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
+  @avatarShapes: -> [
+    @Avatar.Shape
+  ]
+  
   @initialize()
   
   constants: ->

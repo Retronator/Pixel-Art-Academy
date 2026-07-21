@@ -14,6 +14,10 @@ class Pinball.Parts.Pins extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
+  @avatarShapes: -> [
+    @Avatar.Shape
+  ]
+  
   @initialize()
   
   constants: ->

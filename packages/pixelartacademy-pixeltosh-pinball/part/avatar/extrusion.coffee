@@ -30,11 +30,10 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
       @boundaries.push boundaries...
 
       polygon = new AP.PolygonWithHoles boundaries
-      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
 
       individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries,  -@height, 0, @properties.flipped
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, 0, 1
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, -@height, -1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, 0, 1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, -@height, -1
     
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 
