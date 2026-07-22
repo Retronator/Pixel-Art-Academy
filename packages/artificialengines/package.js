@@ -16,6 +16,7 @@ Npm.depends({
   'showdown': '1.9.1',
   'lodash': '4.17.21',
   'poly-decomp': '0.3.0',
+  'polygon-clipping': '0.15.7',
   'path-data-polyfill': '1.0.10',
   'onnxruntime-web': '1.16.3'
 });
@@ -359,6 +360,7 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygon');
   api.addFile('pyramid/polygonboundary');
   api.addFile('pyramid/polygonwithholes');
+  api.addFile('pyramid/polygonwithholes-booleanoperations');
 
   api.addFile('pyramid/polygonalchain');
 
@@ -583,4 +585,6 @@ Package.onTest(function(api) {
   api.addFile('everywhere/lodash/objects-tests');
   api.addClientFile('spectrum/imagedatahelpers-tests');
   api.addFile('pyramid/polygon-tests');
+  api.addFile('pyramid/polygonwithholes-tests');
+  api.addFile('pyramid/polygonwithholes-booleanoperations-tests');
 });

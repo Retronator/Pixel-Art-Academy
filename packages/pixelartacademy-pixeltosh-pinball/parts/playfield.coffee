@@ -103,30 +103,42 @@ class Pinball.Parts.Playfield extends Pinball.Part
         super arguments...
         
         try
-          playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-          
-          vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
-          normalArray = new Float32Array playfieldPolygon.vertices.length * 3
-          
-          for vertex, vertexIndex in playfieldPolygon.vertices
-            offset = vertexIndex * 3
-            vertexBufferArray[offset] = vertex.x - playfieldPosition.x
-            vertexBufferArray[offset + 1] = @height
-            vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
-            normalArray[offset + 1] = 1
-      
-          triangles = playfieldPolygon.triangulate()
-          indexBufferArray = new Uint32Array _.flatten triangles
-          _.reverse indexBufferArray
+          # Merge intersecting holes before subtracting them so the playfield triangulator receives valid boundaries.
+          holePolygons = (new AP.Polygon holeBoundary for holeBoundary in holeBoundaries)
+          @mergedHolePolygons = AP.PolygonWithHoles.getUnion holePolygons
+
+          playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, []
+          @polygons = AP.PolygonWithHoles.getDifference playfieldPolygon, @mergedHolePolygons
+
+          individualGeometryData = (@_createGeometryData polygon, playfieldPosition for polygon in @polygons)
+          @geometryData = @constructor._mergeGeometryData individualGeometryData
           
         catch error
           console.warn error
           
           # Remove the playfield so that any corrections are easier to be made.
-          vertexBufferArray = new Float32Array 0
-          normalArray = new Float32Array 0
-          indexBufferArray = new Uint32Array 0
-          
-        @geometryData = {vertexBufferArray, normalArray, indexBufferArray}
+          @mergedHolePolygons = []
+          @polygons = []
+          @geometryData =
+            vertexBufferArray: new Float32Array 0
+            normalArray: new Float32Array 0
+            indexBufferArray: new Uint32Array 0
+
+      _createGeometryData: (polygon, playfieldPosition) ->
+        vertexBufferArray = new Float32Array polygon.vertices.length * 3
+        normalArray = new Float32Array polygon.vertices.length * 3
+
+        for vertex, vertexIndex in polygon.vertices
+          offset = vertexIndex * 3
+          vertexBufferArray[offset] = vertex.x - playfieldPosition.x
+          vertexBufferArray[offset + 1] = @height
+          vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
+          normalArray[offset + 1] = 1
+
+        triangles = polygon.triangulate()
+        indexBufferArray = new Uint32Array _.flatten triangles
+        _.reverse indexBufferArray
+
+        {vertexBufferArray, normalArray, indexBufferArray}
         
       positionY: -> -@height

@@ -48,6 +48,7 @@ Package.onUse(function(api) {
   api.addFile('part/avatar/cylinder');
   api.addFile('part/avatar/trianglemesh');
   api.addFile('part/avatar/extrusion');
+  api.addFile('part/avatar/coreextrusion');
   api.addFile('part/avatar/taperedextrusion');
   api.addFile('part/avatar/convexextrusion');
   api.addFile('part/avatar/depression');

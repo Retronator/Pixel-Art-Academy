@@ -13,7 +13,7 @@ class Pinball.Parts.Walls extends Pinball.Part
   @assetId: -> Pinball.Assets.Playfield.id()
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.Extrusion
+    Pinball.Part.Avatar.CoreExtrusion
   ]
   
   @initialize()

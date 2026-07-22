@@ -54,11 +54,12 @@ class Pinball.Parts.Bumper extends Pinball.Part
       ballPositionY = sceneManager.ballPositionY()
       
       properties = @extraShapeProperties()
-      
-      Pinball.Part.Avatar.Extrusion.detectShape shape.pixelArtEvaluation,
+      towerTriggerProperties =
         height: ballPositionY * 3
         flipped: properties.flipped
         positionY: ballPositionY * 3
+
+      Pinball.Part.Avatar.Extrusion.detectShape shape.pixelArtEvaluation, towerTriggerProperties, shape.splines
         
     @towerTriggerCollider = new AE.LiveComputedField =>
       return if @data().active
@@ -352,12 +353,14 @@ class Pinball.Parts.Bumper extends Pinball.Part
     ringPhysicsObject.setPosition _displacedRingPosition
 
   class @Shape extends Pinball.Part.Avatar.TriangleMesh
-    @detectShape: (pixelArtEvaluation, properties) ->
+    @requiresSplines: -> true
+
+    @detectShape: (pixelArtEvaluation, properties, splines) ->
       return unless pixelArtEvaluation.layers[0].cores.length
       
-      new @ pixelArtEvaluation, properties
+      new @ pixelArtEvaluation, properties, splines
       
-    constructor: (@pixelArtEvaluation, @properties) ->
+    constructor: (@pixelArtEvaluation, @properties, @splines) ->
       super arguments...
       
       individualGeometryData = []

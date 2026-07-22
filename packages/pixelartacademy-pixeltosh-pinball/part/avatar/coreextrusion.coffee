@@ -7,36 +7,34 @@ PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
-  @requiresSplines: -> true
-  
-  @detectShape: (pixelArtEvaluation, properties, splines) ->
-    return unless splines.length
+class Pinball.Part.Avatar.CoreExtrusion extends Pinball.Part.Avatar.TriangleMesh
+  @detectShape: (pixelArtEvaluation, properties) ->
+    return unless pixelArtEvaluation.layers[0].cores.length
 
-    new @ pixelArtEvaluation, properties, splines
+    new @ pixelArtEvaluation, properties
 
-  constructor: (@pixelArtEvaluation, @properties, @splines) ->
+  constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
-    
+
     individualGeometryData = []
-    
+
     @boundaries = []
-    
-    for componentSplines in @splines
+
+    for core in @pixelArtEvaluation.layers[0].cores
       boundaries = []
-      
-      for spline in componentSplines
-        points = @_getSplinePoints spline
+
+      for line in core.outlines
+        points = @_getLinePoints line
         boundaries.push new AP.PolygonBoundary points
-      
+
       @boundaries.push boundaries...
 
       polygon = new AP.PolygonWithHoles boundaries
 
-      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries,  -@height, 0, @properties.flipped
+      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries, -@height, 0, @properties.flipped
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, 0, 1
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygon, -@height, -1
-    
+
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 
   positionY: -> @properties.positionY or @height

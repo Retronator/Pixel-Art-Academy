@@ -73,14 +73,8 @@ class Pinball.Instructions
       return unless pinball = @getPinball()
       
       partClassesRequiringACore = [
-        Pinball.Parts.BallSpawner
         Pinball.Parts.BallTrough
-        Pinball.Parts.Bumper
-        Pinball.Parts.Flipper
-        Pinball.Parts.Gate
         Pinball.Parts.GobbleHole
-        Pinball.Parts.Plunger
-        Pinball.Parts.SpinningTarget
       ]
       
       parts = []

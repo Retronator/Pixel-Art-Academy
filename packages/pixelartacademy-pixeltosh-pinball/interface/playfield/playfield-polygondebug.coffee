@@ -131,32 +131,24 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         context.translate 0.015, 0.015
       
         return unless playfield = _.find parts, (part) => part instanceof Pinball.Parts.Playfield
+        return unless playfieldShape = playfield.avatar.shape()
         
-        holeBoundaries = []
-        
-        for part in parts
-          holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
-  
-        for holeBoundary in holeBoundaries
-          drawPolygon 'blue', 8, holeBoundary, true
-          
-        return unless playfield.avatar.shape()
-        return unless playfieldBoundary = playfield.avatar.playfieldBoundingRectangle()?.getBoundary()
-        
-        playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-        triangles = playfieldPolygon.triangulate()
+        # Display the merged boundaries used by the actual playfield geometry.
+        for mergedHolePolygon in playfieldShape.mergedHolePolygons
+          drawPolygon 'blue', 8, boundary, true for boundary in mergedHolePolygon.boundaries
         
         trianglesDrawCount = @polygonDebugTrianglesDrawCount()
-        
-        for triangle in triangles
-          break unless trianglesDrawCount
-          trianglesDrawCount--
-  
-          drawPolygon 'green', 1, vertices: [
-            playfieldPolygon.vertices[triangle[0]]
-            playfieldPolygon.vertices[triangle[1]]
-            playfieldPolygon.vertices[triangle[2]]
-          ], true
+
+        for playfieldPolygon in playfieldShape.polygons
+          for triangle in playfieldPolygon.triangulate()
+            break unless trianglesDrawCount
+            trianglesDrawCount--
+
+            drawPolygon 'green', 1, vertices: [
+              playfieldPolygon.vertices[triangle[0]]
+              playfieldPolygon.vertices[triangle[1]]
+              playfieldPolygon.vertices[triangle[2]]
+            ], true
           
       if @constructor.debugWallsTriangulation
         return unless walls = _.find parts, (part) => part instanceof Pinball.Parts.Walls
