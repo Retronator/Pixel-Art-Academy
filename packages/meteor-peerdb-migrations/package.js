@@ -6,7 +6,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('METEOR@1.8.1');
+  api.versionsFrom('METEOR@2.16');
 
   // Core dependencies.
   api.use([
@@ -30,7 +30,8 @@ Package.onUse(function (api) {
 });
 
 Package.onTest(function (api) {
-  api.versionsFrom('METEOR@1.8.1');
+  // Resolve test dependencies against the same Meteor release as Pixel Art Academy.
+  api.versionsFrom('METEOR@2.16');
 
   // Core dependencies.
   api.use([

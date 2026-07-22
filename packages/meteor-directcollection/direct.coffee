@@ -46,10 +46,16 @@ export class DirectCollection
     return document._id
 
   update: (selector, modifier, options) =>
-    options = {} unless options
+    options = _.clone options or {}
     options.w ?= 1
+
+    # The current MongoDB driver treats the deprecated update method as a multi-document update. Select the explicit
+    # method so DirectCollection retains the same default single-document behavior as Meteor collections.
+    updateMethod = if options.multi then 'updateMany' else 'updateOne'
+    delete options.multi
+
     collection = @_getCollection()
-    result = blocking(collection, collection.update)(selector, modifier, options)
+    result = blocking(collection, collection[updateMethod])(selector, modifier, options)
 
     result = result.result if _.isObject(result) and result.result
 

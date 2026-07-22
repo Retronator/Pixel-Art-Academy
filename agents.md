@@ -36,6 +36,7 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Do not modify symlinked runtime or deployment entries at the repo root unless the task explicitly requires it:
   - `build`
   - `run`
+  - `test`
   - `package`
   - `sign`
   - `notarize`
@@ -49,3 +50,8 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Prefer targeted validation first.
 - For CoffeeScript style-sensitive changes, use the repo’s existing lint/configuration when relevant.
 - For app/runtime changes, prefer the smallest check that exercises the edited area before suggesting broader app runs.
+- The main Meteor app is normally running during development. Never run `meteor test-packages` directly from the
+  repository because it can interfere with the live build and root npm dependencies.
+- Use `./test setup` to prepare the isolated test environment, `./test` for the full test suite, and
+  `./test package <package-folder-or-name>` for targeted package tests. When adding or changing tests, run the relevant
+  `./test` command and report its result.

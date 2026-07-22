@@ -114,7 +114,8 @@ Tinytest.add 'directcollection - external db', (test) ->
   test.equal testCollection.findOne(_id: document1._id), document1
   test.equal testCollection.findOne(document1), document1
 
-  test.equal DirectCollection.command({getLastError: 1}, null, mongoUrl)?.ok, 1
+  # Verify the external database connection with a command supported by current MongoDB versions.
+  test.equal DirectCollection.command({ping: 1}, null, mongoUrl)?.ok, 1
 
   # Ensure that insert went to the right database
   testCollection = new DirectCollection 'foo'
