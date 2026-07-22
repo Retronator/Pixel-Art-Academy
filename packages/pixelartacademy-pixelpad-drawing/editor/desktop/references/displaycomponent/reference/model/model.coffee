@@ -21,8 +21,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     
     @viewportSize = new ComputedField =>
       scale = @currentScale()
+
       resizingScale = @resizingScale()
       scale = resizingScale if resizingScale?
+
+      hiddenScale = @hiddenScale()
+      scale = hiddenScale if hiddenScale?
       
       # We calculate the display size using the potentially resizing scale.
       return unless displaySize = @displaySize scale

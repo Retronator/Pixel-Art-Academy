@@ -90,11 +90,11 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     
     @endUpdate()
 
-    @draggingPosition null
+    Tracker.afterFlush => @draggingPosition null
 
   endResizing: ->
     @setScale @resizingScale()
-    @resizingScale null
+    Tracker.afterFlush => @resizingScale null
 
   imageSource: ->
     reference = @data()
@@ -104,7 +104,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     scale = @currentScale()
 
     resizingScale = @resizingScale()
-    scale = resizingScale if resizingScale?
+    scale = Math.max @minScale(), resizingScale if resizingScale?
 
     # We calculate the display size using the potentially resizing scale.
     return display: 'none' unless displaySize = @displaySize scale
@@ -135,7 +135,9 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
   currentScale: ->
     return unless reference = @data()
-    _.propertyValue(reference, 'scale') or 1
+    Math.max @minScale(), _.propertyValue(reference, 'scale') or 1
+    
+  minScale: -> 0 # Override if the reference shouldn't be displayed less than this.
 
   currentDisplayed: ->
     return unless reference = @data()
@@ -257,6 +259,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       @references.startResizing
         reference: @
         referenceScale: @currentScale()
+        minScale: @minScale()
         referenceCenter:
           x: offset.left + $reference.outerWidth() / 2
           y: offset.top + $reference.outerHeight() / 2

@@ -146,6 +146,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     width: imageSize.width * scale
     height: imageSize.height * scale + captionHeight
+    
+  minScale: ->
+    return 0 unless imageSize = @imageSize()
+    
+    shorterSide = Math.min imageSize.width, imageSize.height
+    
+    # Don't let the reference be smaller than 32 pixels.
+    32 / shorterSide
 
   endDrag: ->
     @startUpdate()
@@ -177,16 +185,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     super arguments...
 
   referenceStyle: ->
-    currentDisplayed = @currentDisplayed()
+    return @hiddenReferenceStyle() unless @currentDisplayed()
     
-    if currentDisplayed
-      style = super arguments...
-      
-    else
-      style = @hiddenReferenceStyle()
+    style = super arguments...
 
     # Push assets apart when we're not editing an asset.
-    if currentDisplayed and not @references.options.editorActive()
+    unless @references.options.editorActive()
       position = new THREE.Vector2 parseFloat(style.left), (parseFloat style.top)
 
       distance = new THREE.Vector2(240, 180).length()

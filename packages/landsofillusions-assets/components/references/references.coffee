@@ -176,7 +176,7 @@ class LOI.Assets.Components.References extends LOI.Component
       @_resizingVector.y = event.clientY - @_resizingReferenceCenter.y
       resizingDistance = @_resizingVector.length()
 
-      @resizingReference().resizingScale @_resizingStartReferenceScale * resizingDistance / @_resizingStartDistance
+      @resizingReference().resizingScale Math.max options.minScale, @_resizingStartReferenceScale * resizingDistance / @_resizingStartDistance
 
     # Set goal component last since it triggers reactivity.
     @resizingReference options.reference
