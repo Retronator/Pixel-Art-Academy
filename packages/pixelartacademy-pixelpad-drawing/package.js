@@ -108,6 +108,9 @@ Package.onUse(function(api) {
   api.addStyledFile('editor/desktop/references/displaycomponent/reference/sceneobject/cartridge..');
 
   api.addComponent('editor/desktop/references/displaycomponent/reference/model..');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/helpers');
+  api.addClientFile('editor/desktop/references/displaycomponent/reference/model/previewrenderer');
+  api.addAssets('editor/desktop/references/displaycomponent/reference/model/previewrenderer-worker-bundle.js', 'client');
   api.addFile('editor/desktop/references/displaycomponent/reference/model/cameramanager');
   api.addFile('editor/desktop/references/displaycomponent/reference/model/scenemanager');
   api.addFile('editor/desktop/references/displaycomponent/reference/model/renderermanager');

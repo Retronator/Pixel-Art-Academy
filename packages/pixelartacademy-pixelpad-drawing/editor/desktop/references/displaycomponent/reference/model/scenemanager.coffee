@@ -3,9 +3,9 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-_size = new THREE.Vector3
+Model = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model
 
-class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model.SceneManager
+class Model.SceneManager
   @_textureCache = {}
   
   @fullMeshVisibilityAdjustmentDelta = 50 # display pixels
@@ -15,6 +15,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @_scene = new THREE.Scene()
     @_scene.manager = @
     @scene = new AE.ReactiveWrapper @_scene
+    @ready = new ReactiveField false
     
     @_modelSceneDependency = new Tracker.Dependency
     
@@ -36,7 +37,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @reference.autorun =>
       return unless imageUrl = @imageUrl()
       
-      PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model.Loader.load imageUrl, (data) =>
+      Model.Loader.load imageUrl, (data) =>
         @_scene.remove @_modelScene if @_modelScene
         
         @_modelScene = data.scene
@@ -44,15 +45,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         
         @scene.updated()
         @_modelSceneDependency.changed()
+        @ready true
         
     # Update mesh visibility properties from the reference.
     @reference.autorun =>
       return unless meshVisibility = @meshVisibility()
       
-      properties = Tracker.nonreactive => @meshVisibilityProperties()
-      properties.amountVisible = meshVisibility.amountVisible ? 1
-      properties.sizePreference = meshVisibility.sizePreference ? 0
-      @meshVisibilityProperties properties
+      @meshVisibilityProperties Model.Helpers.getMeshVisibilityProperties meshVisibility
       
     # Update mesh visibility.
     @reference.autorun =>
@@ -61,41 +60,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @_modelSceneDependency.depend()
       meshVisibilityProperties = @meshVisibilityProperties()
       
-      # Collect all the meshes.
-      orderedMeshes = []
-      
-      @_scene.traverse (object) =>
-        return unless object.isMesh
-        
-        object.geometry.computeBoundingBox()
-        object.geometry.boundingBox.getSize _size
-        
-        sizeMeasurementAxes = meshVisibility.sizeMeasurementAxes or {x: true, y: true, z: true}
-
-        size = 1
-        size *= _size[coordinate] for coordinate, include of sizeMeasurementAxes when include
-        
-        orderedMeshes.push
-          mesh: object
-          size: size
-          priorityOrder: orderedMeshes.length + 1
-      
-      orderedMeshes.sort (a, b) => b.size - a.size
-        
-      sizeWeight = meshVisibilityProperties.sizePreference
-      priorityWeight = 1 - sizeWeight
-      
-      for orderedMesh, meshIndex in orderedMeshes
-        orderedMesh.sizeOrder = meshIndex + 1
-        orderedMesh.weightedOrder = orderedMesh.priorityOrder * priorityWeight + orderedMesh.sizeOrder * sizeWeight
-        
-      orderedMeshes.sort (a, b) =>  a.weightedOrder - b.weightedOrder
-      
-      visibleCount = 1 + (orderedMeshes.length - 1) * meshVisibilityProperties.amountVisible
-
-      for orderedMesh, meshIndex in orderedMeshes
-        orderedMesh.mesh.visible = meshIndex < visibleCount
-      
+      Model.Helpers.applyMeshVisibility THREE, @_scene, meshVisibility, meshVisibilityProperties
       @scene.updated()
       
     # Update mesh morphing properties from the reference.
@@ -111,15 +76,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @_modelSceneDependency.depend()
       meshMorphingProperties = @meshMorphingProperties()
       
-      @_scene.traverse (object) =>
-        return unless object.isMesh
-        
-        for morphKey, morphInfluenceIndex of object.morphTargetDictionary when meshMorphingProperties[morphKey]?
-          object.morphTargetInfluences[morphInfluenceIndex] = meshMorphingProperties[morphKey]
-        
-        # Explicit return to avoid result collection.
-        return
-      
+      Model.Helpers.applyMeshMorphing @_scene, meshMorphingProperties
       @scene.updated()
       
     # Update environment.
@@ -134,42 +91,27 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         @_environmentTexture?.dispose()
         
         @_environmentTexture = texture
-        @_environmentTexture.mapping = THREE.EquirectangularReflectionMapping
-        @_environmentTexture.magFilter = THREE.LinearFilter
+        Model.Helpers.configureEnvironmentTexture THREE, @_environmentTexture
         
         @constructor._textureCache[environmentUrl] = @_environmentTexture
         @environmentTexture @_environmentTexture
       
     @reference.autorun =>
-      @_scene.environment = @environmentTexture()
-      @scene.updated()
-    
-    @reference.autorun =>
-      return unless environmentRotation = @environment()?.rotation
-      @_scene.environmentRotation.set(
-        environmentRotation.x or 0
-        environmentRotation.y or 0
-        environmentRotation.z or 0
-        environmentRotation.order
-      )
+      Model.Helpers.applyEnvironment @_scene, @environmentTexture(), @environment()
       @scene.updated()
       
     # Update background.
     @reference.autorun =>
       return unless background = @background()
       
-      if background.color
-        @_scene.background = new THREE.Color background.color
-        
-      else if background.environment
-        @_scene.background = @environmentTexture()
-        
+      Model.Helpers.applyBackground THREE, @_scene, @environmentTexture(), background
       @scene.updated()
   
   destroy: ->
     @imageUrl.stop()
     @environment.stop()
     @background.stop()
+    @meshVisibility.stop()
   
   startAdjustMeshVisibility: (event) ->
     startClientCoordinatesX = event.clientX

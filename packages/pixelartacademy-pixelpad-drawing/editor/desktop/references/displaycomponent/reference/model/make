@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ScriptDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RepositoryRoot="$(git -C "$ScriptDirectory" rev-parse --show-toplevel)"
+ThreeNodeModules="$RepositoryRoot/packages/artificialengines/.npm/package/node_modules"
+CoffeeCompiler="$RepositoryRoot/node_modules/.bin/coffee"
+TemporaryDirectory="$(mktemp -d)"
+TemporaryCoffee="$TemporaryDirectory/previewrenderer-worker.coffee"
+TemporaryJavaScript="$TemporaryDirectory/previewrenderer-worker.js"
+
+trap 'rm -rf "$TemporaryDirectory"' EXIT
+
+if [[ ! -d "$ThreeNodeModules/three" ]]; then
+  echo "Three.js dependencies are missing. Run the Meteor application once to install package dependencies." >&2
+  exit 1
+fi
+
+if [[ ! -x "$CoffeeCompiler" ]]; then
+  echo "CoffeeScript compiler is missing. Run npm install in the repository." >&2
+  exit 1
+fi
+
+cat "$ScriptDirectory/helpers.coffee" > "$TemporaryCoffee"
+printf '\n' >> "$TemporaryCoffee"
+cat "$ScriptDirectory/previewrenderer-worker.coffee" >> "$TemporaryCoffee"
+
+"$CoffeeCompiler" \
+  --bare \
+  --compile \
+  --stdio \
+  < "$TemporaryCoffee" \
+  > "$TemporaryJavaScript"
+
+NODE_PATH="$ThreeNodeModules${NODE_PATH:+:$NODE_PATH}" npm exec --yes --package=esbuild@0.25.8 -- \
+  esbuild "$TemporaryJavaScript" \
+  --bundle \
+  --minify \
+  --format=iife \
+  --platform=browser \
+  --target=chrome100 \
+  --legal-comments=inline \
+  --outfile="$ScriptDirectory/previewrenderer-worker-bundle.js"

@@ -3,7 +3,9 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model.CameraManager
+Model = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model
+
+class Model.CameraManager
   @fullRotationDelta = 50 # display pixels
 
   constructor: (@reference) ->
@@ -17,21 +19,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     # Update camera type and field of view from the reference.
     @reference.autorun =>
       camera = @reference.data().displayOptions?.camera
-      zNear = camera?.zNear or 0.01
-      zFar = camera?.zFar or 100
-      
-      if fieldOfView = camera?.fieldOfView
-        @_camera = new THREE.PerspectiveCamera fieldOfView, 1, zNear, zFar
-        
-      else if frustum = camera?.frustum
-        left = frustum.left or -frustum.width / 2
-        right = frustum.right or frustum.width / 2
-        top = frustum.top or frustum.height / 2
-        bottom = frustum.bottom or -frustum.height / 2
-        @_camera = new THREE.OrthographicCamera left, right, top, bottom, zNear, zFar
-        
-      else
-        @_camera = null
+      @_camera = Model.Helpers.createCamera THREE, camera, 1
 
       @camera @_camera
     
@@ -40,29 +28,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       return unless camera = @camera()
       return unless viewportSize = @reference.viewportSize()
       
-      camera.aspect = viewportSize.width / viewportSize.height
-      camera.updateProjectionMatrix()
+      Model.Helpers.updateCameraAspectRatio camera, viewportSize.width / viewportSize.height
       @camera.updated()
       
     # Update camera properties from the reference.
     @reference.autorun =>
       return unless cameraData = @reference.data().displayOptions?.camera
       
-      properties = Tracker.nonreactive => @_properties()
-      properties.azimuthalAngle = cameraData.azimuthalAngle ? 0
-      properties.polarAngle = cameraData.polarAngle ? 0
-      properties.radialDistance = cameraData.radialDistance ? 1
-      @_properties properties
+      @_properties Model.Helpers.getCameraProperties cameraData
 
     # Update camera position when properties change.
     @reference.autorun =>
       return unless camera = @camera()
       properties = @_properties()
       
-      camera.position.setFromSphericalCoords properties.radialDistance, properties.polarAngle, properties.azimuthalAngle
-      
-      # Update rotation to look at the center.
-      camera.rotation.set -Math.PI / 2 + properties.polarAngle, properties.azimuthalAngle, 0, 'YXZ'
+      Model.Helpers.applyCameraProperties camera, properties
 
       @camera.updated()
 

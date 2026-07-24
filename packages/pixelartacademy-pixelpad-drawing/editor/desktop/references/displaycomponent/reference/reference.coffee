@@ -142,10 +142,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     return unless imageSize = @imageSize()
 
     scale ?= @currentScale()
+    imageHeight = imageSize.height * scale
     captionHeight = if @isRendered() and @caption() then 10 else 0
 
     width: imageSize.width * scale
-    height: imageSize.height * scale + captionHeight
+    height: imageHeight + captionHeight
+    imageHeight: imageHeight
     
   minScale: ->
     return 0 unless imageSize = @imageSize()

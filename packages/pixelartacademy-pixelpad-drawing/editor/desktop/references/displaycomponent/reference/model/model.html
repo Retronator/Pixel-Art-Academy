@@ -3,6 +3,9 @@
     <div class="movement">
       <figure class="figure">
         <div class="viewport">
+          {{#if previewImageUrl}}
+            <img class="preview" src="{{previewImageUrl}}"/>
+          {{/if}}
           {{#if hasInput}}
             <div class="input-area {{horizontalInputAreaClass}} {{verticalInputAreaClass}}"></div>
           {{/if}}

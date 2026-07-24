@@ -4,13 +4,14 @@ AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model.RendererManager
+Model = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model
+
+class Model.RendererManager
   constructor: (@reference) ->
     @renderer = new THREE.WebGLRenderer
       antialias: true
     
-    @renderer.outputEncoding = THREE.LinearEncoding
-    @renderer.toneMapping = THREE.ACESFilmicToneMapping
+    Model.Helpers.configureRenderer THREE, @renderer
     
     @_rendererUpdatedDependency = new Tracker.Dependency
     
@@ -22,8 +23,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     # Update exposure from the reference.
     @reference.autorun =>
-      exposureValue = @reference.data().displayOptions?.exposureValue or 0
-      @renderer.toneMappingExposure = 2 ** exposureValue
+      Model.Helpers.applyRendererDisplayOptions @renderer, @reference.data().displayOptions
       @_rendererUpdatedDependency.changed()
 
   destroy: ->
@@ -31,13 +31,22 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @renderer.forceContextLoss()
 
   startRendering: ->
-    # Start the reactive redraw routine.
-    @reference.autorun =>
-      # Render when renderer changes.
-      @_rendererUpdatedDependency.depend()
+    new Promise (resolve) =>
+      # Start the reactive redraw routine.
+      @reference.autorun =>
+        # Render when renderer changes.
+        @_rendererUpdatedDependency.depend()
 
-      # Render when scene or camera changes.
-      scene = @reference.sceneManager().scene.withUpdates()
-      camera = @reference.cameraManager().camera.withUpdates()
+        # Render after scene is ready.
+        sceneManager = @reference.sceneManager()
+        return unless sceneManager.ready()
+        scene = sceneManager.scene.withUpdates()
 
-      @renderer.render scene, camera
+        cameraManager = @reference.cameraManager()
+        camera = cameraManager.camera.withUpdates()
+
+        @renderer.render scene, camera
+
+        unless firstRenderDone
+          firstRenderDone = true
+          resolve()

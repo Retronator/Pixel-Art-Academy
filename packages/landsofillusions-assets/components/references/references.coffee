@@ -136,7 +136,7 @@ class LOI.Assets.Components.References extends LOI.Component
       return unless draggingReference = @draggingReference()
       draggingReference.endDrag()
 
-      @draggingReference null
+      Tracker.afterFlush => @draggingReference null
 
     $(document).on "pointermove.landsofillusions-assets-components-references", (event) =>
       scale = @display.scale() * @draggingScale()
@@ -169,7 +169,7 @@ class LOI.Assets.Components.References extends LOI.Component
       return unless resizingReference = @resizingReference()
       resizingReference.endResizing()
 
-      @resizingReference null
+      Tracker.afterFlush => @resizingReference null
 
     $(document).on "pointermove.landsofillusions-assets-components-references", (event) =>
       @_resizingVector.x = event.clientX - @_resizingReferenceCenter.x
