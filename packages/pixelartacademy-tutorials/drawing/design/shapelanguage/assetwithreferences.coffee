@@ -60,7 +60,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
     
     # Disable and enable ramp shades depending if the reference has been chosen.
     @enabledPaletteRampIndices = new AE.LiveComputedField =>
-      return [] unless assetData = @getAssetData()
+      return [] unless assetData = @data()
       enabledPaletteRampIndices = []
       
       if stepAreas = assetData.stepAreas
@@ -125,7 +125,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
       hasPixelsWhenInactive: false
       
   bitmapInfo: ->
-    assetData = @getAssetData()
+    assetData = @data()
     return unless assetData.stepAreas?.length
     
     references = @constructor.references()

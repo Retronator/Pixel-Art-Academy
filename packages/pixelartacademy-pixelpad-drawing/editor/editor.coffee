@@ -199,6 +199,8 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       return unless asset.completed
       
       completed = asset.completed()
+      return unless completed?
+      
       @drawing.os.audio.complete() if @drawingActive() and completed and not @_assetWasCompleted
       @_assetWasCompleted = completed
   

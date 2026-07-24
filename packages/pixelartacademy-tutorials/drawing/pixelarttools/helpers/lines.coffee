@@ -39,7 +39,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     # Allow steps to complete with extra pixels so that we can show only line ends, but continue with a line drawn.
     stepArea = @stepAreas()[0]
     
-    for step, stepIndex in stepArea.steps() when stepIndex in [1, 2]
+    for step, stepIndex in stepArea._steps when stepIndex in [1, 2]
       step.options.canCompleteWithExtraPixels = true
       
   Asset = @

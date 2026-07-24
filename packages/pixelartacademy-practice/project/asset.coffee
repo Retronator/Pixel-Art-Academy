@@ -55,8 +55,12 @@ class PAA.Practice.Project.Asset
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
     @data = new AE.LiveComputedField =>
-      return unless assets = @project.assetsData()
-      _.find assets, (asset) => asset.id is @id()
+      return unless assetsData = @project.assetsData()
+      assetId = @id()
+      
+      _.find assetsData, (assetData) => assetData.id is assetId
+    ,
+      EJSON.equals
   
     portfolioComponentClass = @constructor.portfolioComponentClass()
     @portfolioComponent = new portfolioComponentClass @

@@ -33,7 +33,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes2 extends PAA.Tutor
   @initialize()
   
   bitmapInfo: ->
-    assetData = @getAssetData()
+    assetData = @data()
     return unless assetData.stepAreas?.length
 
     texts = []
@@ -56,7 +56,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes2 extends PAA.Tutor
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
     super arguments...
     
-    steps = stepArea.steps()
+    steps = stepArea._steps
     
     # Mark construction and line art steps.
     for pathStep, index in steps

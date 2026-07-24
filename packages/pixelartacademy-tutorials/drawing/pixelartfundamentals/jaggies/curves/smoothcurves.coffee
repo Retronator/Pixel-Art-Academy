@@ -40,7 +40,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     super arguments...
 
     stepArea = @stepAreas()[0]
-    steps = stepArea.steps()
+    steps = stepArea._steps
     
     # Step 2 and 5 introduce extra pixels, so we must allow other steps before them to complete with them present.
     steps[0].options.canCompleteWithExtraPixels = true

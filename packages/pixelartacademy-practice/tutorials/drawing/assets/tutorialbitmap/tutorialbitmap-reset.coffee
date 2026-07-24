@@ -37,7 +37,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     stepArea.reset() for stepArea in @stepAreas()
     
     # Remove any asset data.
-    if assetData = @getAssetData()
+    if assetData = @data()
+      # Note: Create a clone since asset data gets compared for equality.
+      assetData = _.clone assetData
       assetData.stepAreas = []
       assetData.completed = false
       

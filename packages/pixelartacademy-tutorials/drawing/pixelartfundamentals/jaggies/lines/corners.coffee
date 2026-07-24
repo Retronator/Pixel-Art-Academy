@@ -52,7 +52,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
     super arguments...
     
     stepArea = @stepAreas()[0]
-    steps = stepArea.steps()
+    steps = stepArea._steps
     
     # The first step should not show goal pixels.
     steps[0].options.drawHintsForGoalPixels = false

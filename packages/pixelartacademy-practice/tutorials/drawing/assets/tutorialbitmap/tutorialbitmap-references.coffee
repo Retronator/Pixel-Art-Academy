@@ -60,10 +60,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmapId = @bitmapId()
         return unless bitmap = @bitmap()
         
-        assetData = @getAssetData()
-        
-        # Note: create a clone of step areas since the object gets compared for equality.
-        stepAreas = if assetData.stepAreas then EJSON.clone assetData.stepAreas else []
+        # Note: Create clones since they get compared for equality.
+        assetData = _.clone @data()
+        stepAreas = if assetData.stepAreas then _.clone assetData.stepAreas else []
         
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
@@ -160,6 +159,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   
           if goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
             @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
+            stepAreaInstance.initialize()
         
   destroy: ->
     super arguments...

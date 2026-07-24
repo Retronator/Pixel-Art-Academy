@@ -7,6 +7,7 @@ LOI = LandsOfIllusions
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Project.Asset.Bitmap
   # stepAreas: an array of areas that keep track of step progression
   #   activeStepIndex: the index of the currently active step
+  #   completed: boolean whether the final step has been completed
   #   referenceUrl: optional url of the reference chosen to be drawn in this step area
 
   # Id used for the source of versioning actions.
@@ -72,7 +73,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       asset = _.find assets, (asset) => asset.id is @id()
       storedCompleted = asset?.completed
       
-      return storedCompleted unless @_isActiveInEditor(true) and @initialized()
+      return storedCompleted unless @isActiveDrawingInEditor() and @initialized()
       
       stepAreas = @stepAreas()
       return unless stepAreas.length
@@ -82,6 +83,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       true
       
+    @stepsInitialized = new ReactiveField false
     @resetting = new ReactiveField false
     
   destroy: ->
@@ -205,12 +207,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       # Resources are loaded, create tutorial steps.
       Tracker.nonreactive => @initializeSteps()
-    
-  getAssetData: ->
-    assetsData = @tutorial.assetsData()
-    assetId = @id()
-    
-    _.find assetsData, (assetData) => assetData.id is assetId
+      stepArea.initialize() for stepArea in @stepAreas()
     
   setAssetData: (assetData) ->
     assetsData = @tutorial.assetsData()
@@ -255,17 +252,23 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   maxClipboardScale: -> @constructor.maxClipboardScale?()
 
   solve: ->
-    @_afterInitialization =>
-      stepArea.solve() for stepArea in @stepAreas()
+    await new Promise (resolve) =>
+      @_initializeIfNeeded()
+      
+      Tracker.autorun (computation) =>
+        return unless @initialized()
+        computation.stop()
+        resolve()
+    
+    stepArea.solve() for stepArea in @stepAreas()
     
   solveAndComplete: ->
-    @_afterInitialization =>
-      @solve()
+    await @solve()
       
-      assets = @tutorial.state 'assets'
-      asset = _.find assets, (asset) => asset.id is @id()
-      asset.completed = true
-      @tutorial.state 'assets', assets
+    assets = @tutorial.state 'assets'
+    asset = _.find assets, (asset) => asset.id is @id()
+    asset.completed = true
+    @tutorial.state 'assets', assets
   
   hasGoalPixel: (x, y) ->
     return unless @initialized()

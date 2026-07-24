@@ -98,12 +98,21 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     # Prepare lazy initialization.
     @initialized = new ReactiveField false
 
+    @isActiveInEditor = new ReactiveField false
+    @isActiveDrawingInEditor = new ReactiveField false
+    
+    @_isActiveInEditorAutorun = Tracker.autorun (computation) =>
+      editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+      activeInEditor = editor?.isCreated() and editor?.activeAsset() instanceof @constructor
+      @isActiveInEditor activeInEditor
+      @isActiveDrawingInEditor activeInEditor and editor.drawingActive()
+
     # Allow derived classes to finish constructing.
     Meteor.setTimeout =>
       @_initializingAutorun = Tracker.autorun (computation) =>
         return unless @initializingConditions()
         computation.stop()
-        Tracker.nonreactive => @initialize()
+        Tracker.nonreactive => @_initializeIfNeeded()
 
   destroy: ->
     super arguments...
@@ -114,25 +123,18 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @palette.stop()
     
     @_restrictedPaletteSubscription?.stop()
+    @_isActiveInEditorAutorun.stop()
     @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
     @_readabilityAnalysis?.destroy()
     
   initializingConditions: ->
     # Wait with initializing until we've selected the asset as the active one in the editor.
-    @_isActiveInEditor false
+    @isActiveInEditor()
   
-  _isActiveInEditor: (requiresDrawingActive) ->
-    return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
-    return unless editor.isCreated()
-    return unless asset = editor.activeAsset()
-    return unless asset instanceof @constructor
-    return if requiresDrawingActive and not editor.drawingActive()
-    true
-  
-  initialize: ->
-    return if @_initializing
-    @_initializing = true
+  _initializeIfNeeded: ->
+    return if @_initializeNotNeeded
+    @_initializeNotNeeded = true
     @_initialize()
 
   # Override to provide extra initialization functionality.
@@ -177,14 +179,6 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
         readabilityAnalysisInstance
     
     Meteor.setTimeout => @initialized true
-  
-  _afterInitialization: (action) ->
-    @initialize()
-    
-    Tracker.autorun (computation) =>
-      return unless @initialized()
-      computation.stop()
-      action()
 
   urlParameter: -> @bitmapId()
   

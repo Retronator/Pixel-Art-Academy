@@ -32,7 +32,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     super arguments...
     
     stepArea = @stepAreas()[0]
-    steps = stepArea.steps()
+    steps = stepArea._steps
 
     for step in steps
       # Pixels from previous steps get repainted, so they have to be preserved.

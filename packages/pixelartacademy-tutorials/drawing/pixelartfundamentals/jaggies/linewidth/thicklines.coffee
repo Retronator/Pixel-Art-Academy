@@ -32,7 +32,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.ThickLines ex
     
     # The first step should show invalid pixels even where the colors will add them later.
     stepArea = @stepAreas()[0]
-    steps = stepArea.steps()
+    steps = stepArea._steps
     
     steps[0].options.canCompleteWithExtraPixels = true
     steps[1].options.hasPixelsWhenInactive = false

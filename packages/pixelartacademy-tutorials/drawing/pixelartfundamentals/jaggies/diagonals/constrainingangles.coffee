@@ -26,7 +26,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     # Allow steps to complete with extra pixels so that we can show only line ends, but continue with a line drawn.
     stepArea = @stepAreas()[0]
-    steps = stepArea.steps()
+    steps = stepArea._steps
     
     steps[0].options.canCompleteWithExtraPixels = true
   

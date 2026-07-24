@@ -40,7 +40,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
     super arguments...
     
     # Make the pixels step only show drawn errors.
-    @stepAreas()[0].steps()[0].options.drawHintsForGoalPixels = false
+    @stepAreas()[0]._steps[0].options.drawHintsForGoalPixels = false
     
   editorOptions: ->
     references:

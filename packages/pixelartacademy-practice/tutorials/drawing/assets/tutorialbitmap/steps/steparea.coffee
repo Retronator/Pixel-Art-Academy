@@ -8,23 +8,57 @@ class TutorialBitmap.StepArea
   constructor: (@tutorialBitmap, @bounds) ->
     @stepAreaIndex = @tutorialBitmap.addStepArea @
     
+    # Steps are created locally and provided to reactive consumers when all are created.
+    @_steps = []
     @steps = new ReactiveField []
     
-    @data = new ReactiveField @tutorialBitmap.getAssetData()?.stepAreas?[@stepAreaIndex]
+    @data = new AE.LiveComputedField =>
+      # Don't recompute when loading/unloading.
+      return unless assetData = @tutorialBitmap.data()
+      
+      # Tutorial bitmap data is valid so if there is no step area data, it defaults to empty.
+      assetData.stepAreas?[@stepAreaIndex] or {}
+    ,
+      EJSON.equals
+    
     @activeStepIndex = new ReactiveField @data()?.activeStepIndex
     @activeStep = new ReactiveField null
     
     @hasExtraPixels = new ReactiveField null
     @hasMissingPixels = new ReactiveField null
-    @completed = new ReactiveField false
+    @completed = new ReactiveField null
+
+  destroy: ->
+    @_progressAutorun?.stop()
+    step.destroy() for step in @steps()
     
-    @_progressAutorun = Tracker.autorun (autorun) =>
-      # Don't recompute when loading/unloading.
-      return unless assetData = @tutorialBitmap.getAssetData()
+  addStep: (step, stepIndex) ->
+    if stepIndex?
+      @_steps.splice stepIndex, 0, step
       
-      # Update current data.
-      stepAreaData = assetData.stepAreas?[@stepAreaIndex]
-      @data stepAreaData
+    else
+      @_steps.push step
+  
+  getStepIndex: (step) ->
+    @_steps.indexOf step
+    
+  initialize: ->
+    @steps @_steps
+    
+    @_progressAutorun = Tracker.nonreactive => Tracker.autorun (autorun) =>
+      return unless stepAreaData = @data()
+      
+      # Check if we have newer data because we just updated it.
+      # Note: This lets us minimize reactivity by relying on recomputation
+      # of data, but also have live data if we were the one to update it.
+      if @_latestData
+        if EJSON.equals @_latestData, stepAreaData
+          # Data has caught up, no need for substitution anymore.
+          delete @_latestData
+          
+        else
+          # We have newer data, use it.
+          stepAreaData = @_latestData
       
       # Don't recompute when resetting.
       return if @tutorialBitmap.resetting()
@@ -33,23 +67,30 @@ class TutorialBitmap.StepArea
       steps = @steps()
       return unless steps.length
       
-      # Initialize active step from stored state.
-      activeStepIndex = stepAreaData?.activeStepIndex
+      # Initialize active step and completed from stored state.
+      activeStepIndex = stepAreaData.activeStepIndex
       @activeStepIndex activeStepIndex or 0
       @activeStep steps[activeStepIndex or 0]
       
+      completed = stepAreaData.completed
+      @completed completed or false
+      
       # Activate the first step if we're starting fresh.
       @_activateStep steps[0] unless activeStepIndex?
+
+      # Delay recomputation until drawing is active.
+      return unless @tutorialBitmap.isActiveDrawingInEditor()
       
       # Update information about extra and missing pixels for this active step.
       @_updateExtraAndMissingPixelsFields()
       
       # Update current active step.
+      newActiveStepIndex = 0
       completedSteps = 0
       
       # For this step to be completed, this one and all previous steps have to be completed.
       for step, stepIndex in steps
-        if (step.preserveCompleted() and stepIndex < activeStepIndex) or step.completed()
+        if (step.preserveCompleted() and (stepIndex < activeStepIndex or completed)) or step.completed()
           completedSteps++
           newActiveStepIndex = Math.min completedSteps, steps.length - 1
 
@@ -58,7 +99,7 @@ class TutorialBitmap.StepArea
             # Update the fields that steps rely on for calculating their completed state.
             @activeStepIndex newActiveStepIndex
             
-            newActiveStep =  @steps()[newActiveStepIndex]
+            newActiveStep = @steps()[newActiveStepIndex]
             @activeStep newActiveStep
             
             @_updateExtraAndMissingPixelsFields()
@@ -70,36 +111,37 @@ class TutorialBitmap.StepArea
           break
       
       # The asset is completed if all steps are completed and we have no extra pixels.
-      @completed completedSteps is steps.length and not @hasExtraPixels()
+      newCompleted = completedSteps is steps.length and not @hasExtraPixels()
+      @completed newCompleted
       
-      # See if we progressed (the active step index has changed).
-      newActiveStepIndex = Math.min completedSteps, steps.length - 1
-      return if activeStepIndex is newActiveStepIndex
+      # See if we progressed (the active step index or completed has changed).
+      return if newActiveStepIndex is activeStepIndex and newCompleted is completed
       
       # Update the index in the asset.
-      assetData.stepAreas ?= []
-      assetData.stepAreas[@stepAreaIndex] ?= {}
-      assetData.stepAreas[@stepAreaIndex].activeStepIndex = newActiveStepIndex
+      # Note: We have to do this even on first run instead of relying on defaults, because
+      # the presence of the activeStepIndex also tells us that this step has been activated.
+      @_updateData newActiveStepIndex, newCompleted
       
-      @tutorialBitmap.setAssetData assetData
-
-  destroy: ->
-    @_progressAutorun.stop()
-    step.destroy() for step in @steps()
+  _updateData: (activeStepIndex, completed) ->
+    assetData = Tracker.nonreactive => @tutorialBitmap.data()
+    assetData.stepAreas ?= []
+    existingAssetData = assetData.stepAreas[@stepAreaIndex]
     
-  addStep: (step, stepIndex) ->
-    steps = @steps()
+    @_latestData = if existingAssetData then _.clone existingAssetData else {}
+    @_latestData.activeStepIndex = activeStepIndex
+    @_latestData.completed = completed
     
-    if stepIndex?
-      steps.splice stepIndex, 0, step
-      
-    else
-      steps.push step
-      
-    @steps steps
+    assetData.stepAreas[@stepAreaIndex] = @_latestData
+    @tutorialBitmap.setAssetData assetData
   
   solve: ->
-    step.solve() for step in @steps()
+    steps = @steps()
+
+    for step in steps
+      @_activateStep step
+      step.solve()
+    
+    @_updateData steps.length, true
     
   reset: ->
     step.reset() for step in @steps()

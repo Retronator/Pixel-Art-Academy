@@ -169,7 +169,13 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     # Add to tutorial.
     assets = tutorial.assetsData()
     
-    unless tutorialBitmap = _.find assets, (asset) => asset.id is assetId
+    existingAssetIndex = _.findIndex assets, (asset) => asset.id is assetId
+    
+    if existingAssetIndex >= 0
+      tutorialBitmap = _.clone assets[existingAssetIndex]
+      assets[existingAssetIndex] = tutorialBitmap
+    
+    else
       tutorialBitmap = id: assetId
       assets.push tutorialBitmap
 

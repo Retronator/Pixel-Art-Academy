@@ -61,7 +61,7 @@ class TutorialBitmap.Step
   getEditor: -> @constructor.getEditor()
   
   getIndexInArea: ->
-    @stepArea.steps().indexOf @
+    @stepArea.getStepIndex @
     
   isActiveStepInArea: ->
     @stepArea.activeStepIndex() is @getIndexInArea()

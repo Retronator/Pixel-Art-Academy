@@ -409,30 +409,29 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       console.log "Cheating commences …"
       
       return unless activeGroup = _.last @activeGroups()
-      return unless activeGroup.thing?.assets() and activeGroup.thing.state 'assets'
       
-      cheating = =>
-        assets = activeGroup.thing.assets()
-        assetsData = activeGroup.thing.state 'assets'
+      moreCheating = true
+      
+      while moreCheating
+        break unless assets = activeGroup.thing?.assets()
+        break unless assetsData = activeGroup.thing.state 'assets'
         
-        cheatMore = false
+        moreCheating = false
         
-        while uncompletedAssetData = _.find assetsData, (assetData) => not assetData.completed and _.find assets, (asset) => asset.id() is assetData.id
-          console.log "Completing", uncompletedAssetData.id
+        for assetData, assetIndex in assetsData when not assetData.completed
+          continue unless asset = _.find assets, (asset) => asset.id() is assetData.id
+          continue unless asset.solve
           
-          uncompletedAsset = _.find assets, (asset) => asset.id() is uncompletedAssetData.id
-          uncompletedAsset.solve()
-          uncompletedAssetData.completed = true
+          console.log "Completing", assetData.id
+          await asset.solve()
+          assetsData[assetIndex] = _.extend {}, assetData, completed: true
           
-          cheatMore = true
-        
-        if cheatMore
           activeGroup.thing.state 'assets', assetsData
-          Meteor.setTimeout cheating, 100
-        
-        else
-          console.log "Cheating commenced!"
+          await _.waitForSeconds 0.5
+          
+          moreCheating = true
+          break
       
-      cheating()
+      console.log "Cheating commenced!"
       
       event.preventDefault()

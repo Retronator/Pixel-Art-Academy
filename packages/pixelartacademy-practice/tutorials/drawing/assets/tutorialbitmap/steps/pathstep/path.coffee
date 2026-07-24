@@ -35,6 +35,7 @@ class TutorialBitmap.PathStep.Path
     
     # Rasterize the path to the canvas.
     @canvas.context.lineCap = 'round'
+    @canvas.context.lineJoin = 'bevel'
     @canvas.context.lineWidth = @pathStep.options.tolerance * 2
 
     if @fillColor
