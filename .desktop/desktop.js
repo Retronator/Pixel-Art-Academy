@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import process from 'process';
-import { app } from 'electron';
+import { app, screen } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
@@ -45,6 +45,25 @@ export default class Desktop {
         const windowModule = new Module('window');
 
         eventsBus.on('windowCreated', (window) => {
+            const getMaxWindowContentSize = () => {
+                const display = screen.getDisplayMatching(window.getBounds());
+                const windowBounds = window.getBounds();
+                const contentBounds = window.getContentBounds();
+
+                // Reserve space for the native window frame so the resized content fits inside the display work area.
+                const frameWidth = windowBounds.width - contentBounds.width;
+                const frameHeight = windowBounds.height - contentBounds.height;
+
+                return {
+                    width: Math.max(1, display.workArea.width - frameWidth),
+                    height: Math.max(1, display.workArea.height - frameHeight)
+                };
+            };
+
+            const sendMaxWindowContentSize = () => {
+                windowModule.send('maxWindowContentSize', getMaxWindowContentSize());
+            };
+
             windowModule.on('isFullscreen', () => {
                 this.log.verbose('isFullscreen received');
                 windowModule.send('isFullscreen', window.isFullScreen());
@@ -55,6 +74,50 @@ export default class Desktop {
                 window.setFullScreen(fullscreen);
             });
 
+            windowModule.on('getMaxWindowContentSize', () => {
+                this.log.verbose('getMaxWindowContentSize received');
+                sendMaxWindowContentSize();
+            });
+
+            windowModule.on('resizeToMaxViewport', (event, maxViewportSize) => {
+                this.log.verbose('resizeToMaxViewport received');
+
+                // Ignore malformed requests and fullscreen transitions, where Electron owns the window size.
+                if (!maxViewportSize || !Number.isFinite(maxViewportSize.width)
+                    || !Number.isFinite(maxViewportSize.height) || window.isFullScreen()) {
+                    return;
+                }
+
+                // Restore a maximized window before applying an explicit viewport size.
+                if (window.isMaximized()) {
+                    window.unmaximize();
+                }
+
+                const display = screen.getDisplayMatching(window.getBounds());
+                const maxWindowContentSize = getMaxWindowContentSize();
+                const targetContentSize = {
+                    width: Math.max(
+                        1,
+                        Math.min(Math.round(maxViewportSize.width), maxWindowContentSize.width)
+                    ),
+                    height: Math.max(
+                        1,
+                        Math.min(Math.round(maxViewportSize.height), maxWindowContentSize.height)
+                    )
+                };
+
+                window.setContentSize(targetContentSize.width, targetContentSize.height);
+
+                // Center the resized window in the work area of the display it was already occupying.
+                const resizedWindowBounds = window.getBounds();
+                const targetWindowPosition = {
+                    x: Math.round(display.workArea.x + (display.workArea.width - resizedWindowBounds.width) / 2),
+                    y: Math.round(display.workArea.y + (display.workArea.height - resizedWindowBounds.height) / 2)
+                };
+
+                window.setPosition(targetWindowPosition.x, targetWindowPosition.y);
+            });
+
             // Report fullscreen events to our meteor app.
             window.on('enter-full-screen', () => {
                 windowModule.send('isFullscreen', true);
@@ -62,6 +125,20 @@ export default class Desktop {
 
             window.on('leave-full-screen', () => {
                 windowModule.send('isFullscreen', false);
+                sendMaxWindowContentSize();
+            });
+
+            // Update scale availability when the window moves to a display with a different resolution.
+            window.on('move', sendMaxWindowContentSize);
+
+            const onDisplayMetricsChanged = () => {
+                sendMaxWindowContentSize();
+            };
+
+            screen.on('display-metrics-changed', onDisplayMetricsChanged);
+
+            window.on('closed', () => {
+                screen.removeListener('display-metrics-changed', onDisplayMetricsChanged);
             });
 
             window.webContents.setWindowOpenHandler(({ url }) => {

@@ -14,21 +14,6 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     super arguments...
     
     @progress = new LM.Menu.Progress
-  
-  onCreated: ->
-    super arguments...
-    
-    # On desktop we have to ask the window for its full-screen status.
-    if Meteor.isDesktop
-      @_isFullscreen = new ReactiveField false
-
-      # Listen to fullscreen changes.
-      Desktop.on 'window', 'isFullscreen', (event, isFullscreen) =>
-        @_isFullscreen isFullscreen
-        LOI.settings.graphics.preferFullscreen.value isFullscreen
-      
-      # Request initial value.
-      Desktop.send 'window', 'isFullscreen'
     
   continueVisible: ->
     # Continue is visible when we're not on the landing page and if there is a last loaded game.
@@ -48,8 +33,22 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
   isFullscreen: ->
     if Meteor.isDesktop
-      @_isFullscreen()
+      LOI.adventure.interface.desktopWindowFullscreen()
     
+    else
+      super arguments...
+
+  graphicsScale: ->
+    if Meteor.isDesktop and not @isFullscreen()
+      Math.min @graphicsMaximumScale() or 2, LOI.adventure.interface.highestAvailableDesktopWindowScale()
+      
+    else
+      super arguments...
+  
+  canIncreaseGraphicsScale: ->
+    if Meteor.isDesktop and not @isFullscreen()
+      @graphicsScale() < LOI.adventure.interface.highestAvailableDesktopWindowScale()
+
     else
       super arguments...
   
@@ -164,10 +163,10 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
   onClickMainMenuFullscreen: (event) ->
     if Meteor.isDesktop
-      fullscreen = not @_isFullscreen()
+      fullscreen = not @isFullscreen()
       
       Desktop.send 'window', 'setFullscreen', fullscreen
-      @_isFullscreen fullscreen
+      LOI.adventure.interface.desktopWindowFullscreen fullscreen
       
       LOI.settings.graphics.preferFullscreen.value fullscreen
       
@@ -183,6 +182,22 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   onClickDisplayFullscreen: (event) ->
     # Act the same as the main menu fullscreen button.
     @onClickMainMenuFullscreen event
+
+  onClickDisplayGraphicsScalePreviousButton: (event) ->
+    super arguments...
+
+    @_resizeDesktopWindowToMaxViewport()
+
+  onClickDisplayGraphicsScaleNextButton: (event) ->
+    super arguments...
+
+    @_resizeDesktopWindowToMaxViewport()
+
+  _resizeDesktopWindowToMaxViewport: ->
+    return unless Meteor.isDesktop
+    return if @isFullscreen()
+
+    LOI.adventure.interface.resizeDesktopWindowToMaxViewport @graphicsScale()
   
   onClickAudioInGameMusic: (event) ->
     switch LOI.settings.audio.inGameMusicOutput.value()

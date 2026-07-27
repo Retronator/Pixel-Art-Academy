@@ -40,6 +40,37 @@ class LM.Interface extends LOI.Interface
       maxScale: LOI.settings.graphics.maximumScale.value
       debug: false
 
+    if Meteor.isDesktop
+      @desktopWindowFullscreen = new ReactiveField null
+      @desktopMaxWindowContentSize = new ReactiveField null, EJSON.equals
+
+      # Track native window state so scale choices can use the active display while the game is windowed.
+      Desktop.on 'window', 'isFullscreen', (event, isFullscreen) =>
+        @desktopWindowFullscreen isFullscreen
+        LOI.settings.graphics.preferFullscreen.value isFullscreen
+
+      Desktop.on 'window', 'maxWindowContentSize', (event, maxWindowContentSize) =>
+        @desktopMaxWindowContentSize maxWindowContentSize
+
+      Desktop.send 'window', 'isFullscreen'
+      Desktop.send 'window', 'getMaxWindowContentSize'
+
+      # On a windowed launch, restore a specifically selected scale at its largest bar-free viewport size. Wait for
+      # native window state first so fullscreen and automatic-scale launches retain their existing startup behavior.
+      @autorun (computation) =>
+        isFullscreen = @desktopWindowFullscreen()
+        return unless _.isBoolean isFullscreen
+
+        if isFullscreen
+          computation.stop()
+          return
+
+        return unless @desktopMaxWindowContentSize()
+        computation.stop()
+
+        if maxScale = LOI.settings.graphics.maximumScale.value()
+          @resizeDesktopWindowToMaxViewport maxScale
+
     @studio = new @constructor.Studio
 
     @introFadeComplete = new ReactiveField false
@@ -74,6 +105,19 @@ class LM.Interface extends LOI.Interface
     
   onRendered: ->
     super arguments...
+
+    if Meteor.isDesktop
+      @highestAvailableDesktopWindowScale = new ComputedField =>
+        maxWindowContentSize = @desktopMaxWindowContentSize()
+        return @highestAvailableScale() unless maxWindowContentSize
+
+        # Offer every scale whose safe area will fit after Electron expands the window on the active monitor.
+        highestHorizontalScale = Math.floor maxWindowContentSize.width / @display.safeAreaWidth()
+        highestVerticalScale = Math.floor maxWindowContentSize.height / @display.safeAreaHeight()
+        
+        highestScale = Math.min highestHorizontalScale, highestVerticalScale
+      
+        Math.max 2, highestScale
   
     # Wait until adventure is ready.
     @autorun (computation) =>
@@ -101,6 +145,14 @@ class LM.Interface extends LOI.Interface
   
       @introFadeComplete true
 
+  resizeDesktopWindowToMaxViewport: (scale) ->
+    return unless Meteor.isDesktop
+
+    # Electron will constrain the maximum display dimensions to the active monitor's usable content area.
+    Desktop.send 'window', 'resizeToMaxViewport',
+      width: @display.maxDisplayWidth() * scale
+      height: @display.maxDisplayHeight() * scale
+      
   prepareLocation: ->
     if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
       # We're supposed to be in play so we have to make the studio focus on the top and open the PixelPad.
