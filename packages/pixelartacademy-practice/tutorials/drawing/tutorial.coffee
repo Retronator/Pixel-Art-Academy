@@ -48,7 +48,7 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
       
       for assetClass, index in @constructor.assets()
         @_assets[index] ?= Tracker.nonreactive => new assetClass @
-        assets.unshift @_assets[index]
+        assets.push @_assets[index]
         
         break unless @isAssetCompleted @_assets[index]
 

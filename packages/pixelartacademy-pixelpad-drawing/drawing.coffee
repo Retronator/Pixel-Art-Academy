@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
@@ -98,6 +99,33 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     
     @editor().destroy()
 
+  canGoLeft: ->
+    @portfolio()?.getNeighboringAsset -1
+
+  canGoRight: ->
+    @portfolio()?.getNeighboringAsset 1
+
+  goLeft: ->
+    @_goToActiveGroupAssetAtOffsetFromActiveAsset -1
+
+  goRight: ->
+    @_goToActiveGroupAssetAtOffsetFromActiveAsset 1
+
+  _goToActiveGroupAssetAtOffsetFromActiveAsset: (assetIndexOffset) ->
+    return unless assetData = @portfolio()?.getNeighboringAsset assetIndexOffset
+    
+    # Disable transition animations to make asset jumps instant.
+    $drawingArea = @$('.drawing-area')
+    $drawingArea.addClass 'no-animation'
+
+    # Change the URL so the portfolio activates the selected asset through its routing autorun.
+    AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
+    
+    Meteor.setTimeout =>
+      $drawingArea.removeClass 'no-animation'
+    ,
+      100
+  
   onBackButton: ->
     # Relay to palette selection.
     result = @paletteSelection()?.onBackButton()

@@ -52,6 +52,20 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @sectionsMargin = 13
     @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
     
+  getNeighboringAsset: (assetIndexOffset) ->
+    return unless @isCreated()
+    return unless activeAsset = @activeAsset()
+    return unless activeGroup = _.last @activeGroups()
+    return unless activeGroup.assets
+    
+    # Locate the active asset in the current assets array instead of relying on its
+    # stored index, since assets without URL parameters are filtered out of the group.
+    activeGroupAssets = activeGroup.assets()
+    activeAssetIndex = activeGroupAssets.indexOf activeAsset
+    return if activeAssetIndex < 0
+    
+    activeGroupAssets[activeAssetIndex + assetIndexOffset]
+
   sectionActiveClass: ->
     section = @currentData()
 
