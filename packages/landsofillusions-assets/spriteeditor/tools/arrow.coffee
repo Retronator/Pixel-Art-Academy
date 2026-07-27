@@ -5,10 +5,9 @@ LOI = LandsOfIllusions
 class LOI.Assets.SpriteEditor.Tools.Arrow extends LOI.Assets.SpriteEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Arrow'
   @displayName: -> "Arrow"
+  
+  @icon: -> "/landsofillusions/assets/editor/tools/arrow.png"
     
   @initialize()
 
-  constructor: ->
-    super arguments...
-
-    @shortcut = key: AC.Keys.escape
+  cursorType: -> LOI.Assets.SpriteEditor.PixelCanvas.Cursor.Types.None

@@ -86,7 +86,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
       layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout.id()
       
       tools = [
-        LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Arrow.id()
       ]
       
       tools.push toolId for toolId, toolKey of toolRequirements when @toolIsAvailable toolKey
@@ -244,7 +244,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
     true
 
   defaultInterfaceData: ->
-    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+    activeToolId = LOI.Assets.SpriteEditor.Tools.Arrow.id()
   
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas.id()}":

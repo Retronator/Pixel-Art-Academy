@@ -166,7 +166,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       toolboxViewIndex = _.findIndex views, (view) => view.type is FM.Toolbox.id()
       
       tools = [
-        LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Arrow.id()
       ]
   
       tools.push toolId for toolId, toolKey of toolRequirements when @toolIsAvailable toolKey
@@ -385,7 +385,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     true
 
   defaultInterfaceData: ->
-    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+    activeToolId = LOI.Assets.SpriteEditor.Tools.Arrow.id()
   
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":

@@ -305,6 +305,7 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
+  api.addFile('spriteeditor/tools/arrow');
   api.addFile('spriteeditor/tools/aliasedstrokemask');
   api.addFile('spriteeditor/tools/aliasedstroke');
   api.addFile('spriteeditor/tools/pencil');

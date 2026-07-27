@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
   @Types =
+    None: 'None'
     AliasedBrush: 'AliasedBrush'
     AntiAliasedBrush: 'AntiAliasedBrush'
     Pixel: 'Pixel'
@@ -23,7 +24,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
         {centerCoordinates: canvasCoordinates}
         
       else if type is @constructor.Types.AliasedBrush
-  
         aliasedSize = @brushHelper.aliasedSize()
         center = aliasedSize / 2
   
@@ -73,11 +73,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     # Don't draw the cursor when the interface is inactive.
     return unless @pixelCanvas.interface.active()
     
+    # Don't draw the tool that doesn't want a cursor.
+    type = @type()
+    return if type is @constructor.Types.None
+    
+    # Make sure cursor area is calculated.
     cursorArea = @cursorArea()
     return unless cursorArea.position
 
-    # Don't draw an out-of-bounds pixel brush
-    type = @type()
+    # Don't draw an out-of-bounds pixel brush.
     bounds = @pixelCanvas.assetData()?.bounds
     
     if type is @constructor.Types.Pixel and bounds?.fixed

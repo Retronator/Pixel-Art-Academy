@@ -13,7 +13,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     # Operators
 
     active = true
-    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+    activeToolId = LOI.Assets.SpriteEditor.Tools.Arrow.id()
 
     # Content Components
 
@@ -104,7 +104,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       widthStep: 20
       minWidth: 20
       tools: [
-        LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Arrow.id()
         LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
         LOI.Assets.SpriteEditor.Tools.HardEraser.id()

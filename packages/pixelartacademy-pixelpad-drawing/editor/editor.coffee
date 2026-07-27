@@ -107,7 +107,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         # The editor is opened.
         unless @interface.activeTool()
           # Reactivate the last tool, but switch to the arrow (default) if the last active tool is not allowed anymore.
-          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.Editor.Tools.Arrow
+          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.SpriteEditor.Tools.Arrow
           Tracker.nonreactive => @interface.activateTool tool
 
       else
