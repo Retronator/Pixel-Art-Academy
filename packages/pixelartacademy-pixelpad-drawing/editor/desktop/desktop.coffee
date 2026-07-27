@@ -173,6 +173,29 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
       Tracker.nonreactive => applicationAreaData.set "views.#{toolboxViewIndex}.tools", tools
   
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      menuViewIndex = _.findIndex views, (view) => view.type is FM.Menu.id()
+      return unless menuViewIndex > -1
+      
+      actions = [
+        PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
+      ]
+      
+      LineWidth = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
+      
+      if @activeAsset() instanceof LineWidth.LineWidth or LineWidth.isAssetCompleted LineWidth.LineWidth
+        actions.push LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+        actions.push LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
+        
+      else
+        # Reset the brush size back to 1 since the player can't change it.
+        Tracker.nonreactive => @interface.getHelper(LOI.Assets.SpriteEditor.Helpers.Brush).setDiameter 1
+      
+      Tracker.nonreactive => applicationAreaData.set "views.#{menuViewIndex}.items", actions
+    
     historyActionRequirements =
       "#{LOI.Assets.Editor.Actions.Undo.id()}": PAA.Practice.Software.Tools.ToolKeys.Undo
       "#{LOI.Assets.Editor.Actions.Redo.id()}": PAA.Practice.Software.Tools.ToolKeys.Redo
@@ -405,11 +428,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       
     views = [
       type: FM.Menu.id()
-      items: [
-        PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
-        LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
-        LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
-      ]
+      items: []
     ,
       type: FM.Toolbox.id()
       tools: []
