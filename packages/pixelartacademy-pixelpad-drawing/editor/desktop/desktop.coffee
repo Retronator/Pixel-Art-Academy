@@ -191,6 +191,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     zoomActionRequirements =
       "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
       "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom25.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom50.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom100.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom200.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom400.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom800.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom1600.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom3200.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
 
     @autorun (computation) =>
       return unless @interface.isCreated()

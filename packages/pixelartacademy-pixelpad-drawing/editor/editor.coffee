@@ -121,14 +121,14 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
     @autorun (computation) =>
       return unless @interface.isCreated()
 
-      zoomLevels = [100, 200, 300, 400, 600, 800, 1200, 1600]
+      zoomLevels = [100, 200, 300, 400, 500, 600, 800, 1200, 1600, 2400, 3200, 4800, 6400]
       displayScale = LOI.adventure.interface.display.scale()
 
       if displayScale % 3 is 0
-        zoomLevels = [100 / 3, 200 / 3, zoomLevels...]
+        zoomLevels = [25, 100 / 3, 200 / 3, zoomLevels...]
 
       else
-        zoomLevels = [50, zoomLevels...]
+        zoomLevels = [25, 50, zoomLevels...]
 
       # Extend zoom levels down to preview scale if necessary.
       if displayedAsset = @displayedAsset()
@@ -243,6 +243,19 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           {commandOrControl: true, key: AC.Keys.dash}
           {commandOrControl: true, key: AC.Keys.numMinus}
         ]
+        
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom25.id()}": {shift: true, key: AC.Keys[3]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom50.id()}": {shift: true, key: AC.Keys[2]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom100.id()}": [
+          {key: AC.Keys[1]}
+          {shift: true, key: AC.Keys[1]}
+          {holdKey: AC.Keys.graveAccent}
+        ]
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom200.id()}": {key: AC.Keys[2]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom400.id()}": {key: AC.Keys[3]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom800.id()}": {key: AC.Keys[4]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom1600.id()}": {key: AC.Keys[5]}
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Zoom3200.id()}": {key: AC.Keys[6]}
         
         "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [
           {key: AC.Keys.equalSign}

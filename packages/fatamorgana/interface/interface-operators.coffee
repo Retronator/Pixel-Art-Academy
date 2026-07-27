@@ -141,14 +141,14 @@ class FM.Interface extends FM.Interface
     targetTool = _.find @tools(), (tool) => inputClass.isShortcutDown event, @getShortcutForOperator tool
     targetAction = _.find @actions(), (action) => inputClass.isShortcutDown event, @getShortcutForOperator action
 
+    isHoldShortcutActive = (shortcut) =>
+      return true if event.keyCode and event.keyCode is shortcut.holdKey
+      return true if event.button and event.button is shortcut.holdButton
+      false
+      
     if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.
       targetToolShortcut = @getShortcutForOperator targetTool
-      
-      isHoldShortcutActive = (shortcut) =>
-        return true if event.keyCode and event.keyCode is shortcut.holdKey
-        return true if event.button and event.button is shortcut.holdButton
-        false
 
       if _.isArray targetToolShortcut
         storePreviousTool = _.find targetToolShortcut, isHoldShortcutActive
@@ -163,7 +163,31 @@ class FM.Interface extends FM.Interface
       @activateTool targetTool, storePreviousTool
       
     if targetAction?.enabled()
-      targetAction.execute()
+      # We want to execute the action again on input up if we're activating this action with the hold key.
+      targetActionShortcut = @getShortcutForOperator targetAction
+      
+      if _.isArray targetActionShortcut
+        isHoldAction = _.find targetActionShortcut, isHoldShortcutActive
+      
+      else
+        isHoldAction = isHoldShortcutActive targetActionShortcut
+      
+      # Make sure we're not getting repeated events for the same hold action
+      if isHoldAction
+        unless targetAction is @_holdAction
+          # Release any existing hold action.
+          @_holdAction?.execute true
+          
+          # Set the new hold action.
+          @_holdAction = targetAction
+          
+          @_actionHoldKey = event.keyCode
+          @_actionHoldButton = event.button
+          
+          targetAction.execute true
+          
+      else
+        targetAction.execute()
 
     if targetTool or targetAction
       # Prevent browser shortcuts from firing.
@@ -191,12 +215,19 @@ class FM.Interface extends FM.Interface
     
   onInputUp: (event) ->
     return unless @shortcutsActive()
-    return unless @_holdKey is event.keyCode or @_holdButton is event.button
 
-    @restoreStoredTool()
-
-    @_holdKey = null
-    @_holdButton = null
+    if @_holdKey? and @_holdKey is event.keyCode or @_holdButton? and @_holdButton is event.button
+      @restoreStoredTool()
+      
+      @_holdKey = null
+      @_holdButton = null
+    
+    if @_actionHoldKey? and @_actionHoldKey is event.keyCode or @_actionHoldButton? and @_actionHoldButton is event.button
+      @_holdAction?.execute true
+      @_holdAction = null
+      
+      @_actionHoldKey = null
+      @_actionHoldButton = null
   
   onPointerLeaveWindow: (event) ->
     return unless @active()
