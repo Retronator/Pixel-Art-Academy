@@ -10,6 +10,8 @@
     z-index 11
     background atariGray(6)
     box-shadow -1rem 1rem 0 desktopShadowColor
+    container-type inline-size
+    container-name pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas-drawing-area
 
     &.hidden
       display none
@@ -17,20 +19,10 @@
     .evaluation
       position absolute
       z-index 1
-      top 5rem
-      right 4rem
 
       .completed
       .started
-        display inline-block
-        width 10rem
-        height 8rem
-
-      .completed
-        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark.png')
-
-      .started
-        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/startedcheckmark.png')
+        display block
 
       .grade
         color atariGreen(3)
@@ -48,6 +40,54 @@
     &.invert-colors
       color atariGray(6)
       pixel-text-outline(atariGray(0))
+
+@container pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas-drawing-area (min-width: 50rem)
+  .drawing-area
+    .evaluation
+      top 5rem
+      right 4rem
+
+      .completed
+      .started
+        width 10rem
+        height 8rem
+
+      .completed
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark-10.png')
+
+      .started
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/startedcheckmark-10.png')
+
+@container pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas-drawing-area (max-width: 50rem)
+  .drawing-area
+    .evaluation
+      top 10%
+      right 8%
+
+      .completed
+      .started
+        width 6rem
+        height 5rem
+
+      .completed
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark-6.png')
+
+      .started
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/startedcheckmark-6.png')
+
+@container pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas-drawing-area (max-width: 25rem)
+  .drawing-area
+    .evaluation
+      .completed
+      .started
+        width 4rem
+        height 3rem
+
+      .completed
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark-4.png')
+
+      .started
+        background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/startedcheckmark-4.png')
 
 .pixelartacademy-pixelpad-apps-drawing.editor-desktop
   &.editor-visible
