@@ -21,22 +21,20 @@ PAE.Line.Part.StraightLine::_analyzeSegments = ->
   return if @pointSegmentLengths
   
   @pointSegmentLengths = []
-  @pointSegmentLengthFrequency = []
   
   for segmentIndex in [@startSegmentIndex..@endSegmentIndex]
     segment = @line.getEdgeSegment segmentIndex
-    
-    if segment.pointSegmentsCount and segment.pointSegmentLength
-      pointSegmentLength = if segmentIndex in [@startSegmentIndex, @endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
-      @pointSegmentLengths.push pointSegmentLength for i in [1..segment.pointSegmentsCount]
-    
-    @pointSegmentLengthFrequency[pointSegmentLength] ?= 0
-    @pointSegmentLengthFrequency[pointSegmentLength] += segment.pointSegmentsCount
+    continue unless segment.pointSegmentsCount and segment.pointSegmentLength
+
+    pointSegmentLength = if segmentIndex in [@startSegmentIndex, @endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+    @pointSegmentLengths.push pointSegmentLength for i in [1..segment.pointSegmentsCount]
+
+  @pointSegmentLengthFrequency = _.countBy @pointSegmentLengths
     
   # See if the end points are junctions and it would be better not to use them.
   startSegment = @line.getEdgeSegment @startSegmentIndex
   startPoint = @line.getPoint startSegment.startPointIndex
-  currentStartPointSegmentLength = startSegment.pointSegmentLength
+  currentStartPointSegmentLength = _.first @pointSegmentLengths
 
   if currentStartPointSegmentLength > 1 and startPoint.allNeighbors.length > 2
     alternativeStartPointSegmentLength = currentStartPointSegmentLength - 1
@@ -45,11 +43,11 @@ PAE.Line.Part.StraightLine::_analyzeSegments = ->
       @pointSegmentLengths[0] = alternativeStartPointSegmentLength
       @pointSegmentLengthFrequency[alternativeStartPointSegmentLength]++
       @pointSegmentLengthFrequency[currentStartPointSegmentLength]--
-      delete @pointSegmentLengthFrequency[currentStartPointSegmentLength] unless @pointSegmentLengthFrequency[alternativeStartPointSegmentLength]
+      delete @pointSegmentLengthFrequency[currentStartPointSegmentLength] unless @pointSegmentLengthFrequency[currentStartPointSegmentLength]
   
   endSegment = @line.getEdgeSegment @endSegmentIndex
   endPoint = @line.getPoint endSegment.endPointIndex
-  currentEndPointSegmentLength = endSegment.pointSegmentLength
+  currentEndPointSegmentLength = _.last @pointSegmentLengths
 
   if currentEndPointSegmentLength > 1 and endPoint.allNeighbors.length > 2
     alternativeEndPointSegmentLength = currentEndPointSegmentLength - 1

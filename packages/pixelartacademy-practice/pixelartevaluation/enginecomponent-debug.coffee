@@ -30,6 +30,8 @@ class PAE.EngineComponent extends PAE.EngineComponent
       @drawSegmentCorners = new ReactiveField false
   
       $(document).on 'keydown', (event) =>
+        return unless event.ctrlKey
+        
         switch event.which
           when AC.Keys['1'] then field = @drawCore
           when AC.Keys['2'] then field = @drawPoints
