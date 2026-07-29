@@ -4,9 +4,57 @@ PAE = PAA.Practice.PixelArtEvaluation
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 LineArtCleanup = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LineArtCleanup
+Atari2600 = LOI.Assets.Palette.Atari2600
+
+_topLeftCorner = new THREE.Vector2
+_bottomRightCorner = new THREE.Vector2
+_symbolHintTextOffset = 0.5 + 0.5 / 12
 
 class LineArtCleanup.Steps
-  class @DrawLine extends TutorialBitmap.PixelsStep
+  class @RequiredPixelsStep extends TutorialBitmap.PixelsStep
+    drawOverlaidHints: (context, renderOptions = {}) ->
+      @_prepareColorHelp context, renderOptions
+  
+      palette = LOI.palette()
+      glowColor = palette.color Atari2600.hues.gray, 7
+      pixelColor = palette.color Atari2600.hues.gray, 0
+    
+      for pixel in @goalPixels
+        absoluteX = pixel.x + @stepArea.bounds.x
+        absoluteY = pixel.y + @stepArea.bounds.y
+        
+        _topLeftCorner.x = absoluteX
+        _topLeftCorner.y = absoluteY
+        renderOptions.camera.roundCanvasToWindowPixel _topLeftCorner, _topLeftCorner
+        
+        _bottomRightCorner.x = absoluteX + 1
+        _bottomRightCorner.y = absoluteY + 1
+        renderOptions.camera.roundCanvasToWindowPixel _bottomRightCorner, _bottomRightCorner
+  
+        # Draw a radial gradient from the center of the pixel.
+        hintGlowErrorGradient = context.createRadialGradient absoluteX + 0.5, absoluteY + 0.5, 0, absoluteX + 0.5, absoluteY + 0.5, 0.5
+        hintGlowErrorGradient.addColorStop 0, "rgba(#{glowColor.r * 255}, #{glowColor.g * 255}, #{glowColor.b * 255}, 0.5)"
+        hintGlowErrorGradient.addColorStop 1, "rgba(#{glowColor.r * 255}, #{glowColor.g * 255}, #{glowColor.b * 255}, 0)"
+        context.fillStyle = hintGlowErrorGradient
+        context.fillRect absoluteX, absoluteY, 1, 1
+
+        context.fillStyle = "rgba(#{pixelColor.r * 255}, #{pixelColor.g * 255}, #{pixelColor.b * 255}, #{@_hintOpacity})"
+    
+        if @_hintStyle is @_ColorHelp.HintStyle.Dots
+          context.fillRect _topLeftCorner.x + @_dotHintOffset, _topLeftCorner.y + @_dotHintOffset, @_dotHintSize, @_dotHintSize
+          
+        else
+          # Draw the symbol hint.
+          serialIndex = LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, pixel
+          symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
+    
+          # Write the symbol in the center of the pixel.
+          context.fillText symbol, absoluteX + _symbolHintTextOffset, absoluteY + _symbolHintTextOffset
+
+      # Explicit return to avoid result collection.
+      return
+    
+  class @DrawLine extends @RequiredPixelsStep
     @preserveCompleted: -> true
 
     hasPixel: ->
@@ -98,7 +146,7 @@ class LineArtCleanup.Steps
       ,
         100
 
-  class @SmoothenTheCurve extends TutorialBitmap.PixelsStep
+  class @SmoothenTheCurve extends @RequiredPixelsStep
     completed: ->
       return unless super arguments...
       

@@ -5,8 +5,9 @@ LOI = LandsOfIllusions
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
-_topLeftCorner = x: 0, y: 0
-_bottomRightCorner = x: 0, y: 0
+_topLeftCorner = new THREE.Vector2
+_bottomRightCorner = new THREE.Vector2
+_symbolHintTextOffset = 0.5 + 0.5 / 12
 
 _darkRedRGBString = "158, 32, 32"
 _lightRedRGBString = "254, 182, 182"
@@ -188,10 +189,10 @@ class TutorialBitmap.Step
           symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
 
           for offset in [-0.08, 0.08]
-            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5
-            context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5 + offset
-            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5 + offset
-            context.fillText symbol, absoluteX + 0.5 - offset, absoluteY + 0.5 + offset
+            context.fillText symbol, absoluteX + _symbolHintTextOffset + offset, absoluteY + _symbolHintTextOffset
+            context.fillText symbol, absoluteX + _symbolHintTextOffset, absoluteY + _symbolHintTextOffset + offset
+            context.fillText symbol, absoluteX + _symbolHintTextOffset + offset, absoluteY + _symbolHintTextOffset + offset
+            context.fillText symbol, absoluteX + _symbolHintTextOffset - offset, absoluteY + _symbolHintTextOffset + offset
       
       else if @_errorStyle is @_ColorHelp.ErrorStyle.HintGlow or @_displayAllColorErrors and not @_errorStyle
         # Draw a radial gradient from the center of the pixel.
@@ -218,4 +219,4 @@ class TutorialBitmap.Step
       symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
 
       # Write the symbol in the center of the pixel.
-      context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5
+      context.fillText symbol, absoluteX + _symbolHintTextOffset, absoluteY + _symbolHintTextOffset
