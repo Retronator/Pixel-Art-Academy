@@ -108,6 +108,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     @finalSelection = new ReactiveField false
     @selectionFinished = new ReactiveField false
     
+    @previousSelectionSteps = []
     @_timeouts = []
     
   onRendered: ->
@@ -134,7 +135,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       else if @_wasActive and not shouldBeActive
         @_moveOut()
         
-        Meteor.clearTimeout timeout for timeout in @_timeouts
+        @_clearTransitionTimeouts()
   
         Meteor.setTimeout =>
           @cardsVisible shouldBeActive
@@ -151,9 +152,16 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     drawingApp.setMaximumPixelPadSize fullscreen: true
     
   onBackButton: ->
-    return unless @selectedCard()
-    
-    @_goToSelectedCard()
+    if @selectedCardRevealed()
+      @_goToSelectedCard()
+
+    else
+      return unless @previousSelectionSteps.length
+      
+      # Let the final reveal transition animate till the end.
+      return true if _.last(@previousSelectionSteps).finalSelection
+
+      @_restorePreviousSelectionStep()
     
     # Inform that we've handled the back button.
     true
@@ -164,7 +172,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     @selectedCard null
     @selectedCardRevealed false
     @selectionFinished false
-    @choices = []
+    @previousSelectionSteps = []
     @_timeouts = []
     @nextChoice = @constructor.Choices.MonochromeColor
   
@@ -338,6 +346,62 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     for card, index in cards
       card.setPosition 0, -@constructor.boundary.y, 10
       
+  _clearTransitionTimeouts: ->
+    Meteor.clearTimeout timeout for timeout in @_timeouts
+    @_timeouts = []
+
+  _rememberPreviousSelectionStep: ->
+    @previousSelectionSteps.push
+      choice: @currentChoice()
+      finalSelection: @finalSelection()
+      remainingCards: @remainingCards.slice()
+
+  _restorePreviousSelectionStep: ->
+    @_clearTransitionTimeouts()
+    
+    @audio.dealingCenter false
+    @audio.dealingLeft false
+    @audio.dealingRight false
+    @audio.chooseSideFactor 0
+    
+    previousSelectionStep = @previousSelectionSteps.pop()
+
+    @currentChoice null
+    @finalSelection false
+    @selectedCard null
+    @selectedCardRevealed false
+    @selectionFinished false
+
+    @remainingCards = previousSelectionStep.remainingCards
+    @nextChoice = previousSelectionStep.choice
+
+    leftChoiceCards = _.filter @remainingCards, (card) => previousSelectionStep.choice.left.filter card.id
+    rightChoiceCards = _.filter @remainingCards, (card) => previousSelectionStep.choice.right.filter card.id
+
+    @leftChoiceCards leftChoiceCards
+    @rightChoiceCards rightChoiceCards
+
+    cardThickness = @constructor.cardThickness
+    stackOffset = @constructor.stackOffset
+    stackCount = {}
+    stackCount[-1] = 0
+    stackCount[1] = 0
+
+    for card in @remainingCards by -1
+      sign = 0
+      sign = -1 if previousSelectionStep.choice.left.filter card.id
+      sign = 1 if previousSelectionStep.choice.right.filter card.id
+
+      continue unless sign
+
+      stackPosition = stackCount[sign]
+      card.setPosition stackOffset * sign, 0, stackPosition * cardThickness
+      stackCount[sign]++
+
+    @currentChoice previousSelectionStep.choice
+    
+    @audio.chooseSide()
+    
   _gradualDelay: (index) ->
     Math.pow(index + 1, -0.7) * 250
     
@@ -346,6 +410,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
 
     if choice[madeChoice].locked
       return if choice[madeChoice].locked()
+
+    @_rememberPreviousSelectionStep()
 
     @currentChoice null
     
@@ -386,6 +452,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     @audio.chooseSide() if @remainingCards.length > 1
     
   _makeFinalSelection: (selection) ->
+    @_rememberPreviousSelectionStep()
+
     @finalSelection false
     
     Tracker.afterFlush =>
