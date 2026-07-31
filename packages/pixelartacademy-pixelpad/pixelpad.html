@@ -6,7 +6,15 @@
     {{#LandsOfIllusions.Components.Overlay}}
     {{else}}
       <div class="viewport-area">
-        <div class="device {{activeClass}} {{positioningClass}}">
+        <div class="navigation">
+          {{#if canGoLeft}}
+            <button class="left-button navigation-button"></button>
+          {{/if}}
+          {{#if canGoRight}}
+            <button class="right-button navigation-button"></button>
+          {{/if}}
+        </div>
+        <div class="device {{activeClass}} {{positioningClass}} {{hoveredClass}}">
           <div class="glass {{resizableClass}}"></div>
           <div class="screen"></div>
           <div class="os" {{style osStyle}}>

@@ -19,6 +19,27 @@
     transition all 0.5s
 
   .landsofillusions-components-overlay
+    .viewport-area
+      > .navigation
+        absolute-cover()
+
+        .navigation-button
+          display block
+          position absolute
+          width 50%
+          height 100%
+          top 0
+          background none
+          border none
+
+        .left-button
+          left 0
+          cursor w-resize
+
+        .right-button
+          right 0
+          cursor e-resize
+
     > .safe-area
       display none
 

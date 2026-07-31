@@ -4,6 +4,8 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.PixelPad.Apps.Drawing.Portfolio.Asset
+  id: -> throw new AE.NotImplementedException "You must provide the ID to identify this asset."
+
   displayName: -> throw new AE.NotImplementedException "You must specify the asset name."
 
   description: -> '' # Override to provide a description of the asset.
@@ -19,6 +21,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   
   portfolioComponent: -> throw new AE.NotImplementedException "You must provide a component to render the asset in the portfolio."
   
-  urlParameter: -> throw new AE.NotImplementedException "You must provide the URL parameter to identify this asset."
+  urlParameter: -> throw new AE.NotImplementedException "You must provide the URL parameter to navigate to this asset."
 
   ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."

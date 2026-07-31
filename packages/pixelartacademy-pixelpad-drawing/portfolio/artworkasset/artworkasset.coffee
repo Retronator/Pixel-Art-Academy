@@ -35,6 +35,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
     
   destroy: ->
     @_palettesAutorun.stop()
+    
+  id: -> @artworkId
 
   displayName: -> @artwork()?.title or 'Untitled'
   

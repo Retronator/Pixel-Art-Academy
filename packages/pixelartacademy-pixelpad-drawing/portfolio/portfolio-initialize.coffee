@@ -43,9 +43,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
           (a, b) =>
             _.isArray(a) and _.isArray(b) and a.length is b.length and _.intersection(a, b).length is a.length
         
+        groupsProvider = Tracker.nonreactive => new @constructor.GroupsProvider sectionThings, 0
+
         section =
           nameKey: @constructor.Sections["#{_.upperFirst sectionThingName}s"]
-          groups: @_createGroupsField sectionThings, 0
+          groupsProvider: groupsProvider
+          groups: groupsProvider.groups
           isSection: true
 
         @["#{sectionThingName}sSection"] = section
@@ -81,6 +84,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @_importArtworkAsset = new PAA.PixelPad.Apps.Drawing.Portfolio.ImportArtwork
 
     @_wipArtworksGroup =
+      level: 0
       index: 0
       name: => "Work in progress"
       assets: new ComputedField =>
@@ -102,18 +106,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
           do (artwork, assetIndex) =>
             return unless asset = @_artworkAssets[artwork._id]
           
-            assets.push
-              _id: asset.urlParameter()
-              index: assetIndex
-              asset: asset
-              scale: => @_assetScale asset
+            assets.push @constructor.AssetData.getForAsset asset, assetIndex
   
         if PAA.PixelPad.Apps.Drawing.canCreateArtworks()
-          assets.push
-            _id: @_newArtworkAsset.urlParameter()
-            index: assets.length
-            asset: @_newArtworkAsset
-            scale: => 1
+          assets.push @constructor.AssetData.getForAsset @_newArtworkAsset, assetIndex
   
           # TODO: Enable uploading of artworks.
           ###
@@ -150,7 +146,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       # If the active section is not present anymore, close the section.
       if @activeSection and not @activeSection() in sections
         @activeSection null
-        @activeGroup null
+        @activeGroups []
         @hoveredAsset null
         @lastHoveredAsset null
 
@@ -160,10 +156,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       sections
 
     @activeSection = new ReactiveField null, (a, b) => a is b
-    @activeGroups = new ReactiveField [], (a, b) =>
-      return false if a.length isnt b.length
-      return false for group, index in a when group isnt b[index]
-      true
+    @activeGroups = new ReactiveField [], _.arraysHaveSameValues
 
     # Clear stale active groups.
     @autorun (computation) =>
@@ -177,10 +170,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       
       for activeGroup, activeGroupIndex in activeGroups
         currentGroups = newGroups
-        newGroups = newGroups[activeGroup.index].groups?()
-      
-        if activeGroup in currentGroups
-          continue
+        newGroups = newGroups[activeGroup.index]?.groups?()
+        continue if activeGroup in currentGroups
   
         # See if we can find a group with the same name.
         name = activeGroup.name()
@@ -202,6 +193,49 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @lastHoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ReactiveField null, (a, b) => a is b
+    @waitingAsset = new ReactiveField null, (a, b) => a is b
+
+    # Animate newly created assets.
+    @_lastGroupAssets = null
+    
+    @autorun (computation) =>
+      # Clear last assets when an assets group has changed.
+      activeGroups = @activeGroups()
+      group = _.last(activeGroups)
+      assets = group?.assets?()
+
+      unless assets
+        @_lastGroupAssets = null
+        return
+        
+      unless @_lastGroupAssets?.group is group
+        @_lastGroupAssets =
+          group: group
+          assets: assets
+      
+      # See if a new asset was added.
+      newAssets = _.difference assets, @_lastGroupAssets.assets
+      @_lastGroupAssets.assets = assets
+      return unless newAssets.length
+      
+      Meteor.clearTimeout @_revealTimeout
+      @waitingAsset _.last newAssets
+    
+    @autorun (computation) =>
+      return unless waitingAsset = @waitingAsset()
+      
+      if activeAsset = @activeAsset()
+        # If the waiting asset became active, don't do the reveal.
+        @waitingAsset null if activeAsset is waitingAsset
+        
+        # Wait until there's no active asset (we're not on the clipboard anymore).
+        return
+      
+      # Reveal the asset after transitions.
+      @_revealTimeout = Meteor.setTimeout =>
+        @waitingAsset null
+      ,
+        750
 
     # Determine the active section, group, and asset based on the URL.
     @autorun (computation) =>
@@ -352,63 +386,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @_newArtworkAsset.destroy()
     @_importArtworkAsset.destroy()
   
-  _createGroupsField: (sectionThingsProvider, level) ->
-    new ComputedField =>
-      groups = []
-
-      # Get section things and separate folders of things from them.
-      sectionThings = sectionThingsProvider()
-      folders = _.remove sectionThings, (sectionThing) => sectionThing instanceof PAA.PixelPad.Apps.Drawing.Portfolio.Folder
-      
-      # Turn things into groups.
-      groupIndex = 0
-      
-      for sectionThing in sectionThings
-        do (sectionThing) =>
-          assets = new ComputedField =>
-            for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
-              do (asset, assetIndex) =>
-                _id: asset.urlParameter()
-                index: assetIndex
-                asset: asset
-                scale: => @_assetScale asset
-          
-          groups.push
-            level: level
-            thing: sectionThing
-            index: groupIndex
-            name: => sectionThing.fullName()
-            noAssetsInstructions: => sectionThing.noAssetsInstructions?()
-            assets: assets
-            content: => sectionThing.content?()
-          
-          groupIndex++
-      
-      # Turn folders into groups, merged by folder ID.
-      folderInstancesById = {}
-      
-      for folder in folders
-        folderInstancesById[folder.id()] ?= []
-        folderInstancesById[folder.id()].push folder
-        
-      for folderId, folderInstances of folderInstancesById
-        do (folderInstances) =>
-          # We join the contents of all instances together.
-          folderThings = new ComputedField => _.flatten (folderInstance.things for folderInstance in folderInstances)
-          
-          # We take the first instance to act as the provider of the information for this group.
-          folder = folderInstances[0]
-
-          do (folder) =>
-            groups.push
-              level: level
-              index: groupIndex
-              name: => folder.displayName()
-              groups: @_createGroupsField folderThings, level + 1
-        
-          groupIndex++
-      
-      groups
+    @tutorialsSection.groupsProvider.destroy()
+    @challengesSection.groupsProvider.destroy()
+    @projectsSection.groupsProvider.destroy()
+    @constructor.AssetData.destroy()
   
   _searchGroupForAssetWithUrlParameter: (group, urlParameter, currentGroups) ->
     if group.assets

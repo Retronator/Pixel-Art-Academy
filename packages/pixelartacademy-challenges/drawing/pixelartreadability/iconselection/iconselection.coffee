@@ -118,14 +118,16 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
       
     false
   
-  completed: -> @_getIconStatusIfRevealedAnalysis()?.completed
-  started: -> @_getIconStatusIfRevealedAnalysis()?.started
+  completed: -> @_getIconStatusIfRevealedAnalysis 'completed'
+  started: -> @_getIconStatusIfRevealedAnalysis 'started'
   
-  _getIconStatusIfRevealedAnalysis: ->
+  _getIconStatusIfRevealedAnalysis: (property) ->
     return unless bitmap = @document()
-    return unless bitmap.properties.readabilityAnalysis.revealed
     
-    @constructor.getIconStatus bitmap
+    # We send an explicit false so that changing this to a truthy value will trigger the completed sound.
+    return false unless bitmap.properties.readabilityAnalysis.revealed
+    
+    @constructor.getIconStatus(bitmap)[property] or false
   
   width: -> 56
   height: -> 82

@@ -12,19 +12,18 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
   constructor: ->
     super arguments...
 
-    @assets = new ComputedField =>
-      [
-        new PAA.Pico8.Cartridges.Snake.Food @
-        new PAA.Pico8.Cartridges.Snake.Body @
-      ]
-    ,
-      true
+    @_assets = Tracker.nonreactive => [
+      new PAA.Pico8.Cartridges.Snake.Food @
+      new PAA.Pico8.Cartridges.Snake.Body @
+    ]
     
     @pico8Cartridge = new PAA.Pico8.Cartridges.Snake
 
   destroy: ->
-    @assets.stop()
+    asset.destroy() for asset in @_assets
     @pico8Cartridge.destroy()
+
+  assets: -> @_assets
     
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial

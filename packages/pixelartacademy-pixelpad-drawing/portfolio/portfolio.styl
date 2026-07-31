@@ -160,6 +160,7 @@
               .brief
                 display inline-block
                 position relative
+                left 0
                 top 0
                 width 120rem
                 height 150rem
@@ -170,7 +171,7 @@
                 color atariGray(2)
                 box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
                 text-align left
-                transition top 0.5s 0.3s
+                transition top 0.5s 0.3s, left 1s
                 cursor pointer
 
                 &:first-child
@@ -182,11 +183,14 @@
 
                 &.hovered
                   top -4rem
-                  transition top 0.2s
+                  transition top 0.2s, left 1s
 
                 &.active
                   top -240rem
-                  transition top 0.5s
+                  transition top 0.5s, left 1s
+
+                &.waiting
+                  left 400rem
 
                 .asset-name
                   margin-bottom 4.5rem
@@ -219,9 +223,10 @@
 
               .asset
                 position relative
+                left 0
                 top 0
                 height 100rem
-                transition all 0.2s, top 0.5s 0.3s
+                transition all 0.2s, top 0.5s 0.3s, left 1s
                 cursor pointer
                 pointer-events none
 
@@ -244,6 +249,9 @@
                 &.active
                   top -240rem
                   transition all 0.2s, top 0.5s
+
+                &.waiting
+                  left 400rem
 
             .no-assets-instructions
               width 120rem

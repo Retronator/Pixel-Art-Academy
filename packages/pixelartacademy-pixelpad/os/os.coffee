@@ -184,6 +184,12 @@ class PAA.PixelPad.OS extends LOI.Component
 
   go: (appUrl, appPath, appParameter) ->
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
+    
+  canGoLeft: -> @currentApp()?.canGoLeft?() or @currentApp()?.onGoLeft
+  canGoRight: -> @currentApp()?.canGoRight?() or @currentApp()?.onGoRight
+  
+  goLeft: -> @currentApp().goLeft() if @canGoLeft()
+  goRight: -> @currentApp().goRight() if @canGoRight()
 
   shortcutsTableVisibleClass: ->
     'visible' if _.every [@currentSystems()..., @currentApp()], (program) => program.allowsShortcutsTable()

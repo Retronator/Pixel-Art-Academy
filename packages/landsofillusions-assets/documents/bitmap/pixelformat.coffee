@@ -42,11 +42,8 @@ class LOI.Assets.Bitmap.PixelFormat
 
   @equals: (a, b) ->
     return false unless a and b
-    return false unless a.attributeIds.length is b.attributeIds.length
-    for index in [0...a.attributeIds.length]
-      return false unless a.attributeIds[index] is b.attributeIds[index]
 
-    true
+    _.arraysHaveSameValues a.attributeIds, b.attributeIds
 
   equals: (other) ->
     @constructor.equals @, other

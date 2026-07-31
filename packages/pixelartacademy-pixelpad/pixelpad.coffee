@@ -197,6 +197,9 @@ class PAA.PixelPad extends LOI.Adventure.Item
 
   backButtonVisible: -> true # Override to control when the back button is available.
   
+  canGoLeft: -> @os.canGoLeft()
+  canGoRight: -> @os.canGoRight()
+
   url: -> @os.url()
 
   open: ->
@@ -266,6 +269,8 @@ class PAA.PixelPad extends LOI.Adventure.Item
     super(arguments...).concat
       'mousedown .glass': @onMouseDownGlass
       'scroll .os': @onScrollOS
+      'click .left-button': @onClickLeftButton
+      'click .right-button': @onClickRightButton
 
   onMouseDownGlass: (event) ->
     return unless @resizable()
@@ -315,6 +320,12 @@ class PAA.PixelPad extends LOI.Adventure.Item
     # overflow: hidden if the browser tries to focus on input elements.
     event.currentTarget.scrollLeft = 0
     event.currentTarget.scrollTop = 0
+
+  onClickLeftButton: (event) ->
+    @os.goLeft()
+
+  onClickRightButton: (event) ->
+    @os.goRight()
 
   # Listener
 

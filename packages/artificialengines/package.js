@@ -117,6 +117,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/nestedproperty');
   api.addFile('everywhere/lodash/urls');
   api.addFile('everywhere/lodash/math');
+  api.addFile('everywhere/lodash/arrays');
   api.addFile('everywhere/lodash/objects');
   api.addFile('everywhere/lodash/strings');
   api.addFile('everywhere/lodash/filterfunction');
@@ -582,6 +583,7 @@ Package.onTest(function(api) {
     'retronator:artificialengines'
   ]);
 
+  api.addFile('everywhere/lodash/arrays-tests');
   api.addFile('everywhere/lodash/objects-tests');
   api.addClientFile('spectrum/imagedatahelpers-tests');
   api.addFile('pyramid/polygon-tests');
