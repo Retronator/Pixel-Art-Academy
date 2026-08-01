@@ -55,3 +55,5 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Use `./test setup` to prepare the isolated test environment, `./test` for the full test suite, and
   `./test package <package-folder-or-name>` for targeted package tests. When adding or changing tests, run the relevant
   `./test` command and report its result.
+- Request network access before running `./test` commands so dependency setup or Meteor downloads do not stall in the
+  sandbox before failing.

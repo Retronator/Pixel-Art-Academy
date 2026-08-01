@@ -140,6 +140,7 @@ Package.onUse(function(api) {
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep..');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep/path');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep/pathstep-solve');
 
   // Software
 

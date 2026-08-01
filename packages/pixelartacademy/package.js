@@ -11,8 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'onnxruntime-web': '1.16.3',
-  'bresenham-zingl': '0.2.0'
+  'onnxruntime-web': '1.16.3'
 });
 
 Package.onUse(function(api) {

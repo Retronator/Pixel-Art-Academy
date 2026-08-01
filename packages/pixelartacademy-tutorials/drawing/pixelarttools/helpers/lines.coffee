@@ -44,15 +44,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
       
   Asset = @
   
-  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
 
   class @Tool extends PAA.Tutorials.Drawing.Instructions.Instruction
     @id: -> "#{Asset.id()}.Tool"

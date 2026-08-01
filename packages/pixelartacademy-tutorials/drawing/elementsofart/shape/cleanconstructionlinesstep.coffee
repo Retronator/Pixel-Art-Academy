@@ -36,6 +36,8 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep exten
           y: absoluteY
     
     # Replace the layer pixels in this bitmap.
+    return unless pixels.length
+    
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
 

@@ -10,10 +10,6 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Npm.depends({
-  'bresenham-zingl': '0.2.0'
-});
-
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');

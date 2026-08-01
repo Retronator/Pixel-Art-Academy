@@ -132,6 +132,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     
     @message: -> """
       When creating an artwork, it can be useful to account for the context in which it will be displayed.
+
+      Draw a mobile device on the left and a computer display on the right.
     """
     
     @initialize()

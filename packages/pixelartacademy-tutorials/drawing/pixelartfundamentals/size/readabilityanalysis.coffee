@@ -108,6 +108,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     # Update readability analysis regions based on the reference.
     @regions = new AE.LiveComputedField =>
       return unless @initialized()
+      return if @resetting()
       
       fixedDimensions = @constructor.fixedDimensions()
       width = fixedDimensions.width
