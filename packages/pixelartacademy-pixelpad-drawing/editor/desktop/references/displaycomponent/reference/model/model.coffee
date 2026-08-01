@@ -15,7 +15,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @rendererManager = new ReactiveField null
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
+    
     @previewImageUrl = new ReactiveField null
+    @previewMeshes = new ReactiveField null
   
   onCreated: ->
     super arguments...
@@ -23,13 +25,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
     
     @viewportSize = new ComputedField =>
-      scale = @currentScale()
+      if @currentDisplayed()
+        scale = @currentScale()
+  
+        resizingScale = @resizingScale()
+        scale = resizingScale if resizingScale?
 
-      resizingScale = @resizingScale()
-      scale = resizingScale if resizingScale?
-
-      hiddenScale = @hiddenScale()
-      scale = hiddenScale if hiddenScale?
+      else
+        return unless hiddenScale = @hiddenScale()
+        scale = hiddenScale
       
       # We calculate the display size using the potentially resizing scale.
       return unless displaySize = @displaySize scale
@@ -49,9 +53,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     
     @imageUrl = new ComputedField => @data().image?.url
     
-    # Update image size from the reference.
-    @autorun =>
-      @imageSize @displayOptions().imageSize or width: 1000, height: 1000
+    # Provide dummy image size to allow calculating the hidden size.
+    @imageSize width: 1, height: 1
 
     # Request a preview. It is used by stored references and by displayed references until the live rendering starts.
     # We request this reactively so the preview updates if viewport size changes (e.g. due to display scale change).
@@ -78,12 +81,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @_releasePreviewRequest()
       @_previewRequestKey = requestKey
       
-      @constructor.PreviewRenderer.render configuration, (imageDataUrl) =>
+      @constructor.PreviewRenderer.render configuration, (imageDataUrl, meshes) =>
         return if @isDestroyed()
         return if computation.stopped
         return unless @_previewRequestKey is requestKey
 
         @previewImageUrl imageDataUrl
+        @previewMeshes meshes
       
   onRendered: ->
     super arguments...
@@ -109,7 +113,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       @_previewRequestAutorun.stop()
       @previewImageUrl null
-      @_releasePreviewRequest()
     ,
       initializationDelay
   

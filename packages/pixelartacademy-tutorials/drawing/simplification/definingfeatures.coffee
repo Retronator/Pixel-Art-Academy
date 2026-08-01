@@ -104,7 +104,7 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
   Asset = @
   
   class @LineArtStep extends PAA.Tutorials.Drawing.Simplification.ModelStep
-    @meshSelector: (object) -> object instanceof THREE.Mesh and object.visible
+    @meshSelector: (mesh) -> mesh.visible
 
   class @Instruction extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
     getMeshVisibility: ->

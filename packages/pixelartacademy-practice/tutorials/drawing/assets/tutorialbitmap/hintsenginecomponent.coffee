@@ -19,7 +19,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.HintsEngineComponent
           else
             # Don't draw hints at the end of the tutorial steps. We don't want to call completed on the
             # step since that would make it recompute. Step area instead has the last computation stored.
-            continue if activeStepIndex is steps.length - 1 and stepArea.completed()
+            if activeStepIndex is steps.length - 1
+              completed = stepArea.completed()
+              continue unless completed? and not completed
         
         step[@drawHintsFunctionName] context, renderOptions
     

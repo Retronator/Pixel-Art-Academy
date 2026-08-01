@@ -107,7 +107,7 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
     
   Asset = @
   
-  class @AdjustAmount extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
+  class @AdjustAmount extends PAA.Tutorials.Drawing.Simplification.BeforeMeshMorphingInstruction
     @id: -> "#{Asset.id()}.AdjustAmount"
     @assetClass: -> Asset
     
@@ -116,7 +116,3 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
     """
     
     @initialize()
-  
-    activeConditions: ->
-      return unless @stepAreaActive()
-      not @getMeshMorphing()

@@ -111,9 +111,37 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
       svgPaths: => # Dummy function to trigger reactive path generation.
   
   availableToolKeys: ->
-    super(arguments...).concat [
-      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+    toolKeys = [
+      PAA.Practice.Software.Tools.ToolKeys.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo
+      PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.References
     ]
+
+    if @allowDrawing()
+      toolKeys.push [
+        PAA.Practice.Software.Tools.ToolKeys.Pencil
+        PAA.Practice.Software.Tools.ToolKeys.Eraser
+        PAA.Practice.Software.Tools.ToolKeys.ColorFill
+        PAA.Practice.Software.Tools.ToolKeys.Line
+        PAA.Practice.Software.Tools.ToolKeys.Rectangle
+        PAA.Practice.Software.Tools.ToolKeys.Ellipse
+      ]...
+
+    toolKeys
+  
+  allowDrawing: ->
+    return false unless @initialized()
+    
+    stepAreas = @stepAreas()
+    return unless stepAreas.length
+
+    # Allow drawing if no step area is in a rotate step.
+    for stepArea in stepAreas
+      return false if stepArea.activeStep() instanceof @constructor.RotateStep
+
+    true
   
   Asset = @
 

@@ -32,7 +32,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     # Reuse the image if this exact model presentation has already been rendered.
     if preview.imageDataUrl
-      callback preview.imageDataUrl
+      callback preview.imageDataUrl, preview.meshes
       return configurationKey
 
     # Multiple components can ask for the same image before the first render finishes.
@@ -70,7 +70,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       1000
 
   @_onWorkerMessage: (event) ->
-    {requestId, imageDataUrl, error} = event.data
+    {requestId, imageDataUrl, meshes, error} = event.data
     
     request = @_requests[requestId]
     delete @_requests[requestId]
@@ -83,5 +83,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     else
       preview.imageDataUrl = imageDataUrl
+      preview.meshes = meshes
       
-    callback imageDataUrl for callback in request.callbacks
+    callback imageDataUrl, meshes for callback in request.callbacks

@@ -5,9 +5,12 @@ AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.PathStep
+TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+Model = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model
+
+class PAA.Tutorials.Drawing.Simplification.ModelStep extends TutorialBitmap.PathStep
   # Override to select specific meshes from the model.
-  @meshSelector: (object) -> object instanceof THREE.Mesh
+  @meshSelector: (mesh) -> true
   
   # Override to define the style of the generated paths.
   @style: (fill) -> "opacity:1;fill:#{if fill then '#000000' else 'none'};stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel"
@@ -56,11 +59,42 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
     @_referenceUrl.stop()
     @_startedDrawingAutorun.stop()
     @referenceComponent?.stop()
-    @cameraProperties?.stop()
+
+  solve: ->
+    stepAreaData = @stepArea.data()
+    referenceData = @tutorialBitmap.getReferenceDataForUrl stepAreaData.referenceUrl
+
+    previewConfiguration =
+      imageUrl: referenceData.image.url
+      width: @stepArea.bounds.width
+      height: @stepArea.bounds.height
+      displayOptions: EJSON.clone(referenceData.displayOptions or {})
+
+    aspectRatio = previewConfiguration.width / previewConfiguration.height
+    camera = Model.Helpers.createCamera THREE, previewConfiguration.displayOptions.camera, aspectRatio
+    previewRequestKey = Model.PreviewRenderer.getConfigurationKey previewConfiguration
+
+    # Request the meshes directly since the reference component is not available when solving from the portfolio.
+    await new Promise (resolve, reject) =>
+      Model.PreviewRenderer.render previewConfiguration, (imageDataUrl, meshes) =>
+        try
+          svgPaths = @_createSvgPathsFromModel meshes, camera
+          TutorialBitmap.PathStep::_initializePaths.call @, svgPaths
+          resolve()
+
+        catch error
+          reject error
+
+        finally
+          Model.PreviewRenderer.release previewRequestKey
+
+    super arguments...
   
   _initializePaths: (svgPaths) ->
+    # Note: We need to create the fields here because initialize paths gets called from the parent constructor.
     Tracker.nonreactive =>
       @referenceComponent ?= new AE.LiveComputedField =>
+        return unless @tutorialBitmap.isActiveDrawingInEditor()
         return unless stepAreaData = @stepArea.data()
         return unless drawingEditor = @getEditor()
         return unless referencesView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.References
@@ -68,30 +102,47 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
       ,
         (a, b) => a is b
       
-      @cameraProperties ?= new AE.LiveComputedField =>
-        return unless stepAreaData = @stepArea.data()
-        return unless referenceData = @tutorialBitmap.getReferenceDataForUrl stepAreaData.referenceUrl
-        referenceData.displayOptions.camera
-      ,
-        EJSON.equals
-    
+    return unless @tutorialBitmap.isActiveDrawingInEditor()
     return unless @isActiveStepInArea()
     
-    # We need a model reference to read its camera and mesh data.
+    # We need a model reference to read its camera and meshes.
     return unless referenceComponent = @referenceComponent()
-    return unless sceneManager = referenceComponent.sceneManager()
-    return unless cameraManager = referenceComponent.cameraManager()
     
-    # Depend on camera properties in the reference so we recalculate only when the camera stops moving.
-    @cameraProperties()
+    # See if we have a live camera.
+    if cameraManager = referenceComponent.cameraManager()
+      camera = cameraManager.camera.withUpdates()
+    
+    else
+      # Fall back to a camera based on reference properties.
+      return unless viewportSize = referenceComponent.viewportSize()
+      return unless cameraData = referenceComponent.data().displayOptions?.camera
+      return unless camera = Model.Helpers.createCamera THREE, cameraData, 1
 
-    scene = sceneManager.scene.withUpdates()
-    camera = cameraManager.camera.withUpdates()
-    
-    # Find all mesh objects in the scene.
-    meshes = []
-    scene.traverse (object) =>
-      meshes.push object if @constructor.meshSelector object
+      Model.Helpers.updateCameraAspectRatio camera, viewportSize.width / viewportSize.height
+      Model.Helpers.applyCameraProperties camera, Model.Helpers.getCameraProperties cameraData
+
+    # See if we have a live scene.
+    if sceneManager = referenceComponent.sceneManager()
+      # The scene manager is created before the model has loaded, so keep the previous paths until its scene is ready.
+      return unless sceneManager.ready()
+
+      scene = sceneManager.scene.withUpdates()
+
+      # Find all mesh objects in the scene.
+      meshes = []
+      scene.traverse (object) =>
+        return unless object.isMesh
+        meshes.push object
+
+    else
+      # Fall back to static meshes from the preview.
+      return unless meshes = referenceComponent.previewMeshes()
+
+    svgPaths = @_createSvgPathsFromModel meshes, camera
+    super svgPaths
+
+  _createSvgPathsFromModel: (meshes, camera) ->
+    meshes = _.filter meshes, (mesh) => @constructor.meshSelector mesh
   
     # Create SVG paths from the meshes.
     svgPaths = []
@@ -132,4 +183,4 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
       
       svgPaths.push pathElement
 
-    super svgPaths
+    svgPaths

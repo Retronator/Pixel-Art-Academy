@@ -76,14 +76,15 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return storedCompleted unless @isActiveDrawingInEditor() and @initialized()
       
       stepAreas = @stepAreas()
-      return unless stepAreas.length
+      return storedCompleted unless stepAreas.length
       
       for stepArea in stepAreas
-        return false unless stepArea.completed()
+        completed = stepArea.completed()
+        return storedCompleted unless completed?
+        return false unless completed
       
       true
       
-    @stepsInitialized = new ReactiveField false
     @resetting = new ReactiveField false
     
   destroy: ->
@@ -260,11 +261,21 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         computation.stop()
         resolve()
     
-    stepArea.solve() for stepArea in @stepAreas()
+    unless @stepAreas().length
+      # Choose a random reference.
+      if @displayRandomReference()
+        await new Promise (resolve) =>
+          Tracker.autorun (computation) =>
+            return unless @stepAreas().length
+            computation.stop()
+            resolve()
+    
+    for stepArea in @stepAreas()
+      await stepArea.solve()
     
   solveAndComplete: ->
     await @solve()
-      
+    
     assets = @tutorial.state 'assets'
     asset = _.find assets, (asset) => asset.id is @id()
     asset.completed = true

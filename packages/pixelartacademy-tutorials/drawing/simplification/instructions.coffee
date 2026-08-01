@@ -24,17 +24,32 @@ class PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction extends PAA.T
 
   activeConditions: ->
     return unless asset = @getActiveAsset()
-    return if asset.completed()
     return unless asset.constructor.meshMorphingInstructions
-    return unless @stepAreaActive()
-    return unless @getMeshMorphing()
+    @stepAreaActive()
     
-    # Show modification instructions while input is active on the reference.
+  isInputActive: ->
+    return unless asset = @getActiveAsset()
     return unless stepAreaData = @getStepArea()?.data()
     return unless referenceData = asset.getReferenceDataForUrl stepAreaData.referenceUrl
     referenceData.displayOptions?.input
   
-class @DrawLinesInstruction extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
+class PAA.Tutorials.Drawing.Simplification.BeforeMeshMorphingInstruction extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
+  activeConditions: ->
+    return unless super arguments...
+    
+    # Display until the player has changed mesh morphing parameters (or started drawing without doing so).
+    return if @getMeshMorphing()
+    @isInputActive()
+
+class PAA.Tutorials.Drawing.Simplification.AfterMeshMorphingInstruction extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
+  activeConditions: ->
+    return unless super arguments...
+    
+    # Display after the player has changed mesh morphing parameters and until they started drawing.
+    return unless @getMeshMorphing()
+    @isInputActive()
+
+class @DrawLinesInstruction extends PAA.Tutorials.Drawing.Simplification.AfterMeshMorphingInstruction
   @id: -> "PixelArtAcademy.Tutorials.Drawing.Simplification.DrawLinesInstruction"
   @assetClass: -> PAA.Tutorials.Drawing.Simplification.AssetWithReferences
   
@@ -48,7 +63,7 @@ class @DrawLinesInstruction extends PAA.Tutorials.Drawing.Simplification.MeshMor
     return unless super arguments...
     not @getStepArea().steps()[0].options.fill
     
-class @FillSilhouette extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
+class @FillSilhouette extends PAA.Tutorials.Drawing.Simplification.AfterMeshMorphingInstruction
   @id: -> "PixelArtAcademy.Tutorials.Drawing.Simplification.FillSilhouette"
   @assetClass: -> PAA.Tutorials.Drawing.Simplification.AssetWithReferences
   

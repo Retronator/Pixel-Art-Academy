@@ -73,7 +73,7 @@ class TutorialBitmap.StepArea
       @activeStep steps[activeStepIndex or 0]
       
       completed = stepAreaData.completed
-      @completed completed or false
+      @completed completed
       
       # Activate the first step if we're starting fresh.
       @_activateStep steps[0] unless activeStepIndex?
@@ -139,7 +139,10 @@ class TutorialBitmap.StepArea
 
     for step in steps
       @_activateStep step
-      step.solve()
+      await _.waitForFlush()
+
+      await step.solve()
+      await _.waitForFlush()
     
     @_updateData steps.length, true
     

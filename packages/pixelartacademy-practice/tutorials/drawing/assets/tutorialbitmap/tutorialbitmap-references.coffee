@@ -47,7 +47,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return unless references = bitmap.references
       displayedReferences = _.filter references, (reference) => reference.displayed and reference.image.url in referenceUrlChoices
       
-      reference.image.url for reference in displayedReferences
+      # Track URLs and whether this is the initial state, so we can react to
+      # a reset of a bitmap that had its references hidden before reset.
+      urls: (reference.image.url for reference in displayedReferences)
+      initialState: not @bitmap()?.historyPosition
     ,
       EJSON.equals
  
@@ -60,9 +63,13 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmapId = @bitmapId()
         return unless bitmap = @bitmap()
         
+        # Prevent recomputation of completed states while resetting.
+        @resetting true
+
         # Note: Create clones since they get compared for equality.
         assetData = _.clone @data()
-        stepAreas = if assetData.stepAreas then _.clone assetData.stepAreas else []
+        oldStepAreas = assetData.stepAreas
+        stepAreas = if oldStepAreas then _.clone oldStepAreas else []
         
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
@@ -72,7 +79,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         removeNeeded = false
         
-        for stepArea in stepAreas when stepArea.referenceUrl not in displayedReferenceUrlChoices
+        for stepArea in stepAreas when stepArea.referenceUrl not in displayedReferenceUrlChoices.urls
           removeNeeded = true
           break
         
@@ -100,15 +107,29 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             break if found
             
             # The player hasn't drawn so far, so if we don't want the reference anymore, we can remove it.
-            if stepArea.referenceUrl not in displayedReferenceUrlChoices
+            if stepArea.referenceUrl not in displayedReferenceUrlChoices.urls
               _.pull stepAreas, stepArea
         
         # Add new step areas.
-        for referenceUrl in displayedReferenceUrlChoices
+        for referenceUrl in displayedReferenceUrlChoices.urls
           stepAreas.push {referenceUrl} unless _.find stepAreas, (stepArea) => stepArea.referenceUrl is referenceUrl
         
-        assetData.stepAreas = stepAreas
-        @setAssetData assetData
+        # Track which references are used to recreate step areas (displayed and already drawn hidden ones).
+        stepAreaReferenceUrls = (stepArea.referenceUrl for stepArea in stepAreas)
+
+        # See if we need to write new changes.
+        if EJSON.equals stepAreas, oldStepAreas
+          # Step areas data is already correct. Do we need to still initialize the areas?
+          if EJSON.equals stepAreaReferenceUrls, @_currentStepAreaReferenceUrls
+            @resetting false
+            return
+
+        else
+          # We have new step areas data. Save it before initializing new step areas.
+          assetData.stepAreas = stepAreas
+          @setAssetData assetData
+
+        @_currentStepAreaReferenceUrls = stepAreaReferenceUrls
 
         # If necessary, resize the bitmap to make space for all the chosen references.
         desiredWidth = singleWidth
@@ -161,6 +182,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
             stepAreaInstance.initialize()
         
+        # Unlock recomputation after changes have been applied.
+        Tracker.afterFlush => @resetting false
+
   destroy: ->
     super arguments...
     
@@ -179,3 +203,28 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       defaults[reference.image.url] = reference
       
     defaults
+
+  displayRandomReference: ->
+    return unless goalChoices = @resources.goalChoices
+    return unless bitmapId = @bitmapId()
+    return unless bitmap = @bitmap()
+    return unless bitmap.references?.length
+
+    # Nothing to do if a reference is already displayed.
+    return unless displayedReferenceUrlChoices = @displayedReferenceUrlChoices?()
+    return true if displayedReferenceUrlChoices.urls.length
+
+    # Choose among the references that have goal choices, since only those can create step areas.
+    referenceUrlChoices = (goalChoice.referenceUrl for goalChoice in goalChoices when goalChoice.referenceUrl)
+    availableReferences = _.filter bitmap.references, (reference) => reference.image?.url in referenceUrlChoices
+    return unless availableReferences.length
+
+    versionedBitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+
+    referenceIndex = Math.floor Math.random() * availableReferences.length
+    reference = availableReferences[referenceIndex]
+
+    updateReferenceAction = new LOI.Assets.VisualAsset.Actions.UpdateReference @id(), versionedBitmap, reference.image._id, displayed: true
+    versionedBitmap.executeAction updateReferenceAction
+
+    true

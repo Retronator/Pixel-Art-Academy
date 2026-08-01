@@ -31,8 +31,9 @@ self.addEventListener 'message', (event) ->
     await previousRenderQueue
 
     try
-      imageDataUrl = await render configuration
-      self.postMessage {requestId, imageDataUrl}
+      result = await render configuration
+      result.requestId = requestId
+      self.postMessage result
 
     catch error
       self.postMessage
@@ -67,11 +68,24 @@ render = (configuration) ->
   imageBlob = await canvas.convertToBlob type: 'image/png'
   imageDataUrl = new FileReaderSync().readAsDataURL imageBlob
 
+  # Export mesh geometry.
+  meshes = []
+  
+  scene.traverse (object) ->
+    return unless object.isMesh
+    
+    meshes.push
+      visible: object.visible
+      geometry: object.geometry
+      morphTargetInfluences: object.morphTargetInfluences
+      matrixWorld: object.matrixWorld
+
+  # Clean up and return.
   disposeScene modelScene
   environmentTexture?.dispose()
   renderer.renderLists.dispose()
 
-  imageDataUrl
+  {imageDataUrl, meshes}
 
 loadEnvironment = (environment) ->
   return null unless environment?.url

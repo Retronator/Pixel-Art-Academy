@@ -10,8 +10,6 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class TutorialBitmap.PathStep.Path
   @minimumAntiAliasingAlpha = 10
-  # Note: this value was chosen so that the minimum complete closed line will get colored to solve this step.
-  @minimumSolutionPixelAlpha = 110
   @minimumColorHintPixelAlpha = 128
   @minimumRequiredPixelAlpha = 250
   
@@ -36,7 +34,7 @@ class TutorialBitmap.PathStep.Path
     # Rasterize the path to the canvas.
     @canvas.context.lineCap = 'round'
     @canvas.context.lineJoin = 'bevel'
-    @canvas.context.lineWidth = @pathStep.options.tolerance * 2
+    @canvas.context.lineWidth = @pathStep.options.tolerance * 2 if @pathStep.options.tolerance
 
     if @fillColor
       @canvas.context.fillStyle = "rgb(255 0 0)"
@@ -82,7 +80,7 @@ class TutorialBitmap.PathStep.Path
           
           # Make allowed pixels more visible, but don't change their
           # upper end since that's used for detecting required pixels.
-          @_imageData.data[pixelIndex * 4 + 3] = Math.max @constructor.minimumSolutionPixelAlpha - 1, alpha
+          @_imageData.data[pixelIndex * 4 + 3] = Math.max @constructor.minimumColorHintPixelAlpha - 1, alpha
     
     @pathBounds.width = @pathBounds.right - @pathBounds.left + 1
     @pathBounds.height = @pathBounds.bottom - @pathBounds.top + 1
@@ -156,16 +154,9 @@ class TutorialBitmap.PathStep.Path
   hasPixel: (x, y) ->
     @_getPixelAlpha x, y
   
-  pixelExceedsSolutionThreshold: (x, y) ->
-    @_getPixelAlpha(x, y) >= @constructor.minimumSolutionPixelAlpha
-    
   pixelExceedsColorHintThreshold: (x, y) ->
     @_getPixelAlpha(x, y) >= @constructor.minimumColorHintPixelAlpha
     
-  pixelShouldBeFill: (x, y) ->
-    pixelIndex = x + y * @_imageData.width
-    @_imageData.data[pixelIndex * 4] > 128
-  
   pixelCanBeFill: (x, y) ->
     pixelIndex = x + y * @_imageData.width
     @_imageData.data[pixelIndex * 4] > 0

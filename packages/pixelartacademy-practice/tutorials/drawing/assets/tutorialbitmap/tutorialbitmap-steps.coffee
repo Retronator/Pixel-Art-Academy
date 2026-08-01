@@ -55,3 +55,4 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     if stepResources.steps
       @initializeStepsInAreaWithResources stepArea, step for step in stepResources.steps
+      stepArea.initialize()

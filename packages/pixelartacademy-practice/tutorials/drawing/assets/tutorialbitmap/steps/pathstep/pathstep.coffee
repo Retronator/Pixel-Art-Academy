@@ -132,38 +132,6 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     return unless @_pathsReady()
     @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] > 1
   
-  solve: ->
-    bitmap = @tutorialBitmap.bitmap()
-    palette = @tutorialBitmap.palette()
-
-    pixels = []
-    width = @stepArea.bounds.width
-    height = @stepArea.bounds.height
-    
-    for x in [0...width]
-      for y in [0...height]
-        paletteColor = null
-        
-        # Try fills first.
-        for path in @paths when path.pixelExceedsSolutionThreshold(x, y) and path.pixelShouldBeFill x, y
-          paletteColor = palette.exactPaletteColor path.fillColor
-          break
-          
-        # Strokes override filles.
-        for path in @paths when path.pixelExceedsSolutionThreshold(x, y) and not path.pixelShouldBeFill x, y
-          paletteColor = palette.exactPaletteColor path.strokeColor
-          break
-
-        if paletteColor
-          pixels.push
-            x: x + @stepArea.bounds.x
-            y: y + @stepArea.bounds.y
-            paletteColor: paletteColor
-    
-    # Replace the layer pixels in this bitmap.
-    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
-    AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
-    
   drawUnderlyingHints: (context, renderOptions) ->
     return unless @_pathsReady()
 

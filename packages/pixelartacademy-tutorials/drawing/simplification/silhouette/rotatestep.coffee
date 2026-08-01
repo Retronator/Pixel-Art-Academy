@@ -32,9 +32,8 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Tut
 
   solve: ->
     stepAreaData = @stepArea.data()
-    
-    asset = @tutorialBitmap.getAssetData()
-    reference = _.find asset.references, (reference) -> reference.url is stepAreaData.referenceUrl
+    bitmap = @tutorialBitmap.bitmap()
+    reference = _.find bitmap.references, (reference) => reference.image.url is stepAreaData.referenceUrl
 
     # Update the camera rotation to the goal values.
     updateReferenceAction = new LOI.Assets.VisualAsset.Actions.UpdateReference @tutorialBitmap.id(), bitmap, reference.image._id,

@@ -110,15 +110,7 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
   class @SilhouetteStep extends PAA.Tutorials.Drawing.Simplification.ModelStep
     @style: -> 'opacity:1;fill:#000000;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel'
   
-  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
-    getMeshMorphing: ->
-      return unless stepAreaData = @getStepArea()?.data()
-      return unless asset = @getActiveAsset()
-      return unless bitmapReferences = asset.bitmap()?.references
-      return unless referenceData = _.find bitmapReferences, (reference) => reference.image.url is stepAreaData.referenceUrl
-      referenceData.displayOptions?.meshMorphing
-  
-  class @AdjustAmount extends @Instruction
+  class @AdjustAmount extends PAA.Tutorials.Drawing.Simplification.BeforeMeshMorphingInstruction
     @id: -> "#{Asset.id()}.AdjustAmount"
     @assetClass: -> Asset
     
@@ -127,7 +119,3 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
     """
     
     @initialize()
-  
-    activeConditions: ->
-      return unless @stepAreaActive()
-      not @getMeshMorphing()
