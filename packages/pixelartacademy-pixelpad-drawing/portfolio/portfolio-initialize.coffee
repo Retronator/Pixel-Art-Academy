@@ -32,6 +32,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     
     for sectionThingName, sectionLocation of sectionLocations
       do (sectionThingName, sectionLocation) =>
+        # Note: We don't want to use _.arraysHaveSameValues for equality since
+        # folder things can change without a change in folder instance.
         sectionThings = new ComputedField =>
           # Get things from the section location. Note: we expect things to be instances, so
           # they have to be added as instances in the workbench scene, and not as classes.
@@ -39,9 +41,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
             location: sectionLocation
           
           currentSituation.things()
-        ,
-          (a, b) =>
-            _.isArray(a) and _.isArray(b) and a.length is b.length and _.intersection(a, b).length is a.length
         
         groupsProvider = Tracker.nonreactive => new @constructor.GroupsProvider sectionThings, 0
 

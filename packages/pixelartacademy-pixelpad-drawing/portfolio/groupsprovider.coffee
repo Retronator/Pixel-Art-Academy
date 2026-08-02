@@ -6,6 +6,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.GroupsProvider
     @_assetInstancesByThingId = {}
     @_assetsByThingId = {}
     
+    # Note: This is the main place to control reactivity and only recreate groups when things or folders change.
     @_things = new ReactiveField [], _.arraysHaveSameValues
     @_folderIds = new ReactiveField [], _.arraysHaveSameValues
     
@@ -31,7 +32,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.GroupsProvider
         # We take the first instance to act as the provider of the information for this group.
         @_folderInformationProviderByFolderId[folderId] = folderInstances[0]
         
-        @_folderThingsByFolderId[folderId] ?= new ReactiveField [], _.arraysHaveSameValues
+        # Note: We don't want to use _.arraysHaveSameValues since folder
+        # things can change without a change in folder instance.
+        @_folderThingsByFolderId[folderId] ?= new ReactiveField []
         @_folderThingsByFolderId[folderId] _.flatten (folderInstance.things for folderInstance in folderInstances)
     
     @groups = new AE.LiveComputedField =>
