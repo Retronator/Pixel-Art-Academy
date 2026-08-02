@@ -169,20 +169,35 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtEvaluation', pixelArtEvaluationProperty
         asset.executeAction updatePropertyAction, true
     
+        # If this was an evaluation of a starting state, don't change history.
+        AMu.Document.Versioning.clearHistory asset unless historyLength
+    
   onRendered: ->
     super arguments...
     
     @autorun (computation) =>
+      @_resizeObserverSetupIndex ?= 0
+      @_resizeObserverSetupIndex++
+      resizeObserverSetupIndex = @_resizeObserverSetupIndex
+
       @_resizeObserver?.disconnect()
       return unless @paperDisplayed()
 
       await _.waitForFlush()
+      return if @_resizeObserverSetupIndex isnt resizeObserverSetupIndex
+      return unless @isRendered()
+      return unless @paperDisplayed()
     
-      @$content = @$('.content')
+      $content = @$('.content')
+      return unless content = $content[0]
+
       @_resizeObserver = new ResizeObserver =>
-        @contentHeight @$content.outerHeight()
+        return if @_resizeObserverSetupIndex isnt resizeObserverSetupIndex
+        return unless @isRendered()
+
+        @contentHeight $content.outerHeight()
       
-      @_resizeObserver.observe @$content[0]
+      @_resizeObserver.observe content
     
   onDestroyed: ->
     super arguments...

@@ -47,6 +47,10 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       pixelPerfectLines:
         doubles:
           countAllLineWidthTypes: true
+          score: null
+          count: 0
+        score: null
+      score: null
   
   @initialize()
   

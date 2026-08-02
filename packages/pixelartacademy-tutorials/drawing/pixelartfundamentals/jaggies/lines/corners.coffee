@@ -40,11 +40,17 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
     pixelArtScaling: true
     pixelArtEvaluation:
       editable: true
-      allowedCriteria: [PAE.Criteria.PixelPerfectLines]
+      allowedCriteria: ["PixelPerfectLines"]
       pixelPerfectLines:
-        doubles: {}
+        doubles:
+          score: null
+          count: 0
         corners:
           ignoreStraightLineCorners: false
+          score: null
+          count: 0
+        score: null
+      score: null
   
   @initialize()
   
