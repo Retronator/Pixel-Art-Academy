@@ -47,14 +47,10 @@ class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.To
         _startPixelCoordinates.sub _pixelCoordinatesDelta
         
       # Generate pixels between the start and current coordinates.
-      assetData = @editor().assetData()
-      boundsLeft = assetData.bounds.left
-      boundsTop = assetData.bounds.top
-      boundsRight = assetData.bounds.left + assetData.bounds.width - 1
-      boundsBottom = assetData.bounds.top + assetData.bounds.height - 1
+      bounds = @editor().assetData().bounds
       
       addPixel = (x, y) =>
-        return unless boundsLeft <= x <= boundsRight and boundsTop <= y <= boundsBottom
+        return unless bounds.left <= x <= bounds.right and bounds.top <= y <= bounds.bottom
         pixels.push {x, y}
       
       if @data.get 'filled'

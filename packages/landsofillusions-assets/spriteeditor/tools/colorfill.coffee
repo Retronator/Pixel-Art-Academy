@@ -9,6 +9,11 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
   @initialize()
 
+  constructor: ->
+    super arguments...
+
+    @lastCoordinatesHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.LastCoordinates
+
   onPointerDown: (event) ->
     super arguments...
 
@@ -25,7 +30,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       paletteColor: paintHelper.paletteColor()
       materialIndex: paintHelper.materialIndex()
 
-    return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
+    return unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
     paint.normal = paintHelper.normal().toObject()
 
@@ -89,3 +94,5 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       # Optimize the operations (for the symmetry case) and execute the action.
       action.optimizeOperations assetData
       assetData.executeAction action
+
+    @lastCoordinatesHelper pixelCoordinate

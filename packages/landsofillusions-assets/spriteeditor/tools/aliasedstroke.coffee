@@ -6,7 +6,7 @@ LOI = LandsOfIllusions
 Bresenham = require('bresenham-zingl')
 
 _currentPixelCoordinates = new THREE.Vector2
-_lastPixelCoordinates = new THREE.Vector2
+_lastCoordinates = new THREE.Vector2
 _lastStrokeCoordinates = new THREE.Vector2
 _secondToLastStrokeCoordinates = new THREE.Vector2
 _tangentDirection = new THREE.Vector2
@@ -50,7 +50,6 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @drawStraight = new ReactiveField false
     @strokeActive = new ReactiveField false
 
-    @lastPixelCoordinates = new ReactiveField null
     @currentPixelCoordinates = new ReactiveField null
     @lastStrokeCoordinates = new ReactiveField null
     @secondToLastStrokeCoordinates = new ReactiveField null
@@ -58,6 +57,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
     @perfectLineRatio = new ReactiveField null
 
+    @lastCoordinatesHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.LastCoordinates
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
     @brushHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Brush
 
@@ -66,11 +66,6 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # Request realtime updates when actively changing pixels.
     @realtimeUpdating = new ReactiveField false
     
-    # Reset last pixel coordinates whenever the active file changes.
-    @autorun (computation) =>
-      @interface.activeFileId()
-      @lastPixelCoordinates null
-
   onActivated: ->
     # Create stroke mask to match asset bounds.
     @_recreateStrokeMaskAutorun = @autorun (computation) =>
@@ -223,6 +218,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @secondToLastStrokeCoordinates null
 
     @drawStraight false
+    @lockedCoordinate null
 
     assetData = @editor().assetData()
     @endStroke assetData
@@ -230,8 +226,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @strokeActive false
     @realtimeUpdating false
 
-    # Update pixels to take account of new starting coordinates for line drawing.
-    @updatePixels()
+    # Take account of new starting coordinates for line drawing.
+    @lastCoordinatesHelper @currentPixelCoordinates()
   
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
@@ -254,7 +250,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # Calculate which pixels the tool would fill.
     return unless currentPixelCoordinates = @currentPixelCoordinates()
     _currentPixelCoordinates.copy currentPixelCoordinates
-    _lastPixelCoordinates.copy @lastPixelCoordinates() or _currentPixelCoordinates
+    _lastCoordinates.copy @lastCoordinatesHelper() or _currentPixelCoordinates
     _lastStrokeCoordinates.copy @lastStrokeCoordinates() or _currentPixelCoordinates
     _secondToLastStrokeCoordinates.copy @secondToLastStrokeCoordinates() or _lastStrokeCoordinates
 
@@ -266,19 +262,19 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     if @strokeActive() and drawStraight
       unless lockedCoordinate = @lockedCoordinate()
         # Calculate which direction to lock to.
-        if _currentPixelCoordinates.x is _lastPixelCoordinates.x
+        if _currentPixelCoordinates.x is _lastStrokeCoordinates.x
           # Lock to vertical straight lines.
-          lockedCoordinate = x: _lastPixelCoordinates.x
+          lockedCoordinate = x: _lastStrokeCoordinates.x
 
         else
-          lockedCoordinate = y: _lastPixelCoordinates.y
+          lockedCoordinate = y: _lastStrokeCoordinates.y
 
         @lockedCoordinate lockedCoordinate
 
     if @drawLine()
       if keyboardState.isCommandOrControlDown()
         # Draw perfect pixel art line.
-        pixels = @perfectLine _lastPixelCoordinates, _currentPixelCoordinates
+        pixels = @perfectLine _lastCoordinates, _currentPixelCoordinates
 
         # Match current coordinates to the ending perfect coordinates.
         @currentPixelCoordinates _.last pixels
@@ -288,11 +284,11 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
         # Draw bresenham line from last coordinates (which persist after end of stroke). To assure
         # consistency between drawing lines from both directions, we always draw from top to bottom.
-        if _lastPixelCoordinates.y < _currentPixelCoordinates.y
-          Bresenham.line _lastPixelCoordinates.x, _lastPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
+        if _lastCoordinates.y < _currentPixelCoordinates.y
+          Bresenham.line _lastCoordinates.x, _lastCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
           
         else
-          Bresenham.line _currentPixelCoordinates.x, _currentPixelCoordinates.y, _lastPixelCoordinates.x, _lastPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
+          Bresenham.line _currentPixelCoordinates.x, _currentPixelCoordinates.y, _lastCoordinates.x, _lastCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
 
     else
       # Apply locked coordinate.
@@ -336,9 +332,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # Save start of current stroke segment to allow smoothing.
     @secondToLastStrokeCoordinates @lastStrokeCoordinates()
 
-    # Save last absolute pixel as the end of the stroke.
+    # Save the end of the current stroke segment.
     currentPixelCoordinates = @currentPixelCoordinates()
-    @lastPixelCoordinates currentPixelCoordinates
     @lastStrokeCoordinates currentPixelCoordinates
 
   startOfStrokeProcessed: ->

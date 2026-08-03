@@ -14,6 +14,7 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     @startPixelCoordinates = new ReactiveField null
     @currentPixelCoordinates = new ReactiveField null
 
+    @lastCoordinatesHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.LastCoordinates
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     @pixels = new ReactiveField null
@@ -133,8 +134,10 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     else
       positionValid = @editor()?.pointer().pixelCoordinate()
     
-    # Draw shape.
-    @applyTool() if positionValid
+    # Draw shape and save its end as the shared last coordinates.
+    if positionValid
+      @applyTool()
+      @lastCoordinatesHelper @currentPixelCoordinates()
     
     # Clean up.
     @startPixelCoordinates null

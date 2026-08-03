@@ -337,6 +337,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/showshading');
 
   api.addFile('spriteeditor/helpers..');
+  api.addFile('spriteeditor/helpers/lastcoordinates');
   api.addFile('spriteeditor/helpers/zoomlevels');
   api.addFile('spriteeditor/helpers/landmarks');
   api.addFile('spriteeditor/helpers/paint');

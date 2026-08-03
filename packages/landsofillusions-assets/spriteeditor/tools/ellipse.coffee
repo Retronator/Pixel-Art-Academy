@@ -29,14 +29,26 @@ class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tool
     keyboardState = AC.Keyboard.getState()
 
     pixels = []
-    
-    pushEllipsePixel = (x, y) =>
-      pixels.push
-        x: x
-        # HACK: The Bresenham rectangle implementation returns odd-height ellipses shifted by 0.5 pixels.
-        y: Math.floor y
+    outlinePixelsPerRow = {}
     
     if @drawingActive() and @paintHelper.isPaintSet()
+      # Limit generated pixels to the asset bounds.
+      bounds = @editor().assetData().bounds
+
+      addPixel = (x, y) =>
+        return unless bounds.left <= x <= bounds.right and bounds.top <= y <= bounds.bottom
+
+        pixels.push {x, y}
+
+      addOutlinePixel = (x, y) =>
+        # HACK: The Bresenham rectangle implementation returns odd-height ellipses shifted by 0.5 pixels.
+        y = Math.floor y
+
+        outlinePixelsPerRow[y] ?= []
+        outlinePixelsPerRow[y].push x
+
+        addPixel x, y
+
       _pixelCoordinatesDelta.subVectors _currentPixelCoordinates, _startPixelCoordinates
 
       if keyboardState.isKeyDown AC.Keys.shift
@@ -67,9 +79,7 @@ class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tool
               if 0 < x < centerSize and 0 < y < centerSize
                 continue if shape[x - 1][y] and shape[x + 1][y] and shape[x][y - 1] and shape[x][y + 1]
               
-              pixels.push
-                x: x + _startPixelCoordinates.x
-                y: y + _startPixelCoordinates.y
+              addOutlinePixel x + _startPixelCoordinates.x, y + _startPixelCoordinates.y
         
         else
           # The diameter is too big for a custom shape, use Bresenham.
@@ -78,7 +88,7 @@ class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tool
             radius = Math.round _pixelCoordinatesDelta.length()
 
             Bresenham.circle _startPixelCoordinates.x, _startPixelCoordinates.y, radius, (x, y) =>
-              pixels.push {x, y}
+              addOutlinePixel x, y
             
           else
             # We're inscribing a circle into a square, so use the ellipse in a rectangle method.
@@ -90,27 +100,21 @@ class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tool
             
             _currentPixelCoordinates.copy(_startPixelCoordinates).add _pixelCoordinatesDelta
             
-            Bresenham.ellipseRect _startPixelCoordinates.x, _startPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, pushEllipsePixel
+            Bresenham.ellipseRect _startPixelCoordinates.x, _startPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, addOutlinePixel
             
       else
         # Draw an ellipse.
         if keyboardState.isCommandOrControlDown()
           _startPixelCoordinates.sub _pixelCoordinatesDelta
           
-        Bresenham.ellipseRect _startPixelCoordinates.x, _startPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, pushEllipsePixel
+        Bresenham.ellipseRect _startPixelCoordinates.x, _startPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, addOutlinePixel
         
-      if pixels.length and @data.get 'filled'
-        rows = {}
-        
-        for pixel in pixels
-          rows[pixel.y] ?= []
-          rows[pixel.y].push pixel.x
-          
-        for y, xs of rows
-          y = parseInt y
+      if @data.get 'filled'
+        for y, xs of outlinePixelsPerRow
+          y = parseInt y, 10
           minX = _.min xs
           maxX = _.max xs
-          pushEllipsePixel x, y for x in [minX...maxX] when x not in xs
+          addPixel x, y for x in [minX...maxX] when x not in xs
           
       @paintHelper.applyPaintToPixels pixels
 
