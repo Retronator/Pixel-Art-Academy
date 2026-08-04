@@ -28,11 +28,13 @@ class PAA.Chapter extends LOI.Adventure.Chapter
       added: (task) =>
         Tracker.nonreactive => task.onActive()
 
-    # Listen to all active automatic tasks.
+    # Listen to all available automatic tasks.
+    # Note: We shouldn't listen to active tasks, because we want to track completeness
+    # whenever we can (even if the task is not active due to the goal not being active).
     @_automaticTasksAutorun = Tracker.autorun (computation) =>
       return unless LOI.adventure.gameStateAvailable()
 
-      for task in automaticTasks when task.active()
+      for task in automaticTasks when task.available()
         if task.completedConditions()
           # Automatically create an entry for this task.
           PAA.Learning.Task.Entry.create profileId, LOI.adventure.currentSituationParameters(), task.id()
