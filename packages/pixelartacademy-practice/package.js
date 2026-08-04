@@ -154,6 +154,7 @@ Package.onUse(function(api) {
   // Pixel art evaluation
 
   api.addFile('pixelartevaluation..')
+  api.addFile('pixelartevaluation/pixelsmap')
   api.addFile('pixelartevaluation/layer')
   api.addFile('pixelartevaluation/core')
   api.addFile('pixelartevaluation/pixel')

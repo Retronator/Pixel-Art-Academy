@@ -194,10 +194,10 @@ class PAE.Line
   isPointPartCurve: (index) ->
     if @isClosed then @pointPartIsCurve[_.modulo index, @points.length] else @pointPartIsCurve[index]
 
-  assignPoint: (point, end = true) ->
+  assignPoint: (point, addAtEnd = true) ->
     throw new AE.ArgumentException "The point is already assigned to this line.", point, @ if point in @points
 
-    if end
+    if addAtEnd
       @points.push point
     
     else
@@ -223,6 +223,53 @@ class PAE.Line
     
     @_jaggies = null
   
+  mergeLine: (line) ->
+    throw new AE.ArgumentException "The line can't be merged into itself.", line, @ if line is @
+    throw new AE.ArgumentException "Closed lines can't be merged.", line, @ if @isClosed or line.isClosed
+
+    startPoint = @points[0]
+    endPoint = _.last @points
+    
+    otherStartPoint = line.points[0]
+    otherEndPoint = _.last line.points
+
+    # Find which endpoints touch and orient the merged points so the line remains a continuous sequence.
+    if startPoint is otherStartPoint
+      pointsToMerge = line.points[1...line.points.length]
+      addAtEnd = false
+
+    else if startPoint is otherEndPoint
+      pointsToMerge = line.points[0...line.points.length - 1].reverse()
+      addAtEnd = false
+
+    else if endPoint is otherStartPoint
+      pointsToMerge = line.points[1...line.points.length]
+      addAtEnd = true
+
+    else if endPoint is otherEndPoint
+      pointsToMerge = line.points[0...line.points.length - 1].reverse()
+      addAtEnd = true
+
+    else
+      throw new AE.ArgumentException "Lines don't share a matching endpoint.", line, @
+
+    # If the other endpoint pair also matches, merging the line creates a closed loop.
+    if addAtEnd
+      if _.last(pointsToMerge) is startPoint
+        pointsToMerge.pop()
+        @isClosed = true
+
+    else
+      if pointsToMerge[0] is endPoint
+        pointsToMerge.shift()
+        @isClosed = true
+
+    for point in pointsToMerge
+      @_addExpansionPoint point, addAtEnd
+
+    # Explicit return to avoid result collection.
+    return
+
   fillFromPoints: (pointA, pointB) ->
     # Start the line with these two points.
     @_addExpansionPoint pointA
@@ -244,13 +291,22 @@ class PAE.Line
         @isClosed = true
         return
       
+      # Merge with an existing line if we caught its start/end.
+      if currentPoint.lines.length is 2
+        otherLine = if currentPoint.lines[0] is @ then currentPoint.lines[1] else currentPoint.lines[0]
+        @layer.mergeLineInto otherLine, @
+        return
+
+      else if currentPoint.lines.length > 2
+        console.warn "Expanded into a point with 2 neighbors and more than 2 lines going through them."
+
       operation nextPoint
       
       previousPoint = currentPoint
       currentPoint = nextPoint
   
-  _addExpansionPoint: (point, end) ->
-    @assignPoint point, end
+  _addExpansionPoint: (point, addAtEnd) ->
+    @assignPoint point, addAtEnd
     point.assignLine @
     
     for pixel in point.pixels

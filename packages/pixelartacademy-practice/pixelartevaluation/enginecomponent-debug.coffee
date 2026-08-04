@@ -13,6 +13,7 @@ getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
 straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
 segmentBoundaryColor = "hsl(80deg 50% 50% / 100%)"
+invalidatedPixelColor = "hsl(0deg 0% 100% / 40%)"
 
 class PAE.EngineComponent extends PAE.EngineComponent
   @debug = false
@@ -28,6 +29,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
       @drawPotentialParts = new ReactiveField false
       @drawCurvatureCurveParts = new ReactiveField false
       @drawSegmentCorners = new ReactiveField false
+      @drawInvalidatedPixels = new ReactiveField false
   
       $(document).on 'keydown', (event) =>
         return unless event.ctrlKey
@@ -40,6 +42,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
           when AC.Keys['5'] then field = @drawPotentialParts
           when AC.Keys['6'] then field = @drawCurvatureCurveParts
           when AC.Keys['7'] then field = @drawSegmentCorners
+          when AC.Keys['8'] then field = @drawInvalidatedPixels
           
         field not field() if field
 
@@ -65,6 +68,12 @@ class PAE.EngineComponent extends PAE.EngineComponent
         @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
         @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
         
+      if @drawInvalidatedPixels()
+        # Draw invalidated pixels.
+        context.beginPath()
+        layer.invalidatedPixelsMap?.forEach (pixel) => @_addPixelToPath context, pixel
+        @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, invalidatedPixelColor
+
       if @drawPoints()
         # Draw point network.
         for point in layer.points
@@ -182,7 +191,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.beginPath()
     
     for x in [-bounds.height...bounds.width] by 5 * @_pixelSize
-      context.moveTo x, 0
+      context.moveTo x - 0.5, -0.5
       context.lineTo x + bounds.height, bounds.height
     
     context.stroke()

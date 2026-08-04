@@ -59,6 +59,10 @@ class PAE.Layer
     if outline
       @_removeLine outline
       @_removePoint point for id, point in outlinePoints when point.lines.length is 0
+  
+  mergeLineInto: (removingLine, lengtheningLine) ->
+    lengtheningLine.mergeLine removingLine
+    @_removeLine removingLine
     
   updateArea: (bounds) ->
     # Mark all points as old so we can discern them from new ones during debugging.
@@ -84,127 +88,53 @@ class PAE.Layer
           removedPixels.push existingPixel
           
     # Removed pixels and neighbors of added and removed pixels invalidate lines, points, and cores they were part of.
-    invalidatingPixelsMap = {}
-    
-    addInvalidatingPixel = (pixel) =>
-      return unless pixel
-      invalidatingPixelsMap[pixel.x] ?= {}
-      invalidatingPixelsMap[pixel.x][pixel.y] = pixel
+    invalidatingPixelsMap = new PAE.PixelsMap
+    @invalidatedPixelsMap = new PAE.PixelsMap
     
     for pixel in removedPixels
       # Note: For removed pixels we can't use pixel neighborhood because that
       # wouldn't include the removed pixels (since they no longer are on the layer).
-      addInvalidatingPixel pixel
-      pixel.forEachNeighbor (neighbor) => addInvalidatingPixel neighbor
+      invalidatingPixelsMap.add pixel
+      pixel.forEachNeighbor (neighbor) => invalidatingPixelsMap.add neighbor
     
     for pixel in addedPixels
-      pixel.forEachPixelInNeighborhood (neighborhoodPixel) => addInvalidatingPixel neighborhoodPixel
-    
-    invalidatedLines = {}
-    invalidatedPoints = {}
-    invalidatedCores = {}
-    
-    # Invalidating pixels invalidate their lines, points, and cores.
-    for x, pixels of invalidatingPixelsMap
-      for y, pixel of pixels
-        invalidatedLines[line.id] = line for line in pixel.lines
-        invalidatedPoints[point.id] = point for point in pixel.points
-        invalidatedCores[pixel.core.id] = pixel.core if pixel.core
-        invalidatedCores[outlineCore.id] = outlineCore for outlineCore in pixel.outlineCores
-    
-    # Invalidated outlines invalidate their cores.
-    for id, line of invalidatedLines when line.core
-      invalidatedCores[line.core.id] = line.core
-
-    # Invalidated cores invalidate their outlines and outline points.
-    for id, core of invalidatedCores
-      for outline in core.outlines
-        invalidatedLines[outline.id] = outline
-        
-      for pixel in core.outlinePixels
-        for point in pixel.points
-          invalidatedPoints[point.id] = point for point in pixel.points
-          
-    # Invalidated points invalidate the lines they are part of. We do this to extend the network of lines getting
-    # removed since otherwise the points on the perimeter will not get removed as there are nearby lines connecting to
-    # them. Essentially, we want to only leave end points of lines far enough from the changing area to be sure they are
-    # not affecting the result.
-    for id, point of invalidatedPoints
-      invalidatedLines[line.id] = line for line in point.lines
+      pixel.forEachPixelInNeighborhood (neighborhoodPixel) => invalidatingPixelsMap.add neighborhoodPixel
       
-    # Invalidated lines invalidate their points.
-    for id, line of invalidatedLines
-      for point in line.points
-        invalidatedPoints[point.id] = point
-      
-    # Collect invalidated pixels.
-    invalidatedPixelsMap = {}
-    
-    addInvalidatedPixel = (pixel) =>
-      invalidatedPixelsMap[pixel.x] ?= {}
-      invalidatedPixelsMap[pixel.x][pixel.y] = pixel
-    
-    for objects in [invalidatedLines, invalidatedPoints, invalidatedCores]
-      for id, object of objects
-        for pixel in object.pixels
-          addInvalidatedPixel pixel unless pixel in removedPixels
-          
-    # Remove invalidated objects.
-    @_removeLine line for id, line of invalidatedLines
-    @_removePoint point for id, point of invalidatedPoints when point.lines.length is 0
-    @_removeCore core for id, core of invalidatedCores
+    @_invalidateArea invalidatingPixelsMap, @invalidatedPixelsMap, true
     
     # Added pixels are invalidated by default.
-    addInvalidatedPixel pixel for pixel in addedPixels
+    for pixel in addedPixels
+      @invalidatedPixelsMap.add pixel
+      
+    # Removed pixels can't be invalidated.
+    for pixel in removedPixels
+      @invalidatedPixelsMap.remove pixel
+    
+    additionalInvalidatingPixelsMap = new PAE.PixelsMap
     
     # Classify core pixels.
-    forEachInvalidatedPixel = (operation) =>
-      for x, pixels of invalidatedPixelsMap
-        for y, pixel of pixels
-          operation pixel
-          
-    additionalInvalidatedPixelsMap = {}
-    
-    addAdditionalInvalidatedPixel = (pixel) =>
-      additionalInvalidatedPixelsMap[pixel.x] ?= {}
-      additionalInvalidatedPixelsMap[pixel.x][pixel.y] = pixel
-    
-    forEachInvalidatedPixel (pixel) =>
+    @invalidatedPixelsMap.forEach (pixel) =>
       pixel.classifyCore()
       return unless pixel.couldBeCore()
       
       # Invalidate core pixel and neighbors (since they can fall on the outline).
-      pixel.forEachPixelInNeighborhood (neighbor) => addAdditionalInvalidatedPixel neighbor
+      pixel.forEachPixelInNeighborhood (neighbor) => additionalInvalidatingPixelsMap.add neighbor
       
     # Assign cores to core pixels.
-    forEachInvalidatedPixel (pixel) =>
+    @invalidatedPixelsMap.forEach (pixel) =>
       if pixel.isDeepCore and not pixel.core
         core = @_addCore()
         core.fillFromPixel pixel
         
-        # Remove points from the new core, in case it absorbed any pixels/points outside the invalidated area.
-        corePoints = []
-        
+        # Invalidate area of the new core, in case it absorbed any pixels/points outside the current invalidated area.
         for pixel in core.pixels
-          addAdditionalInvalidatedPixel pixel
-          for point in pixel.points when point not in corePoints
-            corePoints.push point
-        
-        for point in corePoints when point.lines.length is 0
-          addAdditionalInvalidatedPixel pixel for pixel in point.pixels
+          pixel.forEachPixelInNeighborhood (neighbor) => additionalInvalidatingPixelsMap.add neighbor
           
-    # Invalidate any additional points
-    additionalInvalidatedPoints = {}
-    
-    for x, pixels of additionalInvalidatedPixelsMap
-      for y, pixel of pixels
-        addInvalidatedPixel pixel
-        additionalInvalidatedPoints[point.id] = point for point in pixel.points when point.lines.length is 0
-    
-    @_removePoint point for id, point of additionalInvalidatedPoints when point.lines.length is 0
+    # Invalidate new core areas.
+    @_invalidateArea additionalInvalidatingPixelsMap, @invalidatedPixelsMap, false
     
     # Assign pixels to core outline pixels.
-    forEachInvalidatedPixel (pixel) =>
+    @invalidatedPixelsMap.forEach (pixel) =>
       return if pixel.couldBeCore()
       
       pixel.forEachNeighbor (neighbor) =>
@@ -227,7 +157,7 @@ class PAE.Layer
           point.addPixel outlinePixel
     
     # Create double points outside of cores.
-    forEachInvalidatedPixel (pixel) =>
+    @invalidatedPixelsMap.forEach (pixel) =>
       return if pixel.core
       
       return unless rightNeighbor = @getPixel pixel.x + 1, pixel.y
@@ -247,7 +177,7 @@ class PAE.Layer
       point.addPixel pointPixel for pointPixel in [pixel, rightNeighbor, bottomNeighbor, bottomRightNeighbor]
       
     # Create single points on all remaining non-core pixels.
-    forEachInvalidatedPixel (pixel) =>
+    @invalidatedPixelsMap.forEach (pixel) =>
       return if pixel.core or @getPointOn pixel
       
       point = @_addPoint()
@@ -312,6 +242,57 @@ class PAE.Layer
     
     # Explicit return to avoid result collection.
     return
+    
+  _invalidateArea: (invalidatingPixelsMap, invalidatedPixelsMap, invalidateCores) ->
+    invalidatedLines = {}
+    invalidatedPoints = {}
+    invalidatedCores = {}
+    
+    # Invalidating pixels invalidate their lines, points, and cores.
+    invalidatingPixelsMap.forEach (pixel) =>
+      invalidatedLines[line.id] = line for line in pixel.lines when invalidateCores or not line.core
+      invalidatedPoints[point.id] = point for point in pixel.points
+      
+      if invalidateCores
+        invalidatedCores[pixel.core.id] = pixel.core if pixel.core
+        invalidatedCores[outlineCore.id] = outlineCore for outlineCore in pixel.outlineCores
+        
+    if invalidateCores
+      # Invalidated outlines invalidate their cores.
+      for id, line of invalidatedLines when line.core
+        invalidatedCores[line.core.id] = line.core
+  
+      # Invalidated cores invalidate their outlines and outline points.
+      for id, core of invalidatedCores
+        for outline in core.outlines
+          invalidatedLines[outline.id] = outline
+          
+        for pixel in core.outlinePixels
+          for point in pixel.points
+            invalidatedPoints[point.id] = point for point in pixel.points
+          
+    # Invalidated points invalidate the lines they are part of. We do this to extend the network of lines getting
+    # removed since otherwise the points on the perimeter will not get removed as there are nearby lines connecting to
+    # them. Essentially, we want to only leave end points of lines far enough from the changing area to be sure they are
+    # not affecting the result.
+    for id, point of invalidatedPoints
+      invalidatedLines[line.id] = line for line in point.lines
+      
+    # Invalidated lines invalidate their points.
+    for id, line of invalidatedLines
+      for point in line.points
+        invalidatedPoints[point.id] = point
+      
+    # Collect invalidated pixels.
+    for objects in [invalidatedLines, invalidatedPoints, invalidatedCores]
+      for id, object of objects
+        for pixel in object.pixels
+          invalidatedPixelsMap.add pixel
+          
+    # Remove invalidated objects.
+    @_removeLine line for id, line of invalidatedLines
+    @_removePoint point for id, point of invalidatedPoints when point.lines.length is 0
+    @_removeCore core for id, core of invalidatedCores
   
   _addPixel: (x, y) ->
     pixel = new PAE.Pixel @, x, y
