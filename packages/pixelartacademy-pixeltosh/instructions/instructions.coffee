@@ -28,6 +28,12 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
     Smirk: 'smirk-up'
     OhNo: 'ohno'
     Thoughtful: 'thoughtful'
+    Grin: 'grin'
+    
+  onCreated: ->
+    super arguments...
+    
+    @petting = new ReactiveField false
   
   customClass: ->
     return unless instruction = @targetDisplayedInstruction()
@@ -40,6 +46,8 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
     @constructor.BodyClasses.Leaning
   
   faceClass: ->
+    return 'grin' if @petting()
+    
     if instruction = @targetDisplayedInstruction()
       return faceClass if faceClass = instruction.faceClass()
     
@@ -52,3 +60,14 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
   
   speechBalloonOptions: ->
     text: => @displayedInstruction()?.message()
+    
+  events: ->
+    super(arguments...).concat
+      'pointerenter .pet-area': @onPointerEnterPetArea
+      'pointerleave .pet-area': @onPointerLeavePetArea
+  
+  onPointerEnterPetArea: (event) ->
+    @petting true
+  
+  onPointerLeavePetArea: (event) =>
+    @petting false
