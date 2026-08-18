@@ -2,6 +2,7 @@
 .idea/
 node_modules
 /run
+/test
 /build
 /deploy*
 /package
