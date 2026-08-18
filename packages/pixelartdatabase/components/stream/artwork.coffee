@@ -115,6 +115,11 @@ class PADB.Components.Stream.Artwork extends AM.Component
       }
 
     imageScale = image.pixelScale
+    
+    if _.isNumber imageScale
+      imageScale =
+        horizontal: imageScale
+        vertical: imageScale
 
     # Calculate how much the image should be upscaled.
     desiredImageScale = 1

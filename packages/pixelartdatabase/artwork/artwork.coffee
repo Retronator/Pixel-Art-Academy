@@ -22,7 +22,9 @@ class PADB.Artwork extends AM.Document
   #   displayName
   # image: main, cached image that we display for this artwork
   #   url: link to the image in the CDN
-  #   pixelScale: pixel size for display of pixel art images
+  #   pixelScale: integer pixel size for display of pixel art images, or object if horizontal and vertical scales are different
+  #     horizontal
+  #     vertical
   # representations: array of online resources representing this artwork
   #   url: address of this resource
   #   type: type of the resource
