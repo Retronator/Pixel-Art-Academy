@@ -11,12 +11,14 @@ class LOI.Items.Components.Map.Node extends AM.Component
   onCreated: ->
     super arguments...
 
-    location = @data()
-
     @map = @ancestorComponent LOI.Items.Components.Map
+    
+    @location = new ComputedField =>
+      locationIdObject = @data()
+      @map.locations()[locationIdObject._id]
 
     @size = new ComputedField =>
-      location = @data()
+      return unless location = @location()
       return unless mapSize = @map.size()
 
       # Get the map width in game pixels.
@@ -111,11 +113,11 @@ class LOI.Items.Components.Map.Node extends AM.Component
       500
 
   name: ->
-    location = @data()
+    return unless location = @location()
     _.deburr location.avatar.shortName()
 
   direction: ->
-    location = @data()
+    return unless location = @location()
 
     # Special directions have priority except for east/west.
     isEastWest = location.direction in [Directions.East, Directions.West]
@@ -141,14 +143,14 @@ class LOI.Items.Components.Map.Node extends AM.Component
       if phrases[0]?.length is 1 and phrases[1] then phrases[1] else phrases[0]
 
   directionClass: ->
-    location = @data()
+    return unless location = @location()
 
     return 'no-direction' unless location.direction
 
     @_makeDirectionClass location.direction
 
   specialDirectionClass: ->
-    location = @data()
+    return unless location = @location()
 
     @_makeDirectionClass location.specialDirection
 
@@ -161,12 +163,12 @@ class LOI.Items.Components.Map.Node extends AM.Component
     _.toLower directionClass
 
   currentClass: ->
-    location = @data()
+    return unless location = @location()
 
     'current' if location.current
 
   specialPositioningClass: ->
-    location = @data()
+    return unless location = @location()
 
     'special-positioning' if location.specialPositioning
 

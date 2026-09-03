@@ -144,12 +144,16 @@ class AB.Router extends AB.Router
       return if event.metaKey or event.ctrlKey or event.shiftKey
 
       link = event.currentTarget
+      $link = $(link)
+      
+      # Do not act on links with a blank target.
+      return if $link.attr('target') is '_blank'
 
       # Do not act on download links.
       return if link.download
 
       # Do not act on pure hashtag links.
-      return if _.startsWith $(link).attr('href'), '#'
+      return if _.startsWith $link.attr('href'), '#'
 
       # Only do soft link changes when we're staying within the same host.
       if link.hostname is location.hostname

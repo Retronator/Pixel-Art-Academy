@@ -30,6 +30,10 @@ RS.Items.CatalogKeys =
       PixelChinaMountains: ''
       ArtworkShipping: ''
     RetronatorBlackKeycard: ''
+    Steam:
+      LearnMode:
+        DefaultReleaseKey: ''
+        ReleaseStateOverrideKey: ''
   Retropolis:
     DayPass: ''
     NightlifePass: ''

@@ -75,8 +75,14 @@ class LOI.Items.Components.Map extends AM.Component
         @anySouthLocations anySouthLocation
         @specialLocations specialLocations
 
-      # Return just a list of locations and sort them by _id to prevent re-rendering.
-      _.sortBy _.values(locations), '_id'
+      locations
+      
+    # HACK: We must send only ID data to the node components and let them re-fetch the changed location directions from
+    # the map each time locations are re-computed. If the new directions were included here, recalculation in the node
+    # does not happen for some reason.
+    @locationIdObjects = new ComputedField =>
+      # Sort items by _id to prevent re-rendering.
+      _.sortBy (_.pick location, '_id' for locationId, location of @locations()), '_id'
     
   onRendered: ->
     super arguments...

@@ -19,7 +19,7 @@ retro: How can I help you today?
 ### AnalyzeUser
 
 * I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
-* I would like to redeem these items. -> [Purchase] `_shoppingCart.length`
+* I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
 * I'm one of the Kickstarter backers. -> [Kickstarter] `not _noRewardBacker`
 * How do I play the game? -> [PlayGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
@@ -324,10 +324,8 @@ retro: Well then, in that case I thank you immensely for your support!
 `_helped = true`
 
 retro: 
-    If you didn't pre-order the game yet, currently you can only get access to it with a pledge on Patreon.
-    Take a ![look at the shelf](look at shelf) over there, it has the link to the Patreon page as well as
-    bundles you can redeem after you've supported the game enough. That way you can keep playing even if
-    you cancel your Patreon membership.
+    All the game bundles and upgrade options are on the shelves over there.
+    Simply ![look at shelves](look at shelves) and add the bundle you want to the shopping cart.
     
 -> [MainQuestion]
 
@@ -443,7 +441,7 @@ retro:
     Chapter 1 of Episode 1 is feature complete and is in open alpha so all players have access to it.
     You can play it from start to finish, but most locations aren't illustrated yet.
     Currently, I'm focusing on giving direct access to all the learning parts of the game for those who want to jump right in.
-    I'll be able to package this into an offline, single-player version of the game with a PC and tablet release.
+    I'm calling it Pixel Art Academy: Learn Mode and it's available as an offline, single-player version of the game on Steam.
 
 -> [PixelArtAcademyQuestions]
 
@@ -571,7 +569,7 @@ retro:
 
 retro: 
     The fastest way to ask me more questions is by catching me on Discord.
-    You can join the server I'm on at https://discord.gg/d6V8Say and don't forget to choose the Pixel Art Academy role in the lobby.
+    You can join my server at https://discord.gg/mngNfvTwG6.
     You can also always send me an email to hi@retronator.com. 
     I'll get back to you as soon as I have more time.
     

@@ -1,0 +1,32 @@
+<template name="Retronator.Store.Pages.Admin.ItemKeys">
+  <h1>Item keys</h1>
+  <h2>Import</h2>
+  <form class="upload-form">
+    <p>Select a text file to import</p>
+    <input class="text-file" type="file" accept="text/plain"/>
+    <p>Or input a list directly</p>
+    <textarea class="manual-input"></textarea>
+    <p>Select item</p>
+    <select class="item">
+      {{#each items}}
+        <option value="{{_id}}">{{catalogKey}}</option>
+      {{/each}}
+    </select>
+    <p>Enter upload passphrase</p>
+    <input class="passphrase" type="password"/>
+    <div><button>Upload</button></div>
+  </form>
+  <h2>Overview</h2>
+  <ul>
+    {{#each itemKeysOverview}}
+      <li>
+        <strong>{{catalogKey}}</strong>
+        <table>
+          <tr><td>Total</td><td>{{totalCount}}</td></tr>
+          <tr><td>Claimed</td><td>{{claimedCount}}</td></tr>
+          <tr><td>Available</td><td>{{availableCount}}</td></tr>
+        </table>
+      </li>
+    {{/each}}
+  </ul>
+</template>

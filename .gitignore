@@ -3,5 +3,13 @@
 node_modules
 /run
 /build
-/deploy
+/deploy*
+/package
+/sign
+/notarize
+/notarize-log.json
 .DS_Store
+version.desktop
+.desktop-installer
+.desktop-package
+.steam

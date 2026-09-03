@@ -7,8 +7,7 @@
   width 250rem
   min-height 100%
   margin 0 auto
-  background black
-  adventure()
+  daily()
   color atariGray(5)
 
   *
@@ -24,7 +23,7 @@
 
     .scene
       position absolute
-      width 720px
+      width 360rem
       right 20rem
       top 0
       height 100vh
@@ -38,7 +37,7 @@
       &::after
         content ''
         position absolute
-        top 650px
+        top 325rem
         bottom 0
         left 0
         right 0
@@ -47,17 +46,19 @@
 
   .header
     margin-bottom 3em
-    color atariGray(6)
 
     .title
       position relative
       margin 0
-      acme-9()
-      font-weight bold
       display inline-block
 
-  h2
+  h1
     acme-9()
+    font-weight bold
+    color atariGray(7)
+
+  h2
+    kyrou-9()
     font-weight bold
     margin-top 2em
     color atariGray(6)
@@ -67,17 +68,18 @@
     text-transform uppercase
     color atariGray(6)
 
+  p
+    line-height 10rem
+
   // Link style
   a
-    position relative
-    padding 0 0.1em 0 0.2em
-    margin 0 -0.1em 0 -0.2em
     color atariGray(7)
-    cursor pointer
-    text-decoration none
+    text-decoration-thickness 1rem
+    text-underline-offset 1rem
 
     &:hover
       background-color atariGray(7)
+      text-decoration-color atariGray(7)
       color atariGray(0)
 
   ul
@@ -86,8 +88,11 @@
     padding-left 2em
 
   dl
+    adventure()
+
     dt
       color atariGray(6)
+      text-transform uppercase
 
     dd
       margin 0 0 1em 2em
@@ -106,9 +111,5 @@
         color atariGray(4)
 
   .images
-    a
-      &:hover
-        background none
-
     img
       width 100%

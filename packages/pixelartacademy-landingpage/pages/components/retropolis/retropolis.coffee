@@ -5,20 +5,17 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
 
   @version: -> '0.0.1'
 
-  sceneWidth = 360
-  sceneScale = 2
-
-  middleSceneHeight = 180
-  middleSceneOffsetFactor = 0.5
-
   onCreated: ->
     super arguments...
 
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
-
-    # Add 2x scale class to html so we can scale cursors.
-    $('html').addClass('scale-2')
+    
+    # Create pixel scaling display.
+    @display = new AM.Display
+      safeAreaWidth: 500
+      safeAreaHeight: 241
+      minScale: 2
 
   onRendered: ->
     super arguments...
@@ -30,6 +27,8 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
     # Preprocess parallax elements to avoid trashing.
     parallaxElements = []
     sceneItems = {}
+    
+    component = @
 
     @$('*[data-depth]').each ->
       $element = $(@)
@@ -86,7 +85,7 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
         $image.data data
 
         # Scale the original image for the first time.
-        scale = sceneScale
+        scale = component.display.scale()
 
         css =
           width: loadedImage.width * scale
@@ -101,7 +100,7 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
 
     # Reposition parallax elements.
     @autorun (computation) =>
-      scale = sceneScale
+      scale = @display.scale()
 
       for element in parallaxElements
         css = {}
@@ -109,15 +108,15 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
         for property in ['left', 'top', 'bottom', 'right']
           css[property] = element[property] * scale if element[property]
 
-          spread = 300
-          offset = -spread * element.scaleFactor + spread
-          css.transform = "translate3d(0, #{offset}px, 0)"
+          spread = 150
+          offset = spread * (1 - element.scaleFactor)
+          css.transform = "translate3d(0, #{offset}rem, 0)"
 
         element.$element.css css
 
     # Scale the images.
     @autorun (computation) =>
-      scale = sceneScale
+      scale = @display.scale()
 
       @$('.scene').find('img').each ->
         $image = $(@)

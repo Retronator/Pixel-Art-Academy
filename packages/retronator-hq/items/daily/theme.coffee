@@ -315,7 +315,7 @@ class Retronator.HQ.Items.Daily.Theme
     for supporter in data.supportersWithNames
       $supporter = $("<tr>")
       $supporter.append("<td class='name'>#{supporter.name}</td>")
-      $supporter.append("<td class='amount'>#{supporter.amount}</td>")
+      $supporter.append("<td class='amount'>#{Math.round supporter.amount}</td>")
       $supportersTable.append($supporter)
 
     # Create featured websites. Grab two random featured websites, except

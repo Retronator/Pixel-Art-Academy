@@ -57,16 +57,24 @@ class HQ.Store extends LOI.Adventure.Location
 
     inventoryScene = _.find LOI.adventure.currentScenes(), (scene) -> scene instanceof HQ.Scenes.Inventory
 
-    _.flattenDeep [
+    things = _.flattenDeep [
       @constructor.Table
       @retro
       newestTableItem
       newestTableItem?.interactions
       HQ.Store.Display
-      if LOI.characterId() then HQ.Store.Shelves else HQ.Store.Shelf.Patreon
+      HQ.Store.Shelves
       inventoryScene?.cart() unless HQ.Items.ShoppingCart.state 'inInventory'
       @elevatorButton
     ]
+    
+    unless LOI.characterId()
+      things.push [
+        HQ.Store.Shelf.Game
+        HQ.Store.Shelf.Upgrades
+      ]...
+      
+    things
 
   exits: ->
     HQ.Elevator.addElevatorExit

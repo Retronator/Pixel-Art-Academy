@@ -18,24 +18,112 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   onCreated: ->
     super arguments...
 
+    # Prepare items.
     RS.Item.all.subscribe @
 
-    # Subscribe to item names.
+    @items = new ComputedField =>
+      return [] unless items = Retronator.user()?.items
+      
+      item.refresh() for item in items
+      
+      items
+
     @autorun (computation) =>
       for item in @items() when item.name
         AB.Translation.forId.subscribe @, item.name._id, AB.languagePreference()
-
-    @otherSide = new ReactiveField false
+        
+    # Separate items into groups.
+    @pixelArtAcademyItems = new ComputedField =>
+      items = @items()
+      selectedItems = []
+  
+      # First add any bundle the user owns.
+      bundleKeys = []
+  
+      addKeys = (bundles) =>
+        for value in _.values bundles
+          if _.isObject value
+            addKeys value
+  
+          else
+            bundleKeys.push value
+  
+      addKeys RS.Items.CatalogKeys.Bundles.PixelArtAcademy
+  
+      for item in items
+        selectedItems.push item if item.catalogKey in bundleKeys
+  
+      # Add all the game items.
+      pixelArtAcademyKeys = []
+  
+      for value in _.values RS.Items.CatalogKeys.PixelArtAcademy
+        pixelArtAcademyKeys.push value if _.isString value
+  
+      # Add avatar keys.
+      pixelArtAcademyKeys.push RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+  
+      # Now filter items to valid keys.
+      for item in items
+        selectedItems.push item if item.catalogKey in pixelArtAcademyKeys
+  
+      selectedItems
+  
+    @rewardItems = new ComputedField =>
+      items = @items()
+      selectedItems = []
+  
+      # Add all the kickstarter-exclusive items.
+      rewardKeys = _.flatten [
+        _.values RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter
+        _.values RS.Items.CatalogKeys.PixelArtAcademy.Help
+      ]
+  
+      # Add avatar keys.
+      avatarKeys = RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar
+      rewardKeys = rewardKeys.concat [avatarKeys.CustomItem, avatarKeys.UniqueItem, avatarKeys.UniqueCustomAvatar]
+  
+      # Add Patreon keys.
+      patreonKeys = RS.Items.CatalogKeys.Retronator.Patreon
+      rewardKeys = rewardKeys.concat [patreonKeys.PatreonKeycard, patreonKeys.EarlyBirdKeycard]
+  
+      for item in items
+        selectedItems.push item if item.catalogKey in rewardKeys
+  
+      selectedItems
+  
+    @accessItems = new ComputedField =>
+      items = @items()
+      selectedItems = []
+  
+      # Add all the kickstarter-exclusive items.
+      accessKeys = _.values RS.Items.CatalogKeys.Retropolis
+  
+      for item in items
+        selectedItems.push item if item.catalogKey in accessKeys
+  
+      selectedItems
+    
+    @itemKeyItems = new ComputedField =>
+      items = @items()
+      selectedItems = []
+      
+      # Add all the Steam keys.
+      steamLearnModeKeys = _.values RS.Items.CatalogKeys.PixelArtAcademy.Steam.LearnMode
+      
+      for item in items
+        selectedItems.push item if item.catalogKey in steamLearnModeKeys
+      
+      selectedItems
 
     # Split items between two pages.
     @pageItems = new ComputedField =>
-      firstPage = [[], [], []]
-      secondPage = [[], [], []]
+      firstPage = [[], [], [], []]
+      secondPage = [[], [], [], []]
 
       pageItemLimit = 9
       itemCount = 0
 
-      for items, bracketIndex in [@pixelArtAcademyItems(), @rewardItems(), @accessItems()]
+      for items, bracketIndex in [@pixelArtAcademyItems(), @rewardItems(), @accessItems(), @itemKeyItems()]
         for item in items
           targetPage = if itemCount > pageItemLimit then secondPage else firstPage
 
@@ -44,84 +132,18 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
 
       [firstPage, secondPage]
 
+    @otherSide = new ReactiveField false
+    
     @selectedItem = new ReactiveField null
-
-  items: ->
-    return [] unless items = Retronator.user()?.items
-
-    item.refresh() for item in items
-
-    items
-
-  pixelArtAcademyItems: ->
-    items = @items()
-    selectedItems = []
-
-    # First add any bundle the user owns.
-    bundleKeys = []
-
-    addKeys = (bundles) =>
-      for value in _.values bundles
-        if _.isObject value
-          addKeys value
-
-        else
-          bundleKeys.push value
-
-    addKeys RS.Items.CatalogKeys.Bundles.PixelArtAcademy
-
-    for item in items
-      selectedItems.push item if item.catalogKey in bundleKeys
-
-    # Add all the game items.
-    pixelArtAcademyKeys = []
-
-    for value in _.values RS.Items.CatalogKeys.PixelArtAcademy
-      pixelArtAcademyKeys.push value if _.isString value
-
-    # Add avatar keys.
-    pixelArtAcademyKeys.push RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
-
-    # Now filter items to valid keys.
-    for item in items
-      selectedItems.push item if item.catalogKey in pixelArtAcademyKeys
-
-    selectedItems
-
-  rewardItems: ->
-    items = @items()
-    selectedItems = []
-
-    # Add all the kickstarter-exclusive items.
-    rewardKeys = _.flatten [
-      _.values RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter
-      _.values RS.Items.CatalogKeys.PixelArtAcademy.Help
-    ]
-
-    # Add avatar keys.
-    avatarKeys = RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar
-    rewardKeys = rewardKeys.concat [avatarKeys.CustomItem, avatarKeys.UniqueItem, avatarKeys.UniqueCustomAvatar]
-
-    # Add Patreon keys.
-    patreonKeys = RS.Items.CatalogKeys.Retronator.Patreon
-    rewardKeys = rewardKeys.concat [patreonKeys.PatreonKeycard, patreonKeys.EarlyBirdKeycard]
-
-    for item in items
-      selectedItems.push item if item.catalogKey in rewardKeys
-
-    selectedItems
-
-  accessItems: ->
-    items = @items()
-    selectedItems = []
-
-    # Add all the kickstarter-exclusive items.
-    accessKeys = _.values RS.Items.CatalogKeys.Retropolis
-
-    for item in items
-      selectedItems.push item if item.catalogKey in accessKeys
-
-    selectedItems
+    @selectedItemKeyCode = new ReactiveField null
+    
+    # Update selected item to always come from updated items (since they will recompute during a claim).
+    @autorun (computation) =>
+      items = @items()
+      
+      Tracker.nonreactive =>
+        return unless selectedItem = @selectedItem()
+        @selectedItem _.find items, (item) => item.catalogKey is selectedItem.catalogKey
 
   displayedPixelArtAcademyItems: ->
     pageIndex = if @otherSide() then 1 else 0
@@ -134,13 +156,20 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   displayedAccessItems: ->
     pageIndex = if @otherSide() then 1 else 0
     @pageItems()[pageIndex][2]
-
+  
+  displayedItemKeyItems: ->
+    pageIndex = if @otherSide() then 1 else 0
+    @pageItems()[pageIndex][3]
+    
   showMoreRewards: ->
     not @otherSide() and @pageItems()[1][1].length
 
   showMoreAccess: ->
     not @otherSide() and @pageItems()[1][2].length
 
+  showMoreItemKeyItems: ->
+    not @otherSide() and @pageItems()[1][3].length
+    
   name: ->
     item = @currentData()
     return "" unless item.name
@@ -160,7 +189,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     name = name.replace "Pixel Art Academy ", ""
     name = name.replace "Lands of Illusions - ", ""
 
-    name
+    _.upperFirst name
 
   keycardClass: ->
     return unless user = Retronator.user()
@@ -198,6 +227,12 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   showTurn: ->
     pageItems = @pageItems()[1]
     _.sum (group.length for group in pageItems)
+  
+  selectedItemKeyClass: ->
+    'item-key' if @selectedItemIsItemKey()
+    
+  selectedItemIsItemKey: ->
+    @selectedItem() in @itemKeyItems()
     
   events: ->
     super(arguments...).concat
@@ -216,8 +251,20 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     item = @currentData()
 
     @selectedItem item
+    @selectedItemKeyCode null
+    
+    if item in @itemKeyItems()
+      RS.Item.Key.retrieveForItem item._id, (error, result) =>
+        if error
+          console.error error
+          LOI.adventure.showDialogMessage error.reason
+          return
+        
+        @selectedItemKeyCode result
 
   onClick: (event) ->
-    return if $(event.target).closest('.item .name').length
+    $target = $(event.target)
+    return if $target.closest('.item .name').length
+    return if $target.closest('.selected-item.item-key').length and not $target.closest('.unload-info').length
 
     @selectedItem null

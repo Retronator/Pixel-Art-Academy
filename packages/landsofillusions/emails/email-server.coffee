@@ -11,6 +11,10 @@ class LOI.Emails.Email extends LOI.Emails.Email
     
     {text, html} = @body character
     sender = @sender()
+
+    # TODO: Remove when other domains other than retronator.com can send emails.
+    return unless _.endsWith sender.address, 'retronator.com'
+    
     characterName = character.avatar.fullName.translate().text
 
     EmailMeteor.send

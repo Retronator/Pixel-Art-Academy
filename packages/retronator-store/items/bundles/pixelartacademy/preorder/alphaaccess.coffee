@@ -26,4 +26,5 @@ class RS.Items.Bundles.PixelArtAcademyPreOrderAlphaAccessUpgrade extends RS.Item
       items: [
         CatalogKeys.PixelArtAcademy.AlphaAccess
         CatalogKeys.Retropolis.NightlifePass
+        CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
       ]

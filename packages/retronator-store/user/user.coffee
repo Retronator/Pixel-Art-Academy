@@ -80,21 +80,10 @@ class RA.User extends RA.User
     itemIds = []
     transactions = RS.Transaction.getValidTransactionsForUser @
 
-    # Helper function that recursively adds items.
-    addItem = (item) =>
-      return unless item = RS.Item.documents.findOne item?._id
-
-      # Add the item to the ids.
-      itemIds = _.union itemIds, [item._id]
-
-      if item.items
-        # This is a bundle. Add all items of the bundle as well.
-        addItem bundleItem for bundleItem in item.items
-
     # Add the items from each transaction except those given away as gifts.
     for transaction in transactions when transaction.items
-      for transactionItem in transaction.items
-        addItem transactionItem.item unless transactionItem.givenGift
+      for transactionItem in transaction.items when not transactionItem.givenGift
+        itemIds = _.union itemIds, RS.Item.getAllIncludedItemIds transactionItem.item
 
     # Create an array of item objects.
     items = _.map itemIds, (id) -> {_id: id}

@@ -6,7 +6,7 @@ class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
   @version: -> '0.0.2'
 
   @title: ->
-    "Pixel Art Academy // Press page"
+    "Pixel Art Academy // Press kit"
 
   @description: ->
     "Information, videos, and artwork about Pixel Art Academy."
