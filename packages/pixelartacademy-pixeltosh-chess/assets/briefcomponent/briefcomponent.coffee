@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 Chess = PAA.Pixeltosh.Programs.Chess
 
-class Chess.Assets.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.BriefComponent
+class Chess.Assets.BriefComponent extends PAA.Practice.Asset.Bitmap.BriefComponent
   @register 'PixelArtAcademy.Pixeltosh.Programs.Chess.Assets.BriefComponent'
   
   onCreated: ->

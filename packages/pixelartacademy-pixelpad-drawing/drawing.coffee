@@ -32,17 +32,17 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     return unless @state('editorId')
 
     # Player must have completed the reference copy challenge with a built-in editor.
-    PAA.Practice.Project.Asset.Bitmap.state 'canEdit'
+    PAA.Practice.Asset.Bitmap.state 'canEdit'
 
   @canUpload: ->
     # External software needs to be selected.
     return unless @state('externalSoftware')
   
     # Player must have completed the reference copy challenge by uploading the result.
-    PAA.Practice.Project.Asset.Bitmap.state 'canUpload'
+    PAA.Practice.Asset.Bitmap.state 'canUpload'
     
   @canCreateArtworks: ->
-    PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria')?.length
+    PAA.Practice.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria')?.length
 
   constructor: ->
     super arguments...

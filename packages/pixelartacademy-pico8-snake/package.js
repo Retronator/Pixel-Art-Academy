@@ -21,6 +21,7 @@ Package.onUse(function(api) {
 
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('assetsprovider');
 
   api.addAssets('snake.p8.png', 'client');
 });

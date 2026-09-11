@@ -23,7 +23,7 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
         do (asset) =>
           return unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
-          assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+          assetClass = PAA.Practice.Asset.getClassForId asset.id
           backgroundIndex = assetClass.backgroundColor().paletteColor.ramp
 
           LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, (bitmap, operation, changedFields) =>

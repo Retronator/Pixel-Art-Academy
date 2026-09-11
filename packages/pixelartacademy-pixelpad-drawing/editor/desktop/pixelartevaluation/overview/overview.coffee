@@ -29,11 +29,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
       return unless pixelArtEvaluationProperty = @pixelArtEvaluation.pixelArtEvaluationProperty()
       criteria = []
       
-      pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
+      pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
       
       if @unlockable()
         # Note: We need to use concat since we don't want to modify the array we got from the state.
-        pixelArtEvaluationCriteria = pixelArtEvaluationCriteria.concat PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or []
+        pixelArtEvaluationCriteria = pixelArtEvaluationCriteria.concat PAA.Practice.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or []
       
       for criterion of PAE.Criteria
         criterionProperty = _.lowerFirst criterion

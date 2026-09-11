@@ -51,7 +51,7 @@ class LM.Intro.TutorialsDrawing extends LOI.Adventure.Scene
 
     things
     
-  class @PixelArtTools extends PAA.PixelPad.Apps.Drawing.Portfolio.Folder
+  class @PixelArtTools extends PAA.PixelPad.Apps.Drawing.Portfolio.GroupFolder
     @id: -> 'PixelArtAcademy.LearnMode.Intro.TutorialsDrawing.PixelArtTools'
     
     @displayName: -> "Pixel art tools"

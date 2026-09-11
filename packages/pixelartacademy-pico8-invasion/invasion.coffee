@@ -43,7 +43,7 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
   
   # Assets
 
-  class @Sprite extends PAA.Practice.Project.Asset.Bitmap
+  class @Sprite extends PAA.Practice.Asset.Bitmap
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     
     @backgroundColor: ->

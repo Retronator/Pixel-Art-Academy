@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Assets
-  class @Asset extends PAA.Practice.Project.Asset.Bitmap
+  class @Asset extends PAA.Practice.Asset.Bitmap
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @backgroundColor: -> new THREE.Color '#edddb5'

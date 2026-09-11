@@ -7,7 +7,7 @@ Chess = PAA.Pixeltosh.Programs.Chess
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class Chess.Assets
-  class @Asset extends PAA.Practice.Project.Asset.Bitmap
+  class @Asset extends PAA.Practice.Asset.Bitmap
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @backgroundColor: -> new THREE.Color '#edddb5'

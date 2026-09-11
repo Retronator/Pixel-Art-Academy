@@ -1,17 +1,17 @@
-<template name="PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent">
+<template name="PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent">
   {{#with bitmap}}
-    {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.Properties}}
+    {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.Properties}}
     {{#if noActions}}
-      {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.NoActions}}
+      {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.NoActions}}
     {{else}}
       <ul class="actions">
-        {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.DefaultActions}}
+        {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.DefaultActions}}
       </ul>
     {{/if}}
   {{/with}}
 </template>
 
-<template name="PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.Properties">
+<template name="PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.Properties">
   <ul class="properties">
     <li class="property fixed-dimensions">
       <span class="property-name">Size</span>:
@@ -33,7 +33,7 @@
   </ul>
 </template>
 
-<template name="PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.NoActions">
+<template name="PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.NoActions">
   <div class="no-actions">
     {{#if needsSettingsSelection}}
       Select an editor or external software in Settings to edit assets.
@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<template name="PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.DefaultActions">
+<template name="PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.DefaultActions">
   {{#if canEdit}}
     <li class="action">
       <button class="button edit-button">Edit</button>

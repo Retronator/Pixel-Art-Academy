@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Thing
+class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Thing
   # icons: object with the icons the player started drawing
   #   {label}: the name of the image classification label for this subject
   #     sizes:

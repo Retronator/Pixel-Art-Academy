@@ -7,8 +7,7 @@ Snake = PAA.Pico8.Cartridges.Snake
 
 class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Project
   @start: ->
-    # Make sure the player doesn't have an already active project.
-    throw new AE.InvalidOperationException "Profile already has an active Snake project." if Snake.Project.state 'activeProjectId'
+    super arguments...
 
     new Promise (resolve, reject) =>
       Tracker.autorun (computation) =>
@@ -97,18 +96,3 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Proj
         Snake.Project.state 'activeProjectId', projectId
 
         resolve()
-
-  @end: ->
-    # Make sure the player has an active project.
-    projectId = Snake.Project.state 'activeProjectId'
-    throw new AE.InvalidOperationException "Profile does not have an active Snake project." unless projectId
-
-    # End the project.
-    endTime = new Date()
-    projectId = PAA.Practice.Project.documents.update projectId,
-      $set:
-        endTime: endTime
-        lastEditTime: endTime
-
-    # Remove project ID from profile's game state.
-    Snake.Project.state 'activeProjectId', null

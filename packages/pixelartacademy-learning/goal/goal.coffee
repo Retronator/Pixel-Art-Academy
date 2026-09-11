@@ -217,7 +217,6 @@ class PAA.Learning.Goal
   @addedAndAvailable: -> @getAdventureInstance().addedAndAvailable()
   @activeAndAvailable: -> @getAdventureInstance().activeAndAvailable()
   @activeOrCompleted: -> @getAdventureInstance().activeOrCompleted()
-  @activeAndAvailableOrCompleted: -> @getAdventureInstance().activeAndAvailableOrCompleted()
   
   @reset: -> @getAdventureInstance().reset()
   
@@ -282,7 +281,6 @@ class PAA.Learning.Goal
   addedAndAvailable: -> @available() and @added()
   activeAndAvailable: -> @active() and @available()
   activeOrCompleted: -> @active() or @completed()
-  activeAndAvailableOrCompleted: -> @activeAndAvailable() or @completed()
 
   reset: ->
     task.reset() for task in @_tasks

@@ -23,7 +23,7 @@ class LM.PixelArtFundamentals.Fundamentals.Publications extends LOI.Adventure.Sc
       continue unless project = PAA.Practice.Project.documents.findOne activeProjectId
 
       for asset in project.assets
-        assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+        assetClass = PAA.Practice.Asset.getClassForId asset.id
 
         if unlockedPublications = assetClass.unlockedPublications?()
           publications = _.union publications, unlockedPublications

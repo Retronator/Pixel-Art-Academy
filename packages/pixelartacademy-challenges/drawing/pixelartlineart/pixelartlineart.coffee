@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Project.Thing
+class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Thing
   # assets: array of assets that the player has chosen to complete for the line art challenges
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -116,10 +116,10 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Project.Thing
         unlockablePixelArtEvaluationCriteria.push criterion
         
       # See if the criteria actually changed.
-      existingUnlockablePixelArtEvaluationCriteria = PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria'
+      existingUnlockablePixelArtEvaluationCriteria = PAA.Practice.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria'
       return unless _.xor(unlockablePixelArtEvaluationCriteria, existingUnlockablePixelArtEvaluationCriteria).length
     
-      PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria', unlockablePixelArtEvaluationCriteria
+      PAA.Practice.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria', unlockablePixelArtEvaluationCriteria
     
     # Listen to a change in completed of assets to determine which pixel art evaluation criteria can be granted.
     @completedChallenges = new AE.LiveComputedField =>
@@ -137,10 +137,10 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Project.Thing
         unlockedPixelArtEvaluationCriteria.push criterion
       
       # See if the criteria actually changed.
-      existingUnlockedPixelArtEvaluationCriteria = PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria'
+      existingUnlockedPixelArtEvaluationCriteria = PAA.Practice.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria'
       return unless _.xor(unlockedPixelArtEvaluationCriteria, existingUnlockedPixelArtEvaluationCriteria).length
       
-      PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
+      PAA.Practice.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
 
   destroy: ->
     @_unlockableCriteriaAutorun.stop()

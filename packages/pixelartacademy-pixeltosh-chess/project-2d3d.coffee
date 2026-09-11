@@ -5,7 +5,6 @@ PAA = PixelArtAcademy
 Chess = PAA.Pixeltosh.Programs.Chess
 
 class Chess.Project.TwoDimensional extends Chess.Project
-  # activeProjectId: ID of the project that is currently active
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Project.TwoDimensional'
   
   @fullName: -> "Chess 2D"
@@ -17,7 +16,6 @@ class Chess.Project.TwoDimensional extends Chess.Project
     chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional
 
 class Chess.Project.ThreeDimensional extends Chess.Project
-  # activeProjectId: ID of the project that is currently active
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Project.ThreeDimensional'
   
   @fullName: -> "Chess 3D"

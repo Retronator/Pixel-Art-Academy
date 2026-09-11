@@ -26,7 +26,7 @@ class PAA.Publication.Article.Figure.Image extends LOI.Component
       return unless LOI.adventure
       return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
       return unless asset = editor.activeAsset()
-      return unless asset instanceof PAA.Practice.Project.Asset.Bitmap
+      return unless asset instanceof PAA.Practice.Asset.Bitmap
       asset
 
     @addedToReferences = new ComputedField =>

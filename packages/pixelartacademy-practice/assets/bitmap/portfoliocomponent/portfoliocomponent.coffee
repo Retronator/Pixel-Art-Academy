@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Practice.Project.Asset.Bitmap.PortfolioComponent extends AM.Component
-  @register 'PixelArtAcademy.Practice.Project.Asset.Bitmap.PortfolioComponent'
+class PAA.Practice.Asset.Bitmap.PortfolioComponent extends AM.Component
+  @register 'PixelArtAcademy.Practice.Asset.Bitmap.PortfolioComponent'
 
   constructor: (@bitmap) ->
     super arguments...

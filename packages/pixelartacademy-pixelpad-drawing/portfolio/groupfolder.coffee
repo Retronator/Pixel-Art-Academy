@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.Folder
+class PAA.PixelPad.Apps.Drawing.Portfolio.GroupFolder
   @id: -> throw new AE.NotImplementedException "You must specify the folder ID."
   
   @displayName: -> throw new AE.NotImplementedException "You must specify the folder display name."
@@ -18,7 +18,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Folder
         AB.createTranslation translationNamespace, 'displayName', @displayName()
         
   constructor: ->
-    # Subscribe to this asset's translations.
+    # Subscribe to this folder's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
     

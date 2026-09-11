@@ -55,7 +55,7 @@ class Pinball.Part extends LOI.Adventure.Thing
           
         else
           # Asset hasn't been added to the project yet, fallback to the default images.
-          assetClass = PAA.Practice.Project.Asset.getClassForId assetId
+          assetClass = PAA.Practice.Asset.getClassForId assetId
           imageUrls = assetClass.imageUrls()
           imageUrls = [imageUrls] unless _.isArray imageUrls
           @_loadImageAssets imageUrls

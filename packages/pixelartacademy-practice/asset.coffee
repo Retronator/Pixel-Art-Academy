@@ -4,7 +4,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Practice.Project.Asset
+class PAA.Practice.Asset
   @Types:
     None: 'None'
     Bitmap: 'Bitmap'
@@ -49,13 +49,13 @@ class PAA.Practice.Project.Asset
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
 
-  constructor: (@project) ->
+  constructor: (@assetsProvider) ->
     # Subscribe to this asset's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
     @data = new AE.LiveComputedField =>
-      return unless assetsData = @project.assetsData()
+      return unless assetsData = @assetsProvider.assetsData()
       assetId = @id()
       
       _.find assetsData, (assetData) => assetData.id is assetId

@@ -28,6 +28,18 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('practice');
+  api.addFile('thing');
+  api.addFile('assetsprovider');
+  api.addFile('assetsproviderthing');
+  api.addFile('asset');
+
+  // Assets
+
+  api.addFile('assets/bitmap..');
+  api.addComponent('assets/bitmap/portfoliocomponent..');
+  api.addComponent('assets/bitmap/clipboardcomponent..');
+  api.addFile('assets/bitmap/clipboardcomponent/previewinfomixin');
+  api.addUnstyledComponent('assets/bitmap/briefcomponent..');
 
   // Journal
 
@@ -89,14 +101,8 @@ Package.onUse(function(api) {
   api.addServerFile('project/subscriptions-server');
 
   api.addFile('project/thing');
+  api.addFile('project/assetsprovider');
   api.addFile('project/workbench');
-  api.addFile('project/asset');
-
-  api.addFile('project/assets/bitmap..');
-  api.addComponent('project/assets/bitmap/portfoliocomponent..');
-  api.addComponent('project/assets/bitmap/clipboardcomponent..');
-  api.addFile('project/assets/bitmap/clipboardcomponent/previewinfomixin');
-  api.addUnstyledComponent('project/assets/bitmap/briefcomponent..');
 
   api.addFile('project/migrations/0000-projectthings');
 

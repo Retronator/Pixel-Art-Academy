@@ -27,7 +27,7 @@
   <li class="group content {{groupActiveClass}} {{groupSubgroupActiveClass}} {{styleClasses}}" {{style groupStyle}}>
     <div class="group-header">
       <div class="group-name">{{name}}</div>
-      {{#if content.completed}}
+      {{#if thing.content.completed}}
         <div class="completed">✔︎</div>
       {{/if}}
     </div>
@@ -38,40 +38,74 @@
         {{/each}}
       </ul>
     {{/if}}
-    {{#if assets}}
-      <ul class="briefs">
-        {{#each assets}}
-          <li class="brief {{assetWaitingClass}} {{assetHoveredClass}} {{assetLastHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
-            <div class="asset-name">
-              {{#if asset.displayNameTranslation}}
-                {{> t10e asset.displayNameTranslation}}
-              {{else}}
-                {{asset.displayName}}
-              {{/if}}
-            </div>
-            <div class="description">
-              {{#if asset.descriptionTranslation}}
-                {{> t10e asset.descriptionTranslation}}
-              {{else}}
-                {{asset.description}}
-              {{/if}}
-            </div>
-          </li>
-        {{/each}}
-      </ul>
-      <ul class="assets">
-        {{#each assets}}
-          <li class="asset {{assetWaitingClass}} {{assetActiveClass}}" {{style assetStyle}}>
-            {{> Render asset.portfolioComponent}}
-          </li>
-        {{/each}}
-      </ul>
+    {{#if assetsProviders}}
+      {{#with activeAssetsProvider}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea}}
+      {{else}}
+        <ul class="assets-providers">
+          {{#each assetsProviders}}
+            <li class="assets-provider">
+              {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/with}}
     {{else}}
-      {{#if noAssetsInstructions}}
-        <div class="no-assets-instructions">
-          {{noAssetsInstructions}}
-        </div>
+      {{#if assets}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea}}
+      {{else}}
+        {{#if thing.noAssetsInstructions}}
+          <div class="no-assets-instructions">
+            {{thing.noAssetsInstructions}}
+          </div>
+        {{/if}}
       {{/if}}
     {{/if}}
   </li>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea">
+  <div class="assets-area {{assetsAreaAnimationClass}}">
+    {{#if thing.canDeactivateAssetsProvider}}
+      <div class="folder" {{style folderStyle}}>
+        <div class="back"></div>
+        <div class="front">
+          <div class="cover"></div>
+          <div class="side">
+            <div class="close-button-area">
+              <button class="close-button">Close</button>
+            </div>
+            <div class="indent"></div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+    <ul class="briefs">
+      {{#each assets}}
+        <li class="brief {{assetWaitingClass}} {{assetHoveredClass}} {{assetLastHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
+          <div class="asset-name">
+            {{#if asset.displayNameTranslation}}
+              {{> t10e asset.displayNameTranslation}}
+            {{else}}
+              {{asset.displayName}}
+            {{/if}}
+          </div>
+          <div class="description">
+            {{#if asset.descriptionTranslation}}
+              {{> t10e asset.descriptionTranslation}}
+            {{else}}
+              {{asset.description}}
+            {{/if}}
+          </div>
+        </li>
+      {{/each}}
+    </ul>
+    <ul class="assets">
+      {{#each assets}}
+        <li class="asset {{assetWaitingClass}} {{assetActiveClass}}" {{style assetStyle}}>
+          {{> Render asset.portfolioComponent}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
 </template>

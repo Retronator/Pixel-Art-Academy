@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
+class PAA.Practice.Asset.Bitmap extends PAA.Practice.Asset
   # bitmapId: reference to a bitmap
   
   # Type of this asset.
@@ -242,7 +242,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 # canEdit: can the user edit the bitmaps with built-in editors
 # canUpload: can the user upload bitmaps
 # unlockedPixelArtEvaluationCriteria: array of pixel art evaluation criteria that the user can enable
-Bitmap = PAA.Practice.Project.Asset.Bitmap
+Bitmap = PAA.Practice.Asset.Bitmap
 
-Bitmap.stateAddress = new LOI.StateAddress "things.PixelArtAcademy.Practice.Project.Asset.Bitmap"
+Bitmap.stateAddress = new LOI.StateAddress "things.PixelArtAcademy.Practice.Asset.Bitmap"
 Bitmap.state = new LOI.StateObject address: Bitmap.stateAddress

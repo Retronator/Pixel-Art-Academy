@@ -129,6 +129,16 @@ class AM.Component extends CommonComponent
       return data if filter data
 
       level++
+      
+  callParentDataWith: (propertyName, args...) ->
+    data = @parentDataWith propertyName
+    
+    # We are not calling callFirstWith on the componentOrMixin because here we
+    # are already traversing mixins so we do not recurse once more.
+    if _.isFunction data[propertyName]
+      return data[propertyName] args...
+    else
+      return data[propertyName]
 
   # Helpers
 

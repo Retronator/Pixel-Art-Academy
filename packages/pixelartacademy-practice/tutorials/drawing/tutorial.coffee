@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
+class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.AssetsProviderThing
   # assets: array of assets that are part of this tutorial
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -68,6 +68,5 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   assetsData: ->
     return unless LOI.adventure.gameStateAvailable()
 
-    # We need to mimic a project, so we need to provide the data. If no state is
-    # set, we send a dummy object to let the bitmap know we've loaded the state.
+    # If no state is set, we send a dummy object to let the bitmap know we've loaded the state.
     @state('assets') or []

@@ -113,7 +113,7 @@ class PAA.Learning.Task
   
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
-  @completed: -> @getAdventureInstance().completed()
+  @completed: -> @getAdventureInstance()?.completed()
 
   @reset: -> @getAdventureInstance().reset()
 

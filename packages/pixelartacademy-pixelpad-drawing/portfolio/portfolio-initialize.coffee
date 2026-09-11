@@ -388,7 +388,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @tutorialsSection.groupsProvider.destroy()
     @challengesSection.groupsProvider.destroy()
     @projectsSection.groupsProvider.destroy()
+    
     @constructor.AssetData.destroy()
+    @constructor.AssetsProviderData.destroy()
   
   _searchGroupForAssetWithUrlParameter: (group, urlParameter, currentGroups) ->
     if group.assets

@@ -168,7 +168,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
       arrowBase = InterfaceMarking.arrowBase()
       textBase = InterfaceMarking.textBase()
       
-      criteriaCount = PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria').length
+      criteriaCount = PAA.Practice.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria').length
       
       arrowY = 2 + 6 * criteriaCount
       

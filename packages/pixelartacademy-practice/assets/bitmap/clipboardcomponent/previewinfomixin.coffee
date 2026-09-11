@@ -4,7 +4,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin extends BlazeComponent
+class PAA.Practice.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin extends BlazeComponent
   onCreated: ->
     @drawing = @component().ancestorComponentOfType PAA.PixelPad.Apps.Drawing
     

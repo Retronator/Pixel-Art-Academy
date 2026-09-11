@@ -32,6 +32,10 @@ The project is using these fonts:
 
   Custom, 5px tall, mostly 3px wide miniature version of Daily
 
+- **Legible** by Matej Jan (www.retronator.com)
+
+  Custom, 3px tall, designed to be (relatively) legible even at this tiny size
+
 - **Illegible** by Matej Jan (www.retronator.com)
 
   Custom, 3px tall, designed to not be legible as to detract from reading tiny text

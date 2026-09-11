@@ -60,7 +60,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
           content: @
 
           completed: =>
-            return unless unlockedPixelArtEvaluationCriteria = PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria'
+            return unless unlockedPixelArtEvaluationCriteria = PAA.Practice.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria'
             @constructor.criterion() in unlockedPixelArtEvaluationCriteria
 
     class @PixelPerfectLines extends @CompletedCriteria

@@ -26,7 +26,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
   things: ->
     things = []
 
-    if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.activeAndAvailable()
+    if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.addedAndAvailable()
       @_tutorialLine ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.ElementsOfArt.Line
       things.push @_tutorialLine
     
@@ -90,7 +90,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
     
     things
   
-  class @PixelArtFundamentals extends PAA.PixelPad.Apps.Drawing.Portfolio.Folder
+  class @PixelArtFundamentals extends PAA.PixelPad.Apps.Drawing.Portfolio.GroupFolder
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.TutorialsDrawing.PixelArtFundamentals'
     
     @displayName: -> "Pixel art fundamentals"

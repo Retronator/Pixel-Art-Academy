@@ -21,7 +21,7 @@ class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridge
   
   # Assets
   
-  class @Body extends PAA.Practice.Project.Asset.Bitmap
+  class @Body extends PAA.Practice.Asset.Bitmap
     @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake.Body'
     
     @displayName: -> "Snake body"
@@ -39,7 +39,7 @@ class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridge
     
     @initialize()
   
-  class @Food extends PAA.Practice.Project.Asset.Bitmap
+  class @Food extends PAA.Practice.Asset.Bitmap
     @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake.Food'
     
     @displayName: -> "Food"

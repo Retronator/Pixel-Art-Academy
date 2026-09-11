@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.Project.Thing
+class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.AssetsProviderThing
   # assets: array of assets that the player has chosen to complete for the Copy reference challenge
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -68,7 +68,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends PAA.Practice.Project.Thing
               canEdit = true
 
       Tracker.nonreactive =>
-        Bitmap = PAA.Practice.Project.Asset.Bitmap
+        Bitmap = PAA.Practice.Asset.Bitmap
 
         Bitmap.state 'canEdit', canEdit unless canEdit is Bitmap.state 'canEdit'
         Bitmap.state 'canUpload', canUpload unless canUpload is Bitmap.state 'canUpload'

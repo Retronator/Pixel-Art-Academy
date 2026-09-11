@@ -10,11 +10,16 @@ LM = PixelArtAcademy.LearnMode
 class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio'
   
-  @Sections:
+  @Sections =
     Tutorials: 'Tutorials'
     Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
+    
+  @AssetsAreaAnimationStates =
+    Opened: 'Opened'
+    Separated: 'Separated'
+    Closed: 'Closed'
 
   # Subscriptions
   @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
@@ -36,6 +41,11 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
         throttle: 100
       assetPan:
         valueType: AEc.ValueTypes.Number
+      folderHover:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 200
+      folderOpen: AEc.ValueTypes.Trigger
+      folderClose: AEc.ValueTypes.Trigger
         
   constructor: (@drawing) ->
     super arguments...
@@ -51,6 +61,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @groupsMaxTotalHeight = 180
     @sectionsMargin = 13
     @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
+    @assetsAreaAnimationState = new ReactiveField null
     
   getNeighboringAsset: (assetIndexOffset) ->
     return unless @isCreated()
@@ -168,6 +179,24 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     group = @currentData()
 
     'active' if group in @activeGroups()
+  
+  assetsAreaAnimationClass: ->
+    assetsProviderData = @currentData()
+    
+    if assetsAreaAnimationState = @assetsAreaAnimationState()
+      if assetsAreaAnimationState.assetsProviderData is assetsProviderData
+        return _.kebabCase assetsAreaAnimationState.state
+    
+    return unless assetsProviderData.thing.assetsProviders()
+    return if assetsProviderData.thing.activeAssetsProvider() is assetsProviderData.assetsProvider
+
+    _.kebabCase @constructor.AssetsAreaAnimationStates.Closed
+  
+  folderStyle: ->
+    group = @currentData()
+    left = -59 + group.assets().length * 1.5
+    
+    left: "calc(50% + #{left}rem)"
 
   briefStyle: ->
     assetData = @currentData()
@@ -226,18 +255,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
     'active' if assetData is @activeAsset()
 
-  selectedEditorClass: ->
-    editor = @currentData()
-    selectedEditorId = @drawing.state('editorId') or null
-
-    'selected' if selectedEditorId is editor.id()
-
-  selectedSoftwareClass: ->
-    software = @currentData()
-    selectedSoftware = @drawing.state('externalSoftware') or null
-
-    'selected' if selectedSoftware is software.value
-
   events: ->
     super(arguments...).concat
       'click .section': @onClickSection
@@ -249,8 +266,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       'pointerleave .asset': @onPointerLeaveAsset
       'click .brief': @onClickBrief
       'click .asset': @onClickAsset
-      'click .pixel-boy .editor': @onClickPixelPadEditor
-      'click .external .editor': @onClickExternalEditor
+      'pointerenter .close-button': @onPointerEnterCloseButton
+      'pointerleave .close-button': @onPointerLeaveCloseButton
+      'click .close-button': @onClickCloseButton
+      'pointerenter .assets-provider': @onPointerEnterAssetsProvider
+      'pointerleave .assets-provider': @onPointerLeaveAssetsProvider
+      'click .assets-provider': @onClickAssetsProvider
 
   onClickSection: (event) ->
     section = @currentData()
@@ -319,6 +340,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @audio.groupHover()
 
   onPointerEnterAsset: (event) ->
+    return if @assetsAreaAnimationState()
+    
     assetData = @currentData()
     @hoveredAsset assetData
     @lastHoveredAsset assetData
@@ -327,6 +350,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @_assetHoverUnlessFirst assetData
 
   onPointerLeaveAsset: (event) ->
+    return if @assetsAreaAnimationState()
+    
     assetData = @hoveredAsset()
     @hoveredAsset null
 
@@ -343,6 +368,62 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
   onClickAsset: (event) ->
     @_goToClickedAsset()
+    
+  onPointerEnterCloseButton: (event) ->
+    return if @assetsAreaAnimationState()
+    
+    @audio.folderHover()
+    
+  onPointerLeaveCloseButton: (event) ->
+    return if @assetsAreaAnimationState()
+    
+    @audio.folderHover()
+    
+  onClickCloseButton: (event) ->
+    assetsProviderData = @currentData()
+    
+    @audio.folderClose()
+
+    @assetsAreaAnimationState
+      assetsProviderData: assetsProviderData
+      state: @constructor.AssetsAreaAnimationStates.Separated
+    
+    await _.waitForSeconds 0.5
+    
+    @assetsAreaAnimationState
+      assetsProviderData: assetsProviderData
+      state: @constructor.AssetsAreaAnimationStates.Closed
+      
+    await _.waitForSeconds 0.5
+    
+    assetsProviderData.thing.deactivateAssetsProvider()
+    @assetsAreaAnimationState null
+  
+  onPointerEnterAssetsProvider: (event) ->
+    @audio.folderHover()
+    
+  onPointerLeaveAssetsProvider: (event) ->
+    @audio.folderHover()
+    
+  onClickAssetsProvider: (event) ->
+    assetsProviderData = @currentData()
+    
+    @audio.folderOpen()
+
+    @assetsAreaAnimationState
+      assetsProviderData: assetsProviderData
+      state: @constructor.AssetsAreaAnimationStates.Separated
+
+    await _.waitForSeconds 0.5
+    
+    @assetsAreaAnimationState
+      assetsProviderData: assetsProviderData
+      state: @constructor.AssetsAreaAnimationStates.Opened
+      
+    await _.waitForSeconds 0.5
+    
+    assetsProviderData.thing.activateAssetsProvider assetsProviderData.assetsProvider
+    @assetsAreaAnimationState null
 
   _goToClickedAsset: ->
     assetData = @currentData()
@@ -354,14 +435,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
     # Set active asset URL.
     AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
-
-  onClickPixelPadEditor: (event) ->
-    editor = @currentData()
-    @drawing.state 'editorId', editor.id()
-
-  onClickExternalEditor: (event) ->
-    program = @currentData()
-    @drawing.state 'externalSoftware', program.value
   
   onKeyDown: (event) ->
     # To get into cheating mode, you have to have shift pressed (and alt released),

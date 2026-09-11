@@ -10,7 +10,7 @@
   background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/back.png')
   transition 0.5s
 
-  .cover
+  > .cover
     position absolute
     z-index 101
     bottom 2rem
@@ -146,112 +146,254 @@
                 color atariGreen(2)
                 adventure()
 
-            .briefs
-              position absolute
-              z-index 0
-              left 0
-              right 0
-              top 22rem
-              margin 0
-              padding 0
+            .assets-providers
               list-style none
-              text-align center
-
-              .brief
-                display inline-block
-                position relative
-                left 0
-                top 0
-                width 120rem
-                height 150rem
-                margin-left -120rem
-                padding 8rem
-                vertical-align top
-                background atariGray(7)
-                color atariGray(2)
-                box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
-                text-align left
-                transition top 0.5s 0.3s, left 1s
-                cursor pointer
-
-                &:first-child
-                  margin-left 0
-
-                &.last-hovered
-                &.active
-                  z-index 99 !important
-
-                &.hovered
-                  top -4rem
-                  transition top 0.2s, left 1s
-
-                &.active
-                  top -240rem
-                  transition top 0.5s, left 1s
-
-                &.waiting
-                  left 400rem
-
-                .asset-name
-                  margin-bottom 4.5rem
-                  small-print()
-                  text-transform uppercase
-
-                .description
-                  small-print()
-
-            .assets
-              position absolute
-              z-index 1
-              display flex
-              justify-content space-around
-              top 54rem
-              left 10rem
-              right 10rem
-              height 100rem
-              margin 0
               padding 0
-              list-style none
-              pointer-events none
 
-              &::before
-              &::after
-                content ''
-                display block
-                width 100%
-                flex-shrink 2
+              .assets-provider
+                .assets-area
+                  top 2rem
+                  cursor pointer
+                  transition top 0.2s
 
-              .asset
-                position relative
-                left 0
-                top 0
-                height 100rem
-                transition all 0.2s, top 0.5s 0.3s, left 1s
-                cursor pointer
-                pointer-events none
-
-                &:hover
-                  flex-shrink 0.2
-                  transition all 0.2s
-
-                  &::before
-                    content: ''
-                    position absolute
-                    left -50%
-                    width 50%
+                  &:hover
+                  &.opened
+                  &.separated
                     top 0
-                    bottom 0
-                    pointer-events all
 
-                &:first-child
-                  flex-shrink 0
+                  &.separated
+                    .folder
+                      .front
+                        z-index 3
 
-                &.active
-                  top -240rem
-                  transition all 0.2s, top 0.5s
+            .assets-area
+              position relative
+              top 0
+              transition top 0.5s
 
-                &.waiting
-                  left 400rem
+              &.opened
+              &.separated
+              &.closed
+                .folder
+                  .front
+                    .side
+                      .close-button-area
+                        .close-button
+                          visibility hidden
+
+              &.separated
+              &.closed
+                .briefs
+                  .brief
+                    margin-left -123rem
+
+                    &:not(:last-child)
+                      box-shadow 0 0 5rem rgba(atariGray(0), 0)
+
+              &.separated
+                top 1rem
+
+                .folder
+                  left 6rem !important
+
+                .briefs
+                  left 50%
+
+                .assets
+                  left calc(50% + 10rem)
+
+              &.closed
+                top 2rem
+
+                .folder
+                  left calc(50% - 65rem) !important
+
+                  .front
+                    z-index 3
+
+                .assets
+                  left calc(25% + 10rem)
+                  right calc(25% + 10rem)
+
+              .folder
+                position absolute
+                top -3rem
+                width 130rem
+                height 137rem
+                transition transform 0.2s, left 0.5s
+
+                &:has(.close-button:hover)
+                  transform translateX(2rem)
+
+                .back
+                .front
+                  absolute-cover()
+                  border-image-slice 5 4 0 fill
+                  border-image-width 5rem 4rem 0
+
+                .back
+                  z-index 0
+                  border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-back-border.png')
+                  opacity 0.25
+
+                .front
+                  display flex
+                  z-index 0
+                  padding 5rem 0 0 4rem
+                  border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-front-border.png')
+                  opacity 0.5
+
+                  .cover
+                    background-color atariGray(5)
+                    flex-grow 1
+
+                  .side
+                    display flex
+                    flex-direction column
+                    width 18rem
+
+                    &::after
+                      content ''
+                      display block
+                      flex-grow 1
+                      background-color atariGray(5)
+
+                    .close-button-area
+                      background-color atariGray(5)
+
+                      .close-button
+                        display flex
+                        justify-content center
+                        align-items end
+                        padding-left 1rem
+                        writing-mode vertical-rl
+                        transform rotate(180deg)
+                        min-height 30rem
+                        width 18rem
+                        border none
+                        background none
+                        small-print()
+                        color atariGray(3)
+                        text-transform uppercase
+
+                        &:hover
+                          color atariGray(1)
+
+                    .indent
+                      width 18rem
+                      height 18rem
+                      background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-front-indent.png')
+
+              .briefs
+                position absolute
+                z-index 1
+                left 0
+                right 0
+                top 3rem
+                margin 0
+                padding 0
+                list-style none
+                text-align center
+                pointer-events none
+                transition all 0.5s
+
+                .brief
+                  display inline-block
+                  position relative
+                  left 0
+                  top 0
+                  width 120rem
+                  height 150rem
+                  margin-left -120rem
+                  padding 8rem
+                  vertical-align top
+                  background atariGray(7)
+                  color atariGray(2)
+                  box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
+                  text-align left
+                  transition top 0.5s 0.3s, left 1s, margin-left 0.5s
+                  cursor pointer
+                  pointer-events initial
+
+                  &:first-child
+                    margin-left 0
+
+                  &.last-hovered
+                  &.active
+                    z-index 99 !important
+
+                  &.hovered
+                    top -4rem
+                    transition top 0.2s, left 1s
+
+                  &.active
+                    top -240rem
+                    transition top 0.5s, left 1s
+
+                  &.waiting
+                    left 400rem
+
+                  .asset-name
+                    margin-bottom 4.5rem
+                    small-print()
+                    text-transform uppercase
+
+                  .description
+                    small-print()
+
+              .assets
+                position absolute
+                z-index 2
+                display flex
+                justify-content space-around
+                top 35rem
+                left 10rem
+                right 10rem
+                height 100rem
+                margin 0
+                padding 0
+                list-style none
+                pointer-events none
+                transition all 0.5s
+
+                &::before
+                &::after
+                  content ''
+                  display block
+                  width 100%
+                  flex-shrink 2
+
+                .asset
+                  position relative
+                  left 0
+                  top 0
+                  height 100rem
+                  transition all 0.2s, top 0.5s 0.3s, left 1s
+                  cursor pointer
+                  pointer-events none
+
+                  &:hover
+                    flex-shrink 0.2
+                    transition all 0.2s
+
+                    &::before
+                      content: ''
+                      position absolute
+                      left -50%
+                      width 50%
+                      top 0
+                      bottom 0
+                      pointer-events all
+
+                  &:first-child
+                    flex-shrink 0
+
+                  &.active
+                    top -240rem
+                    transition all 0.2s, top 0.5s
+
+                  &.waiting
+                    left 400rem
 
             .no-assets-instructions
               width 120rem

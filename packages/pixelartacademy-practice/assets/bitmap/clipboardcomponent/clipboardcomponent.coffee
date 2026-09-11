@@ -4,8 +4,8 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
-  @register 'PixelArtAcademy.Practice.Project.Asset.Bitmap.ClipboardComponent'
+class PAA.Practice.Asset.Bitmap.ClipboardComponent extends AM.Component
+  @register 'PixelArtAcademy.Practice.Asset.Bitmap.ClipboardComponent'
   
   constructor: (@asset) ->
     super arguments...
@@ -13,7 +13,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
     @secondPageActive = new ReactiveField false
 
   mixins: -> [
-    PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
+    PAA.Practice.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
   ]
   
   onCreated: ->

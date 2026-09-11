@@ -1,0 +1,31 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-portfolio-closeproject-portfoliocomponent
+  position absolute
+  bottom 0
+  right 0
+  width 75rem
+  height 100rem
+  box-shadow 0 0 5rem rgba(atariGray(0), 0.2)
+  pointer-events initial
+
+  &::before
+  &::after
+    content ''
+    absolute-cover()
+
+  &::before
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-back.png')
+    opacity 0.25
+
+  &::after
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-front.png')
+    opacity 0.5
+
+  .label
+    position relative
+    z-index 1
+    margin 20rem auto
+    width 23rem
+    height 11rem
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/sticker-green.png')

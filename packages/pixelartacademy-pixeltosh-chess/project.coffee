@@ -21,7 +21,7 @@ class Chess.Project extends PAA.Practice.Project.Thing
       return unless project = PAA.Practice.Project.documents.findOne activeProjectId
       
       for asset in project.assets when not @_assets[asset.id]
-        assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+        assetClass = PAA.Practice.Asset.getClassForId asset.id
         @_assets[asset.id] = Tracker.nonreactive => new assetClass @
         
       for assetId, asset of @_assets when not _.find project.assets, (projectAsset) => projectAsset.id is assetId

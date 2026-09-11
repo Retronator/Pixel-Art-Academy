@@ -1,11 +1,11 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Assets.BriefComponent">
   {{#with bitmap}}
-    {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.Properties}}
+    {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.Properties}}
     {{#if noActions}}
-      {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.NoActions}}
+      {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.NoActions}}
     {{else}}
       <ul class="actions">
-        {{> PixelArtAcademy.Practice.Project.Asset.Bitmap.BriefComponent.DefaultActions}}
+        {{> PixelArtAcademy.Practice.Asset.Bitmap.BriefComponent.DefaultActions}}
         {{#each copySourceAssets}}
           <li class="action">
             <button class="button copy-button">Copy {{displayName}}</button>

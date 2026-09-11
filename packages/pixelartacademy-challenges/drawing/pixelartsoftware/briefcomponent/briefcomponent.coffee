@@ -3,7 +3,7 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.BriefComponent
+class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends PAA.Practice.Asset.Bitmap.BriefComponent
   @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent'
   
   canEdit: ->

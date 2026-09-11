@@ -193,7 +193,7 @@ class LM.Interface extends LM.Interface
             else if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
               availableCompositionClasses.push LM.Compositions.ElementsOfArt
           
-              if LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.activeAndAvailableOrCompleted()
+              if LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.addedAndAvailable()
                 availableCompositionClasses.push LM.Compositions.PixelArtFundamentals
           
           for compositionClass in availableCompositionClasses when compositionClass not in previouslyAvailableCompositionClasses or not currentDynamicSoundtrackComposition

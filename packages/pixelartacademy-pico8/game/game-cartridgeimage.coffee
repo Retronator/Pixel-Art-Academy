@@ -79,7 +79,7 @@ class PAA.Pico8.Game extends PAA.Pico8.Game
     for asset in @assets
       continue unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
-      assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+      assetClass = PAA.Practice.Asset.getClassForId asset.id
       backgroundIndex = assetClass.backgroundColor().paletteColor.ramp
 
       replaceSprite projectAsset.bitmapId, asset.x * 8, asset.y * 8, backgroundIndex
@@ -117,7 +117,7 @@ class PAA.Pico8.Game extends PAA.Pico8.Game
       for asset in @labelImage.assets
         continue unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
-        assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+        assetClass = PAA.Practice.Asset.getClassForId asset.id
         backgroundIndex = assetClass.backgroundColor().paletteColor.ramp
 
         drawSpriteToLabel projectAsset.bitmapId, asset.x, asset.y, backgroundIndex

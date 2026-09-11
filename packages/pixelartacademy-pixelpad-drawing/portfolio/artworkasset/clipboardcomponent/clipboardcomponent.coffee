@@ -14,7 +14,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     @exportArtworkActive = new ReactiveField false
   
   mixins: -> [
-    PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
+    PAA.Practice.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
   ]
   
   onCreated: ->

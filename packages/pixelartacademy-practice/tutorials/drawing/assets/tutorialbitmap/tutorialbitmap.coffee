@@ -4,7 +4,7 @@ AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Project.Asset.Bitmap
+class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Asset.Bitmap
   # stepAreas: an array of areas that keep track of step progression
   #   activeStepIndex: the index of the currently active step
   #   completed: boolean whether the final step has been completed
@@ -51,7 +51,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   constructor: ->
     super arguments...
     
-    @tutorial = @project
+    @tutorial = @assetsProvider
 
     # Create bitmap automatically if it is not present.
     @_createBitmapAutorun = Tracker.autorun (computation) =>

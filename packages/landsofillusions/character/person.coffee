@@ -73,8 +73,8 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       action = new LOI.Memory.Actions.Leave
       action.start @
 
-  recentActions: (requireInitialHangoutCompleted = false) -> throw AE.NotImplementedException "Person must provide recent actions."
-  getActions: (query) -> throw AE.NotImplementedException "Person must implement querying actions."
+  recentActions: (requireInitialHangoutCompleted = false) -> throw new AE.NotImplementedException "Person must provide recent actions."
+  getActions: (query) -> throw new AE.NotImplementedException "Person must implement querying actions."
 
   recentActionsEarliestTime: (requireInitialHangoutCompleted = false) ->
     lastHangout = @personState 'lastHangout'
