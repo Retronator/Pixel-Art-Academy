@@ -3,7 +3,7 @@ AB = Artificial.Base
 queryString = require 'querystring'
 
 class AB.Router extends AB.Router
-  _requestHost = null
+  _requestHost = new Meteor.EnvironmentVariable
   _absoluteUrl = null
 
   @initialize: ->
@@ -17,17 +17,9 @@ class AB.Router extends AB.Router
     for name, handler of OAuth._requestHandlers
       do (handler) ->
         OAuth._requestHandlers[name] = (service, query, response) ->
-          _requestHost = response._requestHost
-
-          try
-            # Call the original handler. We expect it will call absolute URL at some point.
-            handler arguments...
-
-          catch exception
-            console.error "Exception in OAuth flow", exception
-
-          finally
-            _requestHost = null
+          # Keep the request host available in the asynchronous context used by newer OAuth handlers.
+          _requestHost.withValue response._requestHost, ->
+            handler service, query, response
 
     # HACK: Override absolute URL function to use the request host as the root url.
     _absoluteUrl = Meteor.absoluteUrl
@@ -35,14 +27,14 @@ class AB.Router extends AB.Router
       # Absolute URL doesn't remove the leading slash, so we do it to allow both relative and server-relative URLs.
       path = path.substring 1 if path?[0] is '/'
       
-      if _requestHost
+      if requestHost = _requestHost.getOrNullIfOutsideFiber()
         # We reuse the protocol from the root url.
         rootUrl = _absoluteUrl()
         protocol = rootUrl.match(/(.*:\/\/).*/)[1]
 
         # We strip the localhost part and port since that would be added by the proxy in production to address
         # the node server behind the proxy, but we need the redirect URI's to point to the proxy.
-        requestHost = _requestHost.match(/(?:localhost\.)?([^:]*)(?::.*)?/)[1]
+        requestHost = requestHost.match(/(?:localhost\.)?([^:]*)(?::.*)?/)[1]
 
         rootUrl = "#{protocol}#{requestHost}"
 
