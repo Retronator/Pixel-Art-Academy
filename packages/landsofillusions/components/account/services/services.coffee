@@ -63,7 +63,7 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
     
     switch serviceName
       when 'Password'
-        Meteor.call RA.User.sendPasswordResetEmail, (error) ->
+        Meteor.call RA.User.sendPasswordResetEmail, (error) =>
           if error
             LOI.adventure.showDialogMessage error.message
             return
@@ -72,7 +72,8 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
                                              Use it to set the password for your account."""
 
       else
-        Meteor["linkWith#{serviceName}"]()
+        Meteor["linkWith#{serviceName}"] {}, (error) =>
+          LOI.adventure.showDialogMessage error.error if error
 
   onClickStamp: (event) ->
     serviceName = @currentData()
@@ -133,19 +134,19 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
       callback: =>
         if dialog.result is true
           if serviceName is 'Password'
-            Meteor.call RA.User.sendPasswordResetEmail, (error) ->
+            Meteor.call RA.User.sendPasswordResetEmail, (error) =>
               if error
                 LOI.adventure.showDialogMessage error.message
                 return
 
           else
-            RA.User.unlinkService serviceName, (error) ->
+            RA.User.unlinkService serviceName, (error) =>
               if error
                 LOI.adventure.showDialogMessage error.message
                 return
 
         else if dialog.result is 'refresh'
-          RA.Patreon.updateCurrentPledge (error) ->
+          RA.Patreon.updateCurrentPledge (error) =>
             if error
               LOI.adventure.showDialogMessage error.message
               return

@@ -1,8 +1,16 @@
 RS = Retronator.Store
 
+HTTPS = Npm.require 'https'
+TLS = Npm.require 'tls'
+
 class RS.Vat.ExchangeRate extends RS.Vat.ExchangeRate
   @_usdToEur = null
   @_eurToUsd = null
+
+  # Meteor's Node 14 runtime predates the root certificate used by the ECB. Add the published Sectigo root only to
+  # this request's standard certificate authorities so that the ECB certificate can still be fully verified.
+  @_httpsAgent = new HTTPS.Agent
+    ca: TLS.rootCertificates.concat [Assets.getText 'vat/exchangerate/SectigoPublicServerAuthenticationRootE46.pem']
 
   @updateExchangeRates: (callback) ->
     # Request USD reference rates.
@@ -10,37 +18,43 @@ class RS.Vat.ExchangeRate extends RS.Vat.ExchangeRate
 
     # Allow to cache the result up to a day.
     options =
+      agent: @_httpsAgent
       headers:
         'Cache-Control': 'max-age=86400'
 
-    HTTP.get url, options, (error, result) =>
-      if error
+    fetch url, options
+      .then (response) ->
+        throw new Error "Request failed with status code #{response.status}." unless response.ok
+
+        response.text()
+
+      .then (content) =>
+        xml = xml2js.parseStringSync content
+
+        # Find the last exchange rate.
+        latestTime = 0
+        latestEurToUsdRate = null
+
+        for obs in xml.CompactData.DataSet[0].Series[0].Obs
+          time = Date.parse obs.$.TIME_PERIOD
+
+          if time > latestTime
+            latestTime = time
+            latestEurToUsdRate = parseFloat obs.$.OBS_VALUE
+
+        if latestEurToUsdRate
+          @eurToUsd = latestEurToUsdRate
+
+          # Exchange rates are defined to 4 decimals.
+          @usdToEur = Math.round(10000 / latestEurToUsdRate) / 10000
+
+        else
+          console.error "Failed to parse USD exchange rate XML file."
+
+        callback?()
+
+      .catch (error) ->
         console.error "Could not retrieve USD exchange rate XML file.", error
-        return
-
-      xml = xml2js.parseStringSync result.content
-
-      # Find the last exchange rate.
-      latestTime = 0
-      latestEurToUsdRate = null
-
-      for obs in xml.CompactData.DataSet[0].Series[0].Obs
-        time = Date.parse obs.$.TIME_PERIOD
-
-        if time > latestTime
-          latestTime = time
-          latestEurToUsdRate = parseFloat obs.$.OBS_VALUE
-
-      if latestEurToUsdRate
-        @eurToUsd = latestEurToUsdRate
-
-        # Exchange rates are defined to 4 decimals.
-        @usdToEur = Math.round(10000 / latestEurToUsdRate) / 10000
-
-      else
-        console.error "Failed to parse USD exchange rate XML file."
-
-      callback?()
 
 Meteor.startup ->
   # Update exchange rates on startup.

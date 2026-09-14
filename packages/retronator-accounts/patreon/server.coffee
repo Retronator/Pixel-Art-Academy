@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AT = Artificial.Telepathy
 RA = Retronator.Accounts
 
 class RA.Patreon extends RA.Patreon
@@ -17,30 +18,32 @@ OAuth.registerService 'patreon', 2, null, (query) ->
   throw new ServiceConfiguration.ConfigError unless config
 
   try
-    tokenResponse = HTTP.post 'https://www.patreon.com/api/oauth2/token', params:
-      code: query.code
-      client_id: config.clientId
-      client_secret: OAuth.openSecret(config.clientSecret)
-      grant_type: 'authorization_code'
-      redirect_uri: OAuth._redirectUri 'patreon', config
+    clientSecret = OAuth.openSecret config.secret
+    redirectUri = OAuth._redirectUri 'patreon', config
 
-    accessToken = tokenResponse.data.access_token
+    tokenResponseData = AT.Patreon.exchangeAuthorizationCode query.code, config.clientId, clientSecret, redirectUri
+    throw new Error "Patreon returned no access token." unless tokenResponseData?.access_token
+    accessToken = tokenResponseData.access_token
 
   catch error
     console.error error
+    console.error "Patreon OAuth redirect URI: #{redirectUri}" if redirectUri
     throw new AE.InvalidOperationException "Failed to complete OAuth handshake with Patreon."
 
-  if tokenResponse.data.error
-    console.error tokenResponse.data.error
-    throw new AE.InvalidOperationException "Failed to complete OAuth handshake with Patreon.", tokenResponse.data.error
+  if tokenResponseData.error
+    console.error tokenResponseData.error
+    throw new AE.InvalidOperationException "Failed to complete OAuth handshake with Patreon.", tokenResponseData.error
 
   try
-    currentUserResponse = HTTP.get 'https://www.patreon.com/api/oauth2/api/current_user',
+    currentUserResponse = HTTP.get 'https://www.patreon.com/api/oauth2/v2/identity',
       headers:
         Authorization: "Bearer #{accessToken}"
+        'User-Agent': AT.Patreon.userAgent
+      params:
+        'fields[user]': 'email'
 
-    content = JSON.parse currentUserResponse.content
-    userProfile = content.data
+    userProfile = AT.Patreon._parseResponseData(currentUserResponse)?.data
+    throw new Error "Patreon returned no user profile." unless userProfile
 
     # Update user's Patreon pledge.
     RA.Patreon.updateCurrentPledgeForPatron userProfile.id
@@ -51,8 +54,8 @@ OAuth.registerService 'patreon', 2, null, (query) ->
 
   serviceData: _.extend
     accessToken: accessToken
-    refreshToken: tokenResponse.data.refresh_token
-    expiresAt: Date.now() + 1000 * tokenResponse.data.expires_in
+    refreshToken: tokenResponseData.refresh_token
+    expiresAt: Date.now() + 1000 * tokenResponseData.expires_in
     # We add the email fields for accounts-emails-field and accounts-meld to work.
     email: userProfile.attributes.email
   ,

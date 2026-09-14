@@ -6,7 +6,6 @@ Package.describe({
 Npm.depends({
   'twit': '2.2.11',
   'stripe': '5.1.1',
-  'patreon': '0.4.1',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
   'three': '0.126.1',

@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-accounts');
 
   api.use('webapp', 'server');
+  api.use('fetch', 'server');
 
   api.use('chfritz:easycron');
   api.use('peerlibrary:xml2js');
@@ -52,6 +53,7 @@ Package.onUse(function(api) {
   api.addServerFile('vat/methods-server');
   api.addFile('vat/rates');
   api.addFile('vat/exchangerate..');
+  api.addAssets('vat/exchangerate/SectigoPublicServerAuthenticationRootE46.pem', 'server');
   api.addServerFile('vat/exchangerate/server');
   api.addServerFile('vat/exchangerate/methods-server');
 
