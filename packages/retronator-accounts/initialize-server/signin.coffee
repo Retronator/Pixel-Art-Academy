@@ -52,4 +52,9 @@ Meteor.startup ->
   ,
     $set:
       clientId: Meteor.settings.patreon.clientId,
-      clientSecret: Meteor.settings.patreon.clientSecret
+      # Note: secret is not sent to the client by naming convention.
+      secret: Meteor.settings.patreon.clientSecret
+    # Remove fields used in previous implementations.
+    $unset:
+      clientSecret: true
+      redirectUri: true

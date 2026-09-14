@@ -19,7 +19,11 @@ class RA.Patreon extends RA.Patreon
     state = OAuth._stateParam(loginStyle, credentialToken)
 
     redirectUrl = OAuth._redirectUri 'patreon', config
-    loginUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id=#{config.clientId}&state=#{state}&redirect_uri=#{redirectUrl}"
+    encodedRedirectUrl = encodeURIComponent redirectUrl
+    requestedScopes = ['identity', 'identity[email]']
+    encodedRequestedScopes = encodeURIComponent requestedScopes.join ' '
+
+    loginUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id=#{config.clientId}&state=#{state}&redirect_uri=#{encodedRedirectUrl}&scope=#{encodedRequestedScopes}"
 
     OAuth.launchLogin
       loginService: 'patreon'
@@ -41,10 +45,6 @@ Meteor.loginWithPatreon = (options, callback) ->
 
 Meteor.linkWithPatreon = (options, callback) ->
   throw new AE.UnauthorizedException "Please login to an existing account before link." unless Meteor.userId()
-
-  if _.isFunction options and not callback
-    callback = options
-    options = null
 
   credentialRequestCompleteCallback = Accounts.oauth.linkCredentialRequestCompleteHandler callback
   RA.Patreon.requestCredential options, credentialRequestCompleteCallback
