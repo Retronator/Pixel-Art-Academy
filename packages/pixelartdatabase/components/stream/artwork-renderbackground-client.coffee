@@ -33,9 +33,14 @@ PADB.Components.Stream.Artwork::_renderBackground = (displayedArtwork, image, di
   drawTop = (@backgroundCanvas.height - drawHeight) / 2
   drawLeft = (@backgroundCanvas.width - drawWidth) / 2
 
-  # Draw the image and blur it.
-  @backgroundContext.fillStyle = 'black'
+  # Add a spotlight effect to the background for transparent images.
+  gradient = @backgroundContext.createRadialGradient(pixelWidth / 2, pixelHeight / 2, 0, pixelWidth / 2, pixelHeight / 2, pixelWidth / 2)
+  gradient.addColorStop 0, 'white'
+  gradient.addColorStop 1, 'black'
+  @backgroundContext.fillStyle = gradient
   @backgroundContext.fillRect 0, 0, pixelWidth, pixelHeight
+  
+  # Draw the image and blur it.
   @backgroundContext.drawImage image, drawLeft, drawTop, drawWidth, drawHeight
   StackBlur.canvasRGB @backgroundCanvas, 0, 0, pixelWidth, pixelHeight, 150
 

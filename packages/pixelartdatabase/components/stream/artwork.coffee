@@ -70,7 +70,7 @@ class PADB.Components.Stream.Artwork extends AM.Component
     @$artworkArea = @$('.artwork-area')
     @$backgroundCanvas = @$('.background')
     @backgroundCanvas = @$backgroundCanvas[0]
-    @backgroundContext = @backgroundCanvas.getContext '2d'
+    @backgroundContext = @backgroundCanvas.getContext '2d', willReadFrequently: true
 
     # Update background when artwork-area size changes.
     @_areaResizedDependency = new Tracker.Dependency
