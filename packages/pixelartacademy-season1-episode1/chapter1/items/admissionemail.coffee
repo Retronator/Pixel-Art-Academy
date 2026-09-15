@@ -51,7 +51,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
     text = translations.text
 
     # Do variable substitution.
-    text = text.replace /_char_/g, character.avatar.fullName.translate().text
+    text = text.replace /_char_/g, character.avatar.fullName?.translate().text or ''
 
     # Create the html version by treating it as markdown.
     converter = new Showdown.Converter

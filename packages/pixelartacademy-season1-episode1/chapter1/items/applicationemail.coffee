@@ -48,7 +48,7 @@ class C1.Items.ApplicationEmail extends LOI.Emails.Email
     text = "#{text}\n\n#{translations.textOutro}"
 
     # Do variable substitution.
-    text = text.replace /_char_/g, character.avatar.fullName.translate().text
+    text = text.replace /_char_/g, character.avatar.fullName?.translate().text or ''
 
     # Create the html version by treating it as markdown.
     converter = new Showdown.Converter
