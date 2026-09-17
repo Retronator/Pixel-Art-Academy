@@ -5,6 +5,14 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.Components.ThemeBanner extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Components.ThemeBanner'
 
+  mixins: -> [@retireMissingSubmissions]
+
+  constructor: ->
+    super arguments...
+
+    @retireMissingSubmissions =
+      new PADB.PixelDailies.Pages.YearReview.Components.Mixins.RetireMissingSubmissions @
+
   dateTitle: ->
     theme = @data()
 

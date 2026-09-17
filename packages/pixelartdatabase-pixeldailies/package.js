@@ -34,6 +34,7 @@ Package.onUse(function(api) {
   api.addFiles('theme/migrations/0004-renamecollection.coffee', 'server');
 
   api.addFiles('submission/submission.coffee');
+  api.addServerFile('submission/methods');
   api.addFiles('submission/subscriptions.coffee', 'server');
 
   api.addFiles('submission/migrations/0000-reprocessimages.coffee', 'server');
@@ -66,6 +67,9 @@ Package.onUse(function(api) {
   api.addFile('pages/yearreview/years/year2018');
   api.addFile('pages/yearreview/years/year2019');
   api.addFile('pages/yearreview/years/year2020');
+  api.addFile('pages/yearreview/years/year2021');
+  api.addFile('pages/yearreview/years/year2022');
+  api.addFile('pages/yearreview/years/year2023');
 
   api.addComponent('pages/yearreview/layout/layout');
 
@@ -78,6 +82,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/yearreview/components/footer/footer');
   api.addFile('pages/yearreview/components/mixins/mixins');
   api.addFile('pages/yearreview/components/mixins/infinitescroll');
+  api.addFile('pages/yearreview/components/mixins/retiremissingsubmissions');
 
   api.addFile('pages/yearreview/themes/themescalendarprovider');
   api.addServerFile('pages/yearreview/themes/subscriptions');

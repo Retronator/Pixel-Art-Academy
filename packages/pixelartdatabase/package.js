@@ -61,6 +61,7 @@ Package.onUse(function(api) {
   // Components
 
   api.addFile('components..');
+  api.addClientFile('components/videomanager');
   api.addComponent('components/stream..');
   api.addComponent('components/stream/artwork');
   api.addClientFile('components/stream/artwork-renderbackground-client');

@@ -1,6 +1,9 @@
 <template name="PixelArtDatabase.PixelDailies.Pages.Home.Navigation">
   <nav class="pixelartdatabase-pixeldailies-pages-home-navigation">
-    {{> Artificial.Base.RouteLink args 'Current' 'PixelArtDatabase.PixelDailies.Pages.Home'}}
+    {{> Artificial.Base.RouteLink args 'Archive' 'PixelArtDatabase.PixelDailies.Pages.Home'}}
+    {{> Artificial.Base.RouteLink args '2023' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2023}}
+    {{> Artificial.Base.RouteLink args '2022' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2022}}
+    {{> Artificial.Base.RouteLink args '2021' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2021}}
     {{> Artificial.Base.RouteLink args '2020' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2020}}
     {{> Artificial.Base.RouteLink args '2019' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2019}}
     {{> Artificial.Base.RouteLink args '2018' 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day' year=2018}}

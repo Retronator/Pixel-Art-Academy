@@ -55,94 +55,10 @@
         margin-top 5rem
 
       .welcome
-        .todays-theme
-          position relative
-          z-index 1
-          background atariGray(7)
-          color atariGray(0)
-          margin 20rem 10rem
-          padding 7rem
-          text-align left
-          hyphens none
+        p:last-child
           adventure()
-          filter drop-shadow(2rem 2rem 0 atariGray(2))
-
-          &::before
-            content ''
-            position absolute
-            z-index -1
-            background atariGray(7)
-            top 1rem
-            bottom 1rem
-            left -1rem
-            right -1rem
-
-          &::after
-            content ''
-            position absolute
-            z-index -1
-            background atariGray(7)
-            top 2rem
-            bottom 2rem
-            left -2rem
-            right -2rem
-
-          a
-            color atariGray(0)
-
-            &:hover
-              color #31a2f2
-
-          .header
-            .avatar
-              position relative
-              width 30rem
-              vertical-align middle
-              pixel-image-rendering()
-              box-shadow 1rem 1rem 0 atariGray(2)
-
-              &:hover
-                top -1rem
-                left -1rem
-                box-shadow 2rem 2rem 0 atariGray(2)
-
-            .names
-              display inline-block
-              margin-left 8rem
-              vertical-align middle
-
-              .name
-                display block
-                kyrou-9()
-                line-height 14rem
-                font-weight bold
-
-              .username
-                display block
-                color atariGray(3)
-
-                &:hover
-                  color #31a2f2
-
-          .text
-            kyrou-9()
-            font-weight bold
-            margin 10rem 0
-
-          .date
-            .tweet-link
-              color atariGray(3)
-
-              &:hover
-                color #31a2f2
-
-    .below-hint
-      position relative
-      z-index 1
-      text-align center
-      margin-top 20rem
-      opacity 0.8
-      adventure()
+          text-align center
+          text-wrap balance
 
     .background
       position absolute
@@ -169,7 +85,7 @@
       right 0
       acme-9()
       color atariGray(7)
-      font-size 8px
+      font-size 16px
       padding 4rem
       opacity 0.7
       text-decoration none
@@ -211,4 +127,3 @@
         &:hover
         &:focus
          opacity 1
-

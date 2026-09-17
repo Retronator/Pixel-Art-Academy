@@ -48,7 +48,7 @@
   {{/if}}
   {{#with submissionImage}}
     {{#if videoUrl}}
-      <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+      <video class="top-submission" loop muted poster="{{imageUrl}}">
         <img class="top-submission" src="{{imageUrl}}"/>
       </video>
     {{else}}

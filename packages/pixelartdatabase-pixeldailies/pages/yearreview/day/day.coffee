@@ -178,9 +178,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
           artwork
 
-        # If we don't have the artworks loaded yet, use top submissions as placeholders. We pretty
-        # much repeat the archive submission code to create a temporary artwork out of the submission.
-        if not artworks.length and theme.topSubmissions?.length
+        # While the subscription is loading, use top submissions as placeholders. Once it is ready, an empty cursor is
+        # authoritative and must not be repopulated with denormalized theme data that might still contain a retired submission.
+        if not artworks.length and not @themesReady() and theme.topSubmissions?.length
           artworks = for submission in theme.topSubmissions
             PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
 

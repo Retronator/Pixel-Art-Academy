@@ -3,7 +3,7 @@
     <figure class="artwork-with-caption">
       <div class="artwork-frame">
         {{#if videoUrl}}
-          <video class="artwork" src="{{videoUrl}}" loop poster="{{imageUrl}}" {{style artworkStyle}}>
+          <video class="artwork" loop muted poster="{{imageUrl}}" {{videoAttributes}} {{style artworkStyle}}>
             <img class="artwork" src="{{imageUrl}}" {{style artworkStyle}}/>
           </video>
         {{else}}

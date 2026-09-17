@@ -13,10 +13,18 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
     @yearRange = new AE.DateRange year: @options.year
 
     @_subscriptionAutorun = Tracker.autorun (computation) =>
-      @subscriptionHandle @constructor.themes.subscribe @options.year, @limit()
+      limit = @limit()
+
+      # Mongo treats a zero limit as unbounded, so wait for the calendar to provide its initial page size.
+      return unless limit > 0
+
+      @subscriptionHandle @constructor.themes.subscribe @options.year, limit
 
   destroy: ->
+    subscriptionHandle = @subscriptionHandle()
     @_subscriptionAutorun.stop()
+    subscriptionHandle?.stop()
+    @subscriptionHandle null
 
   submissions: ->
     # Get themes in the given year.

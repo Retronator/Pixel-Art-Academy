@@ -59,13 +59,19 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
 
       [profilesCursor, submissionsCursor]
 
-  mixins: -> [@infiniteScroll]
+  mixins: -> [@infiniteScroll, @retireMissingSubmissions]
 
   constructor: ->
     super arguments...
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll step: 10
+    @retireMissingSubmissions = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.RetireMissingSubmissions @
+
     @sortingParameter = new ReactiveField @constructor.SortingParameters.FavoritesCount
+
+    @videoManager = new PADB.Components.VideoManager
+      onLoadError: (sourceUrl) =>
+        @retireMissingSubmissions.retireMissingSubmissionForResourceUrl sourceUrl
 
   onCreated: ->
     super arguments...
@@ -95,31 +101,70 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     @autorun (computation) =>
       @infiniteScroll.updateCount @profiles()?.length or 0
 
-    @_profilesVisibilityData = []
-
   onRendered: ->
     super arguments...
-    @_$window = $(window)
 
-    @_$window.on 'scroll.pixelartdatabase-pixeldailies-pages-yearreview-artists', (event) => @onScroll()
+    @profileVisibilityTracker = new AM.ElementVisibilityTracker @,
+      elements: => @$('.profile')
+      scrollParent: window
+      viewportHeightDistance: 1
+      elementIdentityAndData: (profileElement) =>
+        $profile = $(profileElement)
+        profile = Blaze.getData profileElement
+        profileKey = profile?._id or profile?.username
+        $color = $profile.find('.color')
+        video = $profile.find('video')[0]
+        videoUrl = Blaze.getData(video)?.videoUrl if video
 
-    # Update active profiles on resizes and profile updates.
+        identity: [profileKey, $color[0], video, videoUrl]
+        data:
+          $color: $color
+          video: video
+          videoUrl: videoUrl
+
+      visible: (visibilityInfo) =>
+        {$color, video, videoUrl} = visibilityInfo.data
+
+        $color.css
+          display: 'block'
+
+        if video and videoUrl
+          @videoManager.play video, videoUrl,
+            restart: true
+
+      hidden: (visibilityInfo) =>
+        {$color, video} = visibilityInfo.data
+
+        $color.css
+          display: 'none'
+
+        @videoManager.pause video if video
+
+      destroyed: (visibilityInfo) =>
+        video = visibilityInfo.data.video
+        @videoManager.end video if video
+
+    @profileVisibilityTracker.start()
+
+    # Update profile visibility on resizes and profile updates.
     @autorun (computation) =>
       AM.Window.clientBounds()
-      @profiles()
+      profiles = @profiles()
 
-      # Wait till the new artwork areas get rendered.
+      # Also update measurements when retiring a submission changes an artist's background.
+      @_backgroundForProfile profile for profile in profiles or []
+
+      # Wait until the new profile elements get rendered.
       Tracker.afterFlush =>
-        # Everything is deactivated when first rendered so make sure visibility data reflects that.
-        visibilityData.active = false for visibilityData in @_profilesVisibilityData
+        return unless @isRendered()
 
-        @_measureProfiles()
-        @_updateProfilesVisibility()
+        @profileVisibilityTracker.refresh()
 
   onDestroyed: ->
     super arguments...
 
-    @_$window.off '.pixelartdatabase-pixeldailies-pages-yearreview-artists'
+    @profileVisibilityTracker?.destroy()
+    @videoManager.destroy()
 
   year: ->
     parseInt AB.Router.getParameter 'year'
@@ -139,8 +184,9 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     profile.pixelDailies.statisticsByYear[@year()]
 
   background: ->
-    profile = @currentData()
+    @_backgroundForProfile @currentData()
 
+  _backgroundForProfile: (profile) ->
     submission = PADB.PixelDailies.Submission.documents.findOne
       'user.screenName': new RegExp profile.username, 'i'
       processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
@@ -149,72 +195,6 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
         favoritesCount: -1
 
     submission?.images[0]
-
-  onScroll: ->
-    # Update visibility every 0.2s when scrolling.
-    @_throttledUpdateProfilesVisibility ?= _.throttle =>
-      @_updateProfilesVisibility()
-    ,
-      200
-
-    @_throttledUpdateProfilesVisibility()
-
-  _measureProfiles: ->
-    # Get top and bottom positions of all artworks.
-    $profiles = @$('.profile')
-    return unless $profiles
-
-    for profileElement, index in $profiles
-      $profile = $(profileElement)
-      top = $profile.offset().top
-      bottom = top + $profile.height()
-
-      @_profilesVisibilityData[index] ?= {}
-      @_profilesVisibilityData[index].element = profileElement
-      @_profilesVisibilityData[index].$profile = $profile
-      @_profilesVisibilityData[index].$color = $profile.find('.color')
-      @_profilesVisibilityData[index].top = top
-      @_profilesVisibilityData[index].bottom = bottom
-
-  _updateProfilesVisibility: ->
-    viewportTop = @_$window.scrollTop()
-    windowHeight = @_$window.height()
-    viewportBottom = viewportTop + windowHeight
-
-    # Expand one extra screen beyond the viewport
-    visibilityEdgeTop = viewportTop - windowHeight
-    visibilityEdgeBottom = viewportBottom + windowHeight
-
-    # Go over all the profiles and activate the one at the new index.
-    for visibilityData, index in @_profilesVisibilityData
-      # Profile is visible if it is anywhere in between the visibility edges.
-      profileShouldBeActive = visibilityData.bottom > visibilityEdgeTop and visibilityData.top < visibilityEdgeBottom
-
-      # Activate or deactivate profiles. Note that active is undefined at the start.
-      if profileShouldBeActive and visibilityData.active isnt true
-        # We must activate this profile.
-        $profile = visibilityData.$profile
-
-        visibilityData.$color.css
-          display: 'block'
-
-        for video in $profile.find('video')
-          video.currentTime = 0
-          video.play()
-
-        visibilityData.active = true
-
-      else if not profileShouldBeActive and visibilityData.active isnt false
-        # We need to deactivate this profile.
-        $profile = visibilityData.$profile
-
-        visibilityData.$color.css
-          display: 'none'
-
-        for video in $profile.find('video')
-          video.pause()
-
-        visibilityData.active = false
 
   loading: ->
     not @subscriptionsReady()

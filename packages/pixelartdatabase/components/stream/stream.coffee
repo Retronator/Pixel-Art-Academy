@@ -18,7 +18,8 @@ class PADB.Components.Stream extends AM.Component
   onCreated: ->
     super arguments...
 
-    @playbackSkippedCount = 0
+    @videoManager = new PADB.Components.VideoManager
+      onLoadError: @options.onVideoLoadError
 
     @displayedArtworks = new ComputedField =>
       artworks = @data()
@@ -45,8 +46,6 @@ class PADB.Components.Stream extends AM.Component
 
         displayedArtwork
 
-    @_artworksVisibilityData = []
-
   onRendered: ->
     super arguments...
     
@@ -56,120 +55,53 @@ class PADB.Components.Stream extends AM.Component
     else
       @_$scrollParent = $(window)
 
-    @_$scrollParent.on 'scroll.pixelartdatabase-components-stream', (event) => @onScroll()
+    # Start/stop videos when the artworks come 1 viewport away from being visible.
+    @artworkVisibilityTracker = new AM.ElementVisibilityTracker @,
+      elements: => @$('.artwork-area')
+      scrollParent: @_$scrollParent
+      viewportHeightDistance: 1
+      elementIdentityAndData: (artworkAreaElement) =>
+        $artworkArea = $(artworkAreaElement)
+        displayedArtwork = Blaze.getData artworkAreaElement
+        artworkKey = displayedArtwork?.artwork?._id or displayedArtwork?.imageUrl
+        video = $artworkArea.find('video')[0]
+        videoUrl = displayedArtwork?.videoUrl
 
-    # Update active artwork areas on resizes and artwork updates.
+        identity: [artworkKey, video, videoUrl]
+        data:
+          video: video
+          videoUrl: videoUrl
+
+      visible: (visibilityInfo) =>
+        {video, videoUrl} = visibilityInfo.data
+        return unless video
+
+        sourceUrl = videoUrl if @options.loadVideosWithoutReferrer
+        @videoManager.play video, sourceUrl, restart: true
+
+      hidden: (visibilityInfo) =>
+        video = visibilityInfo.data.video
+        @videoManager.pause video if video
+
+      destroyed: (visibilityInfo) =>
+        video = visibilityInfo.data.video
+        @videoManager.end video if video
+
+    @artworkVisibilityTracker.start()
+
+    # Update artwork visibility on resizes and artwork updates.
     @autorun (computation) =>
       AM.Window.clientBounds()
       @displayedArtworks()
 
       # Wait till the new artwork areas get rendered.
       Tracker.afterFlush =>
-        # Everything is deactivated when first rendered so make sure visibility data reflects that.
-        visibilityData.active = false for visibilityData in @_artworksVisibilityData
+        return unless @isRendered()
 
-        @_measureArtworkAreas()
-        @_updateArtworkAreasVisibility()
+        @artworkVisibilityTracker.refresh()
 
   onDestroyed: ->
     super arguments...
 
-    @_$scrollParent.off '.pixelartdatabase-components-stream'
-
-  artworkOptions: ->
-    @options
-
-  onScroll: ->
-    # Measure artwork areas every 2s when scrolling.
-    @_throttledMeasureArtworkAreas ?= _.throttle =>
-      @_measureArtworkAreas()
-      @_updateArtworkAreasVisibility()
-    ,
-      2000
-
-    # Update visibility every 0.2s when scrolling.
-    @_throttledUpdateArtworkAreasVisibility ?= _.throttle =>
-      @_updateArtworkAreasVisibility()
-    ,
-      200
-    
-    @_throttledMeasureArtworkAreas()
-    @_throttledUpdateArtworkAreasVisibility()
-
-  _measureArtworkAreas: ->
-    # Get top and bottom positions of all artworks.
-    $artworkAreas = @$('.artwork-area')
-    return unless $artworkAreas
-
-    for artworkAreaElement, index in $artworkAreas
-      $artworkArea = $(artworkAreaElement)
-      top = $artworkArea.offset().top
-
-      # When we're scrolling inside a fixed parent, the offset needs to be adjusted by the
-      # scroll amount so that we get the position relative to the scrolling parent.
-      top += @_$scrollParent.scrollTop() if @options.scrollParentSelector
-
-      bottom = top + $artworkArea.height()
-
-      @_artworksVisibilityData[index] ?= {}
-      @_artworksVisibilityData[index].element = artworkAreaElement
-      @_artworksVisibilityData[index].$artworkArea = $artworkArea
-      @_artworksVisibilityData[index].top = top
-      @_artworksVisibilityData[index].bottom = bottom
-
-      displayedArtwork = Blaze.getData(artworkAreaElement)
-      @_artworksVisibilityData[index].artwork = displayedArtwork.artwork
-
-  _updateArtworkAreasVisibility: ->
-    scrollParentTop = if @options.scrollParentSelector then @_$scrollParent.offset().top else 0
-    viewportTop = scrollParentTop + @_$scrollParent.scrollTop()
-    scrollParentHeight = @_$scrollParent.height()
-    viewportBottom = viewportTop + scrollParentHeight
-
-    # Expand one extra screen beyond the viewport
-    visibilityEdgeTop = viewportTop - scrollParentHeight
-    visibilityEdgeBottom = viewportBottom + scrollParentHeight
-
-    # Go over all the artworks and activate the visible ones.
-    for visibilityData, index in @_artworksVisibilityData
-      # Artwork is visible if it is anywhere in between the visibility edges.
-      artworkShouldBeActive = visibilityData.bottom > visibilityEdgeTop and visibilityData.top < visibilityEdgeBottom
-
-      # Activate or deactivate artwork areas. Note that active is undefined at the start.
-      if artworkShouldBeActive and visibilityData.active isnt true
-        # We must activate this artwork area.
-        visibilityData.active = true
-
-        # Play all the videos in this area.
-        $artworkArea = visibilityData.$artworkArea
-        $videos = $artworkArea.find('video')
-
-        playPromises = for video in $videos
-          promise = video.play()
-
-          do (video) =>
-            promise?.then =>
-              video.pause()
-
-          promise
-
-        do ($videos) =>
-          Promise.all(playPromises).then =>
-            Meteor.setTimeout =>
-              for video in $videos
-                video.currentTime = 0
-                video.play()
-            ,
-              500
-
-            # HACK: Safari sometimes hides the video after it starts playing, so we trigger it to be re-rendered.
-            $videos.css
-              display: 'inline-block'
-
-      else if not artworkShouldBeActive and visibilityData.active isnt false
-        # We need to deactivate this artwork area.
-        visibilityData.active = false
-
-        # Stop all the videos in the area.
-        $artworkArea = visibilityData.$artworkArea
-        video.pause() for video in $artworkArea.find('video')
+    @artworkVisibilityTracker?.destroy()
+    @videoManager.destroy()

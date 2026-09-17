@@ -67,7 +67,7 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
 
   @artistUrl: (screenName, year) ->
     AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: year or AB.Router.getParameter('year') or new Date().getFullYear()
+      year: year or AB.Router.getParameter('year') or 2016
       screenName: screenName
 
   Template.registerHelper 'pixelDailiesArtistUrl', (screenName, year) =>

@@ -76,9 +76,12 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
       PADB.Profile.forUsername.subscribe @, screenName
 
-      @yearCalendarProvider new @constructor.CalendarProvider
-        screenName: screenName
-        year: year
+      Tracker.nonreactive =>
+        @_destroyYearCalendarProvider()
+
+        @yearCalendarProvider new @constructor.CalendarProvider
+          screenName: screenName
+          year: year
 
     # We always want at least 10 top artworks, since we use them in the user banner, not just the stream.
     @topArtworksLimit = new ComputedField =>
@@ -90,12 +93,20 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
     # Prepare top user's artworks.
     @topArtworks = new ComputedField =>
-      # Wait for most popular subscription to kick in.
-      return unless @subscriptionsReady()
+      artistKey = "#{@year()}:#{_.toLower @screenName()}"
+
+      # Don't carry cached artworks over when the component reacts to a different route.
+      unless artistKey is @_topArtworksArtistKey
+        @_topArtworksArtistKey = artistKey
+        @_cachedTopArtworks = null
+
+      # Keep the current stream rendered while the increased-limit subscription is loading. Removing it here
+      # collapses the document at the bottom of the page and makes the browser clamp the scroll position to zero.
+      return @_cachedTopArtworks unless @subscriptionsReady()
 
       [submissionsCursor, artworksCursor] = @constructor.mostPopular.query @screenName(), @year(), @topArtworksLimit()
 
-      PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
+      @_cachedTopArtworks = PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
 
     # Convert displayed submission to artworks, so we can show them in a stream.
     @displayedArtworks = new ComputedField =>
@@ -134,6 +145,13 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
   onDestroyed: ->
     Meteor.clearInterval @_changeBackgroundInterval
+    @_destroyYearCalendarProvider()
+
+  _destroyYearCalendarProvider: ->
+    return unless provider = @yearCalendarProvider()
+
+    provider.destroy()
+    @yearCalendarProvider null
 
   year: ->
     parseInt AB.Router.getParameter 'year'
@@ -155,10 +173,6 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     @profile().pixelDailies.statisticsByYear[@year()] or
       favoritesCount: 0
       submissionsCount: 0
-
-  animatedPercentage: ->
-    statistics = @currentData()
-    Math.floor statistics.animatedSubmissionRatio * 100
 
   background: ->
     index = @currentBackgroundIndex()

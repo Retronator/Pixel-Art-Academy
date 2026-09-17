@@ -30,10 +30,18 @@ class PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider extends PADB.Pi
     @yearRange = new AE.DateRange year: @options.year
 
     @_subscriptionAutorun = Tracker.autorun (computation) =>
-      @subscriptionHandle @constructor.submissions.subscribe @options.screenName, @options.year, @limit()
+      limit = @limit()
+
+      # Mongo treats a zero limit as unbounded, so wait for the calendar to provide its initial page size.
+      return unless limit > 0
+
+      @subscriptionHandle @constructor.submissions.subscribe @options.screenName, @options.year, limit
 
   destroy: ->
+    subscriptionHandle = @subscriptionHandle()
     @_subscriptionAutorun.stop()
+    subscriptionHandle?.stop()
+    @subscriptionHandle null
 
   submissions: ->
     @constructor.submissions.query(@options.screenName, @options.year, @limit()).fetch()

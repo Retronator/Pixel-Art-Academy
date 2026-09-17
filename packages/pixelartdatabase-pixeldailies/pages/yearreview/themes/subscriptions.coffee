@@ -6,6 +6,9 @@ PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider.themes.publish (year, 
   check year, Number
   check limit, Number
 
+  # A zero Mongo limit is unbounded, so publish nothing until the client requests a page.
+  return @ready() unless limit > 0
+
   yearRange = new AE.DateRange year: year
 
   themesQuery =

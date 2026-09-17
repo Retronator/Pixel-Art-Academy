@@ -5,7 +5,7 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream'
 
-  mixins: -> [@infiniteScroll]
+  mixins: -> [@infiniteScroll, @retireMissingSubmissions]
 
   constructor: ->
     super arguments...
@@ -13,6 +13,16 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
       step: 10
       windowHeightCounts: 3
+      countCanDifferFromLimit: true
+
+    @retireMissingSubmissions =
+      new PADB.PixelDailies.Pages.YearReview.Components.Mixins.RetireMissingSubmissions @
+
+    @streamOptions =
+      captionComponentClass: @constructor.ArtworkCaption
+      loadVideosWithoutReferrer: true
+      onVideoLoadError: (sourceUrl) =>
+        @retireMissingSubmissions.retireMissingSubmissionForResourceUrl sourceUrl
 
   onCreated: ->
     super arguments...
@@ -22,9 +32,6 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
       artworks = @data()
 
       @infiniteScroll.updateCount artworks?.length or 0
-
-  artworkCaptionClass: ->
-    @constructor.ArtworkCaption
 
   class @ArtworkCaption extends AM.Component
     @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream.ArtworkCaption'

@@ -10,6 +10,13 @@ PADB.Components.Stream.Artwork::_renderBackground = (displayedArtwork, image, di
   pixelWidth = Math.ceil @$artworkArea.outerWidth() / displayScale
   pixelHeight = Math.ceil @$artworkArea.outerHeight() / displayScale
 
+  sourceWidth = if image.naturalWidth? then image.naturalWidth else image.width
+  sourceHeight = if image.naturalHeight? then image.naturalHeight else image.height
+
+  # Canvas pixel extraction requires both a visible artwork area and usable source image pixels.
+  dimensions = [pixelWidth, pixelHeight, sourceWidth, sourceHeight]
+  return false unless _.every dimensions, (dimension) -> dimension > 0
+
   # Resize the canvas.
   @backgroundCanvas.width = pixelWidth
   @backgroundCanvas.height = pixelHeight
@@ -23,7 +30,7 @@ PADB.Components.Stream.Artwork::_renderBackground = (displayedArtwork, image, di
   drawWidth = @backgroundCanvas.width
   drawHeight = @backgroundCanvas.height
 
-  aspectRatio = image.width / image.height
+  aspectRatio = sourceWidth / sourceHeight
   drawHeight = drawWidth / aspectRatio
 
   if drawHeight < @backgroundCanvas.height
@@ -76,3 +83,5 @@ PADB.Components.Stream.Artwork::_renderBackground = (displayedArtwork, image, di
         imageData.data[valueOffset] = value
 
   @backgroundContext.putImageData imageData, 0, 0
+
+  true

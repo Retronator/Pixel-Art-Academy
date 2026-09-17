@@ -7,6 +7,9 @@ PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider.submissions.publish (
   check year, Number
   check limit, Number
 
+  # A zero Mongo limit is unbounded, so publish nothing until the client requests a page.
+  return @ready() unless limit > 0
+
   PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider.submissions.query screenName, year, limit
 
 # Returns submissions ordered by favorites count.

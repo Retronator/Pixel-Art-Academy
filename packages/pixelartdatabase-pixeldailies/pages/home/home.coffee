@@ -71,34 +71,4 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
   background: ->
     url: 'https://pbs.twimg.com/media/DSq0PJeVAAE55Ml.png'
     author: 'LumpyTouch'
-
-  class @Theme extends AM.Component
-    @register 'PixelArtDatabase.PixelDailies.Pages.Home.Theme'
-
-    onCreated: ->
-      super arguments...
-
-      @showingTopOnly = new ReactiveField true
-
-    artworkCaptionClass: ->
-      PADB.PixelDailies.Pages.Home.ArtworkCaption
-
-    themeUrl: ->
-      theme = @data()
-      @_dateUrl theme.time
-
-    _dateUrl: (date) ->
-      AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
-        year: date.getFullYear()
-        month: _.toLower date.toLocaleString 'en-US', month: 'long'
-        day: date.getDate()
-
-    artworks: ->
-      theme = @data()
-      return unless theme.topSubmissions
-
-      # Show top 3 artworks.
-      artworks = for submission in theme.topSubmissions[...3] when submission.images
-        PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
-
-      _.flatten artworks
+    year: 2017

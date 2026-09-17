@@ -7,8 +7,15 @@ class PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
   constructor: (@options = {}) ->
     @options.step ?= 1
     @options.windowHeightCounts ?= 1
+    @options.countCanDifferFromLimit ?= false
+    @options.countSettlingDelay ?= 200
     @count = new ReactiveField 0
     @limit = new ReactiveField @options.step
+
+    # Track which result count already caused a limit increase so an exhausted query does not keep loading.
+    @_countAtLastLimitIncrease = null
+    @_countHasSettled = false
+    @_countSettlingTimeout = null
 
   onRendered: ->
     @_$window = $(window)
@@ -18,13 +25,34 @@ class PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
     @onScroll()
 
   onDestroyed: ->
-    @_$window.off '.infinite-scroll'
+    @_destroyed = true
+    @_$window?.off '.infinite-scroll'
+    @_$window = null
+    @_$body = null
+
+    Meteor.clearTimeout @_countSettlingTimeout
 
   # Call this to tell the mixin how many items (out of the limit) have been loaded.
   updateCount: (value) ->
     # Update the number after new documents have finished rendering.
     Tracker.afterFlush =>
+      return if @_destroyed
+
       @count value
+
+      if @options.countCanDifferFromLimit
+        # Result documents can arrive one at a time. Only use an incomplete count after it has stopped changing,
+        # otherwise each arriving document would request another page and restart the subscription.
+        @_countHasSettled = false
+        Meteor.clearTimeout @_countSettlingTimeout
+        @_countSettlingTimeout = Meteor.setTimeout =>
+          return if @_destroyed
+
+          @_countSettlingTimeout = null
+          @_countHasSettled = true
+          @update()
+        , @options.countSettlingDelay
+
       @update()
 
   onScroll: ->
@@ -38,7 +66,18 @@ class PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
     windowHeightsFactor = @options.windowHeightCounts + 1
     triggerTop = @_$body.height() - @_$window.height() * windowHeightsFactor
 
-    if scrollTop > triggerTop
-      # Only increase the limit if we actually have that many artworks on the client.
-      if @limit() is @count()
-        @limit @limit() + @options.step
+    return unless scrollTop > triggerTop
+    return unless count = @count()
+
+    if @options.countCanDifferFromLimit
+      return unless @_countHasSettled
+
+    else
+      # Most result sets have one displayed item per requested document, so only continue after the page is complete.
+      return unless count is @limit()
+
+    # Wait for the count to change before increasing again to avoid repeatedly requesting past the end of the results.
+    return if count is @_countAtLastLimitIncrease
+
+    @_countAtLastLimitIncrease = count
+    @limit @limit() + @options.step

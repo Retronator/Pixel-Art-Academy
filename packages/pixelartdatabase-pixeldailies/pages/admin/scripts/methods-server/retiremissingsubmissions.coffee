@@ -10,7 +10,7 @@ Meteor.methods
       processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
     ,
       fields:
-        images: 1
+        _id: 1
     ).fetch()
 
     console.log "Testing all displayable Pixel Dailies submissions. Total:", submissions.length
@@ -18,25 +18,9 @@ Meteor.methods
     count = 0
 
     for submission, index in submissions
-      # Make an HTTP HEAD request for the first image and see what code we get.
-      try
-        HTTP.call 'HEAD', submission.images[0].imageUrl
-
-      catch error
-        if error.response
-          console.log "Submission with index", index, "returned error", error.response.statusCode
-
-          # Only react to 404 Not Found errors.
-          if error.response.statusCode is 404
-            PADB.PixelDailies.Submission.documents.update submission._id,
-              $set:
-                processingError: PADB.PixelDailies.Submission.ProcessingError.ImagesNotFound
-
-            count++
-
-        else
-          console.log "Unknown error for submission", submission._id, error
-          throw error
+      # Use the same server-side check that handles missing images reported by clients.
+      retired = PADB.PixelDailies.Submission.retireMissingSubmission submission._id
+      count++ if retired
 
       console.log "processed", index + 1, "so far" unless (index + 1) % 100
 

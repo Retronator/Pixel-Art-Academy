@@ -20,10 +20,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2018]
     position: ['70%', '30%']
     author: 'Zel_D'
   ,
-    url: 'https://pbs.twimg.com/tweet_video_thumb/DTK4Re5X0AA-BWa.jpg'
-    position: ['0%', '95%']
-    author: 'Uknowleo'
-  ,
     url: 'https://pbs.twimg.com/media/DYLox7GXcAACNCg.png'
     position: ['30%', '0%']
     author: 'FilipeBrizolara'

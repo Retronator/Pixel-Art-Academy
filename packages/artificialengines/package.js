@@ -50,7 +50,6 @@ Package.onUse(function(api) {
     'peerlibrary:server-autorun',
     'peerlibrary:blocking',
     'peerlibrary:directcollection',
-    'okgrow:router-autoscroll',
     'stevezhu:lodash',
     'meteorhacks:picker',
     'meteorhacks:inject-initial',
@@ -140,13 +139,14 @@ Package.onUse(function(api) {
 
   api.addClientFile('mirage/browser-client');
   api.addFile('mirage/canvas');
-	api.addFile('mirage/component');
-	api.addFile('mirage/csshelper');
+  api.addFile('mirage/component');
+  api.addFile('mirage/csshelper');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
   api.addFile('mirage/shortcuthelper');
   api.addClientFile('mirage/velocity-client');
   api.addClientFile('mirage/window-client');
+  api.addClientFile('mirage/elementvisibilitytracker');
 
   api.addUnstyledComponent('mirage/datainput..');
 

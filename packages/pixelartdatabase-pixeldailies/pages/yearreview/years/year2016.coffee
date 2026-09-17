@@ -28,14 +28,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2016]
     position: ['0%', '100%']
     author: 'watawatabou'
   ,
-    url: 'https://pbs.twimg.com/media/CvO23_LVUAY5ZwK.png'
-    position: ['50%', '0%']
-    author: 'ricardojuchem'
-  ,
-    url: 'https://pbs.twimg.com/media/CzXz-x3UAAEWb4e.jpg'
-    position: ['0%', '70%']
-    author: 'Helgram'
-  ,
     url: 'https://pbs.twimg.com/tweet_video_thumb/CnM1_1uWEAADG9K.jpg'
     position: ['80%', '0%']
     author: 'Weilard'

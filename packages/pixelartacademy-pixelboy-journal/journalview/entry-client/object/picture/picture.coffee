@@ -85,13 +85,14 @@ class Entry.Object.Picture extends Entry.Object
     desiredPixelScale = displayScale
 
     # If the image is taller than 140px, we want to use a smaller scale.
-    sourceHeight = height / pixelScale
+    sourceHeight = height / pixelScale.vertical
 
     if sourceHeight > maxHeight
       cssScale = maxHeight * displayScale / height
 
     else
-      cssScale = desiredPixelScale / pixelScale
+      # TODO: Improve choosing the pixel scale for images with unequal scale factors.
+      cssScale = desiredPixelScale / Math.max pixelScale.vertical, pixelScale.horizontal
 
     # Account for 3 pixels of padding.
     paddingRem = 3

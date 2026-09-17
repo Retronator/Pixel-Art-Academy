@@ -9,7 +9,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
   # Subscriptions
   @themes: new AB.Subscription name: "#{@componentName()}.themes"
 
-  mixins: -> [@infiniteScroll]
+  mixins: -> [@infiniteScroll, @retireMissingSubmissions]
 
   constructor: (@provider) ->
     super arguments...
@@ -18,6 +18,14 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
       # Provider can already have a higher limit, so start there.
       step: Math.max 53, @provider.limit()
       windowHeightCounts: 2
+      countCanDifferFromLimit: true
+
+    @retireMissingSubmissions =
+      new PADB.PixelDailies.Pages.YearReview.Components.Mixins.RetireMissingSubmissions @
+
+    @videoManager = new PADB.Components.VideoManager
+      onLoadError: (sourceUrl) =>
+        @retireMissingSubmissions.retireMissingSubmissionForResourceUrl sourceUrl
 
     # Indicates that the months are rendering.
     @rendering = new ReactiveField false
@@ -39,11 +47,14 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
       # Update how many items the provider should return.
       @provider.limit @infiniteScroll.limit()
 
-    Meteor.setTimeout =>
+    @_processSubmissionsTimeout = Meteor.setTimeout =>
       # Process submissions.
       @autorun (computation) =>
-        submissions = @provider.submissions()
-        return unless submissions.length
+        # A subscription can deliver documents individually. Wait until the complete page has arrived so those
+        # partial counts do not trigger additional limit increases and restart the subscription.
+        return unless @provider.ready()
+
+        submissions = @provider.submissions() or []
 
         # We only want to react to submission changes.
         Tracker.nonreactive =>
@@ -51,54 +62,61 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
           submissions = _.sortBy submissions, 'time'
           @submissions submissions
 
-          firstSubmission = _.first submissions
-          lastSubmission = _.last submissions
-
-          startYear = firstSubmission.time.getFullYear()
-          monthOffset = firstSubmission.time.getMonth()
-
           months = []
           monthsByYear = @monthsByYear()
 
-          loop
-            firstDay = new Date startYear, monthOffset, 1
-            break if firstDay > lastSubmission.time
+          # The month and day objects are reused to preserve their IDs. Remove assignments from the previous result before
+          # applying the current one so retired submissions disappear and an empty result clears the calendar.
+          for year, monthsForYear of monthsByYear
+            for monthNumber, month of monthsForYear
+              delete day.submission for day in month.days
 
-            firstDayDayOfWeek = firstDay.getDay()
+          if submissions.length
+            firstSubmission = _.first submissions
+            lastSubmission = _.last submissions
 
-            year = firstDay.getFullYear()
-            monthNumber = firstDay.getMonth()
+            startYear = firstSubmission.time.getFullYear()
+            monthOffset = firstSubmission.time.getMonth()
 
-            # Only create the month if we need to. This preserves existing month and day IDs.
-            monthsByYear[year] ?= {}
-            monthsByYear[year][monthNumber] ?=
-              # We provide the _id so that #each does not trash existing months.
-              _id: Random.id()
-              year: firstDay.getFullYear()
-              number: monthNumber
+            loop
+              firstDay = new Date startYear, monthOffset, 1
+              break if firstDay > lastSubmission.time
 
-              paddingDays: ('' for i in [0...firstDayDayOfWeek])
+              firstDayDayOfWeek = firstDay.getDay()
 
-              # Create an array of days for this month. It needs to be an array so we can iterate over it with #each.
-              days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, year)]
-                # We provide the _id so that #each does not trash existing days.
+              year = firstDay.getFullYear()
+              monthNumber = firstDay.getMonth()
+
+              # Only create the month if we need to. This preserves existing month and day IDs.
+              monthsByYear[year] ?= {}
+              monthsByYear[year][monthNumber] ?=
+                # We provide the _id so that #each does not trash existing months.
                 _id: Random.id()
-                number: dayNumber
-                month: monthNumber
-                year: year
+                year: firstDay.getFullYear()
+                number: monthNumber
 
-            months.push monthsByYear[year][monthNumber]
+                paddingDays: ('' for i in [0...firstDayDayOfWeek])
 
-            monthOffset++
+                # Create an array of days for this month. It needs to be an array so we can iterate over it with #each.
+                days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, year)]
+                  # We provide the _id so that #each does not trash existing days.
+                  _id: Random.id()
+                  number: dayNumber
+                  month: monthNumber
+                  year: year
 
-          # Populate submissions to corresponding dates.
-          for submission in submissions
-            year = submission.time.getFullYear()
-            monthNumber = submission.time.getMonth()
-            dayNumber = submission.time.getDate()
+              months.push monthsByYear[year][monthNumber]
 
-            day = monthsByYear[year][monthNumber].days[dayNumber - 1]
-            day.submission = submission
+              monthOffset++
+
+            # Populate submissions to corresponding dates.
+            for submission in submissions
+              year = submission.time.getFullYear()
+              monthNumber = submission.time.getMonth()
+              dayNumber = submission.time.getDate()
+
+              day = monthsByYear[year][monthNumber].days[dayNumber - 1]
+              day.submission = submission
 
           # Mark that we're rendering.
           @rendering true
@@ -164,7 +182,19 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
       'mouseleave .day': @onMouseleaveDay
 
   onMouseenterDay: (event) ->
-    $(event.target).find('video')[0]?.play()
+    dayElement = event.currentTarget
+    return unless video = $(dayElement).find('video')[0]
+    return unless sourceUrl = Blaze.getData(video)?.videoUrl
+
+    @videoManager.play video, sourceUrl
 
   onMouseleaveDay: (event) ->
-    $(event.target).find('video')[0]?.pause()
+    return unless video = $(event.currentTarget).find('video')[0]
+
+    @videoManager.pause video
+
+  onDestroyed: ->
+    super arguments...
+
+    Meteor.clearTimeout @_processSubmissionsTimeout
+    @videoManager.destroy()

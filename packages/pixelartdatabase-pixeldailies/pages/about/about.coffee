@@ -13,3 +13,4 @@ class PADB.PixelDailies.Pages.About extends AM.Component
   background: ->
     url: 'https://pbs.twimg.com/media/C2NVP86UQAEp83v.png'
     author: 'Khoklavixche'
+    year: 2017

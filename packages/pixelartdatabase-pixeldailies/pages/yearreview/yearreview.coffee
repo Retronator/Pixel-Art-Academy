@@ -45,7 +45,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
       @backgrounds = _.flatten [@backgrounds[0], _.shuffle @backgrounds[1..]]
 
       # Create a persistent calendar provider so we don't have to re-fetch themes between page changes. We need to
-      # subscribe in a non-rective context, so that the subscription doesn't get invalidated when this component is
+      # subscribe in a non-reactive context, so that the subscription doesn't get invalidated when this component is
       # destroyed.
       Tracker.nonreactive =>
         @constructor.themeProvidersByYears[year] ?= new @constructor.ThemesCalendarProvider year: year

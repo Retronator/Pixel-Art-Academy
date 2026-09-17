@@ -4,75 +4,26 @@
     <div class="intro">
       <div class="page-content">
         <div class="welcome">
-          {{#with todaysTheme}}
-            {{#Markdown}}
-              Welcome to the Pixel Dailies Archive. This is a fan project made to highlight the [Pixel Dailies](https://twitter.com/Pixel_Dailies) community.
-              Learn more on the [about page]({{routerPath 'PixelArtDatabase.PixelDailies.Pages.About'}}).
-            {{/Markdown}}
+          {{#Markdown}}
+            Welcome to the Pixel Dailies Archive. This is a fan project made to highlight the
+            [Pixel Dailies](https://bsky.app/profile/pixeldailies.bsky.social) community.
+            Learn more on the [about page]({{routerPath 'PixelArtDatabase.PixelDailies.Pages.About'}}).
 
-            <div class="todays-theme">
-              <div class="header">
-                <a href="https://twitter.com/Pixel_Dailies" target="_blank">
-                  <img class="avatar" src="https://pbs.twimg.com/profile_images/795899170431242240/w5oK6AQh.jpg">
-                </a>
-                <div class="names">
-                  <a class="name" href="https://twitter.com/Pixel_Dailies" target="_blank">
-                    Pixel Dailies
-                  </a>
-                  <a class="username" href="https://twitter.com/Pixel_Dailies" target="_blank">
-                    @Pixel_dailies
-                  </a>
-                </div>
-              </div>
-              <div class="text">
-                {{#if text}}
-                  {{text}}
-                {{else}}
-                  loading …
-                {{/if}}
-              </div>
-              <div class="date">
-                <a class="tweet-link" href="https://twitter.com/Pixel_Dailies/status/{{tweetData.id_str}}" target="_blank">
-                  {{todaysDate}}
-                </a>
-              </div>
-            </div>
+            The archive covers submissions retweeted by the [Pixel Dailies](https://twitter.com/Pixel_Dailies) account
+            until mid-2023 when Twitter retired the free API access used to read the account’s timeline.
 
-            {{#Markdown}}
-              To submit an artwork, post it with your Twitter account and include {{#each hashtags}}#{{this}}, {{/each}}
-              #pixel\_dailies, and @pixel\_dailies in the text.
-            {{/Markdown}}
-          {{/with}}
+            While this archive ends here, the community continues to thrive on [Bluesky](https://bsky.app/profile/pixeldailies.bsky.social).
+
+            Choose the year you want to explore in the navigation bar in the top-right.
+          {{/Markdown}}
         </div>
       </div>
-      <p class="below-hint">
-        Below are top submissions from previous days.
-      </p>
       {{#with background}}
         <div class="background">
           <img class="image" src="{{url}}"/>
         </div>
-        <a class="background-author" href="{{pixelDailiesArtistUrl author}}">@{{author}}</a>
+        <a class="background-author" href="{{pixelDailiesArtistUrl author year}}">@{{author}}</a>
       {{/with}}
-    </div>
-    {{#each themes}}
-      {{#if topSubmissions}}
-        {{> PixelArtDatabase.PixelDailies.Pages.Home.Theme}}
-      {{/if}}
-    {{/each}}
-  </div>
-</template>
-
-<template name="PixelArtDatabase.PixelDailies.Pages.Home.Theme">
-  <div class="theme">
-    <a class="theme-link" href="{{themeUrl}}">
-      {{> PixelArtDatabase.PixelDailies.Pages.Components.ThemeBanner this}}
-    </a>
-    {{#with artworks}}
-      {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
-    {{/with}}
-    <div class="view-all">
-      <a href="{{themeUrl}}" class="view-all-link">View all <span class="hashtags">{{#each hashtags}}#{{this}} {{/each}}</span> submissions</a>
     </div>
   </div>
 </template>

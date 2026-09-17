@@ -19,8 +19,20 @@ class PADB.Components.Stream.Artwork extends AM.Component
       displayedArtwork = @data()
       {imageUrl, imageElement} = displayedArtwork
 
+      # Blaze updates retained #each rows when the array grows. Keep the existing image and background when its source
+      # did not change instead of loading and processing the same image again.
+      if @_imageSourceInitialized and imageUrl is @_imageUrl and imageElement is @_imageElement
+        return
+
+      @_imageSourceInitialized = true
+      @_imageUrl = imageUrl
+      @_imageElement = imageElement
+
       image = null
       onImageLoad = =>
+        # Ignore an earlier request if this row started displaying a different artwork before it completed.
+        return unless imageUrl is @_imageUrl and imageElement is @_imageElement
+
         # Calculate pixel scale if needed.
         unless displayedArtwork.artwork.nonPixelArt
           image.pixelScale = displayedArtwork.artwork.image?.pixelScale
@@ -87,13 +99,13 @@ class PADB.Components.Stream.Artwork extends AM.Component
 
       # Give time to the artwork to resize first since we'll be measuring the desired background height.
       Meteor.setTimeout =>
-        @_renderBackground displayedArtwork, image, displayScale
+        # The artwork can disappear while this callback is waiting, for example after retiring a missing submission.
+        return unless @isRendered()
+        return unless @_renderBackground displayedArtwork, image, displayScale
 
         # Display the background and image for the first time.
         @$('.background').addClass 'visible'
         @$('.artwork').addClass 'visible'
-      ,
-        0
 
   onDestroyed: ->
     super arguments...
@@ -111,43 +123,61 @@ class PADB.Components.Stream.Artwork extends AM.Component
       # Non-pixel art images should have smooth interpolation and limited height.
       return {
         imageRendering: 'auto'
-        maxHeight: '130vh'
+        maxHeight: '90vh'
       }
 
     imageScale = image.pixelScale
 
+    if _.isNumber imageScale
+      imageScale =
+        horizontal: imageScale
+        vertical: imageScale
+
     # Calculate how much the image should be upscaled.
     desiredImageScale = 1
-    sourceWidth = image.naturalWidth / imageScale
-    sourceHeight = image.naturalHeight / imageScale
+    sourceWidth = image.naturalWidth / imageScale.horizontal
+    sourceHeight = image.naturalHeight / imageScale.vertical
 
     # Depend on window size changes.
     clientBounds = AM.Window.clientBounds()
     clientHeight = clientBounds.height()
-    artworkFrameWidth = @$('.artwork-frame').width()
+    $artworkFrame = @$('.artwork-frame')
+    artworkFrameWidth = $artworkFrame.width()
+    maxFullyVisibleHeight = clientHeight * 0.8
 
     # Increase desired image until we reach certain limits.
     loop
-      # Don't go over scale of 8.
-      break if desiredImageScale is 8
-
       # Don't go over scale of 2 if we'd cover more than the screen height.
       nextDisplayHeight = sourceHeight * (desiredImageScale + 1)
-      break if desiredImageScale >= 2 and nextDisplayHeight > clientHeight
+      if desiredImageScale >= 2 and nextDisplayHeight > maxFullyVisibleHeight
+        desiredVerticalImageScale = desiredImageScale
+        break
 
       # Don't increase scale if we've covered at least half the artwork frame width.
       displayWidth = sourceWidth * desiredImageScale
-      break if displayWidth > artworkFrameWidth * 0.5
+      if displayWidth > artworkFrameWidth * 0.5
+        desiredHorizontalImageScale = desiredImageScale
+        break
+
+      # Don't increase scale if we've reached 8x and we've covered at least a third of the artwork frame height.
+      displayHeight = sourceHeight * desiredImageScale
+      if desiredImageScale >= 8 and displayHeight > clientHeight * 0.33
+        desiredVerticalImageScale = desiredImageScale
+        break
 
       # No limits were reached, increase scale.
       desiredImageScale++
 
     # Don't let the image be bigger than the frame.
-    if sourceWidth * desiredImageScale > artworkFrameWidth
-      desiredImageScale = artworkFrameWidth / sourceWidth
+    if desiredHorizontalImageScale
+      if sourceWidth * desiredImageScale > artworkFrameWidth
+        desiredHorizontalImageScale = artworkFrameWidth / sourceWidth
 
-    # Calculate how much to actually scale the image since the source image already has a certain scale built-in.
-    cssScale = desiredImageScale / imageScale
+      # Calculate how much to actually scale the image since the source image already has a certain scale built-in.
+      cssScale = desiredHorizontalImageScale / imageScale.horizontal
+
+    else
+      cssScale = desiredVerticalImageScale / imageScale.vertical
 
     # Output the size.
     width: image.naturalWidth * cssScale
@@ -155,6 +185,14 @@ class PADB.Components.Stream.Artwork extends AM.Component
 
   hasCaption: ->
     @options.captionComponentClass?
+
+  videoAttributes: ->
+    return if @options.loadVideosWithoutReferrer
+
+    displayedArtwork = @data()
+    return unless videoUrl = displayedArtwork.videoUrl
+
+    src: videoUrl
 
   renderCaption: ->
     @caption = new @options.captionComponentClass

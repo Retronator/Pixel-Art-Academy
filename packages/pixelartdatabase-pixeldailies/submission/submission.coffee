@@ -44,6 +44,10 @@ class PADB.PixelDailies.Submission extends AM.Document
     NoImages: 'No images.'
     ImagesNotFound: 'Images not found.'
 
+  # Methods
+
+  @retireMissingSubmission: @method 'retireMissingSubmission'
+
   # Subscriptions
 
   @forTheme: @subscription 'forTheme'
