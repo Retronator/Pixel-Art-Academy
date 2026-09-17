@@ -21,8 +21,6 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
 
     @_scheduleNextMessage()
 
-    PADB.PixelDailies.Pages.Home.themes.subscribe @, 2
-
     @subscribe RS.Transaction.messages, 20
 
   destroy: ->
@@ -60,37 +58,6 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
     script = @listeners[0].script
 
     messages = {}
-
-    # Current Pixel Dailies
-    messages.CurrentPixelDailies =
-      weight: 1
-      function: =>
-        [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 1
-
-        latestTheme = themesCursor.fetch()[0]
-        return unless latestTheme?.hashtags?.length
-
-        script.ephemeralState().pixelDailiesHashtag = latestTheme.hashtags[0]
-
-        script.startNode.labels.CurrentPixelDailies
-
-    # Yesterday's Pixel Dailies
-    messages.YesterdaysPixelDailies =
-      weight: 1
-      function: =>
-        [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 2
-
-        yesterdayTheme = themesCursor.fetch()[1]
-        return unless yesterdayTheme?.hashtags?.length and yesterdayTheme.topSubmissions?.length
-
-        topSubmission = yesterdayTheme.topSubmissions[0]
-
-        _.extend script.ephemeralState(),
-          pixelDailiesHashtag: yesterdayTheme.hashtags[0]
-          pixelDailiesUser: topSubmission.user.name
-          pixelDailiesFavorites: topSubmission.favoritesCount
-
-        script.startNode.labels.YesterdaysPixelDailies
 
     # Transaction Message
     transactionMessages = RS.Components.TopSupporters.transactionMessages.find().fetch()

@@ -49,7 +49,6 @@ Package.onUse(function(api) {
   api.addStyleImport('pages/style/style');
 
   api.addComponent('pages/home/home');
-  api.addServerFile('pages/home/subscriptions');
   api.addComponent('pages/home/layout/layout');
   api.addComponent('pages/home/header/header');
   api.addComponent('pages/home/navigation/navigation');

@@ -45,18 +45,6 @@ retro: Bugs made a nest in the source code again.
 
 -> [End]
 
-## CurrentPixelDailies
-
-burra: Today's Pixel Dailies theme is hashtag `_pixelDailiesHashtag`. Get your pixels ready!
-
--> [End]
-
-## YesterdaysPixelDailies
-
-burra: Yesterday's Pixel Dailies theme was hashtag `_pixelDailiesHashtag`. `_pixelDailiesUser` got the most favorites: `_pixelDailiesFavorites`. Wonderful!
-
--> [End]
-
 ## TransactionMessage
 
 burra: Our supporter `_transactionMessage.name` left a message saying, `_transactionMessage.message`. `_transactionMessage.name`
