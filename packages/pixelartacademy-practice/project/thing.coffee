@@ -72,6 +72,13 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
       fields:
         _id: 1
     ).count()
+    
+  @getProjects: ->
+    PAA.Practice.Project.documents.fetch
+      type: @id()
+    ,
+      sort:
+        startTime: 1
   
   constructor: ->
     super arguments...

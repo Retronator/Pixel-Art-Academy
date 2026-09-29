@@ -80,7 +80,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         drawer = @drawer()
         
         if cartridgeParameter and playParameter
-          return unless cartridge = drawer.selectedCartridge()
+          return unless cartridge = drawer.selectedCartridgeVariant()?.cartridge
           computation.stop()
           @cartridge cartridge
         

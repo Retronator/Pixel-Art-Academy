@@ -46,10 +46,12 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
   .table-top
     background-image image('/pixelartacademy/pixelpad/apps/pico8/tabletop.png')
     top -340rem
+    z-index 1
 
   .drawer
     background-image image('/pixelartacademy/pixelpad/apps/pico8/drawer.png')
     top -320rem
+    z-index 0
 
     .contents
       position absolute
@@ -64,13 +66,6 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
 
         .cartridge
           position absolute
-          width 47rem
-          height 57rem
-          transition all 0.2s
-          transform-origin 0 0
-          filter drop-shadow(-3rem 1rem 0 desktopShadowColor)
-          cursor pointer
-          perspective 200rem
 
           &:nth-child(2)
             top 70rem
@@ -81,29 +76,65 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
             left 70rem
 
           &:hover
-            transform translate(0, -1rem)
-            filter drop-shadow(-6rem 2rem 0 desktopShadowColor)
+            .cases
+              .case:last-child
+                transform translate(0, -2rem)
+
+            .shadows
+              .shadow:last-child
+                transform translate(-6rem, 1rem)
 
           &.selected
-            opacity 0
-            transform scale(1.5)
             pointer-events none
 
-            .case-top
-              transform rotateY(-180deg)
+            .cases
+              .case:last-child
+                opacity 0
+                transform scale(1.5)
 
-          .case-top
-          .case-bottom
-            absolute-cover()
-            opacity 0.6
+                .top
+                  transform rotateY(-180deg)
 
-          .case-bottom
-            background-image image('/pixelartacademy/pixelpad/apps/pico8/case-bottom.png')
+            .shadows
+              .shadow:last-child
+                opacity 0
 
-          .case-top
-            background-image image('/pixelartacademy/pixelpad/apps/pico8/case-top.png')
-            transform-origin 0 0
-            transition all 0.2s
+          .cases
+            .case
+              position absolute
+              width 47rem
+              height 57rem
+              transition all 0.2s
+              transform-origin 0 0
+              cursor pointer
+              perspective 200rem
+
+              &.darker
+                filter brightness(0.9)
+
+              .top
+              .bottom
+                absolute-cover()
+                opacity 0.6
+
+              .bottom
+                background-image image('/pixelartacademy/pixelpad/apps/pico8/case-bottom.png')
+
+              .top
+                background-image image('/pixelartacademy/pixelpad/apps/pico8/case-top.png')
+                transform-origin 0 0
+                transition all 0.2s
+
+          .shadows
+            position absolute
+            mix-blend-mode multiply
+
+            .shadow
+              position absolute
+              width 47rem
+              height 57rem
+              transition all 0.2s
+              background-image image('/pixelartacademy/pixelpad/apps/pico8/case-shadow.png')
 
           .memory-card
             position absolute
@@ -141,6 +172,7 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
 
   .selected-cartridge
     position absolute
+    z-index 2
     top -6rem
     left -137rem
     width 399rem
@@ -181,6 +213,31 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
     &:not(.panned-left)
       .memory-card:hover
         top 20rem
+
+    .variant-button
+      display flex
+      justify-content center
+      position absolute
+      left 50%
+      right 0
+      height 55rem
+      z-index 1
+      background none
+      border none
+      padding 8rem 0 6rem
+      opacity 0.8
+      adventure()
+      color atariGray(7)
+
+      &.previous
+        bottom -30rem
+        cursor s-resize
+        align-items flex-start
+
+      &.next
+        top -30rem
+        cursor n-resize
+        align-items flex-end
 
     .case-bottom
     .case-top

@@ -117,6 +117,8 @@ class AM.Component extends CommonComponent
       current = parent
 
     components
+    
+  parentData: (level) -> Template.parentData level
 
   parentDataWith: (filterParameter) ->
     filter = _.filterFunction filterParameter

@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 # A 2D raster image asset.

@@ -21,6 +21,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     @opened = new ReactiveField false
     @pannedLeft = new ReactiveField false
     @selectedCartridge = new ReactiveField null
+    @selectedCartridgeVariant = new ReactiveField null
+    @selectedCartridgeVariantIndex = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -41,7 +43,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
       new LOI.Adventure.Situation options
 
     # We use a cache to avoid reconstruction.
-    @_cartridges = {}
+    @_defaultCartridges = {}
+    @_projectCartridges = {}
 
     @cartridges = new ComputedField =>
       return unless cartridgesSituation = @cartridgesSituation()
@@ -49,21 +52,66 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
       cartridgeClasses = cartridgesSituation.things()
 
       for cartridgeClass in cartridgeClasses
-        # We create the instance in a non-reactive context so that
-        # reruns of this autorun don't invalidate instance's autoruns.
-        Tracker.nonreactive =>
-          @_cartridges[cartridgeClass.id()] ?= new cartridgeClass
+        projectClass = cartridgeClass.projectClass()
+        projects = projectClass.getProjects()
+        activeProjectId = projectClass.state 'activeProjectId'
+        activeCartridgeVariant = null
+        cartridgeVariants = []
 
-        @_cartridges[cartridgeClass.id()]
+        if projects.length
+          for project in projects
+            @_projectCartridges[project._id] ?= Tracker.nonreactive =>
+              variant = new cartridgeClass projectId: project._id
+
+              # Override the thing ID with the project ID for Blaze reactivity.
+              variant._id = project._id
+              variant
+            
+            cartridgeVariant =
+              cartridge: @_projectCartridges[project._id]
+              
+            if project._id is activeProjectId
+              activeCartridgeVariant = cartridgeVariant
+              
+            else
+              cartridgeVariants.push cartridgeVariant
+              
+          cartridgeVariants.push activeCartridgeVariant if activeCartridgeVariant
+
+        else
+          @_defaultCartridges[cartridgeClass.id()] ?= Tracker.nonreactive => new cartridgeClass
+          cartridgeVariants.push cartridge: @_defaultCartridges[cartridgeClass.id()]
+        
+        cartridgeVariant.index = index for cartridgeVariant, index in cartridgeVariants
+        
+        class: cartridgeClass
+        variants: cartridgeVariants
         
     # Select cartridge based on URL parameter.
     @autorun (computation) =>
-      if gameSlug = AB.Router.getParameter 'parameter3'
-        @selectedCartridge _.find @cartridges(), (cartridge) => cartridge.constructor.gameSlug() is gameSlug
+      if gameSlugOrProjectId = AB.Router.getParameter 'parameter3'
+        cartridges = @cartridges()
+        
+        for cartridge in cartridges
+          if cartridge.class.gameSlug() is gameSlugOrProjectId
+            @selectedCartridge cartridge
+            @selectedCartridgeVariant cartridge.variants[0]
+            @selectedCartridgeVariantIndex 0
+            return
+            
+          for variant in cartridge.variants
+            if variant.cartridge.options.projectId is gameSlugOrProjectId
+              @selectedCartridge cartridge
+              @selectedCartridgeVariant variant
+              @selectedCartridgeVariantIndex cartridge.variants.indexOf variant
+              return
       
       else
         @audio.caseClose() if Tracker.nonreactive => @selectedCartridge()
-        @selectedCartridge null
+
+      @selectedCartridge null
+      @selectedCartridgeVariant null
+      @selectedCartridgeVariantIndex null
 
   onRendered: ->
     super arguments...
@@ -80,30 +128,50 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
     cartridge.destroy() for gameSlug, cartridge of @_cartridges
 
-  cartridgeImageUrl: ->
-    cartridge = @currentData()
-
-    return unless url = cartridge.imageUrl()
-
-    # Don't cache local carts.
-    if url.indexOf('pico8/cartridge.png') > 0
-      url += "&runId=#{@_runId}"
-
-    url
-
   deselectCartridge: ->
     AB.Router.changeParameter 'parameter3', null
     @pannedLeft false
-
-  cartridgeShareUrl: ->
-    cartridge = @currentData()
-    cartridge.shareUrl()
 
   openedClass: ->
     'opened' if @opened()
 
   coveredClass: ->
     'covered' if @pico8.cartridge()
+    
+  selectedClass: ->
+    cartridge = @currentData()
+    
+    'selected' if cartridge is @selectedCartridge()
+  
+  caseClass: ->
+    cartridgeVariant = @currentData()
+    cartridges = @parentData()
+    
+    'darker' unless (cartridges.variants.length - cartridgeVariant.index) % 2
+    
+  caseStyle: ->
+    cartridgeVariant = @currentData()
+    
+    left: "#{-cartridgeVariant.index}rem"
+    top: "#{-cartridgeVariant.index}rem"
+    zIndex: cartridgeVariant.index + 1
+  
+  cartridgeImageUrl: ->
+    cartridgeVariant = @currentData()
+    
+    return unless url = cartridgeVariant.cartridge.imageUrl()
+    
+    # Don't cache local carts.
+    if url.indexOf('pico8/cartridge.png') > 0
+      url += "&runId=#{@_runId}"
+    
+    url
+    
+  shadowStyle: ->
+    cartridgeVariant = @currentData()
+    
+    left: "#{-3 * (1 + cartridgeVariant.index)}rem"
+    top: "#{1 + Math.floor cartridgeVariant.index / 3}rem"
 
   activeClass: ->
     'active' if @selectedCartridge()
@@ -111,15 +179,23 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
   pannedLeftClass: ->
     'panned-left' if @pannedLeft()
 
-  selectedClass: ->
-    cartridge = @currentData()
+  showPreviousVariant: ->
+    @selectedCartridgeVariantIndex()
+    
+  showNextVariant: ->
+    return unless selectedCartridge = @selectedCartridge()
+    @selectedCartridgeVariantIndex() < selectedCartridge.variants.length - 1
 
-    'selected' if cartridge is @selectedCartridge()
+  cartridgeShareUrl: ->
+    cartridge = @currentData()
+    cartridge.shareUrl()
 
   events: ->
     super(arguments...).concat
       'click': @onClick
       'click .cartridge': @onClickCartridge
+      'click .previous.variant-button': @onClickPreviousVariantButton
+      'click .next.variant-button': @onClickNextVariantButton
       'click .selected-cartridge .memory-card': @onClickSelectedCartridgeMemoryCard
       'click .selected-cartridge .case-top': @onClickSelectedCartridgeCaseTop
       'click .selected-cartridge .case-bottom': @onClickSelectedCartridgeCaseBottom
@@ -134,10 +210,28 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
   onClickCartridge: (event) ->
     cartridge = @currentData()
-    AB.Router.changeParameter 'parameter3', cartridge.constructor.gameSlug()
+    topVariant = _.last cartridge.variants
+    
+    if projectId = topVariant.cartridge.options.projectId
+      AB.Router.changeParameter 'parameter3', projectId
+    
+    else
+      AB.Router.changeParameter 'parameter3', cartridge.class.gameSlug()
     
     @audio.caseOpen()
   
+  onClickPreviousVariantButton: (event) ->
+    previousVariantIndex = @selectedCartridgeVariantIndex() - 1
+    previousVariant = @selectedCartridge().variants[previousVariantIndex]
+
+    AB.Router.changeParameter 'parameter3', previousVariant.cartridge.options.projectId
+
+  onClickNextVariantButton: (event) ->
+    nextVariantIndex = @selectedCartridgeVariantIndex() + 1
+    nextVariant = @selectedCartridge().variants[nextVariantIndex]
+
+    AB.Router.changeParameter 'parameter3', nextVariant.cartridge.options.projectId
+
   onClickSelectedCartridgeMemoryCard: (event) ->
     if @pannedLeft()
       @pannedLeft false

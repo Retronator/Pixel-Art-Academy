@@ -6,11 +6,22 @@
           <ul class="cartridges">
             {{#each cartridges}}
               <li class="cartridge {{selectedClass}}">
-                <div class="case-bottom"></div>
-                <div class="memory-card">
-                  <img class="image" src="{{cartridgeImageUrl}}"/>
+                <div class="cases">
+                  {{#each variants}}
+                    <div class="case {{caseClass}}" {{style caseStyle}}>
+                      <div class="bottom"></div>
+                      <div class="memory-card">
+                        <img class="image" src="{{cartridgeImageUrl}}"/>
+                      </div>
+                      <div class="top"></div>
+                    </div>
+                  {{/each}}
                 </div>
-                <div class="case-top"></div>
+                <div class="shadows">
+                  {{#each variants}}
+                    <div class="shadow" {{style shadowStyle}}></div>
+                  {{/each}}
+                </div>
               </li>
             {{/each}}
           </ul>
@@ -26,9 +37,15 @@
     </div>
     <div class="table-top"></div>
     <div class="selected-cartridge {{activeClass}} {{pannedLeftClass}}">
+      {{#if showPreviousVariant}}
+        <button class="previous variant-button">↓</button>
+      {{/if}}
+      {{#if showNextVariant}}
+        <button class="next variant-button">↑</button>
+      {{/if}}
       <div class="case-bottom"></div>
       <div class="memory-card">
-        {{#with selectedCartridge}}
+        {{#with selectedCartridgeVariant}}
           <img class="image" src="{{cartridgeImageUrl}}"/>
         {{/with}}
       </div>
