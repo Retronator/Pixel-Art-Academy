@@ -11,7 +11,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
     @Pixelvision
     @PixelKid
     @PixelFriend
-    @StudyPlan
   ]
   @initialize()
   
@@ -23,11 +22,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
     @progress = new LM.Content.Progress.ContentProgress
       content: @
       units: "apps"
-
-  class @StudyPlan extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.StudyPlan'
-    @displayName: -> "Study Plan"
-    @initialize()
   
   class @Pixeltosh extends LM.Content.AppContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.Pixeltosh'

@@ -10,6 +10,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
   @contents: -> [
     @Drawing
+    @StudyPlan
     @Pico8
   ]
 
@@ -32,8 +33,16 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
     @initialize()
 
-    status: -> LM.Content.Status.Unlocked
+    status: -> if LM.Intro.Tutorial.Goals.ToDoTasks.completed() then LM.Content.Status.Unlocked else @constructor.Status.Locked
 
+  class @StudyPlan extends LM.Content.AppContent
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Apps.StudyPlan'
+    @appClass = PAA.PixelPad.Apps.StudyPlan
+    
+    @initialize()
+    
+    status: -> if LM.Intro.Tutorial.Goals.PixelArtSoftware.Basics.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
+    
   class @Pico8 extends LM.Content.AppContent
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Apps.Pico8'
     @appClass = PAA.PixelPad.Apps.Pico8
@@ -42,6 +51,4 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
     @initialize()
 
-    status: ->
-      pixelArtSoftwareGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
-      if pixelArtSoftwareGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
+    status: -> if LM.Intro.Tutorial.Goals.PixelArtSoftware.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked

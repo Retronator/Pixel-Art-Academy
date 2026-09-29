@@ -14,7 +14,6 @@ class LM.Content.AssetContent extends LM.Content
   constructor: ->
     super arguments...
     
-    # Stop previous translation and subscribe to the asset directly.
     assetTranslationNamespace = @constructor.assetClass.id()
     @_assetTranslationSubscription = AB.subscribeNamespace assetTranslationNamespace
     

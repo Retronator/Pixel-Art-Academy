@@ -41,7 +41,7 @@ class LM.Content.Progress
 
         entry.completedUnitsCount = completedUnitsCount if completedUnitsCount = @completedUnitsCount?()
         entry.requiredCompletedRatio = requiredCompletedRatio if requiredCompletedRatio = @requiredCompletedRatio?()
-        entry.requiredCompletedUnitsCount = requiredCompletedUnitsCount if requiredCompletedUnitsCount = @requiredCompletedRatio?()
+        entry.requiredCompletedUnitsCount = requiredCompletedUnitsCount if requiredCompletedUnitsCount = @requiredCompletedUnitsCount?()
 
         LM.Content.Progress.Entry.documents.upsert selector, entry
 
