@@ -5,18 +5,23 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.AssetData
   @_assetDataById = {}
 
   @getForAsset: (asset, index) ->
-    assetData = @_assetDataById[asset.id()] ?= Tracker.nonreactive => new @ asset
+    assetId = asset.id()
+    variantId = asset.variantId() or null
+    
+    @_assetDataById[assetId] ?= {}
+    assetData = @_assetDataById[assetId][variantId] ?= Tracker.nonreactive => new @ asset
 
     # Double check that instances are stable until destroy is called.
     unless assetData.asset is asset
-      console.warn "Requested asset data for a different asset instance with the same ID.", asset.id(), assetData.asset, asset
+      console.warn "Requested asset data for a different asset instance with the same IDs.", assetId, variantId, assetData.asset, asset
 
     assetData.index = index
     assetData
 
   @destroy: ->
-    for assetDataId, assetData of @_assetDataById
-      assetData.destroy()
+    for assetDataId, variants of @_assetDataById
+      for variantId, assetData of variants
+        assetData.destroy()
 
     @_assetDataById = {}
 

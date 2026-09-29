@@ -67,7 +67,7 @@ class PAA.Practice.Artworks
   @remove: (artwork) ->
     # Remove the bitmap.
     bitmapId = artwork.image.url.split('id=')[1]
-    LOI.Assets.Bitmap.documents.remove bitmapId
+    LOI.Assets.Bitmap.removeFully bitmapId
     
     # Remove the artwork.
     PADB.Artwork.documents.remove artwork._id

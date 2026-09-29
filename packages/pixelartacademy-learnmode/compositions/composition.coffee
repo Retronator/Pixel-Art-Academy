@@ -46,7 +46,7 @@ class LM.Compositions.Composition extends AMe.Composition
     # See which section we're in and how far along in the group.
     activeSection = portfolio.activeSection()
     activeGroup = _.last portfolio.activeGroups()
-    activeAssets = activeGroup.assets()
+    activeAssets = activeGroup.activeAssets()
     
     activeAssetIndex = _.findIndex activeAssets, (asset) => asset is activeAsset
     unitIndex = activeAssets.length - 1 - activeAssetIndex

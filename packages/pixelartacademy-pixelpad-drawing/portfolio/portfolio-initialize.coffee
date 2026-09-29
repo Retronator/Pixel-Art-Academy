@@ -24,6 +24,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     
   onCreated: ->
     super arguments...
+    
+    @editAssetsProvider = new @constructor.EditAssetsProvider @
 
     sectionLocations =
       tutorial: new PAA.Practice.Tutorials.Drawing
@@ -250,6 +252,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
             @activeGroups result.groups
             @activeAsset result.asset
             return
+            
+    # Set the selected assets provider index if there's an active assets provider.
+    @autorun (computation) =>
+      return unless lastActiveGroup = _.last @activeGroups()
+
+      if activeAssetsProviderData = lastActiveGroup.activeAssetsProvider()
+        lastActiveGroup.selectedAssetsProviderIndex activeAssetsProviderData.index
 
     # Displayed asset retains its value until another asset gets activated
     @displayedAsset = new ReactiveField null, (a, b) => a is b
@@ -393,17 +402,23 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @constructor.AssetsProviderData.destroy()
   
   _searchGroupForAssetWithUrlParameter: (group, urlParameter, currentGroups) ->
-    if group.assets
-      for assetData in group.assets()
-        if assetData.asset.urlParameter() is urlParameter
-          return {
-            groups: currentGroups
-            asset: assetData
-          }
+    return result if result = @_searchAssetsForAssetWithUrlParameter group.assets?(), urlParameter, currentGroups
+    
+    if activeAssetsProvider = group.activeAssetsProvider?()
+      return result if result = @_searchAssetsForAssetWithUrlParameter activeAssetsProvider.assets(), urlParameter, currentGroups
       
     if group.groups
       for group in group.groups()
-        if result = @_searchGroupForAssetWithUrlParameter group, urlParameter, [currentGroups..., group]
-          return result
+        return result if result = @_searchGroupForAssetWithUrlParameter group, urlParameter, [currentGroups..., group]
       
     null
+    
+  _searchAssetsForAssetWithUrlParameter: (assets, urlParameter, currentGroups) ->
+    return unless assets
+    
+    for assetData in assets
+      if assetData.asset.urlParameter() is urlParameter
+        return {
+          groups: currentGroups
+          asset: assetData
+        }

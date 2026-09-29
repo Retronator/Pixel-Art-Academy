@@ -146,17 +146,48 @@
                 color atariGreen(2)
                 adventure()
 
+            .assets-provider-button
+              position absolute
+              z-index 100
+              width 70rem
+              top 20rem
+              bottom 0
+              background none
+              border none
+              cursor default
+
+              &.next
+                right 0
+
+              &.visible
+                opacity 1
+
+                &.previous
+                  cursor w-resize
+
+                &.next
+                  cursor e-resize
+
             .assets-providers
               list-style none
               padding 0
 
               .assets-provider
+                position relative
+                transition left ease-out 0.4s
+
+                &.selected
+                  .assets-area
+                    cursor pointer
+
+                    &.editing
+                    &:hover
+                      top 0
+
                 .assets-area
                   top 2rem
-                  cursor pointer
-                  transition top 0.2s
+                  transition top 0.2s, opacity 0.5s
 
-                  &:hover
                   &.opened
                   &.separated
                     top 0
@@ -166,6 +197,16 @@
                       .front
                         z-index 3
 
+                  &.hiding
+                    opacity 0
+
+                  &.editing
+                    .folder
+                      .front
+                        .label
+                          transform skewY(-10deg) translateY(-10%)
+                          opacity 0
+
             .assets-area
               position relative
               top 0
@@ -174,6 +215,7 @@
               &.opened
               &.separated
               &.closed
+              &.hiding
                 .folder
                   .front
                     .side
@@ -183,6 +225,7 @@
 
               &.separated
               &.closed
+              &.hiding
                 .briefs
                   .brief
                     margin-left -123rem
@@ -203,6 +246,7 @@
                   left calc(50% + 10rem)
 
               &.closed
+              &.hiding
                 top 2rem
 
                 .folder
@@ -228,61 +272,102 @@
                 .back
                 .front
                   absolute-cover()
+
+                .back
+                .front .sheet
                   border-image-slice 5 4 0 fill
                   border-image-width 5rem 4rem 0
 
                 .back
                   z-index 0
-                  border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-back-border.png')
+                  border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/folder-back-border.png')
                   opacity 0.25
+                  filter drop-shadow(0 0 5rem rgba(atariGray(0), 0.2))
 
                 .front
-                  display flex
                   z-index 0
-                  padding 5rem 0 0 4rem
-                  border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-front-border.png')
-                  opacity 0.5
 
-                  .cover
-                    background-color atariGray(5)
-                    flex-grow 1
-
-                  .side
+                  .sheet
+                    absolute-cover()
                     display flex
-                    flex-direction column
-                    width 18rem
+                    padding 5rem 0 0 4rem
+                    border-image-source image('/pixelartacademy/pixelpad/apps/drawing/portfolio/folder-front-border.png')
+                    opacity 0.5
 
-                    &::after
-                      content ''
-                      display block
+                    .cover
+                      background-color atariGray(5)
                       flex-grow 1
-                      background-color atariGray(5)
 
-                    .close-button-area
-                      background-color atariGray(5)
-
-                      .close-button
-                        display flex
-                        justify-content center
-                        align-items end
-                        padding-left 1rem
-                        writing-mode vertical-rl
-                        transform rotate(180deg)
-                        min-height 30rem
-                        width 18rem
-                        border none
-                        background none
-                        small-print()
-                        color atariGray(3)
-                        text-transform uppercase
-
-                        &:hover
-                          color atariGray(1)
-
-                    .indent
+                    .side
+                      display flex
+                      flex-direction column
                       width 18rem
-                      height 18rem
-                      background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/projectfolder/portfoliocomponent/folder-front-indent.png')
+
+                      &::after
+                        content ''
+                        display block
+                        flex-grow 1
+                        background-color atariGray(5)
+
+                      .close-button-area
+                        background-color atariGray(5)
+
+                        .close-button
+                          display flex
+                          justify-content center
+                          align-items end
+                          padding-left 1rem
+                          writing-mode vertical-rl
+                          transform rotate(180deg)
+                          min-height 30rem
+                          width 18rem
+                          border none
+                          background none
+                          small-print()
+                          color atariGray(3)
+                          text-transform uppercase
+
+                          &:hover
+                            color atariGray(1)
+
+                      .indent
+                        width 18rem
+                        height 18rem
+                        background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/folder-front-indent.png')
+
+                  .label
+                    position absolute
+                    z-index 3
+                    top 30rem
+                    left calc(50% - 30rem)
+                    width 60rem
+                    height 28rem
+                    background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/folder-label.png')
+                    text-align center
+                    cursor text
+                    transition all 0.2s
+                    transform-origin bottom left
+                    opacity 1
+                    filter drop-shadow(0 0 1rem rgba(atariGray(0), 0.1))
+
+                    .category
+                      legible()
+                      height 4rem
+                      margin 1rem 0
+                      text-transform uppercase
+                      color atariGray(2)
+
+                    .name-area
+                      padding calc(1rem / 8) 2rem 0
+                      height 21rem
+                      overflow hidden
+
+                      .name
+                        kroeger-4()
+                        color atariAzure(2)
+                        line-height 5rem
+                        overflow-wrap break-word
+                        white-space pre-wrap
 
               .briefs
                 position absolute

@@ -10,6 +10,9 @@ class PAA.Practice.AssetsProvider
 
   assetsData: -> throw new AE.NotImplementedException "Assets provider must provide data to the assets."
   
+  name: -> # Override if the assets provider has a name.
+  setName: -> # Override if you can change the name of the assets provider.
+  
   getAsset: (assetClassOrId) ->
     assetId = _.thingId assetClassOrId
     assets = @assets()

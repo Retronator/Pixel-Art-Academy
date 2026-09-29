@@ -10,4 +10,4 @@ class PAA.Practice
 if Meteor.isServer
   # Export all public projects.
   AM.DatabaseContent.addToExport ->
-    PAA.Practice.Project.documents.fetch profileId: $exists: false
+    PAA.Practice.Project.documents.fetch publicPath: $exists: true

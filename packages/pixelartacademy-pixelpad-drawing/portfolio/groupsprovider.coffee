@@ -57,15 +57,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.GroupsProvider
           @_assetsProvidersDataByThingId[thingId] ?= Tracker.nonreactive => new AE.LiveComputedField =>
             return unless assetsProviders = thing.assetsProviders()
             
-            for assetsProvider, assetsProviderIndex in assetsProviders
+            assetsProvidersData = for assetsProvider, assetsProviderIndex in assetsProviders
               PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData.getForAssetsProvider assetsProvider, thing, assetsProviderIndex
+            
+            assetsProvidersData.push PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData.getNewAssetsProvider thing, assetsProviders.length
+            
+            assetsProvidersData
           ,
             _.arraysHaveSameValues
           
           @_activeAssetsProviderDataByThingId[thingId] ?= Tracker.nonreactive => new AE.LiveComputedField =>
             return unless assetsProvider = thing.activeAssetsProvider()
             
-            PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData.getForAssetsProvider assetsProvider, thing, 0
+            PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData.getForAssetsProvider assetsProvider, thing
           
           groups.push
             level: level
@@ -75,6 +79,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.GroupsProvider
             assets: @_assetsProviderDataByThingId[thingId].assets
             assetsProviders: @_assetsProvidersDataByThingId[thingId]
             activeAssetsProvider: @_activeAssetsProviderDataByThingId[thingId]
+            selectedAssetsProviderIndex: new ReactiveField 0
+            activeAssets: -> @assets() or @activeAssetsProvider()?.assets()
           
         groupIndex++
       

@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addFile('portfolio/groupfolder');
   api.addFile('portfolio/archive');
   api.addServerFile('portfolio/subscriptions');
+  api.addComponent('portfolio/editassetsprovider..');
 
   api.addFile('portfolio/forms..');
   api.addFile('portfolio/forms/asset');

@@ -72,8 +72,7 @@ AM.Document.Versioning._moveInHistory = (versionedDocument, operations, newHisto
 
 AM.Document.Versioning.clearHistory = (versionedDocument) ->
   # Remove action archives.
-  AM.Document.Versioning.ActionArchive.documents.remove
-    versionedDocumentId: versionedDocument._id
+  AM.Document.Versioning.ActionArchive.removeHistoryForDocument versionedDocument._id
   
   # Reinstate initial history state.
   versionedDocument.historyPosition = 0

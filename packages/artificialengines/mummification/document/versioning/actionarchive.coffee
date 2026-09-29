@@ -46,3 +46,6 @@ class AM.Document.Versioning.ActionArchive extends AM.Document
     return 0 unless lastActionArchive
     
     lastActionArchive.historyEnd + 1
+    
+  @removeHistoryForDocument: (versionedDocumentId) ->
+    @documents.remove {versionedDocumentId}

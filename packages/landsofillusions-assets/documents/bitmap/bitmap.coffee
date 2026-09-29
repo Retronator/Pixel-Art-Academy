@@ -48,6 +48,10 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     plainObject.bounds = _.pick bitmap.bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if bitmap.bounds
     plainObject
     
+  @removeFully: (bitmapId) ->
+    @documents.remove bitmapId
+    AM.Document.Versioning.ActionArchive.removeHistoryForDocument bitmapId
+  
   initialize: ->
     # Make sure we don't initialize it multiple times.
     if @_initialized

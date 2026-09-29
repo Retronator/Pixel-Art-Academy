@@ -145,6 +145,10 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     
     portfolio = @portfolio()
 
+    # Relay to the assets provider editor.
+    result = portfolio.editAssetsProvider.onBackButton()
+    return result if result?
+
     # We only need to handle closing groups when not on an asset.
     return if portfolio.activeAsset()
 

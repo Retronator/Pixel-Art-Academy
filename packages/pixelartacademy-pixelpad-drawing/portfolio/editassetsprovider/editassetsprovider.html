@@ -1,0 +1,54 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.EditAssetsProvider">
+  <div class="pixelartacademy-pixelpad-apps-drawing-portfolio-editassetsprovider {{activeClass}} {{creatingClass}}">
+    <div class="overlay"></div>
+    <div class="waiting"></div>
+    <div class="content">
+      <div class="instructions">
+        {{#if $is mode 'Creating'}}
+          {{> t10e thing.nameAssetsProviderInstructionsTranslation}}
+        {{/if}}
+        {{#if $is mode 'Naming'}}
+          {{> t10e thing.nameAssetsProviderInstructionsTranslation}}
+        {{/if}}
+        {{#if $is mode 'Editing'}}
+          {{> t10e thing.editAssetsProviderInstructionsTranslation}}
+        {{/if}}
+        {{#if $is mode 'Duplicating'}}
+          {{> t10e thing.duplicateAssetsProviderInstructionsTranslation}}
+        {{/if}}
+      </div>
+      <div class="label">
+        <div class="category">{{labelCategory}}</div>
+        <div class="name-area">
+          <div class="name">
+            {{#if showEmptyName}}
+              {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.EditAssetsProvider.EmptyName}}
+            {{else}}
+              {{#with assetsProvider}}
+                {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.EditAssetsProvider.Name}}
+              {{/with}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        {{#if $is mode 'Creating'}}
+          <button class="action-button confirm-create-button recommended">Create</button>
+          <button class="action-button close-button">Cancel</button>
+        {{/if}}
+        {{#if $is mode 'Naming'}}
+          <button class="action-button close-button recommended">Save</button>
+        {{/if}}
+        {{#if $is mode 'Editing'}}
+          <button class="action-button close-button recommended">Save</button>
+          <button class="action-button duplicate-button">Duplicate</button>
+          <button class="action-button delete-button danger">Delete</button>
+        {{/if}}
+        {{#if $is mode 'Duplicating'}}
+          <button class="action-button confirm-duplicate-button recommended">Save</button>
+          <button class="action-button cancel-duplicate-button">Cancel</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

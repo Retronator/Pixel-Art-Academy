@@ -11,8 +11,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData
     unless assetsProviderData.assetsProvider is assetsProvider
       console.warn "Requested asset provider for a different assets provider instance with the same ID.", assetsProvider.id(), assetsProviderData.assetsProvider, assetsProvider
     
-    assetsProviderData.index = index
+    assetsProviderData.index = index if index?
     assetsProviderData
+    
+  @getNewAssetsProvider: (thing, index) ->
+    newAssetsProvider = new PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData.New thing
+    newAssetsProvider.index = index
+    newAssetsProvider
   
   @destroy: ->
     for assetProviderId, assetProvider of @_assetsProviderDataById
@@ -31,3 +36,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.AssetsProviderData
 
   destroy: ->
     @assets.stop()
+  
+  name: -> @assetsProvider.name()
+  
+  class @New
+    constructor: (@thing) ->
+
+    destroy: ->
+
+    assets: -> []
+
+    name: -> @thing.newAssetsProviderPlaceholder()

@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 
 class PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   id: -> throw new AE.NotImplementedException "You must provide the ID to identify this asset."
+  variantId: -> # Override if this asset can have multiple variants.
 
   displayName: -> throw new AE.NotImplementedException "You must specify the asset name."
 
@@ -24,3 +25,5 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   urlParameter: -> throw new AE.NotImplementedException "You must provide the URL parameter to navigate to this asset."
 
   ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."
+
+  destroy: -> # Override to perform any cleanup.

@@ -31,5 +31,5 @@ class PAA.Practice.Project extends PAA.Practice.Project
     
     plainData: @
     arrayBuffer: arrayBuffer
-    path: "#{@name or @_id}.txt"
+    path: "#{@publicPath or @_id}.txt"
     lastEditTime: @lastEditTime

@@ -35,18 +35,18 @@ class PAA.Practice.Pages.Admin.Projects extends AM.Component
     
   onClickCreatePublicCopyButton: (event) ->
     project = _.cloneDeep @currentData()
-    projectName = @$('.public-project-name').val()
+    publicPath = @$('.public-path').val()
     
     assets = {}
     
     project._id = Random.id()
-    project.name = projectName
+    project.publicPath = publicPath
     project.assets = for asset in project.assets
       newAsset = _.pick asset, ['id', 'type']
       if asset.bitmapId
         bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
         
-        bitmap.name = "#{projectName}/#{_.kebabCase asset.id}"
+        bitmap.name = "#{publicPath}/#{_.kebabCase asset.id}"
         bitmap._id = Random.id()
         delete bitmap.profileId
         bitmap.historyPosition = 0

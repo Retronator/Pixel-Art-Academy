@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 Snake = PAA.Pico8.Cartridges.Snake
 
 class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Project
-  @start: ->
+  @start: (properties = {}) ->
     super arguments...
 
     new Promise (resolve, reject) =>
@@ -77,7 +77,7 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Proj
         foodBitmapId = LOI.Assets.Bitmap.documents.insert foodBitmapData
 
         # Create the project.
-        projectId = PAA.Practice.Project.documents.insert
+        projectId = PAA.Practice.Project.documents.insert _.extend {}, properties,
           startTime: creationTime
           lastEditTime: creationTime
           type: Snake.Project.id()

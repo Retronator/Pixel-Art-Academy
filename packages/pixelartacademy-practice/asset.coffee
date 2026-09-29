@@ -78,6 +78,8 @@ class PAA.Practice.Asset
 
     handle.stop() for handle in [@_autorunHandles..., @_subscriptionHandles...]
   
+  variantId: -> # Override if this asset can have variants.
+  
   autorun: (handler) ->
     handle = Tracker.autorun handler
     @_autorunHandles.push handle

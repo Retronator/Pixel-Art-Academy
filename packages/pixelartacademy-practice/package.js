@@ -105,6 +105,7 @@ Package.onUse(function(api) {
   api.addFile('project/workbench');
 
   api.addFile('project/migrations/0000-projectthings');
+  api.addFile('project/migrations/0001-publicpath');
 
   // Challenges
 

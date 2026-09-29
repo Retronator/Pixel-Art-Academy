@@ -1,0 +1,171 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-portfolio-editassetsprovider
+  position absolute
+  left -5rem
+  right -5rem
+  top 0
+  bottom 0
+  z-index 102
+  opacity 0
+  transition opacity 0.2s, visibility 0.2s
+  pointer-events none
+
+  &.active
+    opacity 1
+    pointer-events auto
+
+  &.creating
+    .waiting
+      visibility visible
+
+    .actions
+      visibility hidden
+
+  .overlay
+    absolute-cover()
+    background atariGray(0)
+    opacity 0.8
+
+  .waiting
+    absolute-cover()
+    z-index 2
+    cursor wait
+    visibility hidden
+
+  .content
+    absolute-cover()
+    z-index 1
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+
+    .instructions
+    .actions
+      height 50rem
+
+    .instructions
+      acme-9()
+      color atariGray(7)
+      text-align center
+
+    .label
+      margin 10rem 0
+      width 95rem
+      height 50rem
+      padding 0 16rem
+      background-image image('/pixelartacademy/pixelpad/apps/drawing/portfolio/folder-label-big.png')
+      text-align center
+      filter drop-shadow(0 0 5rem rgba(atariGray(0), 0.25))
+
+      .category
+        margin-top 2rem
+        adventure()
+        text-transform uppercase
+        color atariGray(1)
+
+      .name-area
+        height 37rem
+        padding-top 1rem
+        overflow hidden
+
+        .name
+          position relative
+          margin-top 9rem
+          adventure()
+          line-height 9rem
+          color atariAzure(1)
+          text-align center
+
+          textarea
+            width 100%
+            min-height 18rem
+            margin 0
+            padding 0
+            border none
+            outline none
+            background none
+            font inherit
+            color inherit
+            text-align center
+            input-placeholder atariAzure(5)
+            appearance none
+            resize none
+            white-space pre-wrap
+            overflow-wrap break-word
+
+    .actions
+      display flex
+      justify-content center
+
+      .action-button
+        position relative
+        height 15rem
+        padding 2rem 4rem 4rem
+        border none
+        background none
+        uni()
+        color atariGray(0)
+        text-transform uppercase
+
+        & + .action-button
+          margin-left 5rem
+
+        &::before
+        &::after
+          content ''
+          absolute-cover()
+          z-index -1
+
+        &::before
+          background-color atariGray(1)
+          top 2rem
+
+        &::after
+          background-color atariGray(3)
+          bottom 2rem
+
+        &:hover
+          color atariGray(1)
+
+          &::after
+            background-color atariGray(4)
+
+        &:active
+          padding-top 3rem
+          padding-bottom 3rem
+
+          &::after
+            top 1rem
+            bottom 1rem
+
+        &.recommended
+          color atariGreen(0)
+
+          &::before
+            background-color atariGreen(1)
+
+          &::after
+            background-color atariGreen(3)
+
+          &:hover
+            color atariGreen(1)
+
+            &::after
+              background-color atariGreen(4)
+
+        &.danger
+          color atariRed(0)
+
+          &::before
+            background-color atariRed(1)
+
+          &::after
+            background-color atariRed(3)
+
+          &:hover
+            color atariRed(1)
+
+            &::after
+              background-color atariRed(4)

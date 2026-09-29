@@ -20,6 +20,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     Opened: 'Opened'
     Separated: 'Separated'
     Closed: 'Closed'
+    Hiding: 'Hiding'
 
   # Subscriptions
   @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
@@ -46,6 +47,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
         throttle: 200
       folderOpen: AEc.ValueTypes.Trigger
       folderClose: AEc.ValueTypes.Trigger
+      foldersMove: AEc.ValueTypes.Trigger
         
   constructor: (@drawing) ->
     super arguments...
@@ -67,15 +69,33 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     return unless @isCreated()
     return unless activeAsset = @activeAsset()
     return unless activeGroup = _.last @activeGroups()
-    return unless activeGroup.assets
+    return unless activeGroup.activeAssets
     
     # Locate the active asset in the current assets array instead of relying on its
     # stored index, since assets without URL parameters are filtered out of the group.
-    activeGroupAssets = activeGroup.assets()
+    activeGroupAssets = activeGroup.activeAssets()
     activeAssetIndex = activeGroupAssets.indexOf activeAsset
     return if activeAssetIndex < 0
     
     activeGroupAssets[activeAssetIndex + assetIndexOffset]
+    
+  selectAssetsProviderById: (assetsProviderId) ->
+    group = _.last @activeGroups()
+    assetsProviders = group.assetsProviders()
+    assetsProviderIndex = _.findIndex assetsProviders, (assetsProviderData) => assetsProviderData.assetsProvider.id() is assetsProviderId
+    
+    @selectAssetsProviderByIndex assetsProviderIndex
+    
+  selectAssetsProviderByIndex: (assetsProviderIndex) ->
+    group = _.last @activeGroups()
+    
+    currentIndex = group.selectedAssetsProviderIndex()
+    newIndex = _.clamp assetsProviderIndex, 0, group.assetsProviders().length - 1
+    
+    return if newIndex is currentIndex
+    
+    group.selectedAssetsProviderIndex newIndex
+    @audio.foldersMove()
 
   sectionActiveClass: ->
     section = @currentData()
@@ -175,6 +195,37 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     parentWidth - 18 - 3 * (parent.groups().length - group.index - 1)
 
+  previousAssetsProviderButtonVisibleClass: ->
+    return if @assetsAreaAnimationState()
+    
+    group = @currentData()
+    'visible' if group.selectedAssetsProviderIndex()
+  
+  nextAssetsProviderButtonVisibleClass: ->
+    return if @assetsAreaAnimationState()
+    
+    group = @currentData()
+    'visible' if group.selectedAssetsProviderIndex() < group.assetsProviders().length - 1
+    
+  selectedAssetsProviderClass: ->
+    assetsProvider = @currentData()
+    group = @parentDataWith 'assetsProviders'
+    
+    'selected' if assetsProvider.index is group.selectedAssetsProviderIndex()
+  
+  assetsProviderStyle: ->
+    assetsProvider = @currentData()
+    group = @parentDataWith 'assetsProviders'
+    assetsProviders = group.assetsProviders()
+    
+    differenceToSelected = assetsProvider.index - group.selectedAssetsProviderIndex()
+    distanceToSelected = Math.abs differenceToSelected
+    
+    zIndex = assetsProviders.length - distanceToSelected
+    left = "#{20 * distanceToSelected ** 0.5 * Math.sign differenceToSelected}rem"
+    
+    {zIndex, left}
+    
   groupActiveClass: ->
     group = @currentData()
 
@@ -182,35 +233,53 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   
   assetsAreaAnimationClass: ->
     assetsProviderData = @currentData()
+    return unless assetsProviderData.thing.assetsProviders()
     
     if assetsAreaAnimationState = @assetsAreaAnimationState()
-      if assetsAreaAnimationState.assetsProviderData is assetsProviderData
+      if assetsProviderData is assetsAreaAnimationState.assetsProviderData
         return _.kebabCase assetsAreaAnimationState.state
     
-    return unless assetsProviderData.thing.assetsProviders()
-    return if assetsProviderData.thing.activeAssetsProvider() is assetsProviderData.assetsProvider
+      else
+        return _.kebabCase @constructor.AssetsAreaAnimationStates.Hiding
+    
+    return if assetsProviderData.assetsProvider and assetsProviderData.assetsProvider is assetsProviderData.thing.activeAssetsProvider()
 
     _.kebabCase @constructor.AssetsAreaAnimationStates.Closed
   
+  assetsAreaEditingClass: ->
+    assetsProviderData = @currentData()
+    
+    if assetsProviderData.assetsProvider
+      'editing' if assetsProviderData.assetsProvider is @editAssetsProvider.assetsProvider()
+      
+    else
+      'editing' if @editAssetsProvider.mode() is @constructor.EditAssetsProvider.Modes.Creating
+
   folderStyle: ->
-    group = @currentData()
-    left = -59 + group.assets().length * 1.5
+    assetsProviderData = @currentData()
+    left = -59 + assetsProviderData.assets().length * 1.5
     
     left: "calc(50% + #{left}rem)"
 
+  folderLabel: ->
+    assetsProviderData = @currentData()
+
+    category: @callParentDataWith 'name'
+    name: assetsProviderData.name()
+
   briefStyle: ->
     assetData = @currentData()
-    group = @parentDataWith 'assets'
+    assetsProvider = @parentDataWith 'assets'
 
-    zIndex = group.assets().length - assetData.index
+    zIndex = assetsProvider.assets().length - assetData.index
 
     zIndex: zIndex
 
   assetStyle: ->
     assetData = @currentData()
-    group = @parentDataWith 'assets'
+    assetsProvider = @parentDataWith 'assets'
 
-    zIndex = group.assets().length - assetData.index
+    zIndex = assetsProvider.assets().length - assetData.index
 
     zIndex: zIndex
     width: "#{assetData.asset.width() * assetData.scale() + assetData.asset.portfolioBorderWidth() * 2}rem"
@@ -266,12 +335,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       'pointerleave .asset': @onPointerLeaveAsset
       'click .brief': @onClickBrief
       'click .asset': @onClickAsset
-      'pointerenter .close-button': @onPointerEnterCloseButton
-      'pointerleave .close-button': @onPointerLeaveCloseButton
-      'click .close-button': @onClickCloseButton
-      'pointerenter .assets-provider': @onPointerEnterAssetsProvider
-      'pointerleave .assets-provider': @onPointerLeaveAssetsProvider
-      'click .assets-provider': @onClickAssetsProvider
+      'pointerenter .assets-area .close-button': @onPointerEnterCloseButton
+      'pointerleave .assets-area .close-button': @onPointerLeaveCloseButton
+      'click .assets-area .close-button': @onClickCloseButton
+      'pointerenter .selected.assets-provider': @onPointerEnterAssetsProvider
+      'pointerleave .selected.assets-provider': @onPointerLeaveAssetsProvider
+      'click .selected.assets-provider': @onClickAssetsProvider
+      'click .selected.assets-provider .label': @onClickAssetsProviderLabel
+      'click .previous.assets-provider-button': @onClickPreviousAssetsProviderButton
+      'click .next.assets-provider-button': @onClickNextAssetsProviderButton
 
   onClickSection: (event) ->
     section = @currentData()
@@ -381,6 +453,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
   onClickCloseButton: (event) ->
     assetsProviderData = @currentData()
+    return if @assetsAreaAnimationState()
     
     @audio.folderClose()
 
@@ -397,16 +470,31 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     await _.waitForSeconds 0.5
     
     assetsProviderData.thing.deactivateAssetsProvider()
+    
+    await _.waitForFlush()
+    
     @assetsAreaAnimationState null
+
+    return if assetsProviderData.assetsProvider.name()
+    @editAssetsProvider.show assetsProviderData.assetsProvider, assetsProviderData.thing, @constructor.EditAssetsProvider.Modes.Naming
   
   onPointerEnterAssetsProvider: (event) ->
+    return if @editAssetsProvider.visible()
+  
     @audio.folderHover()
     
   onPointerLeaveAssetsProvider: (event) ->
+    return if @editAssetsProvider.visible()
+
     @audio.folderHover()
     
   onClickAssetsProvider: (event) ->
     assetsProviderData = @currentData()
+    return if @assetsAreaAnimationState()
+    
+    unless assetsProviderData.assetsProvider
+      @_createNewAssetsProvider assetsProviderData.thing
+      return
     
     @audio.folderOpen()
 
@@ -425,6 +513,32 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     assetsProviderData.thing.activateAssetsProvider assetsProviderData.assetsProvider
     @assetsAreaAnimationState null
 
+  onClickAssetsProviderLabel: (event) ->
+    assetsProviderData = @parentDataWith 'assets'
+    return if @assetsAreaAnimationState()
+    event.stopPropagation()
+
+    if assetsProviderData.assetsProvider
+      @editAssetsProvider.show assetsProviderData.assetsProvider, assetsProviderData.thing, @constructor.EditAssetsProvider.Modes.Editing
+      
+    else
+      @_createNewAssetsProvider assetsProviderData.thing
+      
+  _createNewAssetsProvider: (thing) ->
+    @editAssetsProvider.show null, thing, @constructor.EditAssetsProvider.Modes.Creating
+  
+  onClickPreviousAssetsProviderButton: (event) ->
+    return if @assetsAreaAnimationState()
+    @_selectNeighboringAssetsProvider -1
+  
+  onClickNextAssetsProviderButton: (event) ->
+    return if @assetsAreaAnimationState()
+    @_selectNeighboringAssetsProvider 1
+
+  _selectNeighboringAssetsProvider: (direction) ->
+    group = @currentData()
+    @selectAssetsProviderByIndex group.selectedAssetsProviderIndex() + direction
+    
   _goToClickedAsset: ->
     assetData = @currentData()
     
@@ -490,3 +604,39 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       console.log "Cheating commenced!"
       
       event.preventDefault()
+
+  class @AssetsProviderLabel extends AM.Component
+    @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsProviderLabel'
+
+    @nameLineHeight = 5 # rem
+
+    constructor: ->
+      super arguments...
+
+      @nameTopMargin = new ReactiveField @constructor.nameLineHeight
+
+    onCreated: ->
+      super arguments...
+
+      @portfolio = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Portfolio
+
+    onRendered: ->
+      super arguments...
+
+      @$name = @$('.name')
+
+      @_nameResizeObserver = new ResizeObserver =>
+        displayScale = LOI.adventure.interface.display.scale()
+        nameHeight = @$name.outerHeight() / displayScale
+        nameLineCount = Math.round nameHeight / @constructor.nameLineHeight
+        @nameTopMargin if nameLineCount > 3 then 0 else @constructor.nameLineHeight
+
+      @_nameResizeObserver.observe @$name[0]
+
+    onDestroyed: ->
+      super arguments...
+
+      @_nameResizeObserver?.disconnect()
+
+    nameStyle: ->
+      marginTop: "#{@nameTopMargin()}rem"

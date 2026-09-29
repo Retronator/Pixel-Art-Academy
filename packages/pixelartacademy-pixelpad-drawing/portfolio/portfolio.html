@@ -19,6 +19,7 @@
           {{/each}}
         </ul>
       </div>
+      {{> Render editAssetsProvider}}
     {{/if}}
   </div>
 </template>
@@ -42,9 +43,11 @@
       {{#with activeAssetsProvider}}
         {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea}}
       {{else}}
+        <button class="previous assets-provider-button {{previousAssetsProviderButtonVisibleClass}}"></button>
+        <button class="next assets-provider-button {{nextAssetsProviderButtonVisibleClass}}"></button>
         <ul class="assets-providers">
           {{#each assetsProviders}}
-            <li class="assets-provider">
+            <li class="assets-provider {{selectedAssetsProviderClass}}" {{style assetsProviderStyle}}>
               {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea}}
             </li>
           {{/each}}
@@ -65,18 +68,23 @@
 </template>
 
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsArea">
-  <div class="assets-area {{assetsAreaAnimationClass}}">
+  <div class="assets-area {{assetsAreaAnimationClass}} {{assetsAreaEditingClass}}">
     {{#if thing.canDeactivateAssetsProvider}}
       <div class="folder" {{style folderStyle}}>
         <div class="back"></div>
         <div class="front">
-          <div class="cover"></div>
-          <div class="side">
-            <div class="close-button-area">
-              <button class="close-button">Close</button>
+          <div class="sheet">
+            <div class="cover"></div>
+            <div class="side">
+              <div class="close-button-area">
+                <button class="close-button">Close</button>
+              </div>
+              <div class="indent"></div>
             </div>
-            <div class="indent"></div>
           </div>
+          {{#with folderLabel}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsProviderLabel}}
+          {{/with}}
         </div>
       </div>
     {{/if}}
@@ -107,5 +115,14 @@
         </li>
       {{/each}}
     </ul>
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.AssetsProviderLabel">
+  <div class="label {{styleClass}}">
+    <div class="category">{{category}}</div>
+    <div class="name-area">
+      <div class="name" {{style nameStyle}}>{{name}}</div>
+    </div>
   </div>
 </template>

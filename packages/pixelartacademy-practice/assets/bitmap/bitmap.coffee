@@ -127,6 +127,8 @@ class PAA.Practice.Asset.Bitmap extends PAA.Practice.Asset
     @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
     @_readabilityAnalysis?.destroy()
+  
+  variantId: -> @bitmapId()
     
   initializingConditions: ->
     # Wait with initializing until we've selected the asset as the active one in the editor.
