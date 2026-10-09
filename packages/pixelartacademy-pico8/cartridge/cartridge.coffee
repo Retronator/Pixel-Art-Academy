@@ -30,7 +30,7 @@ class PAA.Pico8.Cartridge extends LOI.Adventure.Thing
       true
 
     @projectId = new ComputedField =>
-      @options.projectId or @constructor.projectClass()?.state 'activeProjectId'
+      @options?.projectId or @constructor.projectClass()?.state 'activeProjectId'
     ,
       true
 

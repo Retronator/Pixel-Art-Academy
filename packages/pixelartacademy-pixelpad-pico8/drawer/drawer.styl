@@ -211,8 +211,9 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
             pointer-events auto
 
     &:not(.panned-left)
-      .memory-card:hover
-        top 20rem
+      .memory-cards
+        .memory-card:hover
+          top -2rem
 
     .variant-button
       display flex
@@ -286,21 +287,38 @@ desktopShadowColor = rgba(112, 40, 0, 0.48)
             text-decoration none
             word-break break-word
 
-    .memory-card
+    .memory-cards
       position absolute
+      list-style none
+      margin 0
+      padding 0
       left 216rem
       top 22rem
       width 160rem
       height 205rem
-      cursor pointer
 
-      &::after
-        content ''
-        absolute-cover()
-        background-image image('/pixelartacademy/pixelpad/apps/pico8/cartridge-big-overlay.png')
-        mix-blend-mode overlay
-        pointer-events none
+      .memory-card
+        absolute-cover-size()
+        cursor pointer
 
-      .image
-        width 100%
-        height 100%
+        &::after
+          content ''
+          absolute-cover()
+          background-image image('/pixelartacademy/pixelpad/apps/pico8/cartridge-big-overlay.png')
+          mix-blend-mode overlay
+          pointer-events none
+
+        &.previous
+        &.next
+          transform scale(1.2)
+          visibility hidden
+
+        &.previous
+          top -135%
+
+        &.next
+          top 135%
+
+        .image
+          width 100%
+          height 100%

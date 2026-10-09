@@ -44,11 +44,13 @@
         <button class="next variant-button">↑</button>
       {{/if}}
       <div class="case-bottom"></div>
-      <div class="memory-card">
-        {{#with selectedCartridgeVariant}}
-          <img class="image" src="{{cartridgeImageUrl}}"/>
-        {{/with}}
-      </div>
+      <ul class="memory-cards">
+        {{#each selectedCartridge.variants}}
+          <div class="memory-card {{memoryCardClass}}">
+            <img class="image" src="{{cartridgeImageUrl}}"/>
+          </div>
+        {{/each}}
+      </ul>
       <div class="case-top">
         <!-- TODO: Show case top only for online projects.
           div class="share-area">

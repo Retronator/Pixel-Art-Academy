@@ -185,6 +185,15 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
   showNextVariant: ->
     return unless selectedCartridge = @selectedCartridge()
     @selectedCartridgeVariantIndex() < selectedCartridge.variants.length - 1
+  
+  memoryCardClass: ->
+    cartridgeVariant = @currentData()
+    selectedCartridgeVariantIndex = @selectedCartridgeVariantIndex()
+    
+    switch
+     when selectedCartridgeVariantIndex < cartridgeVariant.index then 'previous'
+     when selectedCartridgeVariantIndex > cartridgeVariant.index then 'next'
+     else 'current'
 
   cartridgeShareUrl: ->
     cartridge = @currentData()
@@ -221,16 +230,17 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     @audio.caseOpen()
   
   onClickPreviousVariantButton: (event) ->
-    previousVariantIndex = @selectedCartridgeVariantIndex() - 1
-    previousVariant = @selectedCartridge().variants[previousVariantIndex]
-
-    AB.Router.changeParameter 'parameter3', previousVariant.cartridge.options.projectId
+    @changeCartridgeVariant -1
 
   onClickNextVariantButton: (event) ->
-    nextVariantIndex = @selectedCartridgeVariantIndex() + 1
-    nextVariant = @selectedCartridge().variants[nextVariantIndex]
+    @changeCartridgeVariant 1
 
-    AB.Router.changeParameter 'parameter3', nextVariant.cartridge.options.projectId
+  changeCartridgeVariant: (offset) ->
+    variantIndex = @selectedCartridgeVariantIndex() + offset
+    variant = @selectedCartridge().variants[variantIndex]
+
+    AB.Router.changeParameter 'parameter3', variant.cartridge.options.projectId
+    @audio.cartridgeSelect()
 
   onClickSelectedCartridgeMemoryCard: (event) ->
     if @pannedLeft()
