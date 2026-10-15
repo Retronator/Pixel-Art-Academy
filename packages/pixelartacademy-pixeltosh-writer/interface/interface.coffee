@@ -35,3 +35,5 @@ class Writer.Interface
           visible: true
       contentArea:
         type: Writer.Interface.Editor.id()
+        documentFileId: documentFile.id()
+        documentData: documentFile.data()

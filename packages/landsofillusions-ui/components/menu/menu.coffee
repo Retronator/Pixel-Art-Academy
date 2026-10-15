@@ -41,6 +41,9 @@ class LOI.Components.Menu extends AM.Component
 
       # Toggle menu on escape.
       if event.which is AC.Keys.escape
+        # We're handling the escape key, so others shouldn't.
+        event.stopImmediatePropagation()
+
         # See if we should handle the menu change ourselves or to delegate.
         if customShowMenuHandler = @customShowMenu()
           customShowMenuHandler()

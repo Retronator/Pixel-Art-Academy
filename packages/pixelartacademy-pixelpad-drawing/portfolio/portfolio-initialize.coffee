@@ -28,9 +28,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @editAssetsProvider = new @constructor.EditAssetsProvider @
 
     sectionLocations =
-      tutorial: new PAA.Practice.Tutorials.Drawing
-      challenge: new PAA.Practice.Challenges.Drawing
-      project: new PAA.Practice.Project.Workbench
+      tutorial: PAA.Practice.Tutorials.Drawing
+      challenge: PAA.Practice.Challenges.Drawing
+      project: PAA.Practice.Project.Workbench
     
     for sectionThingName, sectionLocation of sectionLocations
       do (sectionThingName, sectionLocation) =>
@@ -54,87 +54,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
 
         @["#{sectionThingName}sSection"] = section
   
-    # Create artwork assets.
-    @_artworkAssets = {}
-    @_artworkAssetsDependency = new Tracker.Dependency
-  
-    @_artworkIds = new ComputedField =>
-      return [] unless artworks = PAA.PixelPad.Apps.Drawing.state 'artworks'
-      artwork.artworkId for artwork in artworks
-  
-    @_artworksDictionary = new AE.ReactiveDictionary =>
-      artworkIds = @_artworkIds()
-      dictionary = {}
-      
-      PADB.Artwork.documents.find(_id: $in: artworkIds).forEach (artwork) =>
-        dictionary[artwork._id] = dictionary
-  
-      dictionary
-    ,
-      added: (id) =>
-        @_artworkAssets[id] = new PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset id
-        @_artworkAssetsDependency.changed()
-  
-      removed: (id) =>
-        @_artworkAssets[id].destroy()
-        delete @_artworkAssets[id]
-        @_artworkAssetsDependency.changed()
-    
-    # Create WIP artworks group.
-    @_newArtworkAsset = new PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork
-    @_importArtworkAsset = new PAA.PixelPad.Apps.Drawing.Portfolio.ImportArtwork
-
-    @_wipArtworksGroup =
-      level: 0
-      index: 0
-      name: => "Work in progress"
-      assets: new ComputedField =>
-        assets = []
-        
-        # Get all WIP artworks.
-        @_artworkAssetsDependency.depend()
-        
-        artworkIds = @_artworkIds()
-        
-        wipArtworks = PADB.Artwork.documents.fetch
-          _id: $in: artworkIds
-          wip: true
-        ,
-          sort:
-            startDate: 1
-          
-        for artwork, assetIndex in wipArtworks
-          do (artwork, assetIndex) =>
-            return unless asset = @_artworkAssets[artwork._id]
-          
-            assets.push @constructor.AssetData.getForAsset asset, assetIndex
-  
-        if PAA.PixelPad.Apps.Drawing.canCreateArtworks()
-          assets.push @constructor.AssetData.getForAsset @_newArtworkAsset, assetIndex
-  
-          # TODO: Enable uploading of artworks.
-          ###
-          assets.push
-            _id: @_importArtworkAsset.urlParameter()
-            index: assets.length
-            asset: @_importArtworkAsset
-            scale: => 1
-          ###
-  
-        assets
-        
-    @artworksSection =
-      nameKey: @constructor.Sections.Artworks
-      isSection: true
-      groups: =>
-        groups = []
-  
-        if @_wipArtworksGroup.assets().length
-          groups.push @_wipArtworksGroup
-          
-        # TODO: Fetch all artworks.
-    
-        groups
+    @artworksSection = Tracker.nonreactive => new @constructor.Artworks.Section
   
     @sections = new ComputedField =>
       sections = []
@@ -389,14 +309,11 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     super arguments...
     
     $(document).off '.pixelartacademy-pixelpad-apps-drawing-portfolio'
-    
-    @_artworksDictionary.stop()
-    @_newArtworkAsset.destroy()
-    @_importArtworkAsset.destroy()
   
     @tutorialsSection.groupsProvider.destroy()
     @challengesSection.groupsProvider.destroy()
     @projectsSection.groupsProvider.destroy()
+    @artworksSection.destroy()
     
     @constructor.AssetData.destroy()
     @constructor.AssetsProviderData.destroy()

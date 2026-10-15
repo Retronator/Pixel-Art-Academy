@@ -128,6 +128,20 @@ class PAA.Pixeltosh.OS extends LOI.Component
     dialog = @constructor.Interface.ErrorDialog.createInterfaceData options
     @interface.displayDialog dialog
   
+  showInputDialog: (options) ->
+    new Promise (resolve) =>
+      dialog = @constructor.Interface.InputDialog.createInterfaceData _.extend {}, options,
+        onClose: resolve
+
+      @interface.displayDialog dialog
+
+  showMessageDialog: (options) ->
+    new Promise (resolve) =>
+      dialog = @constructor.Interface.MessageDialog.createInterfaceData _.extend {}, options,
+        onClose: resolve
+
+      @interface.displayDialog dialog
+
   addWindow: (windowData) ->
     windowId = @interface.addWindow _.extend {}, windowData,
       order: @_getMaxWindowOrder() + 1
@@ -198,6 +212,12 @@ class PAA.Pixeltosh.OS extends LOI.Component
     if errorDialog = @interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
       return result if result = errorDialog.onBackButton?()
     
+    if inputDialog = @interface.getView PAA.Pixeltosh.OS.Interface.InputDialog
+      return result if result = inputDialog.onBackButton()
+
+    if messageDialog = @interface.getView PAA.Pixeltosh.OS.Interface.MessageDialog
+      return result if result = messageDialog.onBackButton()
+
     # Relay to the active program.
     return unless activeProgram = @activeProgram()
     return result if result = activeProgram.onBackButton?()

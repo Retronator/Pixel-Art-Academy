@@ -1,5 +1,5 @@
-<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork">
-  <form class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-exportartwork pixelartacademy-pixelpad-apps-drawing-portfolio-forms-form export-artwork-form">
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork">
+  <form class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworks-asset-exportartwork pixelartacademy-pixelpad-apps-drawing-portfolio-forms-form export-artwork-form">
     <div class="form-title">Export artwork form</div>
     <div class="prompt">
       Check the sizes you want to export.
@@ -9,14 +9,14 @@
         <span class="name">Original</span>
         <span class="description">Good for further editing, game use, and backup.</span>
       </div>
-      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale originalScale}}
+      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork.Scale originalScale}}
       {{#if previewScales.length}}
         <div class="category">
           <span class="name">Preview</span>
           <span class="description">General storage with a better preview.</span>
         </div>
         {{#each previewScales}}
-          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork.Scale}}
         {{/each}}
       {{/if}}
       {{#if publishingScales.length}}
@@ -25,7 +25,7 @@
           <span class="description">High resolution for posting online.</span>
         </div>
         {{#each publishingScales}}
-          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork.Scale}}
         {{/each}}
       {{/if}}
       {{#if wallpaperScales.length}}
@@ -34,7 +34,7 @@
           <span class="description">Big enough to fill your screen.</span>
         </div>
         {{#each wallpaperScales}}
-          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork.Scale}}
         {{/each}}
       {{/if}}
     </div>
@@ -57,7 +57,7 @@
   </form>
 </template>
 
-<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork.Scale">
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork.Scale">
   <label class="scale">
     <div class="selection"><input type="checkbox" class="factor-input" data-factor="{{factor}}"><span class="checkmark"></span></div>
     <div class="factor">{{factor}}x {{#if factorDescription}}({{factorDescription}}){{/if}}</div>

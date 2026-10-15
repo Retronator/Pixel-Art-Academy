@@ -57,7 +57,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     
     @window = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
     
-    @projectId = new ComputedField => PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
+    @projectId = new ComputedField => @data()?.projectId
     
     @project = new ComputedField =>
       return unless projectId = @projectId()
@@ -342,6 +342,12 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
 
     @_cursor.remove() unless @animating()
   
+  projectEditable: -> PAA.Pico8.Cartridges.Invasion.Project.editable()
+  
+  projectName: -> @project()?.name or "Invasion"
+  
+  projectNameMaxLength: -> PAA.Practice.Project.nameMaxLength
+  
   getDesignValue: (property) ->
     _.nestedProperty @design(), property
     
@@ -371,6 +377,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     super(arguments...).concat
       'click': @onClick
       'click .asset-image': @onClickAssetImage
+      'change .project-name': @onChangeProjectName
       
   onClick: (event) ->
     $target = $(event.target)
@@ -389,9 +396,21 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     # Find the bitmap ID for this entity.
     project = @project()
     asset = _.find project.assets, (asset) => asset.id is "PixelArtAcademy.Pico8.Cartridges.Invasion.#{entity}"
+
+    # Activate the project to be edited (if needed).
+    PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId', project._id
     
     @pixelPadOS.go PAA.PixelPad.Apps.Drawing.url(), asset.bitmapId
   
+  onChangeProjectName: (event) ->
+    return unless @projectEditable()
+    return unless projectId = @projectId()
+    
+    # Use the same naming behavior as the portfolio, including clearing an empty name.
+    assetsProvider = new PAA.Practice.Project.AssetsProvider null, projectId
+    assetsProvider.setName event.currentTarget.value
+    event.currentTarget.value = @projectName()
+    
   class @Property extends AM.DataInputComponent
     constructor: ->
       super arguments...

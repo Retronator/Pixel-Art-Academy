@@ -22,6 +22,8 @@ class PAA.Practice.Project extends AM.Document
     
   @enablePersistence()
   @enableDatabaseContent()
+  
+  @nameMaxLength = 45
 
   # Subscriptions
 

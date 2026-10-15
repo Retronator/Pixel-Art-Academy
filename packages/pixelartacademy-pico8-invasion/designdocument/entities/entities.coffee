@@ -35,27 +35,27 @@ class DesignDocument.Entities extends AM.Component
       PAA.Pico8.Cartridges.Invasion.Shield
     ]
     
-    @projectThing = new ComputedField =>
-      @_projectThing?.destroy()
-      return unless projectId = @designDocument.projectId()
-      @_projectThing = Tracker.nonreactive => new PAA.Pico8.Cartridges.Invasion.Project projectId
-      @_projectThing
+    @projectThing = new ComputedField => PAA.Pico8.Cartridges.Invasion.Project.getWorkbenchInstance()
     
-    @_assets = []
-    @assets = new ComputedField =>
-      entity.destroy() for entity in @_assets
+    @assetsProvider = new ComputedField =>
       return unless projectThing = @projectThing()
+      return unless projectId = @designDocument.projectId()
+      projectThing.getAssetsProvider projectId
+    
+    @_assets = {}
+    
+    @assets = new ComputedField =>
+      return unless assetsProvider = @assetsProvider()
       
-      @_assets = for entityClass in @assetClasses
-        Tracker.nonreactive => new entityClass projectThing
+      for assetClass in @assetClasses
+        @_assets[assetClass.id()] ?= Tracker.nonreactive => new assetClass assetsProvider
         
-      @_assets
+      _.values @_assets
       
   onDestroyed: ->
     super arguments...
     
-    @_projectThing.destroy()
-    entity.destroy() for entity in @_assets
+    asset.destroy() for assetId, asset of @_assets
   
   canAddEntity: ->
     return unless project = @designDocument.project()
@@ -101,18 +101,6 @@ class DesignDocument.Entities extends AM.Component
     ]
     
     _.without entities, undefined
-  
-  chosenText: ->
-    choice = @data()
-    value = @value()
-    
-    option = _.find choice.options, (option) => value is option.value
-    
-    unless option
-      console.warn "No option found for value", value, choice
-      return
-      
-    option.text
   
   events: ->
     super(arguments...).concat

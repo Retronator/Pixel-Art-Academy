@@ -100,7 +100,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
             return
             
           for variant in cartridge.variants
-            if variant.cartridge.options.projectId is gameSlugOrProjectId
+            if variant.cartridge.options?.projectId is gameSlugOrProjectId
               @selectedCartridge cartridge
               @selectedCartridgeVariant variant
               @selectedCartridgeVariantIndex cartridge.variants.indexOf variant
@@ -221,7 +221,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     cartridge = @currentData()
     topVariant = _.last cartridge.variants
     
-    if projectId = topVariant.cartridge.options.projectId
+    if projectId = topVariant.cartridge.options?.projectId
       AB.Router.changeParameter 'parameter3', projectId
     
     else

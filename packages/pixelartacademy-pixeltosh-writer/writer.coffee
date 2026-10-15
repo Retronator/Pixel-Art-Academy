@@ -20,22 +20,8 @@ class PAA.Pixeltosh.Programs.Writer extends PAA.Pixeltosh.Program
 
   @initialize()
   
-  constructor: ->
-    super arguments...
-    
-    @file = new ReactiveField null
-  
   load: (file) ->
     super arguments...
-    
-    file ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: "#{PAA.Pico8.Cartridges.Invasion}.DesignDocument"
-      path: 'Document'
-      data: =>
-        documentComponentId: PAA.Pico8.Cartridges.Invasion.DesignDocument.id()
-        projectId: AB.Router.getParameter('projectId') or AB.Router.getParameter('parameter4') or PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-    
-    @file file
     
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData file
   

@@ -6,8 +6,8 @@ LOI = LandsOfIllusions
 
 Extras = PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ChangeArtwork extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ChangeArtwork'
+class PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ChangeArtwork extends AM.Component
+  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ChangeArtwork'
   @initializeDataComponent()
   
   constructor: (@artworkAsset) ->

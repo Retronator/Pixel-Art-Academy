@@ -24,11 +24,22 @@ class LOI.Adventure.Situation
 
     # Now apply all current scene modifications that apply to this time and place.
     scenes = []
+    locationClass = _.thingClass location
 
     for scene in LOI.adventure.currentScenes()
-      # We compare IDs since we can get in a class or an instance.
-      locationClass = _.thingClass location
-      sceneLocationClass = _.thingClass scene.location()
+      sceneLocation = scene.location()
+
+      if sceneLocation
+        if _.isArray sceneLocation
+          sceneLocationClass = (_.thingClass sceneLocation for sceneLocation in sceneLocation)
+          
+        else
+          sceneLocationClass = _.thingClass sceneLocation
+
+      else
+        sceneLocationClass = null
+
+      # We can either not have a location specified (which means it is always present), or the location needs to match.
       validLocation = not sceneLocationClass or (locationClass is sceneLocationClass) or (locationClass in sceneLocationClass)
 
       sceneTimelineId = scene.timelineId()

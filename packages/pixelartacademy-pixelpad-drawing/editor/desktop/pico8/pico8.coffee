@@ -40,7 +40,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
 
     @cartridge = new ComputedField =>
       return unless asset = @desktop.activeAsset()
-      asset.project?.pico8Cartridge
+      asset.assetsProvider?.project?.pico8Cartridge
       
     # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
     @autorun (computation) =>

@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent'
+class PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ClipboardComponent extends AM.Component
+  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ClipboardComponent'
   @initializeDataComponent()
   
   constructor: (@artworkAsset) ->
@@ -157,7 +157,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       pixelScale: 1
     
     LOI.adventure.interface.focusArtworks [artworkWithEmbeddedImage],
-      captionComponentClass: PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ArtworkCaption
+      captionComponentClass: PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ArtworkCaption
   
   class @Title extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title'

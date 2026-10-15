@@ -99,6 +99,7 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       @unlockingEntity = null # Override which entity unlocks the asset.
       
       status: ->
+        return LM.Content.Status.Unlocked if PAA.Pico8.Cartridges.Invasion.Project.editable()
         return LM.Content.Status.Unavailable unless projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
         return LM.Content.Status.Unavailable unless project = PAA.Practice.Project.documents.findOne projectId
         return LM.Content.Status.Unavailable unless entities = project.design.entities

@@ -134,7 +134,7 @@ class LM.Interface extends LM.Interface
       
       activeGroup = _.last portfolio.activeGroups()
       activeThing = activeGroup.thing
-      return unless course = activeThing?.content().course
+      return unless course = activeThing?.content()?.course
       
       if course instanceof LM.Intro.Tutorial.Content.Course
         # Intro

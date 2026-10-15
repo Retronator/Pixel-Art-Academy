@@ -13,4 +13,14 @@ class Writer.Interface.Editor extends LOI.View
     super arguments...
     
     @os = @interface.parent
-    @writer = @os.getProgram Writer
+    @interfaceWindow = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
+
+    # Rename the window title to the document name.
+    @autorun (computation) =>
+      return unless documentFileId = @data().get 'documentFileId'
+      return unless documentFile = @os.fileSystem.getFileForId documentFileId
+      documentName = documentFile.name()
+
+      Tracker.nonreactive => @interfaceWindow.data().set 'title.text', documentName
+
+  documentData: -> @data().get 'documentData'

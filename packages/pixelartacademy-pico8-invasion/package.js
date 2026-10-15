@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-pico8');
+  api.use('retronator:pixelartacademy-pixeltosh');
 
   api.export('PixelArtAcademy');
 
@@ -21,10 +22,12 @@ Package.onUse(function(api) {
 
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('assetsprovider');
 
   api.addComponent('designdocument..');
   api.addFile('designdocument/designdocument-design');
   api.addFile('designdocument/asset');
+  api.addFile('designdocument/file');
   api.addComponent('designdocument/choice..');
   api.addComponent('designdocument/entities..');
   api.addComponent('designdocument/portfoliocomponent..');

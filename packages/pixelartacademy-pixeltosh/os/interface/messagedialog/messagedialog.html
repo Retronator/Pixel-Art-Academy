@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.Pixeltosh.OS.Interface.MessageDialog">
+  <div class="pixelartacademy-pixeltosh-os-interface-messagedialog">
+    <div class="dialog pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="message">{{message}}</div>
+      <div class="actions">
+        {{#each buttons}}
+          <button type="button" class="dialog-button pixelartacademy-pixeltosh-os-interface-button">{{text}}</button>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</template>

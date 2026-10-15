@@ -79,6 +79,11 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
     ,
       sort:
         startTime: 1
+        
+  @getWorkbenchInstance: ->
+    situation = new LOI.Adventure.Situation location: PAA.Practice.Project.Workbench
+    
+    _.find situation.things(), (project) => project instanceof @
   
   constructor: ->
     super arguments...
@@ -93,7 +98,7 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
     super arguments...
 
     @_translationSubscription.stop()
-    assetsProvider.destroy() for assetsProvider in @_assetsProviders
+    assetsProvider.destroy() for assetsProviderId, assetsProvider of @_assetsProviders
 
   assetsProviders: ->
     projects = PAA.Practice.Project.documents.fetch
@@ -125,6 +130,10 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
     @constructor.end()
 
   createAssetsProvider: (properties = {}) ->
+    if @activeAssetsProvider()
+      @deactivateAssetsProvider()
+      await _.waitForFlush()
+    
     @constructor.start properties
 
   duplicateAssetsProvider: (assetsProvider, properties = {}) ->

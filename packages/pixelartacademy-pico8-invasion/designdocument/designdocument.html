@@ -2,7 +2,13 @@
   <div class="pixelartacademy-pico8-cartridges-invasion-designdocument {{animatingClass}}">
     <article>
       <hgroup class="title" data-unit="title">
-        <h1>Invasion</h1>
+        <h1>
+          {{#if projectEditable}}
+            <input class="project-name" type="text" value="{{projectName}}" maxlength="{{projectNameMaxLength}}" />
+          {{else}}
+            {{projectName}}
+          {{/if}}
+        </h1>
         <p>Design document</p>
       </hgroup>
       <h2 data-unit="game-concept-header">1. Game Concept</h2>

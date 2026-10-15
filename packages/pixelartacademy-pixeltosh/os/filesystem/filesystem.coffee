@@ -41,12 +41,8 @@ class PAA.Pixeltosh.OS.FileSystem extends LOI.Adventure.Location
 
   files: -> @currentFilesSituation().things()
   
-  getFileForPath: (path) ->
-    # Try to find a file with this path.
-    return file for file in @files() when file.path() is path
-    
-    # Return a folder instead.
-    @getFolderForPath path
+  getFileForId: (fileId) ->
+    _.find @files(), (file) => file.id() is fileId
   
   getFolderForPath: (path) ->
     @_folders[path] ?= new PAA.Pixeltosh.OS.FileSystem.File

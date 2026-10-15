@@ -7,7 +7,7 @@ DesignDocument = PAA.Pico8.Cartridges.Invasion.DesignDocument
 
 class DesignDocument.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Asset'
-  @type: -> @Types.None
+  @type: -> PAA.Practice.Asset.Types.None
   
   @displayName: -> "Design Document"
 
@@ -24,7 +24,7 @@ class DesignDocument.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   
   @initialize()
   
-  constructor: ->
+  constructor: (@assetsProvider) ->
     super arguments...
     
     # Subscribe to this asset's translations.
@@ -37,6 +37,8 @@ class DesignDocument.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
     @_translationSubscription.stop()
 
   id: -> @constructor.id()
+
+  variantId: -> @assetsProvider.id()
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
@@ -55,10 +57,10 @@ class DesignDocument.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
     pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
     pixelPad.os.go PAA.PixelPad.Apps.Pixeltosh.url()
     
-    Tracker.autorun (computation) ->
+    Tracker.autorun (computation) =>
       return unless pixeltoshOS = PAA.PixelPad.Apps.Pixeltosh.getOS()
       computation.stop()
       
       writer = pixeltoshOS.getProgram PAA.Pixeltosh.Programs.Writer
-      file = pixeltoshOS.fileSystem.getFileForPath 'Invasion/Invasion Design Document'
+      file = pixeltoshOS.fileSystem.getFileForId "#{DesignDocument.id()}.#{@variantId()}"
       pixeltoshOS.loadProgram writer, file

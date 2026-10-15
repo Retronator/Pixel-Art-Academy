@@ -26,6 +26,8 @@ Package.onUse(function(api) {
   // Interface needs to be added before programs.
   api.addFile('os/interface..');
   api.addComponent('os/interface/errordialog..');
+  api.addComponent('os/interface/inputdialog..');
+  api.addComponent('os/interface/messagedialog..');
   api.addComponent('os/interface/cursor..');
   api.addComponent('os/interface/titlebar..');
   api.addComponent('os/interface/window..');
@@ -55,14 +57,19 @@ Package.onUse(function(api) {
   api.addFile('program/finder/actions..');
   api.addFile('program/finder/actions/about');
   api.addFile('program/finder/actions/open');
+  api.addFile('program/finder/actions/delete');
   api.addFile('program/finder/actions/close');
   api.addFile('program/finder/actions/closeall');
 
   api.addFile('os/filesystem..');
   api.addFile('os/filesystem/file');
+  api.addFile('os/filesystem/projectfile');
   api.addFile('os/filesystem/filetypes..');
   api.addFile('os/filesystem/filetypes/disk');
   api.addFile('os/filesystem/filetypes/folder');
+
+  api.addFile('program/newproject..');
+  api.addFile('program/newproject/file');
 
   api.addFile('pages..');
   api.addComponent('pages/pixeltosh..');

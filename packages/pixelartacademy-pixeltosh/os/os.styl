@@ -9,9 +9,14 @@
   overflow hidden
   cursor none
   transform translateX(0)
+  caret-color black
 
   *
     cursor none !important
+
+    &::selection
+      color white
+      background black
 
   .fatamorgana-interface
     .fatamorgana-menu

@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent'
+class PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.PortfolioComponent extends AM.Component
+  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.PortfolioComponent'
 
   constructor: (@artworkAsset) ->
     super arguments...

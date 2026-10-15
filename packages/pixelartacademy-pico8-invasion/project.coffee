@@ -17,6 +17,12 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
   
   @fullName: -> "Invasion game"
 
+  @assetsProviderClass: -> @AssetsProvider
+
+  @visible: -> LM.Design.Fundamentals.Goals.Invasion.Start.completed()
+
+  @editable: -> LM.Design.Fundamentals.Goals.Invasion.completed()
+
   @initialize()
 
   constructor: ->
@@ -24,43 +30,11 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
     
     @pico8Cartridge = new PAA.Pico8.Cartridges.Invasion
 
-    @_assets = {}
-    @_assetsUpdatedDependency = new Tracker.Dependency()
-
-    @_designDocumentAsset = Tracker.nonreactive => new PAA.Pico8.Cartridges.Invasion.DesignDocument.Asset @
-    
-    @autorun (computation) =>
-      return unless activeProjectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-      return unless project = PAA.Practice.Project.documents.findOne activeProjectId
-      
-      for asset in project.assets when not @_assets[asset.id]
-        assetClass = PAA.Practice.Asset.getClassForId asset.id
-        @_assets[asset.id] = Tracker.nonreactive => new assetClass @
-        
-      for assetId, asset of @_assets when not _.find project.assets, (projectAsset) => projectAsset.id is assetId
-        asset.destroy()
-        delete @_assets[assetId]
-      
-      @_assetsUpdatedDependency.changed()
-
-    @pico8Cartridge = new PAA.Pico8.Cartridges.Invasion
-
   destroy: ->
     super arguments...
     
     @pico8Cartridge.destroy()
 
-    @_designDocumentAsset.destroy()
-    asset.destroy() for assetId, asset of @_assets
-    
-  assets: ->
-    @_assetsUpdatedDependency.depend()
-    
-    [
-      _.values(@_assets)...
-      @_designDocumentAsset
-    ]
-    
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter LM.Design.Fundamentals
     chapter.getContent LM.Design.Fundamentals.Content.Projects.Invasion

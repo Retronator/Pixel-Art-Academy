@@ -94,7 +94,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
     @_endEvents()
     
   _endEvents: ->
-    $(document).off '.pixelartacademy-pixeltosh-os-interface-window'
+    $(document).off '.pixelartacademy-pixeltosh-os-interface-scrollablearea'
   
   programViewActive: ->
     programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
@@ -353,8 +353,8 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
     ,
       scrollDelay * 1000
     
-    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
-      $document.off '.pixelartacademy-pixeltosh-os-interface-window'
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-scrollablearea', (event) =>
+      @_endEvents()
       
       Meteor.clearInterval @_scrollInterval
 
@@ -368,7 +368,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
     # Wire dragging handlers.
     $document = $(document)
     
-    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window',  (event) =>
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-scrollablearea',  (event) =>
       return unless coordinates = cursor.coordinates()
       
       scrollAreaDelta = coordinates.y - dragStartCoordinates.y
@@ -377,7 +377,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
       @scrollbarMoveDelta
         top: Math.round scrollAreaDelta / scrollAreaSpan * contentSpan
 
-    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-scrollablearea', (event) =>
       # End drag mode.
       @_endEvents()
 
@@ -394,7 +394,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
     # Wire dragging handlers.
     $document = $(document)
     
-    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-scrollablearea', (event) =>
       return unless coordinates = cursor.coordinates()
       
       scrollAreaDelta = coordinates.x - dragStartCoordinates.x
@@ -403,7 +403,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
       @scrollbarMoveDelta
         left: Math.round scrollAreaDelta / scrollAreaSpan * contentSpan
     
-    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-scrollablearea', (event) =>
       # End drag mode.
       @_endEvents()
       

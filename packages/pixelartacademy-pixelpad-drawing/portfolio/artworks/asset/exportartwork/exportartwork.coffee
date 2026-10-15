@@ -9,8 +9,8 @@ Extras = PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
 
 JSZip = require 'jszip'
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork'
+class PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork extends AM.Component
+  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset.ExportArtwork'
   @initializeDataComponent()
   
   constructor: (@artworkAsset) ->

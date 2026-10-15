@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
+class PAA.PixelPad.Apps.Drawing.Portfolio.Artworks.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   constructor: (@artworkId) ->
     super arguments...
     

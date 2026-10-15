@@ -24,11 +24,18 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     
     @openFolders = {}
     
-    @selectedPath = new ReactiveField null
+    @selectedFolderPath = new ReactiveField null
+    @selectedFileId = new ReactiveField null
     
+    # Note: Selected file can also be a folder, which means the icon in finder that represents the folder.
     @selectedFile = new ComputedField =>
-      return unless selectedPath = @selectedPath()
-      @os.fileSystem.getFileForPath selectedPath
+      if selectedFileId = @selectedFileId()
+        return @os.fileSystem.getFileForId selectedFileId
+        
+      else if selectedFolderPath = @selectedFolderPath()
+        return @os.fileSystem.getFolderForPath selectedFolderPath
+        
+      null
   
   load: ->
     @os.addWindow @constructor.Desktop.createInterfaceData()
@@ -42,7 +49,11 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     caption: 'File'
     items: [
       PAA.Pixeltosh.Programs.Finder.Actions.Open.id()
-      null
+      PAA.Pixeltosh.Programs.Finder.Actions.Delete.id()
+    ]
+  ,
+    caption: 'Window'
+    items: [
       PAA.Pixeltosh.Programs.Finder.Actions.Close.id()
       PAA.Pixeltosh.Programs.Finder.Actions.CloseAll.id()
     ]
@@ -70,8 +81,14 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
   deregisterFolderWindow: (path) ->
     delete @openFolders[path]
   
-  selectPath: (path) ->
-    @selectedPath path
+  selectFolderPath: (path) ->
+    @selectedFolderPath path
+    @selectedFileId null
+
+  selectFile: (file) ->
+    @selectedFolderPath if file.type() is PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder then file.path() else null
+    @selectedFileId file.id()
     
   deselect: ->
-    @selectedPath null
+    @selectedFolderPath null
+    @selectedFileId null

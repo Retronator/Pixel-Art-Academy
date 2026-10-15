@@ -46,6 +46,9 @@ class FM.Interface extends FM.Interface
       # Iterate over all array items.
       return _.flatten (@_collectOperatorIds item, possibleValues for item in source)
 
+    else if _.isFunction source
+      return []
+      
     else if _.isObject source
       # Iterate over all properties.
       return _.flatten (@_collectOperatorIds value, possibleValues for key, value of source)

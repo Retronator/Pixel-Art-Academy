@@ -6,14 +6,14 @@ PAA = PixelArtAcademy
 Invasion = PAA.Pico8.Cartridges.Invasion
 
 class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Pico8.Cartridges.Invasion.Project
-  @start: ->
+  @start: (properties = {}) ->
     super arguments...
     
     profileId = LOI.adventure.profileId()
     creationTime = new Date()
     
     # Create the project.
-    projectId = PAA.Practice.Project.documents.insert
+    projectId = PAA.Practice.Project.documents.insert _.extend {}, properties,
       startTime: creationTime
       lastEditTime: creationTime
       type: PAA.Pico8.Cartridges.Invasion.Project.id()

@@ -46,12 +46,15 @@ Package.onUse(function(api) {
   api.addStyleImport('portfolio/forms/form');
   api.addComponent('portfolio/forms/extras..');
 
-  api.addFile('portfolio/artworkasset..');
-  api.addComponent('portfolio/artworkasset/portfoliocomponent..');
-  api.addComponent('portfolio/artworkasset/clipboardcomponent..');
-  api.addComponent('portfolio/artworkasset/changeartwork..');
-  api.addComponent('portfolio/artworkasset/exportartwork..');
-  api.addComponent('portfolio/artworkasset/artworkcaption..');
+  api.addFile('portfolio/artworks..');
+  api.addFile('portfolio/artworks/section');
+  api.addFile('portfolio/artworks/workinprogress');
+  api.addFile('portfolio/artworks/asset..');
+  api.addComponent('portfolio/artworks/asset/portfoliocomponent..');
+  api.addComponent('portfolio/artworks/asset/clipboardcomponent..');
+  api.addComponent('portfolio/artworks/asset/changeartwork..');
+  api.addComponent('portfolio/artworks/asset/exportartwork..');
+  api.addComponent('portfolio/artworks/asset/artworkcaption..');
 
   api.addFile('portfolio/newartwork..');
   api.addComponent('portfolio/newartwork/portfoliocomponent..');

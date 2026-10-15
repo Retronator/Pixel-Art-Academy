@@ -54,6 +54,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     
     @interfaceWindow = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
     @interfaceWindow.changed.addHandler @, @onWindowChanged
+    @scrollableArea = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.ScrollableArea
     
     @folderPath = =>
       folderData = @data()
@@ -76,6 +77,10 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     
     @interfaceWindow.changed.removeHandler @, @onWindowChanged
   
+  folderStyle: ->
+    # Fill the window height.
+    minHeight: "#{@scrollableArea.contentAreaSize().height}rem"
+
   files: ->
     folderPath = @folderPath()
     folderPathFolders = folderPath.split '/'
@@ -122,4 +127,4 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
   onPointerDownFolder: (event) ->
     return if $(event.target).closest('.file-button').length
     
-    @finder.selectPath @folderPath()
+    @finder.selectFolderPath @folderPath()

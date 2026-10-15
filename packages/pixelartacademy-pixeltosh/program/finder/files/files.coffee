@@ -15,7 +15,7 @@ class PAA.Pixeltosh.Programs.Finder.Files extends AM.Component
   
   selectedClass: ->
     file = @currentData()
-    'selected' if @finder.selectedPath() is file.path()
+    'selected' if @finder.selectedFileId() is file.id()
 
   events: ->
     super(arguments...).concat
@@ -24,7 +24,7 @@ class PAA.Pixeltosh.Programs.Finder.Files extends AM.Component
  
   onPointerDownFileButton: (event) ->
     file = @currentData()
-    @finder.selectPath file.path()
+    @finder.selectFile file
   
   onDoubleClickFileButton: (event) ->
     @os.interface.getOperator(PAA.Pixeltosh.Programs.Finder.Actions.Open).execute()

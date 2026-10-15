@@ -119,7 +119,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           handleView viewId, anyToolIsAvailable
 
     @autorun (computation) =>
-      pico8Cartridge = @displayedAsset()?.project?.pico8Cartridge?
+      pico8Cartridge = @displayedAsset()?.assetsProvider?.project?.pico8Cartridge?
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
     
     @autorun (computation) =>

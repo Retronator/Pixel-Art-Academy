@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Thing extends LOI.Adventure.Thing
-  content: -> throw new AE.NotImplementedException "A practice thing must specify which content it represents."
+  content: -> null # Override if the practice thing corresponds to learning content.
 
   assets: -> null # Override if the practice thing provides assets directly.
   

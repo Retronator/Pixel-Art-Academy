@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -10,6 +11,8 @@ class LM.Design.Fundamentals.PixeltoshFiles extends LOI.Adventure.Scene
   @initialize()
   
   things: ->
+    return [] unless LM.Design.invasionEnabled()
+
     unless @_invasionDisk
       @_invasionDisk = new PAA.Pixeltosh.OS.FileSystem.File
         id: "#{PAA.Pico8.Cartridges.Invasion.id()}.Disk"
@@ -18,18 +21,18 @@ class LM.Design.Fundamentals.PixeltoshFiles extends LOI.Adventure.Scene
       
       @_invasionDisk.options.disk = @_invasionDisk
       
-    @_invasionDesignDocument ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: "#{PAA.Pico8.Cartridges.Invasion}.DesignDocument"
-      path: 'Invasion/Invasion Design Document'
-      type: PAA.Pixeltosh.Programs.Writer.TextDocument
-      disk: @_invasionDisk
-      data: =>
-        documentComponentId: PAA.Pico8.Cartridges.Invasion.DesignDocument.id()
-        projectId: PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-    
-    invasionEnabled = LM.Design.invasionEnabled()
-    
-    [
-      @_invasionDisk if invasionEnabled
-      @_invasionDesignDocument if invasionEnabled
+    files = [
+      @_invasionDisk
     ]
+    
+    @_invasionDesignDocuments ?= {}
+    
+    for project in PAA.Pico8.Cartridges.Invasion.Project.getProjects()
+      @_invasionDesignDocuments[project._id] ?= new PAA.Pico8.Cartridges.Invasion.DesignDocument.File project._id, @_invasionDisk
+      files.push @_invasionDesignDocuments[project._id]
+
+    if PAA.Pico8.Cartridges.Invasion.Project.editable()
+      @_createInvasionProject ?= new PAA.Pixeltosh.Programs.NewProject.File PAA.Pico8.Cartridges.Invasion.Project, @_invasionDisk
+      files.push @_createInvasionProject
+
+    files
