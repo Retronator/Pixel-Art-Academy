@@ -177,7 +177,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @autorun (computation) =>
       return unless lastActiveGroup = _.last @activeGroups()
 
-      if activeAssetsProviderData = lastActiveGroup.activeAssetsProvider()
+      if activeAssetsProviderData = lastActiveGroup.activeAssetsProvider?()
         lastActiveGroup.selectedAssetsProviderIndex activeAssetsProviderData.index
 
     # Displayed asset retains its value until another asset gets activated

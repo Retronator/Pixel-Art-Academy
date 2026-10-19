@@ -21,35 +21,12 @@ class Pinball.Project extends PAA.Practice.Project.Thing
   @iconUrl: -> @versionedUrl "/pixelartacademy/pixeltosh/programs/pinball/icon-project.png"
   @program: -> Pinball
 
-  constructor: ->
-    super arguments...
+  @assetsProviderClass: -> @AssetsProvider
 
-    @_assets = {}
-    @_assetsUpdatedDependency = new Tracker.Dependency()
-    
-    @autorun (computation) =>
-      activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
-      return unless project = PAA.Practice.Project.documents.findOne activeProjectId
-      
-      for asset in project.assets when not @_assets[asset.id]
-        assetClass = PAA.Practice.Asset.getClassForId asset.id
-        @_assets[asset.id] = Tracker.nonreactive => new assetClass @
-        
-      for assetId, asset of @_assets when not _.find project.assets, (projectAsset) => projectAsset.id is assetId
-        asset.destroy()
-        delete @_assets[assetId]
-      
-      @_assetsUpdatedDependency.changed()
+  @visible: -> PAA.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Pinball.OpenPinballMachine.completed()
 
-  destroy: ->
-    super arguments...
-    
-    asset.destroy() for assetId, asset of @_assets
-    
-  assets: ->
-    @_assetsUpdatedDependency.depend()
-    _.values @_assets
-    
+  @editable: -> PAA.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Pinball.PlayGate.completed()
+
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals
     chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball

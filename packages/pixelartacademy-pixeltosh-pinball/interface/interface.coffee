@@ -5,6 +5,7 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Interface
   @Layouts:
+    Splash: 'Splash'
     Editor: 'Editor'
     OrthographicPlay: 'OrthographicPlay'
     PerspectivePlay: 'PerspectivePlay'
@@ -18,18 +19,29 @@ class Pinball.Interface
     ,
       caption: 'File'
       items: [
+        Pinball.Interface.Actions.New.id()
+        Pinball.Interface.Actions.Open.id()
+        null
+        Pinball.Interface.Actions.Save.id()
+        Pinball.Interface.Actions.Rename.id()
+        Pinball.Interface.Actions.Duplicate.id()
+        Pinball.Interface.Actions.DeleteMachine.id()
+        null
+        PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
+      ]
+    ,
+      caption: 'Machine'
+      items: [
         Pinball.Interface.Actions.Edit.id()
         Pinball.Interface.Actions.Test.id()
         Pinball.Interface.Actions.Play.id()
         null
         Pinball.Interface.Actions.Reset.id()
-        null
-        PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
       ]
     ,
-      caption: 'Edit'
+      caption: 'Part'
       items: [
-        Pinball.Interface.Actions.Delete.id()
+        Pinball.Interface.Actions.DeletePart.id()
         Pinball.Interface.Actions.Flip.id()
         Pinball.Interface.Actions.RotateClockwise.id()
         Pinball.Interface.Actions.RotateCounterClockwise.id()
@@ -53,7 +65,7 @@ class Pinball.Interface
     "#{Pinball.Interface.Actions.Test.id()}": key: AC.Keys.t
     "#{Pinball.Interface.Actions.Play.id()}": key: AC.Keys.p
     "#{Pinball.Interface.Actions.Reset.id()}": key: AC.Keys.r
-    "#{Pinball.Interface.Actions.Delete.id()}": [{key: AC.Keys.delete}, {key: AC.Keys.backspace}]
+    "#{Pinball.Interface.Actions.DeletePart.id()}": [{key: AC.Keys.delete}, {key: AC.Keys.backspace}]
     "#{Pinball.Interface.Actions.Flip.id()}": commandOrControl: true, key: AC.Keys.f
     "#{Pinball.Interface.Actions.RotateClockwise.id()}": commandOrControl: true, key: AC.Keys.r
     "#{Pinball.Interface.Actions.RotateCounterClockwise.id()}": commandOrControl: true, shift: true, key: AC.Keys.r
@@ -73,6 +85,8 @@ class Pinball.Interface
     bottom: 0
     
   @determineLayout: (pinball) ->
+    return @Layouts.Splash unless pinball.projectId()
+
     switch pinball.cameraManager()?.displayType()
       when Pinball.CameraManager.DisplayTypes.Orthographic
         switch pinball.gameManager()?.mode()
@@ -86,6 +100,9 @@ class Pinball.Interface
         @Layouts.PerspectivePlay
     
   @createLayoutsData: ->
+    "#{@Layouts.Splash}":
+      contentComponentId: @Splash.id()
+    
     "#{@Layouts.Editor}":
       type: FM.SplitView.id()
       fixed: true

@@ -47,9 +47,14 @@ class Pinball.SceneManager
     
     @_parts = []
     @parts = new ReactiveField @_parts
+    
+    @_constructed = new ReactiveField false
 
     # Instantiate playfield parts based on the data.
     @_partsAutorun = @pinball.autorun =>
+      # Don't run before the scene manager is prepared.
+      return unless @_constructed()
+      
       remainingPlayfieldPartIds = (part.playfieldPartId for part in @_parts)
 
       return unless newPartsData = @pinball.partsData()
@@ -114,6 +119,8 @@ class Pinball.SceneManager
       return unless partsData = @pinball.partsData()
       return unless _.keys(partsData).length is parts.length
       _.every parts, (part) => part.ready()
+    
+    @_constructed true
     
   destroy: ->
     @_partsAutorun.stop()

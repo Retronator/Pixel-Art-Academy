@@ -52,7 +52,7 @@ class LM.Intro.Tutorial extends LM.Chapter
     # Create the first snake project when the play task has been completed.
     @_createSnakeProjectAutorun = Tracker.autorun (computation) =>
       return unless LM.Intro.Tutorial.Goals.Snake.Play.completed()
-      return if PAA.Pico8.Cartridges.Snake.Project.hasProjects()
+      return if PAA.Pico8.Cartridges.Snake.Project.currentProfileHasProjects()
       return if LM.Intro.Tutorial.Goals.Snake.Draw.completed()
 
       await PAA.Pico8.Cartridges.Snake.Project.start()

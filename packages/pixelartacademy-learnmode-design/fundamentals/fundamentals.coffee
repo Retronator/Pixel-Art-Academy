@@ -34,7 +34,7 @@ class LM.Design.Fundamentals extends LM.Chapter
     @_createInvasionProjectAutorun = Tracker.autorun (computation) =>
       return unless LOI.adventure.gameStateAvailable()
       return unless LM.Design.invasionEnabled()
-      return if PAA.Pico8.Cartridges.Invasion.Project.hasProjects()
+      return if PAA.Pico8.Cartridges.Invasion.Project.currentProfileHasProjects()
       return if PAA.Pico8.Cartridges.Invasion.Project.editable()
       
       PAA.Pico8.Cartridges.Invasion.Project.start()

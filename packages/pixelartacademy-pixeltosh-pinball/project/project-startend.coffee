@@ -7,7 +7,7 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 class Pinball.Project extends Pinball.Project
   @initialize()
   
-  @start: ->
+  @start: (properties = {}) ->
     super arguments...
 
     profileId = LOI.adventure.profileId()
@@ -16,7 +16,7 @@ class Pinball.Project extends Pinball.Project
     # Create the project.
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
-    projectId = PAA.Practice.Project.documents.insert
+    projectId = PAA.Practice.Project.documents.insert _.extend {}, properties,
       startTime: creationTime
       lastEditTime: creationTime
       type: @id()

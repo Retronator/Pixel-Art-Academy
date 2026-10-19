@@ -25,6 +25,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
     @PlayBumper
     @DrawGate
     @PlayGate
+    @DuplicateProject
     @RemoveGobbleHoles
     @DrawFlipper
     @PlayFlipper

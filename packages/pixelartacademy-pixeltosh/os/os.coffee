@@ -1,6 +1,7 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
 AEc = Artificial.Echo
+FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -208,7 +209,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
     _.last(sortedWindows)?.order or 0
 
   onBackButton: ->
-    # Relay to the error dialog.
+    # Relay to the dialogs.
     if errorDialog = @interface.getView PAA.Pixeltosh.OS.Interface.ErrorDialog
       return result if result = errorDialog.onBackButton?()
     
@@ -217,6 +218,10 @@ class PAA.Pixeltosh.OS extends LOI.Component
 
     if messageDialog = @interface.getView PAA.Pixeltosh.OS.Interface.MessageDialog
       return result if result = messageDialog.onBackButton()
+
+    # Close any open menus.
+    if menuDropdown = @interface.getView FM.Menu.Dropdown
+      @interface.closeDialog menuDropdown.data()
 
     # Relay to the active program.
     return unless activeProgram = @activeProgram()

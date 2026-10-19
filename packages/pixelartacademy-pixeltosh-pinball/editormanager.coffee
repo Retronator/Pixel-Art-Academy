@@ -53,55 +53,12 @@ class Pinball.EditorManager
                       x: 173.5 * pixelSize
                       z: 189.5 * pixelSize
                   lastEditTime: new Date
-                  
-          # Re-link any missing assets up to the current task.
-          PinballGoal = LM.PixelArtFundamentals.Fundamentals.Goals.Pinball
-          
-          for taskClass, taskIndex in PinballGoal.tasks()
-            
-            if taskClass.prototype instanceof PinballGoal.AssetsTask
-              assetsMissing = false
-              
-              for assetClass in taskClass.unlockedAssets()
-                assetId = assetClass.id()
-                continue if _.find project.assets, (asset) => asset.id is assetId
-
-                console.warn "Missing pinball asset detected! Trying to find an existing one …", assetId
-                
-                # See if there is a bitmap available with this asset's name.
-                name = assetClass.displayName()
-                fixedDimensions = assetClass.fixedDimensions()
-                
-                existingBitmap = LOI.Assets.Bitmap.documents.findOne
-                  name: name
-                  'bounds.width': fixedDimensions.width
-                  'bounds.height': fixedDimensions.height
-                  
-                if existingBitmap
-                  console.warn "Found it! Adding it to the project.", existingBitmap._id
-                  
-                  PAA.Practice.Project.documents.update projectId,
-                    $push:
-                      assets:
-                        id: assetId
-                        type: 'Bitmap'
-                        bitmapId: existingBitmap._id
-                    $set:
-                      lastEditTime: new Date
-                      
-                else
-                  console.warn "Could not found it."
-                  assetsMissing = true
-                  
-              if assetsMissing
-                # Some assets weren't found as existing bitmaps so we reactivate the task.
-                console.warn "Some assets were not found. Reactivating asset creation."
-                taskClass.onActive()
-                
-            if taskClass.getAdventureInstance().active()
-              break
       
   destroy: ->
+    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-editormanager'
+    $interface = $('.pixelartacademy-pixeltosh-program-view').closest('.fatamorgana-interface')
+    $interface.off '.pixelartacademy-pixeltosh-programs-pinball-editormanager'
+
     @_projectChangeAutorun.stop()
     @_cleanupAutorun?.stop()
     @_addPartAutorun?.stop()

@@ -57,6 +57,7 @@ Package.onUse(function(api) {
   api.addFile('program/finder/actions..');
   api.addFile('program/finder/actions/about');
   api.addFile('program/finder/actions/open');
+  api.addFile('program/finder/actions/rename');
   api.addFile('program/finder/actions/delete');
   api.addFile('program/finder/actions/close');
   api.addFile('program/finder/actions/closeall');

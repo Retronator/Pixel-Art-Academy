@@ -8,9 +8,9 @@ class PAA.Practice.Project.AssetsProvider extends PAA.Practice.AssetsProvider
 
   id: -> @projectId
   
-  projectData: -> PAA.Practice.Project.documents.findOne @projectId
+  projectDocument: -> PAA.Practice.Project.documents.findOne @projectId
 
-  name: -> @projectData()?.name
+  name: -> @projectDocument()?.name
 
   setName: (name) ->
     name = name?.trim()
@@ -27,4 +27,4 @@ class PAA.Practice.Project.AssetsProvider extends PAA.Practice.AssetsProvider
 
     PAA.Practice.Project.documents.update @projectId, modifier
 
-  assetsData: -> @projectData()?.assets
+  assetsData: -> @projectDocument()?.assets

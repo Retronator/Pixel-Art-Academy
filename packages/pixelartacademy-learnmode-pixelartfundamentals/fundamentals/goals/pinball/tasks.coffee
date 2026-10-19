@@ -366,6 +366,26 @@ class Goal.PlayGate extends Goal.Task
 
   @completedConditions: -> @playfieldHasPart Pinball.Parts.Gate
   
+class Goal.DuplicateProject extends Goal.Task
+  @id: -> "#{Goal.id()}.DuplicateProject"
+  @goal: -> Goal
+
+  @directive: -> "Duplicate your pinball machine"
+
+  @instructions: -> """
+    The time of mechanical pinball machines is coming to an end.
+    In the Pinball Creation Kit on the Pixeltosh, use the File menu to save the current version of your machine.
+    Then use the Duplicate command to start working on a new version that will take you into the future.
+  """
+
+  @predecessors: -> [Goal.PlayGate]
+
+  @studyPlanBuilding: -> 'TransportTycoonHouses1'
+
+  @initialize()
+
+  @completedConditions: -> PAA.Pixeltosh.Programs.Pinball.Project.getCurrentProfileProjects().length > 1
+
 class Goal.RemoveGobbleHoles extends Goal.Task
   @id: -> "#{Goal.id()}.RemoveGobbleHoles"
   @goal: -> Goal
@@ -373,11 +393,10 @@ class Goal.RemoveGobbleHoles extends Goal.Task
   @directive: -> "Remove gobble holes"
 
   @instructions: -> """
-    The time of mechanical pinball machines is coming to an end.
-    With new ways to score points, remove the gobble holes from the playfield to make way for flippers.
+    With new ways to score points, remove the gobble holes from the playfield in your new machine to make way for flippers.
   """
   
-  @predecessors: -> [Goal.PlayGate]
+  @predecessors: -> [Goal.DuplicateProject]
 
   @studyPlanBuilding: -> 'TransportTycoonHouse2'
 

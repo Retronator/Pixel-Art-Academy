@@ -11,8 +11,6 @@ class Pinball.Interface.Actions.Mode extends Pinball.Interface.Actions.Action
   
   @displayName: -> @mode()
   
-  enabled: -> true
-  
   active: -> @pinball.gameManager()?.mode() is @constructor.mode()
   
   execute: ->
@@ -22,14 +20,16 @@ class Pinball.Interface.Actions.Edit extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Edit
   @initialize()
   
-  enabled: -> @pinball.editModeUnlocked()
+  enabled: -> @pinball.projectId() and @pinball.editModeUnlocked()
   
 class Pinball.Interface.Actions.Test extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Test
   @initialize()
   
-  enabled: -> @pinball.editModeUnlocked()
+  enabled: -> @pinball.projectId() and @pinball.editModeUnlocked()
   
 class Pinball.Interface.Actions.Play extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Play
   @initialize()
+  
+  enabled: -> @pinball.projectId()

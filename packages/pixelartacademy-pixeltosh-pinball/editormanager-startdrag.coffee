@@ -35,7 +35,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
   delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
   pixelSize = Pinball.CameraManager.orthographicPixelSize
   
-  $interface.on 'pointermove.pixelartacademy-pixeltosh-programs-pinball-editormanager', _.throttle (event) =>
+  $interface.on 'pointermove.pixelartacademy-pixeltosh-programs-pinball-editormanager', throttledMove = _.throttle (event) =>
     return unless coordinates = osCursor.coordinates()
     
     part.setTemporaryPosition
@@ -47,6 +47,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
   # Wire end of dragging on pointer up anywhere in the window.
   $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-editormanager', =>
     osCursor.endClassRequests @
+    throttledMove.cancel()
 
     newPosition = part.position()
     

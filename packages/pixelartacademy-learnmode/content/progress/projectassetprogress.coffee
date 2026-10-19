@@ -8,7 +8,7 @@ class LM.Content.Progress.ProjectAssetProgress extends LM.Content.Progress
     super arguments...
 
   completed: ->
-    projects = @options.project.getProjects()
+    projects = @options.project.getCurrentProfileProjects()
     return unless projects.length
     
     for project in projects

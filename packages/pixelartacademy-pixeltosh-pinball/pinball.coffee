@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mirage
 FM = FataMorgana
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
@@ -29,6 +30,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     "
   
   @slug: -> 'pinball'
+  @projectClass: -> @Project
   
   @initialize()
   
@@ -60,7 +62,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @projectId = new AE.LiveComputedField =>
       return unless file = @openedFile()
-      file.data()
+      file.data().projectId
       
     # Try to load the project from content in case it's not the player's project.
     @autorun (computation) =>
@@ -73,8 +75,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       PAA.Practice.Project.assetsForProjectId.subscribeContent projectId
     
     @partsData = new AE.LiveComputedField =>
-      return unless projectId = @projectId()
-      return unless project = PAA.Practice.Project.documents.findOne projectId
+      return unless project = @projectDocument()
       project.playfield
     
     @debugPhysics = @state.field 'debugPhysics', default: false
@@ -90,6 +91,21 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @partsData.stop()
     @projectId.stop()
     
+  projectDocument: ->
+    return unless projectId = @projectId()
+    PAA.Practice.Project.documents.findOne projectId
+  
+  projectAssetsProvider: ->
+    return unless project = @projectDocument()
+    Pinball.Project.getWorkbenchInstance()?.getAssetsProvider project._id
+  
+  editModeUnlocked: ->
+    LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawGobbleHole.getAdventureInstance().completed()
+  
+  menuItems: -> @constructor.Interface.createMenuItems()
+  
+  shortcuts: -> @constructor.Interface.createShortcuts()
+  
   getPartData: (playfieldPartId) ->
     @partsData()?[playfieldPartId]
   
@@ -100,7 +116,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @autorun (computation) =>
       return unless osCursor = @os.cursor()
       
-      unless @sceneManager()?.ready() or not @loaded()
+      if @projectId() and @loaded() and not @sceneManager()?.ready()
         osCursor.wait @
     
       else
@@ -108,7 +124,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     file ?= new PAA.Pixeltosh.OS.FileSystem.File
       id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
-      data: => AB.Router.getParameter('projectId') or AB.Router.getParameter('parameter4') or @constructor.Project.state('activeProjectId')
+      data: =>
+        projectId: AB.Router.getParameter('projectId') or AB.Router.getParameter('parameter4') or @constructor.Project.state('activeProjectId')
     
     @openFile file
     
@@ -149,6 +166,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   unload: ->
     super arguments...
     
+    @openedFile null
+    
     @app.removeComponent @
     
     @sceneManager()?.destroy()
@@ -177,14 +196,24 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @state 'ballTravelExtents', @_ballTravelExtents
     
+  restart: (file) ->
+    @os.unloadProgram @
+    @os.loadProgram @, file
+
   openFile: (file) ->
     @openedFile file
     
-    # Progress gameplay.
-    if file.id() is "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
-      LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
+    # If the user opened their pinball machine, make it the active project and progress gameplay.
+    return unless project = @projectDocument()
+    return unless project.profileId is LOI.adventure.profileId()
+    
+    Pinball.Project.state 'activeProjectId', project._id
+    LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
       
   onBackButton: ->
+    if openDialog = @os.interface.getView Pinball.Interface.OpenDialog
+      return openDialog.onBackButton()
+
     # Pressing escape returns to edit mode if edit is unlocked.
     gameManager = @gameManager()
 
@@ -193,9 +222,6 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       
       # Inform that we've handled the back button.
       true
-    
-  editModeUnlocked: ->
-    LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawGobbleHole.getAdventureInstance().completed()
     
   update: (appTime) ->
     # Update physics.
@@ -258,7 +284,3 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime
-    
-  menuItems: -> @constructor.Interface.createMenuItems()
-  
-  shortcuts: -> @constructor.Interface.createShortcuts()

@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.OpenDialog">
+  <div class="pixelartacademy-pixeltosh-programs-pinball-interface-opendialog">
+    <div class="dialog pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="prompt">Choose pinball machine</div>
+      <div class="machines-area">
+        {{#PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea scrollbars}}
+          <ol class="machines">
+            {{#each machines}}
+              <li class="machine {{selectedClass}}">{{name}}</li>
+            {{/each}}
+          </ol>
+        {{/PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea}}
+      </div>
+      <div class="actions pixelartacademy-pixeltosh-os-interface-dialogactions">
+        <button type="button" class="open-button pixelartacademy-pixeltosh-os-interface-button" {{openDisabledAttribute}}>Open</button>
+        <button type="button" class="cancel-button pixelartacademy-pixeltosh-os-interface-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</template>

@@ -49,6 +49,7 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     caption: 'File'
     items: [
       PAA.Pixeltosh.Programs.Finder.Actions.Open.id()
+      PAA.Pixeltosh.Programs.Finder.Actions.Rename.id()
       PAA.Pixeltosh.Programs.Finder.Actions.Delete.id()
     ]
   ,

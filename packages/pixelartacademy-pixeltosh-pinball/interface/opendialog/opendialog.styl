@@ -1,0 +1,57 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-pinball-interface-opendialog
+  absolute-cover()
+
+  .dialog
+    position absolute
+    left 50%
+    top 50%
+    width 240rem
+    padding 10rem
+    transform translate(-50%, -50%)
+    chicago-mini()
+
+    .prompt
+      margin-bottom 10rem
+      text-transform uppercase
+
+    .machines-area
+      border 1rem solid black
+      background white
+      color black
+
+      .pixelartacademy-pixeltosh-os-interface-scrollablearea
+        height 100rem
+
+        .vertical-scrollbar
+          bottom -1rem
+
+        .resize-control
+          display none
+
+        .content-area
+          bottom 0
+
+          .content
+            width 100%
+
+            .machines
+              margin 0
+              padding 0
+              list-style none
+
+              .machine
+                padding 3rem
+                background white
+                color black
+                text-align left
+                overflow-wrap anywhere
+
+                &.selected
+                  background black
+                  color white
+
+    .actions
+      margin-top 10rem
+      text-align right

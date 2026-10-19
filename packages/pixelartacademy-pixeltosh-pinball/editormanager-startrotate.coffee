@@ -50,7 +50,7 @@ Pinball.EditorManager::startRotate = (part) ->
     cursorAngle = Math.atan2 coordinates.y - rotationAxis.y, coordinates.x - rotationAxis.x
     
     cursorClass = switch
-      when -Math.PI * 3 / 4 < cursorAngle > Math.PI * 3 / 4 then 'w-rotate'
+      when cursorAngle < -Math.PI * 3 / 4 or cursorAngle > Math.PI * 3 / 4 then 'w-rotate'
       when cursorAngle > Math.PI / 4 then 's-rotate'
       when cursorAngle < -Math.PI / 4 then 'n-rotate'
       else 'e-rotate'
@@ -84,7 +84,7 @@ Pinball.EditorManager::startRotate = (part) ->
   # Create a throttled delta update function to emulate a slow CPU.
   delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
   
-  $interface.on 'pointermove.pixelartacademy-pixeltosh-programs-pinball-editormanager', _.throttle (event) =>
+  $interface.on 'pointermove.pixelartacademy-pixeltosh-programs-pinball-editormanager', throttledMove = _.throttle (event) =>
     updateAngle event
   ,
     delay
@@ -98,6 +98,7 @@ Pinball.EditorManager::startRotate = (part) ->
   # Wire end of rotating on pointer up anywhere in the window.
   $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-editormanager', =>
     osCursor.endClassRequests @
+    throttledMove.cancel()
     
     newRotationAngle = part.rotationAngle()
     

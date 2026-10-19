@@ -113,6 +113,8 @@ class Pinball.CameraManager
         @_properties newProperties
         
   destroy: ->
+    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-cameramanager'
+
     @_cameraAutorun.stop()
     @_cameraRotationAutorun.stop()
     @_cameraPropertiesAutorun.stop()

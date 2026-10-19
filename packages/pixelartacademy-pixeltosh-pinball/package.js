@@ -20,8 +20,10 @@ Package.onUse(function(api) {
 
   api.addFile('pinball');
   api.addFile('assets');
-  api.addFile('project');
-  api.addFile('project-startend');
+  api.addFile('project..');
+  api.addFile('project/project-startend');
+  api.addFile('project/assetsprovider');
+  api.addFile('project/file');
   api.addFile('instructions');
 
   api.addFile('scenemanager');
@@ -82,9 +84,17 @@ Package.onUse(function(api) {
   api.addComponent('interface/settings/number..');
   api.addComponent('interface/settings/boolean..');
   api.addComponent('interface/about..');
+  api.addComponent('interface/opendialog..');
+  api.addComponent('interface/splash..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
+  api.addFile('interface/actions/new');
+  api.addFile('interface/actions/open');
+  api.addFile('interface/actions/save');
+  api.addFile('interface/actions/rename');
+  api.addFile('interface/actions/duplicate');
+  api.addFile('interface/actions/deletemachine');
   api.addFile('interface/actions/camera');
   api.addFile('interface/actions/toggledebugphysics');
   api.addFile('interface/actions/toggleslowmotion');
@@ -94,6 +104,6 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/reset');
   api.addFile('interface/actions/flip');
   api.addFile('interface/actions/rotate');
-  api.addFile('interface/actions/delete');
+  api.addFile('interface/actions/deletepart');
   api.addFile('interface/actions/about');
 });

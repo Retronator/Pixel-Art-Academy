@@ -49,7 +49,7 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
       contentSize = @contentSize()
 
       left: Math.max 0, contentSize.width - contentAreaSize.width
-      top: Math.max 0,contentSize.height - contentAreaSize.height
+      top: Math.max 0, contentSize.height - contentAreaSize.height
     
     # Create the field for indicating changes.
     @scrollbarMoveDelta = new ReactiveField null
@@ -98,11 +98,13 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
   
   programViewActive: ->
     programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
-    programView.active()
+
+    # Dialogs can contain scrollable areas without belonging to a program window.
+    if programView then programView.active() else true
     
   # Scrolling
   
-  scrollInDirection: (vertical, sign, factor=1) ->
+  scrollInDirection: (vertical, sign, factor = 1) ->
     if vertical
       @_setScrollTop @_clampedScrollTop() + Math.sign(sign) * scrollDelta * factor
       

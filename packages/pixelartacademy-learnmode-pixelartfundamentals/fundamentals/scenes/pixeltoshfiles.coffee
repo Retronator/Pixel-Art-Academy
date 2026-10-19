@@ -10,75 +10,78 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
   @initialize()
   
   things: ->
-    unless @_pinballDisk
-      @_pinballDisk = new PAA.Pixeltosh.OS.FileSystem.File
-        id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.Disk"
-        path: 'Pinball Creation Kit'
-        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+    pixeltoshFiles = []
+    
+    if LM.PixelArtFundamentals.pinballEnabled()
+      unless @_pinballDisk
+        @_pinballDisk = new PAA.Pixeltosh.OS.FileSystem.File
+          id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.Disk"
+          path: 'Pinball Creation Kit'
+          type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+        
+        @_pinballDisk.options.disk = @_pinballDisk
       
-      @_pinballDisk.options.disk = @_pinballDisk
+      pixeltoshFiles.push @_pinballDisk
       
-    @_pinballProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: PAA.Pixeltosh.Programs.Pinball.id()
-      path: 'Pinball Creation Kit/Pinball Creation Kit'
-      type: PAA.Pixeltosh.Programs.Pinball
-      disk: @_pinballDisk
-    
-    @_pinballMachine ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
-      path: 'Pinball Creation Kit/My Pinball Machine'
-      type: PAA.Pixeltosh.Programs.Pinball.Project
-      disk: @_pinballDisk
-      data: => PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
-    
-    @_moonShot ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.DemoMachines.MoonShot"
-      path: 'Pinball Creation Kit/Demo Machines/Moon Shot'
-      type: PAA.Pixeltosh.Programs.Pinball.Project
-      disk: @_pinballDisk
-      data: => 'ewzE9QPCPPLnxHvpi'
-    
-    pinballEnabled = LM.PixelArtFundamentals.pinballEnabled()
-    
-    unless @_drawQuicklyDisk
-      @_drawQuicklyDisk = new PAA.Pixeltosh.OS.FileSystem.File
-        id: "#{PAA.Pixeltosh.Programs.DrawQuickly.id()}.Disk"
-        path: 'Draw Quickly'
-        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+      @_pinballProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
+        id: PAA.Pixeltosh.Programs.Pinball.id()
+        path: 'Pinball Creation Kit/Pinball Creation Kit'
+        type: PAA.Pixeltosh.Programs.Pinball
+        disk: @_pinballDisk
       
-      @_drawQuicklyDisk.options.disk = @_drawQuicklyDisk
-    
-    @_drawQuciklyProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: PAA.Pixeltosh.Programs.DrawQuickly.id()
-      path: 'Draw Quickly/Draw Quickly'
-      type: PAA.Pixeltosh.Programs.DrawQuickly
-      disk: @_drawQuicklyDisk
+      pixeltoshFiles.push @_pinballProgram
       
-    drawQuciklyEnabled = LM.PixelArtFundamentals.drawQuicklyEnabled()
-    
-    unless @_chessDisk
-      @_chessDisk = new PAA.Pixeltosh.OS.FileSystem.File
-        id: "#{PAA.Pixeltosh.Programs.Chess.id()}.Disk"
-        path: 'Chess Academy'
-        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+      @_pinballMachines ?= {}
       
-      @_chessDisk.options.disk = @_chessDisk
+      for project in PAA.Pixeltosh.Programs.Pinball.Project.getCurrentProfileProjects()
+        @_pinballMachines[project._id] ?= new PAA.Pixeltosh.Programs.Pinball.Project.File project._id, @_pinballDisk
+        pixeltoshFiles.push @_pinballMachines[project._id]
+  
+      @_moonShot ?= new PAA.Pixeltosh.OS.FileSystem.File
+        id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.DemoMachines.MoonShot"
+        path: 'Pinball Creation Kit/Demo Machines/Moon Shot'
+        type: PAA.Pixeltosh.Programs.Pinball.Project
+        disk: @_pinballDisk
+        data: => projectId: 'ewzE9QPCPPLnxHvpi'
+      
+      pixeltoshFiles.push @_moonShot
     
-    @_chessProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: PAA.Pixeltosh.Programs.Chess.id()
-      path: 'Chess Academy/Chess Academy'
-      type: PAA.Pixeltosh.Programs.Chess
-      disk: @_chessDisk
-    
-    chessEnabled = LM.PixelArtFundamentals.chessEnabled()
-    
-    [
-      @_pinballDisk if pinballEnabled
-      @_pinballProgram if pinballEnabled
-      @_pinballMachine if pinballEnabled
-      @_moonShot if pinballEnabled
-      @_drawQuicklyDisk if drawQuciklyEnabled
-      @_drawQuciklyProgram if drawQuciklyEnabled
-      @_chessDisk if chessEnabled
-      @_chessProgram if chessEnabled
-    ]
+    if LM.PixelArtFundamentals.drawQuicklyEnabled()
+      unless @_drawQuicklyDisk
+        @_drawQuicklyDisk = new PAA.Pixeltosh.OS.FileSystem.File
+          id: "#{PAA.Pixeltosh.Programs.DrawQuickly.id()}.Disk"
+          path: 'Draw Quickly'
+          type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+        
+        @_drawQuicklyDisk.options.disk = @_drawQuicklyDisk
+        
+      pixeltoshFiles.push @_drawQuicklyDisk
+      
+      @_drawQuciklyProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
+        id: PAA.Pixeltosh.Programs.DrawQuickly.id()
+        path: 'Draw Quickly/Draw Quickly'
+        type: PAA.Pixeltosh.Programs.DrawQuickly
+        disk: @_drawQuicklyDisk
+        
+      pixeltoshFiles.push @_drawQuciklyProgram
+      
+    if LM.PixelArtFundamentals.chessEnabled()
+      unless @_chessDisk
+        @_chessDisk = new PAA.Pixeltosh.OS.FileSystem.File
+          id: "#{PAA.Pixeltosh.Programs.Chess.id()}.Disk"
+          path: 'Chess Academy'
+          type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+        
+        @_chessDisk.options.disk = @_chessDisk
+        
+      pixeltoshFiles.push @_chessDisk
+      
+      @_chessProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
+        id: PAA.Pixeltosh.Programs.Chess.id()
+        path: 'Chess Academy/Chess Academy'
+        type: PAA.Pixeltosh.Programs.Chess
+        disk: @_chessDisk
+        
+      pixeltoshFiles.push @_chessProgram
+      
+    pixeltoshFiles

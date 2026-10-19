@@ -24,7 +24,6 @@ class Pinball.InputManager
       part.activate() for part in @_getParts control
       
     $(document).on 'keyup.pixelartacademy-pixeltosh-programs-pinball-inputmanager', (event) =>
-      return if @_ignoreKeys event
       return unless control = @_keyCodeToControl event.code
       return unless @controlActive[control]
 

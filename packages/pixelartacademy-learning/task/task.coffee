@@ -114,6 +114,9 @@ class PAA.Learning.Task
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
   @completed: -> @getAdventureInstance()?.completed()
+  @available: -> @getAdventureInstance()?.available()
+  @availableOrCompleted: -> @getAdventureInstance()?.availableOrCompleted()
+  @active: -> @getAdventureInstance()?.active()
 
   @reset: -> @getAdventureInstance().reset()
 

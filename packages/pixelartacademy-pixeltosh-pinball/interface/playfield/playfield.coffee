@@ -38,6 +38,11 @@ class Pinball.Interface.Playfield extends LOI.View
     
     @$('.pixelartacademy-pixeltosh-programs-pinball-interface-playfield').append @pinball.rendererManager().renderer.domElement
 
+  onDestroyed: ->
+    super arguments...
+
+    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-interface-playfield'
+
   showOverlay: -> not @pinball.gameManager()?.inPlay()
 
   selectionVisibleClass: ->

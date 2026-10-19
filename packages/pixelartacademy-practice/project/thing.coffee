@@ -73,9 +73,26 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
         _id: 1
     ).count()
     
+  @currentProfileHasProjects: ->
+    PAA.Practice.Project.documents.find(
+      type: @id()
+      profileId: LOI.adventure.profileId()
+    ,
+      fields:
+        _id: 1
+    ).count()
+    
   @getProjects: ->
     PAA.Practice.Project.documents.fetch
       type: @id()
+    ,
+      sort:
+        startTime: 1
+        
+  @getCurrentProfileProjects: ->
+    PAA.Practice.Project.documents.fetch
+      type: @id()
+      profileId: LOI.adventure.profileId()
     ,
       sort:
         startTime: 1
@@ -140,14 +157,21 @@ class PAA.Practice.Project.Thing extends PAA.Practice.Thing
     project = PAA.Practice.Project.documents.findOne assetsProvider.id()
     throw new AE.ArgumentException "The project to duplicate does not exist." unless project
 
-    project = _.extend {}, project, properties
+    # Create a copy of the project with new properties.
+    # Note: We also need to account for duplicating public projects.
+    _.extend project, properties
+    
     project._id = Random.id()
+    project.profileId = LOI.adventure.profileId()
     project.lastEditTime = project.startTime = new Date()
     delete project.endTime
+    delete project.publicPath
+    
     project.assets = for asset in project.assets
       if asset.bitmapId
         bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
         bitmap._id = Random.id()
+        bitmap.profileId = project.profileId
         bitmap.historyPosition = 0
         bitmap.history = []
         bitmap.lastEditTime = project.lastEditTime

@@ -21,16 +21,8 @@ class LM.PixelArtFundamentals.Fundamentals.Workbench extends LOI.Adventure.Scene
     things = []
     
     if LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.addedAndAvailable()
-      # Pinball project appears after Pinball Creation Kit was run for the first time.
-      openPinballMachineTask = PAA.Learning.Task.getAdventureInstanceForId LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.OpenPinballMachine.id()
-      pinballProjectEnabled = openPinballMachineTask.completed()
-      activePinballProjectId = Pinball.Project.state 'activeProjectId'
-  
-      if pinballProjectEnabled and activePinballProjectId
-        if @_pinball?.projectId isnt activePinballProjectId
-          @_pinball?.destroy()
-          @_pinball = Tracker.nonreactive => new Pinball.Project activePinballProjectId
-  
+      if Pinball.Project.visible()
+        @_pinball ?= Tracker.nonreactive => new Pinball.Project
         things.push @_pinball
         
     if LM.PixelArtFundamentals.Fundamentals.Goals.Chess.addedAndAvailable() and Chess.state 'ownedPieceTypeCounts'

@@ -72,12 +72,12 @@ class Pinball.Part extends LOI.Adventure.Thing
       EJSON.equals
     
     @shapeProperties = new AE.LiveComputedField =>
-      _.defaults {}, _.pick(@data(), @shapeDataPropertyNames()), @extraShapeProperties(), @constants()
+      _.defaults {partId: @constructor.id()}, _.pick(@data(), @shapeDataPropertyNames()), @extraShapeProperties(), @constants()
     ,
       EJSON.equals
     
     @physicsProperties = new AE.LiveComputedField =>
-      _.defaults {}, _.pick(@data(), @physicsDataPropertyNames()), @extraPhysicsProperties(), @constants()
+      _.defaults {partId: @constructor.id()}, _.pick(@data(), @physicsDataPropertyNames()), @extraPhysicsProperties(), @constants()
     ,
       EJSON.equals
       

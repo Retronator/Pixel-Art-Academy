@@ -156,7 +156,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.EditAssetsProvider extends AM.Componen
       @editAssetsProvider.assetsProviderNamePlaceholder()
 
     customAttributes: ->
-      maxlength: PAA.Practice.Project.nameMaxLength()
+      maxlength: PAA.Practice.Project.nameMaxLength
 
   class @Name extends @NameInput
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.EditAssetsProvider.Name'
