@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 class AEc.Node.Delay extends AEc.Node
@@ -36,13 +37,11 @@ class AEc.Node.Delay extends AEc.Node
   constructor: ->
     super arguments...
 
-    @node = new ComputedField =>
+    @node = new AE.LiveComputedField =>
       # We must create a new delay node each time max delay time changes.
       maxDelayTime = @readParameter 'maxDelayTime'
       
       new DelayNode @audio.context, {maxDelayTime}
-    ,
-      true
 
     @autorun (computation) =>
       return unless node = @node()

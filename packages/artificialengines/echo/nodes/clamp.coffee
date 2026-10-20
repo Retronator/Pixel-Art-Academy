@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 # We need to save the Number class to a temporary variable since it will get set to the new class definition below.
@@ -38,15 +39,13 @@ class AEc.Node.Clamp extends AEc.Node
   constructor: ->
     super arguments...
 
-    @value = new ComputedField =>
+    @value = new AE.LiveComputedField =>
       inputValue = @readInput 'value'
 
       minimum = @readParameter 'minimum'
       maximum = @readParameter 'maximum'
 
       _.clamp inputValue, minimum, maximum
-    ,
-      true
     
   destroy: ->
     super arguments...

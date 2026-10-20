@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 class AEc.Node.RandomBuffer extends AEc.Node
@@ -34,10 +35,8 @@ class AEc.Node.RandomBuffer extends AEc.Node
     
     # Reactively select a different buffer if it's not selected yet or the current one becomes unavailable
     # or select is triggered. We want to minimize re-selection so we create a computed field for it.
-    @shouldSelectNextBufferNumber = new ComputedField =>
+    @shouldSelectNextBufferNumber = new AE.LiveComputedField =>
       @bufferNumber()? and @selectedBuffer()? and not @readInput('select')
-    ,
-      true
     
     @autorun (computation) =>
       return unless @shouldSelectNextBufferNumber()
@@ -53,12 +52,10 @@ class AEc.Node.RandomBuffer extends AEc.Node
         return if @bufferNumber()
         @_selectNextBufferNumber()
       
-    @selectedBuffer = new ComputedField =>
+    @selectedBuffer = new AE.LiveComputedField =>
       @readParameter "buffer#{@bufferNumber()}"
     ,
       (a, b) => a is b
-    ,
-      true
     
   destroy: ->
     super arguments...

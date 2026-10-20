@@ -586,6 +586,7 @@ Package.onTest(function(api) {
   api.addFile('everywhere/lodash/arrays-tests');
   api.addFile('everywhere/lodash/objects-tests');
   api.addClientFile('spectrum/imagedatahelpers-tests');
+  api.addClientFile('echo/audio-tests');
   api.addFile('pyramid/polygon-tests');
   api.addFile('pyramid/polygonwithholes-tests');
   api.addFile('pyramid/polygonwithholes-booleanoperations-tests');

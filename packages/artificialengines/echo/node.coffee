@@ -70,7 +70,7 @@ class AEc.Node
 
   readParameter: (parameter) ->
     unless @_parameterFields[parameter]
-      @_parameterFields[parameter] = Tracker.nonreactive => new ComputedField =>
+      @_parameterFields[parameter] = new AE.LiveComputedField =>
         if reactiveValue = @_getReactiveValueField(parameter)()
           # We always return whatever is coming from the connection.
           reactiveValue()
@@ -78,8 +78,6 @@ class AEc.Node
         else
           # We return the constant value set on the node or default.
           @parametersData()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
-      ,
-        true
 
     @_parameterFields[parameter]()
 

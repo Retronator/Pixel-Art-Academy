@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 # We need to save the Boolean class to a temporary variable since it will get set to the new class definition below.
@@ -26,10 +27,7 @@ class AEc.Node.Boolean extends AEc.Node
   constructor: ->
     super arguments...
 
-    @value = new ComputedField =>
-      @readParameter 'boolean'
-    ,
-      true
+    @value = new AE.LiveComputedField => @readParameter 'boolean'
     
   destroy: ->
     super arguments...

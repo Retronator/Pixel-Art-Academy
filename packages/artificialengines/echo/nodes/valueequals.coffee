@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 class AEc.Node.ValueEquals extends AEc.Node
@@ -26,7 +27,7 @@ class AEc.Node.ValueEquals extends AEc.Node
   constructor: ->
     super arguments...
     
-    @equals = new ComputedField =>
+    @equals = new AE.LiveComputedField =>
       return unless value = @readInput('value')?.toString()
     
       values = @readParameter 'values'
@@ -39,8 +40,6 @@ class AEc.Node.ValueEquals extends AEc.Node
         values = []
       
       value in values
-    ,
-      true
     
   destroy: ->
     super arguments...

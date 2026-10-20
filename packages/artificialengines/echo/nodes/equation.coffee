@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 class AEc.Node.Equation extends AEc.Node
@@ -34,7 +35,7 @@ class AEc.Node.Equation extends AEc.Node
   constructor: ->
     super arguments...
 
-    @value = new ComputedField =>
+    @value = new AE.LiveComputedField =>
       return unless equation = @readParameter 'equation'
 
       code = ""
@@ -54,8 +55,6 @@ class AEc.Node.Equation extends AEc.Node
         
       catch error
         console.warn "Equation node error:", error.message
-    ,
-      true
     
   destroy: ->
     super arguments...

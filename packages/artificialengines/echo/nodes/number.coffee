@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AEc = Artificial.Echo
 
 # We need to save the Number class to a temporary variable since it will get set to the new class definition below.
@@ -26,10 +27,7 @@ class AEc.Node.Number extends AEc.Node
   constructor: ->
     super arguments...
 
-    @value = new ComputedField =>
-      @readParameter 'number'
-    ,
-      true
+    @value = new AE.LiveComputedField => @readParameter 'number'
     
   destroy: ->
     super arguments...
