@@ -22,13 +22,8 @@ class Chess.Interface.BoardDisplayChoice extends PAA.Pixeltosh.Program.View
     @os = @ancestorComponentOfType PAA.Pixeltosh.OS
     @chess = @os.getProgram Chess
     
-    @choice = new ReactiveField null
-    
-    # Auto-close when the choice is made (through this UI or the program menu).
-    @autorun (computation) =>
-      return unless Chess.state 'boardDisplayType'
-      @chess.interfaceManager().closeBoardDisplayChoice()
-      
+    @choice = new ReactiveField Chess.state('boardDisplayType')
+
   choiceIsAvailable: ->
     # TODO: Change when 3D chess exists.
     @choice() is Chess.BoardDisplayTypes.TwoDimensional
@@ -63,4 +58,6 @@ class Chess.Interface.BoardDisplayChoice extends PAA.Pixeltosh.Program.View
     @choice option.type
 
   onClickDoneButton: (event) ->
+    return unless @choiceIsAvailable()
     Chess.state 'boardDisplayType', @choice()
+    @chess.interfaceManager().closeBoardDisplayChoice()

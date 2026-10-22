@@ -15,7 +15,12 @@ class PAA.Pixeltosh.Programs.Finder.Files extends AM.Component
   
   selectedClass: ->
     file = @currentData()
-    'selected' if @finder.selectedFileId() is file.id()
+    
+    if selectedFileId = @finder.selectedFileId()
+      'selected' if selectedFileId is file.id()
+    
+    else if selectedFolderPath = @finder.selectedFolderPath()
+      'selected' if selectedFolderPath is file.path()
 
   events: ->
     super(arguments...).concat

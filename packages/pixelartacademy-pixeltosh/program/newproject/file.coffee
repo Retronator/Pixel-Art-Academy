@@ -4,10 +4,10 @@ class PAA.Pixeltosh.Programs.NewProject.File extends PAA.Pixeltosh.OS.FileSystem
   @program: -> PAA.Pixeltosh.Programs.NewProject
   @iconUrl: -> @program().iconUrl()
 
-  constructor: (projectClass, disk) ->
+  constructor: (projectClass, disk, folderPath = disk.path()) ->
     super
       id: "#{projectClass.id()}.NewProject"
-      path: "#{disk.path()}/#{_.titleCase projectClass.newAssetsProviderPlaceholder()}"
+      path: "#{folderPath}/#{_.titleCase projectClass.newAssetsProviderPlaceholder()}"
       type: PAA.Pixeltosh.Programs.NewProject.File
       disk: disk
       data: -> projectClass

@@ -154,12 +154,16 @@ class Chess.GameManager
     
     for pieceType in pieceTypes
       if pieceColor is Chess.Piece.Colors.White
-        unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
+        whitePieceIsDrawn = Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.White
+
+        if whitePieceIsDrawn? and not whitePieceIsDrawn
           throwError 'white', pieceType
           return false
           
       if pieceColor is Chess.Piece.Colors.Black
-        unless Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.Black
+        blackPieceIsDrawn = Chess.activeAssetIsDrawn pieceType, Chess.Piece.Colors.Black
+
+        if blackPieceIsDrawn? and not blackPieceIsDrawn
           throwError 'black', pieceType
           return false
           

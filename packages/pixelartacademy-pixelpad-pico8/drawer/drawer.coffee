@@ -52,10 +52,14 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
       cartridgeClasses = cartridgesSituation.things()
 
       for cartridgeClass in cartridgeClasses
-        projectClass = cartridgeClass.projectClass()
-        projects = projectClass.getProjects()
-        activeProjectId = projectClass.state 'activeProjectId'
-        activeCartridgeVariant = null
+        if projectClass = cartridgeClass.projectClass()
+          projects = projectClass.getProjects()
+          activeProjectId = projectClass.state 'activeProjectId'
+          activeCartridgeVariant = null
+          
+        else
+          projects = []
+          
         cartridgeVariants = []
 
         if projects.length

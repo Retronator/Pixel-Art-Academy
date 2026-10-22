@@ -16,6 +16,7 @@ class LM.PixelArtFundamentals.Fundamentals.Workbench extends LOI.Adventure.Scene
     super arguments...
 
     @_pinball?.destroy()
+    @_chess2D?.destroy()
 
   things: ->
     things = []
@@ -25,12 +26,9 @@ class LM.PixelArtFundamentals.Fundamentals.Workbench extends LOI.Adventure.Scene
         @_pinball ?= Tracker.nonreactive => new Pinball.Project
         things.push @_pinball
         
-    if LM.PixelArtFundamentals.Fundamentals.Goals.Chess.addedAndAvailable() and Chess.state 'ownedPieceTypeCounts'
-      if activeChess2DProjectId = Chess.Project.TwoDimensional.state 'activeProjectId'
-        if @_chess2D?.projectId isnt activeChess2DProjectId
-          @_chess2D?.destroy()
-          @_chess2D = Tracker.nonreactive => new Chess.Project.TwoDimensional activeChess2DProjectId
-        
+    if LM.PixelArtFundamentals.Fundamentals.Goals.Chess.addedAndAvailable()
+      if Chess.Project.TwoDimensional.visible()
+        @_chess2D ?= Tracker.nonreactive => new Chess.Project.TwoDimensional
         things.push @_chess2D
 
     things

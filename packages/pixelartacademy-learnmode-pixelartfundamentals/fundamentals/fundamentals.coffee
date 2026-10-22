@@ -94,7 +94,8 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @_createChess2DProjectAutorun = Tracker.autorun (computation) =>
       return unless LOI.adventure.gameStateAvailable()
       return unless LM.PixelArtFundamentals.Fundamentals.Content.Projects.Chess.TwoDimensional.getAdventureInstance().status() is LM.Content.Status.Unlocked
-      return if Chess.Project.TwoDimensional.state 'activeProjectId'
+      return if Chess.Project.TwoDimensional.currentProfileHasProjects()
+      return if Chess.Project.TwoDimensional.editable()
       
       Chess.Project.TwoDimensional.start()
     
@@ -120,8 +121,10 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
         blackAssetId = blackAsset.id()
         continue if _.find project.assets, (asset) => asset.id is blackAssetId
 
-        continue unless whiteBitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId whiteAssetData.bitmapId
-        continue unless whiteBitmap.historyPosition
+        # Only do this check until the goal is complete so new sets get black pieces immediately.
+        unless Chess.Project.TwoDimensional.editable()
+          continue unless whiteBitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId whiteAssetData.bitmapId
+          continue unless whiteBitmap.historyPosition
         
         blackAsset.addToProject projectId
   

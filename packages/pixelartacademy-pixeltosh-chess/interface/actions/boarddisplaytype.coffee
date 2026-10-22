@@ -11,6 +11,7 @@ class BoardDisplayType extends Chess.Interface.Actions.Action
   
   execute: ->
     Chess.state 'boardDisplayType', @constructor.boardDisplayType()
+    @chess.interfaceManager().closeBoardDisplayChoice()
 
 class Chess.Interface.Actions.BoardDisplay2D extends BoardDisplayType
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.BoardDisplay2D'

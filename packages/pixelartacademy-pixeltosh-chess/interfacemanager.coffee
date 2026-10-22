@@ -19,6 +19,7 @@ class Chess.InterfaceManager
     
     @_shopWindowId = new ReactiveField null
     @_boardDisplayChoiceWindowId = new ReactiveField null
+    @_chessSetChoiceWindowId = new ReactiveField null
     @_earningsWindowId = new ReactiveField null
     
     # Reactively change the interface layout.
@@ -80,15 +81,31 @@ class Chess.InterfaceManager
         window.styleClass = styleClass for window in chessWindows
         layoutData.set 'windows', windows
         
+    # A missing (or deleted) selection starts the full style-and-set selection flow.
+    @_chessSetChoiceRequired = new ReactiveField not Chess.currentProject()
+    @_boardDisplayChoiceRequired = new ReactiveField @_chessSetChoiceRequired() or not Chess.state('boardDisplayType')
+
     @_boardDisplayChoiceAutorun = @chess.autorun =>
       return unless LOI.adventure.gameStateAvailable()
       return unless @window()
       
-      # Note: We want to compare to the raw state value to not take the default into account.
-      return if Chess.state 'boardDisplayType'
+      return unless @_boardDisplayChoiceRequired()
       return if @_boardDisplayChoiceWindowId()
       
       @_boardDisplayChoiceWindowId @chess.os.addWindow Chess.Interface.BoardDisplayChoice.createInterfaceData()
+
+    @_chessSetChoiceAutorun = @chess.autorun =>
+      return unless LOI.adventure.gameStateAvailable()
+      return unless @window()
+      
+      return if @_boardDisplayChoiceRequired()
+      return if @_boardDisplayChoiceWindowId()
+      return unless Chess.state 'boardDisplayType'
+
+      return unless @_chessSetChoiceRequired()
+      return if @_chessSetChoiceWindowId()
+
+      @_chessSetChoiceWindowId @chess.os.addWindow Chess.Interface.ChessSetChoice.createInterfaceData()
 
     @_autoFlipBoardAutorun = @chess.autorun =>
       return unless gameManager = @chess.gameManager()
@@ -102,6 +119,7 @@ class Chess.InterfaceManager
     @_earningsAutorun = @chess.autorun =>
       return unless @window()
       return unless @inMenu()
+      return if @choosingChessSet()
       return unless Chess.pendingRewards().length
 
       return if @_earningsWindowId()
@@ -116,7 +134,7 @@ class Chess.InterfaceManager
         computation.stop()
         return
         
-      return if @_boardDisplayChoiceWindowId()
+      return if @choosingChessSet()
       return unless @chess.audioManager().introWhenReady()
       computation.stop()
   
@@ -125,6 +143,7 @@ class Chess.InterfaceManager
     @_layoutAutorun.stop()
     @_themeAutorun.stop()
     @_boardDisplayChoiceAutorun.stop()
+    @_chessSetChoiceAutorun.stop()
     @_autoFlipBoardAutorun.stop()
     @_earningsAutorun.stop()
     @_introAudioAutorun.stop()
@@ -162,6 +181,7 @@ class Chess.InterfaceManager
   closeBoardDisplayChoice: ->
     return unless boardDisplayChoiceWindowId = @_boardDisplayChoiceWindowId()
 
+    @_boardDisplayChoiceRequired false
     @chess.os.removeWindow boardDisplayChoiceWindowId
     @_boardDisplayChoiceWindowId null
 
@@ -171,6 +191,42 @@ class Chess.InterfaceManager
     return unless boardDisplayChoiceWindowId = @_boardDisplayChoiceWindowId()
     return unless window = @chess.os.interface.getWindow boardDisplayChoiceWindowId
     window.childComponentsOfType(Chess.Interface.BoardDisplayChoice)[0]
+
+  openChessSetChoice: ->
+    return if @choosingChessSet()
+
+    # Reuse the startup flow, beginning with the board style choice.
+    @_chessSetChoiceRequired true
+    @_boardDisplayChoiceRequired true
+
+  chessSetChoiceIsOpen: -> @_chessSetChoiceWindowId()?
+  
+  choosingChessSet: -> @_boardDisplayChoiceWindowId()? or @_chessSetChoiceRequired()
+
+  availableChessSets: ->
+    switch Chess.boardDisplayType()
+      when Chess.BoardDisplayTypes.TwoDimensional
+        Chess.Project.TwoDimensional.getCurrentProfileProjects()
+      
+      when Chess.BoardDisplayTypes.ThreeDimensional
+        Chess.Project.ThreeDimensional.getCurrentProfileProjects()
+
+  backToBoardDisplayChoice: ->
+    return unless chessSetChoiceWindowId = @_chessSetChoiceWindowId()
+
+    # Restart the style choice while keeping chess set selection mandatory.
+    @_boardDisplayChoiceRequired true
+    @chess.os.removeWindow chessSetChoiceWindowId
+    @_chessSetChoiceWindowId null
+
+  endChessSetChoice: (project) ->
+    Chess.activateProject project
+    @_chessSetChoiceRequired false
+
+    if chessSetChoiceWindowId = @_chessSetChoiceWindowId()
+      @chess.os.removeWindow chessSetChoiceWindowId
+      @_chessSetChoiceWindowId null
+      @chess.os.activateWindow @windowId
 
   closeEarnings: ->
     return unless earningsWindowId = @_earningsWindowId()
@@ -182,7 +238,7 @@ class Chess.InterfaceManager
     
   displayBoardCoordinates: -> Chess.displayBoardCoordinates() or @inLesson()
 
-  interfaceTheme: -> Chess.currentProject()?.interfaceTheme or Chess.InterfaceThemes.Light
+  interfaceTheme: -> Chess.currentProject()?.interfaceTheme or Chess.interfaceTheme()
 
   chessboardTheme: -> Chess.currentProject()?.chessboardTheme or Chess.ChessboardThemes.Contrast
   

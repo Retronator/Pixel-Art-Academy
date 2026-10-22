@@ -30,7 +30,6 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     "
   
   @slug: -> 'pinball'
-  @projectClass: -> @Project
   
   @initialize()
   

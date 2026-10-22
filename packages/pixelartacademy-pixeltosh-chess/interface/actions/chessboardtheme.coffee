@@ -9,6 +9,8 @@ class ChessboardTheme extends Chess.Interface.Actions.Action
     return unless interfaceManager = @chess.interfaceManager()
     interfaceManager.chessboardTheme() is @constructor.chessboardTheme()
 
+  enabled: -> super(arguments...) and Chess.currentProjectId()
+
   execute: ->
     projectId = Chess.currentProjectId()
     

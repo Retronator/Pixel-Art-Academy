@@ -36,9 +36,11 @@ class PAA.Pixeltosh.OS.Interface.ScrollableArea extends AM.Component
 
     # Load initial values from program view.
     @autorun (computation) =>
-      return unless programViewData = @programViewData()
-      @scrollTop programViewData.value().scrollTop or 0
-      @scrollLeft programViewData.value().scrollLeft or 0
+      # Note: Make sure the program view supplies view data.
+      # Content components can have a data wrapper without any stored data.
+      return unless programViewDataValue = @programViewData()?.value()
+      @scrollTop programViewDataValue.scrollTop or 0
+      @scrollLeft programViewDataValue.scrollLeft or 0
       
     # Track size for calculating scrollbar dimensions.
     @contentAreaSize = new ReactiveField width: 0, height: 0

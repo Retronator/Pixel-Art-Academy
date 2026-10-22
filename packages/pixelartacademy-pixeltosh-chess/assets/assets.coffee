@@ -24,6 +24,12 @@ class Chess.Assets
 
     @addToProject: (projectId) ->
       assetId = @id()
+
+      # Switching between sets can request the same asset again while its palette is still loading.
+      @_pendingProjectAssets ?= {}
+      pendingAssetId = "#{projectId}.#{assetId}"
+      return if @_pendingProjectAssets[pendingAssetId]
+      @_pendingProjectAssets[pendingAssetId] = true
       
       # Load the Macintosh palette.
       macintoshPalette = await new Promise (resolve) =>
@@ -32,6 +38,12 @@ class Chess.Assets
           return unless palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Macintosh
           computation.stop()
           resolve palette
+
+      delete @_pendingProjectAssets[pendingAssetId]
+
+      # The set may have been deleted or its asset created while we waited for the palette.
+      return unless project = PAA.Practice.Project.documents.findOne projectId
+      return if _.find project.assets, (asset) => asset.id is assetId
   
       # Create the bitmap.
       creationTime = new Date

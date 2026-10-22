@@ -1,0 +1,66 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-chess-interface-chesssetchoice
+  .window
+    width 180rem
+
+    .title
+      margin-bottom 8rem
+      text-transform uppercase
+
+    .sets-area
+      border 1rem solid black
+      background white
+      color black
+
+      .dark-interface &
+        border-color white
+        background black
+        color white
+
+      .pixelartacademy-pixeltosh-os-interface-scrollablearea
+        height 100rem
+
+        .vertical-scrollbar
+          bottom -1rem
+
+        .resize-control
+          display none
+
+        .content-area
+          bottom 0
+
+          .content
+            width 100%
+
+            .sets
+              margin 0
+              padding 0
+              list-style none
+
+              .set
+                padding 3rem
+                background white
+                color black
+                text-align left
+                overflow-wrap anywhere
+
+                .dark-interface &
+                  background black
+                  color white
+
+                &.selected
+                  background black
+                  color white
+
+                  .dark-interface &
+                    background white
+                    color black
+
+              .empty
+                padding 8rem
+                geneva-mini()
+
+    .actions
+      margin-top 8rem
+      text-align center

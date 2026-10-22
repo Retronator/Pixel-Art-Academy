@@ -83,5 +83,15 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
         disk: @_chessDisk
         
       pixeltoshFiles.push @_chessProgram
+
+      @_chessSets ?= {}
+
+      for project in PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.getCurrentProfileProjects()
+        @_chessSets[project._id] ?= new PAA.Pixeltosh.Programs.Chess.Project.File PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional, project._id, @_chessDisk
+        pixeltoshFiles.push @_chessSets[project._id]
+
+      if PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional.editable()
+        @_createChessProject ?= new PAA.Pixeltosh.Programs.NewProject.File PAA.Pixeltosh.Programs.Chess.Project.TwoDimensional, @_chessDisk, 'Chess Academy/Chess Sets'
+        pixeltoshFiles.push @_createChessProject
       
     pixeltoshFiles

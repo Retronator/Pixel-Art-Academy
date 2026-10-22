@@ -35,7 +35,7 @@ class Pinball.Interface.OpenDialog extends FM.Dialog
   
       # Display user machines above demo machines.
       _.sortBy machines, [
-        (machine) => machine.name.indexOf(' / ') isnt -1
+        (machine) => not (machine.file instanceof Pinball.Project.File)
         (machine) =>
           projectId = machine.file.data().projectId
           project = PAA.Practice.Project.documents.findOne projectId

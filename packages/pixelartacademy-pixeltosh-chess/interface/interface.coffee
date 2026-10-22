@@ -51,6 +51,10 @@ class Chess.Interface
         Chess.Interface.Actions.DarkInterface.id()
       ]
     ,
+      caption: 'Pieces'
+      type: Chess.Interface.PiecesMenuDropdown.id()
+      items: Chess.Interface.PiecesMenuDropdown.createItems()
+    ,
       caption: 'Play'
       items: [
         Chess.Interface.Actions.AutoPromotion.id()

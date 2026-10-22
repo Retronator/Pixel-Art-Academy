@@ -98,7 +98,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
   loadProgram: (program, file) ->
     Tracker.nonreactive =>
       loadedPrograms = @loadedPrograms()
-      loadedPrograms.push program
+      loadedPrograms.push program unless program in loadedPrograms
       @loadedPrograms loadedPrograms
 
       program.load file

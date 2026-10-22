@@ -14,8 +14,8 @@ class PAA.Practice.Pages.Admin.Projects extends AM.Component
     
     PAA.Practice.Project.all.subscribe @
     
-    unless Persistence.hasSyncedStorage Persistence.SyncedStorages.LocalStorage.id()
-      Persistence.registerSyncedStorage new Persistence.SyncedStorages.LocalStorage storageKey: "Retronator"
+    unless Persistence.hasSyncedStorage Persistence.SyncedStorages.IndexedDB.id()
+      Persistence.registerSyncedStorage new Persistence.SyncedStorages.IndexedDB databaseName: "Retronator"
     
   profiles: ->
     Persistence.Profile.documents.fetch()

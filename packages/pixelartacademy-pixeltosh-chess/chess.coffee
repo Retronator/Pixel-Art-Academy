@@ -11,8 +11,9 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   # autoFlipBoard: boolean whether to automatically orient the board for the human player on turn
   # audioBoard: boolean whether to play board interaction sounds
   # audioVoice: boolean whether Pixeltosh should make spoken announcements
-  # projectId2D: the project ID of the currently chosen 2D chess set
-  # TODO: projectId3D: the project ID of the currently chosen 3D chess set
+  # interfaceTheme: enum for a fallback interface theme when no chess set is selected
+  # projectId2D: optional project ID of the currently chosen 2D chess set, activeProjectId otherwise
+  # TODO: projectId3D: optional project ID of the currently chosen 3D chess set, activeProjectId otherwise
   # currency: number of currency the player has
   # ownedPieceTypeCounts: how many pieces did the player purchase
   #   {pieceType}: number of pieces of this type the player owns
@@ -63,10 +64,28 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   @autoFlipBoard = @state.field 'autoFlipBoard', default: true
   @audioBoard = @state.field 'audioBoard', default: true
   @audioVoice = @state.field 'audioVoice', default: true
+  @interfaceTheme = @state.field 'interfaceTheme', default: @InterfaceThemes.Light
   
   @projectId2D: -> @state('projectId2D') or @Project.TwoDimensional.state 'activeProjectId'
   @projectId3D: -> @state('projectId3D') or @Project.ThreeDimensional.state 'activeProjectId'
 
+  @activateProject: (project) ->
+    projectClass = _.find  [@Project.TwoDimensional, @Project.ThreeDimensional], (projectClass) => projectClass.id() is project.type
+    projectIdField = if projectClass is @Project.TwoDimensional then 'projectId2D' else 'projectId3D'
+
+    if project?.profileId is LOI.adventure.profileId()
+      # This is a player project. Activate it.
+      projectClass.state 'activeProjectId', project._id
+      @state projectIdField, null
+      
+    else
+      # This is a public project. Select it in the state.
+      @state projectIdField, project._id
+
+    # Turn on the display type that will showcase this project.
+    boardDisplayType = if projectClass is @Project.TwoDimensional then @BoardDisplayTypes.TwoDimensional else @BoardDisplayTypes.ThreeDimensional
+    @state 'boardDisplayType', boardDisplayType
+    
   @currentProjectId: ->
     switch @boardDisplayType()
       when @BoardDisplayTypes.TwoDimensional then @projectId2D()
@@ -112,9 +131,10 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
   @_assetIsDrawnInProject: (project, assetId) ->
     return unless asset = _.find project.assets, (asset) => asset.id is assetId
     return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
-    bitmap.historyPosition
+    bitmap.historyPosition or 0
   
   @pawnAssetMissing: ->
+    return unless @currentProject()
     return unless @ownedPiecesCount Chess.Piece.Types.Pawn
     not @activeAssetIsDrawn Chess.Piece.Types.Pawn, Chess.Piece.Colors.White
   
@@ -148,8 +168,10 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @rewardsManager = new ReactiveField null
     @audioManager = new ReactiveField null
     
-  load: ->
+  load: (file) ->
     super arguments...
+
+    @openFile file if file
 
     # Initialize components.
     @interfaceManager new @constructor.InterfaceManager @
@@ -162,6 +184,8 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
   unload: ->
+    super arguments...
+
     @interfaceManager()?.destroy()
     @gameManager()?.destroy()
     @lessonManager()?.destroy()
@@ -174,7 +198,12 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     @rewardsManager null
     @audioManager null
     
-    @_macintoshPaletteSubscription.stop()
+    @_macintoshPaletteSubscription?.stop()
+
+  openFile: (file) ->
+    projectId = file.data().projectId
+    project = PAA.Practice.Project.documents.findOne projectId
+    @constructor.activateProject project
   
   onBackButton: ->
     # Going back closes the shop.
@@ -189,6 +218,13 @@ class PAA.Pixeltosh.Programs.Chess extends PAA.Pixeltosh.Program
     # Going back returns to the menu.
     if not interfaceManager.inMenu()
       interfaceManager.enterScreen @constructor.InterfaceManager.Screens.Menu
+      
+      # Inform that we've handled the back button.
+      return true
+
+    # Going back returns from the chess set choice back to the board display choice.
+    if interfaceManager.choosingChessSet() and interfaceManager.chessSetChoiceIsOpen()
+      interfaceManager.backToBoardDisplayChoice()
       
       # Inform that we've handled the back button.
       return true

@@ -10,12 +10,16 @@ class InterfaceTheme extends Chess.Interface.Actions.Action
     interfaceManager.interfaceTheme() is @constructor.interfaceTheme()
 
   execute: ->
-    projectId = Chess.currentProjectId()
+    interfaceTheme = @constructor.interfaceTheme()
     
-    PAA.Practice.Project.documents.update projectId,
-      $set:
-        interfaceTheme: @constructor.interfaceTheme()
-        lastEditTime: new Date
+    if projectId = Chess.currentProjectId()
+      PAA.Practice.Project.documents.update projectId,
+        $set:
+          interfaceTheme: interfaceTheme
+          lastEditTime: new Date
+          
+    else
+      Chess.interfaceTheme interfaceTheme
 
 class Chess.Interface.Actions.LightInterface extends InterfaceTheme
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.Actions.LightInterface'

@@ -1,0 +1,22 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Chess.Interface.ChessSetChoice">
+  <div class="pixelartacademy-pixeltosh-programs-chess-interface-boarddisplaychoice pixelartacademy-pixeltosh-programs-chess-interface-chesssetchoice">
+    <div class="window pixelartacademy-pixeltosh-chess pixelartacademy-pixeltosh-os-interface-rectanglearea">
+      <div class="title">Choose chess set</div>
+      <div class="sets-area">
+        {{#PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea scrollbars}}
+          <ol class="sets">
+            {{#each projects}}
+              <li class="set {{projectSelectedClass}}">{{projectName}}</li>
+            {{else}}
+              <li class="empty">No chess sets found. Add them to the Chess Sets folder.</li>
+            {{/each}}
+          </ol>
+        {{/PixelArtAcademy.Pixeltosh.OS.Interface.ScrollableArea}}
+      </div>
+      <div class="actions pixelartacademy-pixeltosh-os-interface-dialogactions">
+        <button class="back-button pixelartacademy-pixeltosh-os-interface-button">Back</button>
+        <button class="done-button pixelartacademy-pixeltosh-os-interface-button" {{doneButtonDisabledAttribute}}>Done</button>
+      </div>
+    </div>
+  </div>
+</template>

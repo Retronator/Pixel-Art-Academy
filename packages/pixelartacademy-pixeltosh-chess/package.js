@@ -26,9 +26,11 @@ Package.onUse(function(api) {
   api.addFile('chess');
   api.addFile('assets..');
   api.addUnstyledComponent('assets/briefcomponent..');
-  api.addFile('project');
-  api.addFile('project-startend');
-  api.addFile('project-2d3d');
+  api.addFile('project..');
+  api.addFile('project/project-startend');
+  api.addFile('project/project-2d3d');
+  api.addFile('project/assetsprovider');
+  api.addFile('project/file');
   api.addFile('square');
   api.addFile('move');
   api.addFile('piece');
@@ -44,6 +46,7 @@ Package.onUse(function(api) {
   api.addFile('audiomanager');
 
   api.addStyledFile('interface..');
+  api.addFile('interface/piecesmenudropdown');
   api.addComponent('interface/intro..');
   api.addComponent('interface/playerstatus..');
   api.addComponent('interface/lessons..');
@@ -55,6 +58,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/about..');
   api.addComponent('interface/shop..');
   api.addComponent('interface/boarddisplaychoice..');
+  api.addComponent('interface/chesssetchoice..');
   api.addComponent('interface/earnings..');
 
   api.addComponent('interface/chessboard..');
@@ -78,6 +82,8 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/audio');
   api.addFile('interface/actions/interfacetheme');
   api.addFile('interface/actions/chessboardtheme');
+  api.addFile('interface/actions/selectchessset');
+  api.addFile('interface/actions/openchesssetchoice');
   api.addFile('interface/actions/history');
   api.addFile('interface/actions/autopromotion');
   api.addFile('interface/actions/autoflipboard');
@@ -138,4 +144,15 @@ Package.onUse(function(api) {
   api.addFile('rewards..');
   api.addFile('rewards/lessoncompleted');
   api.addFile('rewards/lessonrepeated');
+});
+
+Package.onTest(function(api) {
+  api.use([
+    'coffeescript',
+    'tinytest',
+    'retronator:landsofillusions',
+    'retronator:pixelartacademy-pixeltosh-chess'
+  ]);
+
+  api.addClientFile('project/project-tests');
 });

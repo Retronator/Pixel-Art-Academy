@@ -7,31 +7,11 @@ Chess = PAA.Pixeltosh.Programs.Chess
 class Chess.Assets.BriefComponent extends PAA.Practice.Asset.Bitmap.BriefComponent
   @register 'PixelArtAcademy.Pixeltosh.Programs.Chess.Assets.BriefComponent'
   
-  onCreated: ->
-    super arguments...
-      
-    @workbenchSituation = new ComputedField =>
-      options =
-        timelineId: LOI.adventure.currentTimelineId()
-        location: PAA.Practice.Project.Workbench
-      
-      return unless options.timelineId
-      
-      new LOI.Adventure.Situation options
-      
-    @projects = new ComputedField =>
-      return unless workbenchSituation = @workbenchSituation()
-      
-      workbenchSituation.things()
-  
   copySourceAssets: ->
     sourceAssetClasses = @bitmap.constructor.copySourceAssets()
     return [] unless sourceAssetClasses.length
     
-    projectClass = @bitmap.constructor.projectClass()
-    project = _.find @projects(), (project) -> project instanceof projectClass
-    
-    _.filter project.assets(), (asset) =>
+    _.filter @bitmap.assetsProvider.assets(), (asset) =>
       _.find sourceAssetClasses, (sourceAssetClass) => asset instanceof sourceAssetClass
   
   events: ->
