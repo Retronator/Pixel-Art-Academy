@@ -1,0 +1,32 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Progression">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-progression">
+    <div class="panel-area">
+      <div class="panel {{panelDisplayedClass}}">
+        <div class="title">Study Plan progression</div>
+        <ol class="levels">
+          {{#each levels}}
+            <li class="level {{levelRevealedClass}}">
+              <div class="number">Level {{number}}</div>
+              {{#if revealed}}
+                <div class="name">{{name}}</div>
+                <div class="description">{{description}}</div>
+                {{#if levelHasStartButton}}
+                  <button class="action-button start-button">Start</button>
+                {{/if}}
+              {{else}}
+                {{#if levelHasUnlockButton}}
+                  <button class="action-button unlock-button">Unlock</button>
+                {{else}}
+                  <div class="lock"></div>
+                {{/if}}
+              {{/if}}
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+      <div class="lotus {{lotusDrivingClass}} {{lotusOpenClass}}">
+        {{> PixelArtAcademy.PixelPad.Components.SpeechBalloon args speechBalloonOptions}}
+      </div>
+    </div>
+  </div>
+</template>

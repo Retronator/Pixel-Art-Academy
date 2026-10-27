@@ -15,6 +15,7 @@ These instructions apply to the entire repository unless a deeper `agents.md` ov
 - Match the existing architecture and naming patterns before introducing new abstractions.
 - Prefer CoffeeScript for app logic changes; avoid introducing plain JavaScript into CoffeeScript areas.
 - Prefer Stylus for styling changes; avoid adding CSS/SCSS unless an existing file already uses it.
+- Do not add ARIA attributes (`aria-*`) or ARIA `role` attributes to HTML or Spacebars templates.
 - Keep names verbose and explicit; this codebase favors readability over brevity.
 - Add comments for non-obvious code paths and multi-step logic, consistent with `codestyle.md`.
 - Use 2-space indentation and avoid trailing whitespace.

@@ -106,6 +106,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return unless currentApp instanceof PAA.PixelPad.Apps.StudyPlan
     currentApp
     
+  @shortTermGoalsUnlocked: -> LM.Intro.Tutorial.Goals.PixelArtSoftware.completed()
+  
+  @midTermGoalsUnlocked: -> LM.Intro.Tutorial.Goals.Snake.completed()
+    
   constructor: ->
     super arguments...
 

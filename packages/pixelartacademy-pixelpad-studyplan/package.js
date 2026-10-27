@@ -18,6 +18,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('studyplan');
+  api.addComponent('progression..');
 
   api.addFile('connectionpoint');
   api.addFile('goalhierarchy');

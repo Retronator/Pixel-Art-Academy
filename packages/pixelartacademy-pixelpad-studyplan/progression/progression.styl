@@ -1,0 +1,147 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-progression
+  absolute-cover()
+  z-index 10
+
+  .panel-area
+    position absolute
+    left calc(50% - 159rem)
+    top calc(50% - 90rem)
+    width 318rem
+    height 180rem
+
+    .panel
+      position absolute
+      left 0
+      top 50%
+      width 100%
+      height 0
+      display flex
+      padding 2rem
+      border 1rem solid atariCyan(3)
+      flex-direction column
+      text-align center
+      background atariCyan(1)
+      box-shadow -5rem 5rem 0 rgba(atariGray(0), 0.5)
+      transition all 0.5s cubic-bezier(0.5, 0, 1, 0)
+      visibility hidden
+      overflow hidden
+
+      &.displayed
+        top 0
+        height 100%
+        visibility visible
+
+      .title
+        margin 0 0 2rem
+        padding 2rem
+        background atariCyan(2)
+        color atariCyan(6)
+        text-transform uppercase
+        acme-9()
+
+      .levels
+        display flex
+        list-style none
+        padding 0
+        margin 0
+        flex-grow 1
+        gap 2rem
+
+        .level
+          display flex
+          position relative
+          flex-direction column
+          width 77rem
+          padding 2rem 2rem 6rem
+
+          &.revealed
+            background atariCyan(0)
+
+          .number
+            padding 1rem 0
+            background atariCyan(2)
+            color atariCyan(6)
+            text-transform uppercase
+            uni()
+            line-height 7rem
+
+          .name
+            margin 8rem 3rem 5rem
+            text-transform uppercase
+            thintel()
+            line-height 11rem
+
+          .description
+            margin 0 3rem
+            uni()
+            line-height 9rem
+
+          .start-button
+            width 65rem
+            align-self center
+            margin-top auto
+
+          .unlock-button
+            position absolute
+            top calc(50% - 7.5rem)
+            left calc(50% - 32.5rem)
+            width 65rem
+            margin-top 0
+
+          .lock
+            position absolute
+            top 50%
+            left calc(50% - 3.5rem)
+            width 7rem
+            height 9rem
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/lock.png')
+
+    .lotus
+      position absolute
+      bottom -20rem
+      left 400rem
+      width 146rem
+      height 48rem
+      background-image image('/pixelartacademy/pixelpad/apps/studyplan/lotus.png')
+      transition left 1s ease-out
+
+      &.open::before
+        content ''
+        position absolute
+        width 52rem
+        height 46rem
+        top 6rem
+        left 58rem
+        background-image image('/pixelartacademy/pixelpad/apps/studyplan/lotus-open.png')
+
+      &:not(.open)::before
+        content ''
+        position absolute
+        width 35rem
+        height 25rem
+        top 16rem
+        left 59rem
+        background-image image('/pixelartacademy/pixelpad/apps/studyplan/lotus-closed.png')
+
+      &.driving::after
+        content ''
+        position absolute
+        width 81rem
+        height 9rem
+        top 35rem
+        left 42rem
+        background-image image('/pixelartacademy/pixelpad/apps/studyplan/lotus-driving.png')
+
+      .pixelartacademy-pixelpad-components-speechballoon
+        position absolute
+        left 88rem
+        bottom 44rem
+        pointer-events none
+        adventure()
+        color atariGray(0)
+
+        .content-measuring
+          min-width auto !important
+          width 120rem

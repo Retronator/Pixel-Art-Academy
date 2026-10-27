@@ -390,7 +390,7 @@ class StudyPlan.GoalHierarchy
       distributePossibleGoals rootGoalNode, 'propagatedAvailableInterests' for rootGoalNode in @rootGoalNodes
 
       # Allow adding mid-term goals after completing the intro.
-      if LM.Intro.Tutorial.Goals.Snake.completed()
+      if StudyPlan.midTermGoalsUnlocked()
         distributePossibleGoals rootGoalNode, 'propagatedProvidedInterests' for rootGoalNode in @rootGoalNodes
       
       # Place expansion points.

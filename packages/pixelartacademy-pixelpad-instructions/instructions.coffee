@@ -105,9 +105,15 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
           
           return
         
-        # Nothing to do if we're displaying the correct instruction.
+        # If we're displaying the correct instruction, we only need to update the display state, if it changed.
         displayedInstruction = @displayedInstruction()
-        return if displayedInstruction is targetDisplayedInstruction
+        if displayedInstruction is targetDisplayedInstruction
+          activeDisplayState = targetDisplayedInstruction.activeDisplayState()
+          
+          if @defaultDisplayState() isnt activeDisplayState
+            await @animateDisplayState activeDisplayState
+          
+          return
         
         # If another instruction is open we have to first close it.
         if @displayState() is @constructor.DisplayState.Open

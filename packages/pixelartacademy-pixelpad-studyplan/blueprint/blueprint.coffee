@@ -123,6 +123,7 @@ class StudyPlan.Blueprint extends AM.Component
     @_animateTimeouts = []
     @_revealedPathways = []
     @initialRevealCompleted = new ReactiveField false
+    @revealAnimating = new ReactiveField false
     
     @readyToAnimate = new ComputedField =>
       return unless @roadTileMapComponent.isRendered()
@@ -143,6 +144,7 @@ class StudyPlan.Blueprint extends AM.Component
       return if @_animationRestarting
       
       # Restart all animations. Wait for the current ones to cancel.
+      @revealAnimating true
       @_animationRestarting = true
       Meteor.clearTimeout timeout for timeout in @_animateTimeouts
       @_animateTimeouts = []
@@ -177,6 +179,7 @@ class StudyPlan.Blueprint extends AM.Component
                 await @revealPoint point, true
                 
               @initialRevealCompleted true
+              @revealAnimating false
             ,
               if @initialRevealCompleted() then 30 else 1000
 

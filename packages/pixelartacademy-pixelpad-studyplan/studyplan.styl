@@ -5,3 +5,53 @@
 
   .modal-window-cover
     absolute-cover()
+
+  .action-button
+    position relative
+    z-index 0
+    width 50rem
+    height 15rem
+    padding 2rem 4rem 4rem
+    margin-top 10rem
+    border none
+    background none
+    uni()
+    color atariGray(6)
+    text-transform uppercase
+
+    &::before
+    &::after
+      content ''
+      absolute-cover()
+      z-index -1
+
+    &::before
+      background-color atariAqua(1)
+      top 2rem
+
+    &::after
+      background-color atariAqua(3)
+      bottom 2rem
+
+    &:hover
+      color atariGray(7)
+
+      &::after
+        background-color atariAqua(4)
+
+    &:active:not(:disabled)
+      padding-top 3rem
+      padding-bottom 3rem
+
+      &::after
+        top 1rem
+        bottom 1rem
+
+    &:disabled
+      color atariGray(3)
+
+      &::before
+        background-color atariGray(1)
+
+      &::after
+        background-color atariGray(2)
