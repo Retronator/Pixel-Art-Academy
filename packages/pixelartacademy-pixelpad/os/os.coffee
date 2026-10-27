@@ -187,6 +187,7 @@ class PAA.PixelPad.OS extends LOI.Component
     
   canGoLeft: -> @currentApp()?.canGoLeft?() or @currentApp()?.onGoLeft
   canGoRight: -> @currentApp()?.canGoRight?() or @currentApp()?.onGoRight
+  navigationButtonOverlap: -> @currentApp()?.navigationButtonOverlap?()
   
   goLeft: -> @currentApp().goLeft() if @canGoLeft()
   goRight: -> @currentApp().goRight() if @canGoRight()

@@ -100,11 +100,24 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     @editor().destroy()
 
   canGoLeft: ->
+    return unless @_onClipboard()
     @portfolio()?.getNeighboringAsset -1
 
   canGoRight: ->
+    return unless @_onClipboard()
     @portfolio()?.getNeighboringAsset 1
 
+  _onClipboard: ->
+    # Asset has to be active to be on the clipboard.
+    return unless portfolio = @portfolio()
+    return unless portfolio.isCreated()
+    return unless portfolio.activeAsset()
+    
+    # We must not be in the editor to still be on the clipboard.
+    not @editor()?.visible()
+  
+  navigationButtonOverlap: -> 10
+  
   goLeft: ->
     @_goToActiveGroupAssetAtOffsetFromActiveAsset -1
 

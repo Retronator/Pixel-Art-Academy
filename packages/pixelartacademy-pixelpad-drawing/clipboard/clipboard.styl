@@ -13,6 +13,20 @@
     z-index 11
     background-image image('/pixelartacademy/pixelpad/apps/drawing/clipboard/clipboard-board.png')
 
+    .navigation-indicators
+      adventure()
+      color atariBlue(0)
+
+      .indicator
+        position absolute
+        bottom 1rem
+
+        &.left
+          left 3rem
+
+        &.right
+          right 2rem
+
   &::after
     content ''
     position absolute

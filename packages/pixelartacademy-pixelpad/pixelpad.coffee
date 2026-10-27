@@ -199,6 +199,15 @@ class PAA.PixelPad extends LOI.Adventure.Item
   
   canGoLeft: -> @os.canGoLeft()
   canGoRight: -> @os.canGoRight()
+  navigationButtonOverlap: -> @os.navigationButtonOverlap() or 0
+
+  navigationButtonStyle: ->
+    scale = LOI.adventure.interface.display.scale()
+    viewport = LOI.adventure.interface.display.viewport()
+    clientWidth = viewport.viewportBounds.width()
+    buttonWidth = (clientWidth / scale - @animatingSize().width) / 2 + @navigationButtonOverlap()
+    
+    width: "#{buttonWidth}rem"
 
   url: -> @os.url()
 
