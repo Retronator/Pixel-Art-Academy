@@ -13,9 +13,9 @@
 
 ┌──────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                              │
-│                 RETRONATOR, interactive content development, Matej Jan, s.p.                 │
+│{{companyNameHeader}}│
 │                                                                                              │
-│                    POSTAJA 6, 5216 MOST NA SOČI, SLOVENIA, EUROPEAN UNION                    │
+│{{companyAddressHeader}}│
 │                                                                                              │
 ├───────────────────────────────────────────────┬──────────────────────────────────────────────┤
 │VAT ID: SI77072251                             │email: hi@retronator.com                      │
@@ -28,7 +28,7 @@
  Customer:
 
  {{taxInfo.business.name}}
- {{taxInfo.business.address}}
+{{formatAddress taxInfo.business.address}}
 
  {{#if taxInfo.business.vatId}}VAT ID: {{taxInfo.business.vatId}}{{/if}}
 {{/if}}
@@ -108,7 +108,7 @@
 
 
 ════════════════════════════════════════════════════════════════════════════════════════════════
-Legal name: Retronator, razvoj interaktivnih vsebin, Matej Jan, s.p.
-Address: Postaja 6, 5216 Most na Soči, Slovenija
+Legal name: Retronator, razvoj interaktivnih vsebin, {{companyDetails.ownerName}}, s.p.
+Address: {{companyDetails.address}}, Slovenija
   </div>
 </template>

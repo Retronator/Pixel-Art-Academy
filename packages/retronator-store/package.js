@@ -157,6 +157,9 @@ Package.onUse(function(api) {
   api.addServerFile('pages/admin/transactions/methods-server');
   api.addServerFile('pages/admin/transactions/subscriptions');
 
+  api.addUnstyledComponent('pages/admin/issueinvoice..');
+  api.addServerFile('pages/admin/issueinvoice/methods-server');
+
   api.addUnstyledComponent('pages/admin/payments..');
   api.addServerFile('pages/admin/payments/subscriptions');
 

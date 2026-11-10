@@ -32,6 +32,6 @@ createVerificationEmail = (user, url) ->
   email.addParagraph "Let me know if you have any questions. Welcome to the Retronator family!"
 
   email.addParagraph "Cheers,\n
-                        Matej 'Retro' Jan // Retronator"
+                        Matej 'Retro' Petrović Jan // Retronator"
 
   email

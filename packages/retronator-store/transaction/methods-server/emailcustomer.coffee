@@ -41,7 +41,7 @@ RS.Transaction.emailCustomer = ({customer, payments, shoppingCart, taxInfo, invo
   email.addParagraph "Thank you so much for your order!"
   
   email.addParagraph "Best,\n
-                      Matej 'Retro' Jan // Retronator"
+                      Matej 'Retro' Petrović Jan // Retronator"
   
   email.addParagraph "p.s. If you run into any trouble, the fastest way to talk to me is on Discord.
                       You can join the server I'm on at the link below."

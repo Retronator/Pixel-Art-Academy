@@ -4,7 +4,7 @@ The assets for the still life stand come from various authors, governed by diffe
 
 ## Tableware
 
-### [Matej Jan](https://matejjan.com)
+### [Matej Petrović Jan](https://matejjan.com)
 
 ```
 bowl-large-average.glb

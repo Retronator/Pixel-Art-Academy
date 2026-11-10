@@ -43,7 +43,7 @@ Artworks used with permission from [Jorge Monreal](https://www.deviantart.com/co
 - Blue girl 2
 - Skull girl 3
 
-Artworks used with permission from [Matej Jan](https://matejjan.com):
+Artworks used with permission from [Matej Petrović Jan](https://matejjan.com):
 
 - Africa
 - Blonde

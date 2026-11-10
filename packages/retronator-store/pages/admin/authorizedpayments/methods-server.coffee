@@ -108,7 +108,7 @@ RS.Pages.Admin.AuthorizedPayments.sendReminderEmail.method (transactionId) ->
   email.addParagraph "Thank you for your intended support and happy holidays!"
 
   email.addParagraph "Best,\n
-                      Matej 'Retro' Jan // Retronator"
+                      Matej 'Retro' Petrović Jan // Retronator"
 
   email.end()
 

@@ -22,7 +22,7 @@ class HQ.Store.Retro extends HQ.Actors.Retro
         visible: false
 
   descriptiveName: ->
-    justName = "Matej '![Retro](talk to Retro)' Jan."
+    justName = "Matej '![Retro](talk to Retro)' Petrović Jan."
     return justName unless newestPost = @newestTableItem()?.post
 
     switch newestPost.type

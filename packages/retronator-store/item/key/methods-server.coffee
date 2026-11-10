@@ -159,17 +159,17 @@ RS.Item.Key.emailKeys.method (emailAddress) ->
     if unavailable
       userEmail.addParagraph "Looks like some keys were not available at this time, I'm so sorry about that. I'll fix it as soon as I can and send you the keys."
       userEmail.addParagraph "Thank you for your patience,\n
-                               Matej 'Retro' Jan // Retronator"
+                               Matej 'Retro' Petrović Jan // Retronator"
 
     else
       userEmail.addParagraph "Best,\n
-                               Matej 'Retro' Jan // Retronator"
+                               Matej 'Retro' Petrović Jan // Retronator"
 
   else
     userEmail.addParagraph "Thank you for requesting to send you keys for Retronator products. Unfortunately, I can't find any purchases that would be eligible for keys with this email."
     userEmail.addParagraph "Reply to let me know which keys you were expecting to receive and I can look into it."
     userEmail.addParagraph "Thank you,\n
-                             Matej 'Retro' Jan // Retronator"
+                             Matej 'Retro' Petrović Jan // Retronator"
 
   userEmail.end()
   

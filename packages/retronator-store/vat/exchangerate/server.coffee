@@ -4,9 +4,6 @@ HTTPS = Npm.require 'https'
 TLS = Npm.require 'tls'
 
 class RS.Vat.ExchangeRate extends RS.Vat.ExchangeRate
-  @_usdToEur = null
-  @_eurToUsd = null
-
   # Meteor's Node 14 runtime predates the root certificate used by the ECB. Add the published Sectigo root only to
   # this request's standard certificate authorities so that the ECB certificate can still be fully verified.
   @_httpsAgent = new HTTPS.Agent
@@ -32,11 +29,15 @@ class RS.Vat.ExchangeRate extends RS.Vat.ExchangeRate
         xml = xml2js.parseStringSync content
 
         # Find the last exchange rate.
+        @historicalRates = []
         latestTime = 0
         latestEurToUsdRate = null
 
         for obs in xml.CompactData.DataSet[0].Series[0].Obs
           time = Date.parse obs.$.TIME_PERIOD
+          @historicalRates.push
+            time: time
+            usdToEur: Math.round(10000 / parseFloat(obs.$.OBS_VALUE)) / 10000
 
           if time > latestTime
             latestTime = time
@@ -69,3 +70,10 @@ Meteor.startup ->
   ,
     hour: 3
     minute: 0
+
+# Use the most recent published reference rate on or before the requested day (including weekends).
+RS.Vat.ExchangeRate.usdToEurForDate = (date) ->
+  rates = _.filter @historicalRates, (entry) -> entry.time <= date.getTime()
+  latest = _.maxBy rates, 'time'
+  throw new Artificial.Everywhere.InvalidOperationException "No exchange rate is available for this date." unless latest
+  latest.usdToEur

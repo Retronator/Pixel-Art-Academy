@@ -159,7 +159,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         title: 'Skull girl 3'
         caption: "Acrylic on canvas, 31.5 × 23.6 inches"
 
-      # Matej Jan
+      # Matej Petrović Jan
 
       africa:
         artistInfo: @artistsInfo.matejJan

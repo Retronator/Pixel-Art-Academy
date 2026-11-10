@@ -29,5 +29,5 @@ Special permission was granted by Aron Imandikromo to redistribute the textures 
 the purpose of the Pixel Art Academy project and its direct derivatives. Textures have been reduced in size and 
 compressed when available.
 
-Embedded low-poly collision meshes were made by Matej Jan. 
-`blueberry-leaf` and `raspberry-leaf` models were also made by Matej Jan, textures by Aron Imandikromo.
+Embedded low-poly collision meshes were made by Matej Petrović Jan.
+`blueberry-leaf` and `raspberry-leaf` models were also made by Matej Petrović Jan, textures by Aron Imandikromo.

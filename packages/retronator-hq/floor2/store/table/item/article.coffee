@@ -44,7 +44,7 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
 
       else
         attribution = "by"
-        author = "Matej 'Retro' Jan"
+        author = "Matej 'Retro' Petrović Jan"
 
     date = @post.time.toLocaleString Artificial.Babel.currentLanguage(),
       month: 'long'

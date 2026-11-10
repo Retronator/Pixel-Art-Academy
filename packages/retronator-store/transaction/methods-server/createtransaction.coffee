@@ -16,19 +16,6 @@ RS.Transaction.create = (options) ->
   if taxInfo
     transaction.taxInfo = taxInfo
 
-    # Generate the next sequential invoice ID.
-    invoiceYear = transaction.time.getUTCFullYear()
-    lastVatTransaction = RS.Transaction.documents.findOne
-      'taxInfo.invoiceId.year': invoiceYear
-    ,
-      sort:
-        'taxInfo.invoiceId.number': -1
-        
-    lastInvoiceNumber = lastVatTransaction?.taxInfo.invoiceId.number or 0
-    transaction.taxInfo.invoiceId =
-      year: invoiceYear
-      number: lastInvoiceNumber + 1
-
   if shoppingCart.tipAmount()
     transaction.tip =
       amount: shoppingCart.tipAmount()
@@ -70,6 +57,9 @@ RS.Transaction.create = (options) ->
 
     transaction.items.push item
 
+  # Determine the invoice number immediately before insertion, using the latest issued invoice.
+  transaction.taxInfo.invoiceId = RS.Transaction.nextInvoiceId transaction.time if taxInfo
+
   # Insert the purchase document for this transaction.
   transactionId = RS.Transaction.documents.insert transaction
 
@@ -83,3 +73,13 @@ RS.Transaction.create = (options) ->
       
   # Return transactionId if it was created successfully.
   transactionId
+
+# Previews and issuance use the highest existing invoice number within the UTC year.
+# Looking this up does not reserve a number; issuance must look it up again immediately before insertion.
+RS.Transaction.nextInvoiceId = (date) ->
+  year = date.getUTCFullYear()
+  lastTransaction = RS.Transaction.documents.findOne {'taxInfo.invoiceId.year': year},
+    sort: 'taxInfo.invoiceId.number': -1
+
+  year: year
+  number: (lastTransaction?.taxInfo.invoiceId.number or 0) + 1

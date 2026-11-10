@@ -3,10 +3,10 @@ HQ = Retronator.HQ
 
 class HQ.Actors.Retro extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Retro'
-  @fullName: -> "Matej 'Retro' Jan"
+  @fullName: -> "Matej 'Retro' Petrović Jan"
   @shortName: -> "Retro"
-  @descriptiveName: -> "Matej '![Retro](talk to Retro)' Jan."
-  @description: -> "It's Matej Jan a.k.a. Retro. He's the man behind Retronator and the developer of Pixel Art Academy."
+  @descriptiveName: -> "Matej '![Retro](talk to Retro)' Petrović Jan."
+  @description: -> "It's Matej Petrović Jan a.k.a. Retro. He's the man behind Retronator and the developer of Pixel Art Academy."
   @pronouns: -> LOI.Avatar.Pronouns.Masculine
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.red

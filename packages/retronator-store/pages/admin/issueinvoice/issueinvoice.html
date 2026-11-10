@@ -1,0 +1,50 @@
+<template name="Retronator.Store.Pages.Admin.IssueInvoice">
+  <h1>Issue Invoice</h1>
+  <form class="issue-invoice-form" autocomplete="off">
+    <fieldset disabled="{{issuing}}">
+      <legend>Customer</legend>
+      <p><label>Name <input class="invoice-customer-name" name="customer-name" autocomplete="section-invoice billing name" required /></label></p>
+      <p><label>Address <textarea class="invoice-customer-address" name="customer-address" autocomplete="section-invoice billing street-address" required></textarea></label></p>
+      <p><label>VAT ID <input class="invoice-customer-vatId" /></label></p>
+      <p>Country {{> Retronator.Store.Pages.Admin.IssueInvoice.Country}}</p>
+      <p><label>Email <input class="invoice-customer-email" name="customer-email" autocomplete="section-invoice billing email" type="email" required /></label></p>
+    </fieldset>
+    <fieldset disabled="{{issuing}}">
+      <legend>Invoice</legend>
+      <p><label>Date of issue <input class="invoice-date" type="date" value="{{dateOfIssue}}" required /></label></p>
+      <p>Invoice number: {{#if defaults}}{{defaults.invoiceId.year}}-{{defaults.invoiceId.number}}{{else}}Loading…{{/if}}</p>
+      <p>The next available number is assigned when issuing.</p>
+      <h3>Items</h3>
+      {{#each lines}}
+        <fieldset class="invoice-line">
+          <p>
+            <label>Catalog key
+              <select class="invoice-catalog-key" required>
+                <option value="">Select an item</option>
+                {{#each itemCatalogKeys}}
+                  <option value="{{this}}">{{this}}</option>
+                {{/each}}
+                <option value="__new__">Create a new catalog item</option>
+              </select>
+            </label>
+          </p>
+          <p><label>New catalog key <input class="invoice-new-catalog-key" /></label></p>
+          <p><label>New item description <input class="invoice-description" /></label> (for new catalog items only)</p>
+          <p><label>Price USD (including VAT) <input class="invoice-price" type="number" min="0" step="any" required /></label></p>
+          <button class="remove-invoice-line" type="button">Remove item</button>
+        </fieldset>
+      {{/each}}
+      <p><button class="add-invoice-line" type="button">Add item</button></p>
+      <p><label>VAT rate <select class="invoice-vat-rate"><option value="0">0%</option><option value="0.22">22%</option></select></label></p>
+      <p>USD to EUR exchange rate: {{defaults.usdToEurExchangeRate}}</p>
+      <p>Amount EUR: {{amountEur}}</p>
+      <button class="issue-invoice-button" type="button" disabled="{{issueDisabled}}">{{#if issuing}}Issuing…{{else}}Issue invoice{{/if}}</button>
+    </fieldset>
+  </form>
+  {{#if error}}<p role="alert">{{error}}</p>{{/if}}
+  {{#with issuedInvoice}}
+    <p>Last issued invoice: {{invoiceId.year}}-{{invoiceId.number}}.
+      <a href="{{routerPath 'Retronator.Store.Pages.Invoice' accessSecret=accessSecret}}" target="_blank" rel="noopener">View invoice</a>
+    </p>
+  {{/with}}
+</template>

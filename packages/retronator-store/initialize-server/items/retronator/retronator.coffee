@@ -16,11 +16,10 @@ Document.startup ->
   RS.Item.create
     catalogKey: CatalogKeys.Retronator.Patreon.Subscriptions
     name: "Pixel Art Academy - Subscription"
-    description: """If you'd prefer to pay for the game on a monthly basis, you can become a patron of Matej 'Retro' Jan
-                    on Patreon. The pledge tiers are offered at 80% discount of the prices, and all your payments are
+    description: """If you want to support the project, you can become a patron of Retro
+                    on Patreon. All your payments are
                     added to your Retronator Store account so you can buy one of the game packages after you've
-                    contributed enough. Patreon subscription does not however give you a Steam key for Pixel Art
-                    Academy: Learn Mode."""
+                    contributed enough."""
     storeUrl: 'https://www.patreon.com/retro'
     storeSeller: 'Patreon'
 

@@ -4,39 +4,39 @@
 
 The project is using these fonts:
 
-- **Retrotype** by Matej Jan (www.retronator.com)
+- **Retrotype** by Matej Petrović Jan (www.retronator.com)
 
   Custom, proprietary font of Retronator
 
-- **Adventure** by Matej Jan (www.retronator.com)
+- **Adventure** by Matej Petrović Jan (www.retronator.com)
 
   Custom, main interface font for Pixel Art Academy
 
-- **Freehand** by Matej Jan (www.retronator.com)
+- **Freehand** by Matej Petrović Jan (www.retronator.com)
 
   Custom, handwritten font for Pixel Art Academy
 
-- **Checkout** by Matej Jan (www.retronator.com)
+- **Checkout** by Matej Petrović Jan (www.retronator.com)
 
   Custom, 5x3 fixed-width font for Pixel Art Academy
 
-- **Academy** by Matej Jan (www.retronator.com)
+- **Academy** by Matej Petrović Jan (www.retronator.com)
 
   Custom, headline font used by Retropolis Academy of Art
 
-- **Daily** by Matej Jan (www.retronator.com)
+- **Daily** by Matej Petrović Jan (www.retronator.com)
 
   Custom, body font of Retronator Daily blog
 
-- **Small Print** by Matej Jan (www.retronator.com)
+- **Small Print** by Matej Petrović Jan (www.retronator.com)
 
   Custom, 5px tall, mostly 3px wide miniature version of Daily
 
-- **Illegible** by Matej Jan (www.retronator.com)
+- **Illegible** by Matej Petrović Jan (www.retronator.com)
 
   Custom, 3px tall, designed to not be legible as to detract from reading tiny text
 
-- **Lines** by Matej Jan (www.retronator.com)
+- **Lines** by Matej Petrović Jan (www.retronator.com)
 
   Custom, 2px tall, abstractly represents lines of text
 

@@ -1109,17 +1109,17 @@
       "translations": {
         "en": {
           "us": {
-            "text": "Matej 'Retro' Jan",
+            "text": "Matej 'Retro' Petrović Jan",
             "quality": 0
           },
           "best": {
-            "text": "Matej 'Retro' Jan",
+            "text": "Matej 'Retro' Petrović Jan",
             "quality": 0,
             "languageRegion": "en-US"
           }
         },
         "best": {
-          "text": "Matej 'Retro' Jan",
+          "text": "Matej 'Retro' Petrović Jan",
           "quality": 0,
           "languageRegion": "en-US"
         }
@@ -2710,5 +2710,5 @@
   },
   "_schema": "8.0.0",
   "ownerName": "Lands of Illusions Admin",
-  "debugName": "Matej 'Retro' Jan"
+  "debugName": "Matej 'Retro' Petrović Jan"
 }

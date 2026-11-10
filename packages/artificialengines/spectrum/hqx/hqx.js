@@ -9,7 +9,7 @@
  *
  * Copyright (C) 2010 Dominic Szablewski ( mail@phoboslab.org )
  * 
- * Copyright (C) 2018 Matej Jan ( hi@retronator.com )
+ * Copyright (C) 2018 Matej Petrović Jan ( hi@retronator.com )
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

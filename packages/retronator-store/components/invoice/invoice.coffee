@@ -18,6 +18,29 @@ class RS.Components.Invoice extends AM.Component
         continue unless item = RS.Item.documents.findOne transactionItem.item._id
         AB.Translation.forId.subscribe @, item.name._id, ['en', 'sl']
 
+  companyDetails: ->
+    transaction = @currentData()
+
+    # Match the UTC date of issue so historical invoices retain the company details valid at the time.
+    if transaction.time < new Date Date.UTC(2026, 9, 9)
+      ownerName: 'Matej Jan'
+      address: 'Postaja 6, 5216 Most na Soči'
+
+    else
+      ownerName: 'Matej Petrović Jan'
+      address: 'Adamičeva ulica 5, 1000 Ljubljana'
+
+  companyNameHeader: ->
+    _.pad "RETRONATOR, interactive content development, #{@companyDetails().ownerName}, s.p.", 94
+
+  companyAddressHeader: ->
+    _.pad "#{@companyDetails().address.toUpperCase()}, SLOVENIA, EUROPEAN UNION", 94
+
+  formatAddress: (address) ->
+    # Indent every address line to align with the customer name in the preformatted invoice.
+    lines = (address or '').split /\r\n|\r|\n/
+    (" #{line.trim()}" for line in lines).join '\n'
+
   formatDate: (date) ->
     language = @language()
 

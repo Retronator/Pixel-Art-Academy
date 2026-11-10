@@ -182,10 +182,10 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/jorge-monreal-skull-girl-3.jpg'
     ]
 
-  # Matej Jan
+  # Matej Petrović Jan
     
   PADB.create
-    artist: name: first: 'Matej', last: 'Jan', nickname: 'Retro'
+    artist: name: first: 'Matej', last: 'Petrović Jan', nickname: 'Retro'
     artworks: [
       type: PADB.Artwork.Types.Physical
       title: 'Africa'
