@@ -63,14 +63,12 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     
     @_nameAreaResizeObserver?.disconnect()
     
-  markComplete: (value) ->
+  manuallyArchive: (value) ->
     goalNode = @data()
-    goalNode.markComplete value
-    position = goalNode.endTaskPoint.localPosition
-    @tileMapComponent.setFlag position.x, position.y, value
+    StudyPlan.manuallyArchiveGoal goalNode.goalId, value
     
     if value
-      # Goal is marked complete, deactivate all tasks.
+      # Goal is archived, deactivate all tasks.
       for taskPoint in goalNode.taskPoints
         @tileMapComponent.deactivateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
       
@@ -99,10 +97,6 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     return unless taskPosition = @tileMapComponent.getPositionForTask taskId
     
     StudyPlan.Blueprint.TileMap.mapPosition goalPosition.x + taskPosition.x, goalPosition.y + taskPosition.y
-    
-  markedCompleteClass: ->
-    return unless goalNode = @data()
-    'marked-complete' if goalNode.markedComplete()
   
   nameStyle: ->
     return unless goalNode = @data()
@@ -135,23 +129,3 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     
   onClickRemoveButton: (event) ->
     @blueprint.studyPlan.removeGoal @goalId
-
-  class @MarkedComplete extends AM.DataInputComponent
-    @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal.MarkedComplete'
-    
-    constructor: ->
-      super arguments...
-      
-      @type = AM.DataInputComponent.Types.Checkbox
-      
-    onCreated: ->
-      super arguments...
-      
-      @goal = @ancestorComponentOfType StudyPlan.Blueprint.Goal
-    
-    load: ->
-      goalNode = @data()
-      goalNode.markedComplete()
-    
-    save: (value) ->
-      @goal.markComplete value

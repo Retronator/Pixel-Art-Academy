@@ -101,7 +101,7 @@ class AbruptSegmentLengthChanges.Instructions
       To see the lengths of curve segments, hover over the line.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
 
     @initialize()
@@ -151,7 +151,7 @@ class AbruptSegmentLengthChanges.Instructions
       Close the evaluation paper and draw the next line.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     
     @initialize()
   
@@ -178,7 +178,7 @@ class AbruptSegmentLengthChanges.Instructions
     @initialize()
     
   class @OpenSmoothCurves extends @StepInstruction
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @activeConditions: ->
@@ -231,8 +231,8 @@ class AbruptSegmentLengthChanges.Instructions
     @id: -> "#{AbruptSegmentLengthChanges.id()}.MajorAbruptSegmentLengthChange"
     @stepNumber: -> 8
     
-    @activeDisplayState: -> InstructionsSystem.DisplayState.Open
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @activeDisplayState: -> InstructionsSystem.DisplayStates.Open
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @message: -> """
@@ -262,7 +262,7 @@ class AbruptSegmentLengthChanges.Instructions
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      InstructionsSystem.DisplayState.Hidden
+      InstructionsSystem.DisplayStates.Hidden
       
     @initialize()
     
@@ -295,7 +295,7 @@ class AbruptSegmentLengthChanges.Instructions
     @id: -> "#{AbruptSegmentLengthChanges.id()}.MinorAbruptSegmentLengthChange"
     @stepNumber: -> 13
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @message: -> """
@@ -323,7 +323,7 @@ class AbruptSegmentLengthChanges.Instructions
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      InstructionsSystem.DisplayState.Hidden
+      InstructionsSystem.DisplayStates.Hidden
       
     @initialize()
     
@@ -344,4 +344,4 @@ class AbruptSegmentLengthChanges.Instructions
       return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom

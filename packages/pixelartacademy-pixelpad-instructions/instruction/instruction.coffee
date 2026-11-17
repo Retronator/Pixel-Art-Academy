@@ -27,11 +27,11 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   
   @activeDisplayState: ->
     # Override if you want the instruction to display closed.
-    PAA.PixelPad.Systems.Instructions.DisplayState.Open
+    PAA.PixelPad.Systems.Instructions.DisplayStates.Open
     
   @displaySide: ->
     # Override if the instruction doesn't appear at the bottom.
-    PAA.PixelPad.Systems.Instructions.DisplaySide.Bottom
+    PAA.PixelPad.Systems.Instructions.DisplaySides.Bottom
 
   @initialize: ->
     @register @id()
@@ -73,18 +73,19 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   
     @delayTime = new ReactiveField 0
     
+    @active = new ReactiveField false
+
     @completed = new ReactiveField false
   
-    @_wasActive = false
-  
     @_activeAutorun = Tracker.autorun (computation) =>
+      wasActive = Tracker.nonreactive => @active()
       active = @activeConditions()
       
       Tracker.nonreactive =>
-        @onActivate() if active and not @_wasActive
-        @onDeactivate() if @_wasActive and not active
+        @onActivate() if active and not wasActive
+        @onDeactivate() if wasActive and not active
       
-      @_wasActive = active
+      @active active
 
     @_completedAutorun = Tracker.autorun (computation) =>
       return if @completed()

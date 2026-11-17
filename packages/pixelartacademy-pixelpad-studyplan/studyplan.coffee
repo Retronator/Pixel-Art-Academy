@@ -7,7 +7,7 @@ PAA = PixelArtAcademy
 class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   # goals: object of goals placed in the study plan
   #   {id}:
-  #     markedComplete: boolean whether the player considers this goal complete
+  #     archived: boolean whether the player manually archived this goal
   #     connections: array of connections to required interests of other goals
   #       goalId: target goal of this connection
   #       direction: in which direction from this goal the connection is going
@@ -16,6 +16,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   # revealed: object for storing which parts of the map have been revealed yet
   #   taskIds: an array of task IDs for which the player has seen their reveal animation
   #   goalIds: an array of goal IDs for which the player has seen their reveal animation
+  # unlockedProgressionLevel: the last progression level unlocked on the progression screen
   # camera:
   #   origin: the position the center of the canvas displays
   #     x
@@ -36,6 +37,22 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     "
 
   @initialize()
+  
+  @ProgressionLevels = 
+    Intro: 1
+    ShortTermGoals: 2
+    MidTermGoals: 3
+    LongTermGoals: 4
+  
+  # This reflects the progression level the player has acknowledged on the progress screen.
+  @unlockedProgressionLevel = @state.field 'unlockedProgressionLevel', default: 0
+
+  # This reflects the progression level the player is eligible to unlock.
+  @currentProgressionLevel: ->
+    # TODO: Add level 4 when long-term goals are available.
+    return @ProgressionLevels.MidTermGoals if @midTermGoalsAvailable()
+    return @ProgressionLevels.ShortTermGoals if @shortTermGoalsAvailable()
+    @ProgressionLevels.Intro
 
   @GoalConnectionDirections =
     Forward: 'Forward'
@@ -52,17 +69,27 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     # Note: We return a boolean so we can use this from functions where undefined means 'not ready'.
     @state('goals')?[goalId]?
     
-  @hasActiveGoal: (goalOrGoalId) ->
+  @getGoalData: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
+    
+    @state('goals')?[goalId]
+    
+  @isGoalManuallyArchived: (goalOrGoalId) ->
     goalId = _.thingId goalOrGoalId
     
     return false unless goal = @state('goals')?[goalId]
-    not goal.markedComplete
+    goal.archived
     
-  @isGoalMarkedComplete: (goalOrGoalId) ->
+  @manuallyArchiveGoal: (goalOrGoalId, value = true) ->
     goalId = _.thingId goalOrGoalId
     
-    return false unless goal = @state('goals')?[goalId]
-    goal.markedComplete
+    goals = @state('goals') or {}
+    goals[goalId].archived = value
+    @state 'goals', goals
+    
+  @isAnythingRevealed: ->
+    return unless revealed = @state 'revealed'
+    revealed.taskIds?.length or revealed.goalIds?.length
     
   @isTaskRevealed: (taskId) ->
     return unless revealed = @state 'revealed'
@@ -106,9 +133,9 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return unless currentApp instanceof PAA.PixelPad.Apps.StudyPlan
     currentApp
     
-  @shortTermGoalsUnlocked: -> LM.Intro.Tutorial.Goals.PixelArtSoftware.completed()
+  @shortTermGoalsAvailable: -> LM.Intro.Tutorial.Goals.PixelArtSoftware.completed()
   
-  @midTermGoalsUnlocked: -> LM.Intro.Tutorial.Goals.Snake.completed()
+  @midTermGoalsAvailable: -> LM.Intro.Tutorial.Goals.Snake.completed()
     
   constructor: ->
     super arguments...
@@ -118,6 +145,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @goalSearch = new ReactiveField null
     @activeGoals = new ReactiveField null
     @interests = new ReactiveField null
+    @progression = new ReactiveField null
+    
+    @handlingProgression = new ReactiveField true
+    @showProgression = new ReactiveField false
     
   onCreated: ->
     super arguments...
@@ -126,6 +157,9 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @selectedGoalId = new ReactiveField null
     @selectedTaskId = new ReactiveField null
     @highlightedTaskId = new ReactiveField null
+    
+    @handlingProgression true
+    @showProgression false
     
     # Instantiate all goals.
     @_goals = []
@@ -142,6 +176,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @goalSearch new @constructor.GoalSearch @
     @activeGoals new @constructor.ActiveGoals @
     @interests new @constructor.Interests @
+    @progression new @constructor.Progression
 
     # We set size in an autorun so that it adapts to window resizes.
     @autorun (computation) => @setMaximumPixelPadSize fullscreen: true
@@ -149,6 +184,42 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     # Maximize on run.
     @maximize()
     
+  onRendered: ->
+    super arguments...
+    
+    # Show progression screen if needed.
+    @autorun =>
+      return unless LOI.adventure.gameStateAvailable()
+      return if @blueprint().revealAnimating()
+
+      # Keep the map paused until Start closes the entire sequence of unlocked levels.
+
+      # If the initial progression level hasn't been unlocked, immediately show the progression screen.
+      unless unlockedProgressionLevel = @constructor.unlockedProgressionLevel()
+        return if @showProgression()
+        @showProgression true
+        
+      else
+        # Otherwise, show the progression screen if the player is trying to add a goal they haven't unlocked yet.
+        shouldProgress = false
+        
+        if goalIds = @addGoalOptions()?.goalIds
+          # Sideways goals can be sent as an array per index.
+          goalIds = _.flatten goalIds
+        
+          for goalId in goalIds
+            goalType = @constructor.getGoalType goalId
+            
+            switch goalType
+              when @constructor.GoalTypes.ShortTerm then shouldProgress = true if unlockedProgressionLevel < @constructor.ProgressionLevels.ShortTermGoals
+              when @constructor.GoalTypes.MidTerm then shouldProgress = true if unlockedProgressionLevel < @constructor.ProgressionLevels.MidTermGoals
+              when @constructor.GoalTypes.LongTerm then shouldProgress = true if unlockedProgressionLevel < @constructor.ProgressionLevels.LongTermGoals
+        
+        if shouldProgress
+          @showProgression true
+          
+        @handlingProgression shouldProgress
+  
   onDestroyed: ->
     super arguments...
     
@@ -157,12 +228,16 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     goalNode.destroy() for goalId, goalNode of @_goalNodeTemplates
   
   onBackButton: ->
-    return unless @modalWindowDisplayed()
+    return unless @modalWindowDisplayed() and not @showProgression()
     
     @closeModalWindow()
     
     # Inform that we've handled the back button.
     true
+  
+  finishProgression: ->
+    @handlingProgression false
+    @showProgression false
     
   createGoalNode: (goalId, goalHierarchy) ->
     unless PAA.Learning.Goal.getClassForId goalId
@@ -220,9 +295,6 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     # Add the new goal.
     goals[goalId] = {}
     
-    goal = PAA.Learning.Goal.getClassForId goalId
-    goals[goalId].markedComplete = true if goal.allCompleted()
-    
     if options.sourceGoalId
       # Add connection from the source goal.
       connection =
@@ -248,7 +320,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @state 'goals', goals
   
   modalWindowDisplayed: ->
-    @selectedTaskId() or @selectedGoalId() or @addGoalDisplayed()
+    @showProgression() or @selectedTaskId() or @selectedGoalId() or @addGoalDisplayed()
   
   displayModalWindowCover: ->
     @addGoalDisplayed()
@@ -259,7 +331,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @closeAddGoal() if @addGoalDisplayed()
   
   addGoalDisplayed: ->
-    @addGoalOptions()
+    @addGoalOptions() and not @showProgression()
   
   displayActiveGoals: ->
     # Show active goals once the player can mark the Pixel Art Software goal complete.

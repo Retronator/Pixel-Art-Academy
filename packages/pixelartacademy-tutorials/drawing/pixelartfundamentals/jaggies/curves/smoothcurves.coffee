@@ -162,7 +162,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
     
     @activeConditions: ->
       return unless asset = @getActiveAsset()

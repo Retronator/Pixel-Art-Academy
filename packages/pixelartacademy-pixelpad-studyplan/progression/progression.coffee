@@ -13,149 +13,137 @@ class StudyPlan.Progression extends AM.Component
     @studyPlan = @ancestorComponentOfType StudyPlan
     @panelDisplayed = new ReactiveField false
     @controlsReady = new ReactiveField false
-    @closing = new ReactiveField false
-    @revealedLevel = new ReactiveField StudyPlan.displayedProgressionLevel()
-    @speechText = new ReactiveField null
+    @playTimelapse = new ReactiveField false
+    @timelapsePlayed = new ReactiveField false
+    @timelapseReplayed = new ReactiveField false
+    @timelapseUrl = new ReactiveField null
     
-    @lotusDriving = new ReactiveField true
-    @lotusOpen = new ReactiveField false
+    @levelsInfo = [
+      level: StudyPlan.ProgressionLevels.ShortTermGoals
+      name: "Short-term goals"
+      description: "Choose what to work on next with short-term goals."
+    ,
+      level: StudyPlan.ProgressionLevels.MidTermGoals
+      name: "Mid-term goals"
+      description: "Add mid-term goals beyond short-term goals to see what comes next."
+    ,
+      level: StudyPlan.ProgressionLevels.LongTermGoals
+      name: "Long-term goals"
+      description: "Decide on a long-term goal and plan backwards how to get there."
+    ]
     
   onRendered: ->
     super arguments...
     
-    await _.waitForSeconds 1
+    await _.waitForSeconds if StudyPlan.unlockedProgressionLevel() then 0.1 else 1
     return unless @isRendered()
     
     @panelDisplayed true
     
-    await _.waitForSeconds 1
-    return unless @isRendered()
+    if @showIntro()
+      # Wait for the panel's opening transition before starting the intro.
+      await _.waitForSeconds 0.5
+      return unless @isRendered()
 
-    @_lotusLeft = if @currentLevel() < 3 then 200 else 10
-    @$('.lotus').css left: "#{@_lotusLeft}rem"
-    
-    await _.waitForSeconds 1
-    return unless @isRendered()
-    @lotusDriving false
-    
-    await _.waitForSeconds 0.5
-    return unless @isRendered()
-    
-    @lotusOpen true
+      @startTimelapse()
+
+    else
+      @controlsReady true
+
+  onDestroyed: ->
+    super arguments...
+
+    Meteor.clearTimeout @_timelapseTimeout
+
+  startTimelapse: ->
+    Meteor.clearTimeout @_timelapseTimeout
+    @controlsReady false
+
+    # A fresh image URL makes the browser restart the GIF on every replay.
+    @timelapseUrl "/pixelartacademy/pixelpad/apps/studyplan/intro.gif?playback=#{Date.now()}"
+    @playTimelapse true
+
+    @_timelapseTimeout = Meteor.setTimeout =>
+      controlsReadyDelay = if @timelapseReplayed() then 1000 else 5000
+      @timelapsePlayed true
+      
+      @_timelapseTimeout = Meteor.setTimeout =>
+        @finishTimelapse()
+      ,
+        controlsReadyDelay
+    ,
+      25000
+
+  finishTimelapse: ->
+    # Cancel the pending completion when playback is skipped before replaying.
+    Meteor.clearTimeout @_timelapseTimeout
+    @playTimelapse false
+    @timelapsePlayed true
     @controlsReady true
-    @say "Welcome to the Study Plan where you will shape your learning journey."
-
-  say: (text) ->
-    @speechText text
-
-  speechBalloonOptions: ->
-    text: => @speechText()
 
   panelDisplayedClass: ->
     'displayed' if @panelDisplayed()
 
-  levels: ->
-    [
-      number: 1
-      name: "Progress tracking"
-      description: "Use the Study Plan to see what you're working on."
-    ,
-      number: 2
-      name: "Short-term goals"
-      description: "Choose what to work on next with short-term goals."
-    ,
-      number: 3
-      name: "Mid-term goals"
-      description: "Plan one step ahead by exploring what future goals look like."
-    ,
-      number: 4
-      name: "Long-term goals"
-      description: "Choose an end goal and plan backwards how to get there."
-    ]
+  showIntro: ->
+    not StudyPlan.unlockedProgressionLevel()
   
-  currentLevel: ->
-    @revealedLevel() + 1
+  timelapsePlayedClass: ->
+    'timelapse-played' if @timelapsePlayed()
     
-  levelIsCurrent: ->
-    level = @currentData()
-    level.number is @currentLevel()
+  levelRevealed: ->
+    levelInfo = @currentData()
+    levelInfo.level <= StudyPlan.unlockedProgressionLevel()
+  
+  levelUnlockingClass: ->
+    'unlocking' if @levelHasUnlockButton()
+    
+  levelRevealedClass: ->
+    'revealed' if @levelRevealed()
 
-  levelHasUnlockButton: ->
-    @controlsReady() and not @closing() and @levelIsCurrent() and @currentLevel() <= StudyPlan.unlockedProgressionLevel()
+  levelNumber: ->
+    levelInfo = @currentData()
+    levelInfo.level - 1
 
   levelHasStartButton: ->
     level = @currentData()
-    @controlsReady() and not @closing() and level.number is @revealedLevel() and @revealedLevel() >= StudyPlan.unlockedProgressionLevel()
+    return unless level.level is StudyPlan.currentProgressionLevel()
 
-  revealed: ->
-    level = @currentData()
-    level.number <= @revealedLevel()
-
-  levelRevealedClass: ->
-    'revealed' if @revealed()
+    @controlsReady()
   
-  lotusDrivingClass: ->
-    'driving' if @lotusDriving()
+  levelHasUnlockButton: ->
+    levelInfo = @currentData()
+
+    # We unlock levels one by one.
+    levelToBeUnlocked = StudyPlan.unlockedProgressionLevel() + 1
+    return unless levelInfo.level is levelToBeUnlocked
+  
+    # Make sure the level can be unlocked.
+    return unless levelToBeUnlocked <= StudyPlan.currentProgressionLevel()
     
-  lotusOpenClass: ->
-    'open' if @lotusOpen()
+    @controlsReady()
 
   events: ->
     super(arguments...).concat
+      'click': @onClick
       'click .unlock-button': @onClickUnlockButton
       'click .start-button': @onClickStartButton
-
+      'click .replay-button': @onClickReplayButton
+  
+  onClick: (event) ->
+    @finishTimelapse() if @playTimelapse()
+  
   onClickUnlockButton: (event) ->
-    return unless @levelHasUnlockButton()
+    levelInfo = @currentData()
 
-    # Reveal locally so the parent keeps the screen open and the map paused between levels.
-    @revealedLevel @currentData().number
-
-    @_moveLotusLeft() if @revealedLevel() is 3
-
-  _moveLotusLeft: ->
-    return unless @_lotusLeft is 200
-
-    # Keep Start unavailable and hide speech while Mini Retro gets in and changes parking spots.
-    @controlsReady false
-    speechText = @speechText()
-    @say null
-    @lotusOpen false
-
-    await _.waitForSeconds 0.5
-    return unless @isRendered()
-
-    @lotusDriving true
-    @_lotusLeft = 10
-    @$('.lotus').css left: "#{@_lotusLeft}rem"
-
-    await _.waitForSeconds 1
-    return unless @isRendered()
-    @lotusDriving false
-
-    await _.waitForSeconds 0.5
-    return unless @isRendered()
-
-    @lotusOpen true
-    @say speechText
-    @controlsReady true
+    StudyPlan.unlockedProgressionLevel levelInfo.level
 
   onClickStartButton: (event) ->
-    return unless @levelHasStartButton()
-    @closing true
-    @lotusOpen false
-    @say null
-
-    await _.waitForSeconds 0.5
-    return unless @isRendered()
-
-    @$('.lotus').css
-      left: "-250rem"
-      transition: "left 1s ease-in"
-      
-    @lotusDriving true
+    # Start button on the intro screen also unlocks the level.
+    StudyPlan.unlockedProgressionLevel StudyPlan.ProgressionLevels.Intro unless StudyPlan.unlockedProgressionLevel()
     
-    await _.waitForSeconds 1
-    return unless @isRendered()
-    
-    @studyPlan.finishProgression @revealedLevel()
+    # Close the progression panel.
+    @studyPlan.finishProgression()
+  
+  onClickReplayButton: (event) ->
+    @timelapseReplayed true
+    @startTimelapse()

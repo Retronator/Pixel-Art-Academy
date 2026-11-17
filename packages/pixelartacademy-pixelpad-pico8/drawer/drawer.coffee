@@ -1,4 +1,5 @@
 AB = Artificial.Base
+AC = Artificial.Control
 AM = Artificial.Mirage
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
@@ -23,6 +24,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     @selectedCartridge = new ReactiveField null
     @selectedCartridgeVariant = new ReactiveField null
     @selectedCartridgeVariantIndex = new ReactiveField null
+    @cartridgeVariationsAnimating = new ReactiveField false
 
   onCreated: ->
     super arguments...
@@ -120,6 +122,12 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
   onRendered: ->
     super arguments...
 
+    # Normalize wheel and smooth scrolling into variant changes matching the arrow buttons.
+    @_discreteWheelEventListener = new AC.DiscreteWheelEventListener
+      timeout: 0.2
+      element: @$('.selected-cartridge')[0]
+      callback: (sign) => @changeCartridgeVariant -sign
+
     # Open the drawer on app launch.
     Meteor.setTimeout =>
       @opened true
@@ -129,6 +137,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
   onDestroyed: ->
     super arguments...
+
+    @_discreteWheelEventListener?.destroy()
 
     cartridge.destroy() for gameSlug, cartridge of @_cartridges
 
@@ -197,7 +207,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     switch
      when selectedCartridgeVariantIndex < cartridgeVariant.index then 'previous'
      when selectedCartridgeVariantIndex > cartridgeVariant.index then 'next'
-     else 'current'
+     when not @cartridgeVariationsAnimating() then 'current'
 
   cartridgeShareUrl: ->
     cartridge = @currentData()
@@ -240,11 +250,22 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     @changeCartridgeVariant 1
 
   changeCartridgeVariant: (offset) ->
+    return unless selectedCartridge = @selectedCartridge()
+
     variantIndex = @selectedCartridgeVariantIndex() + offset
-    variant = @selectedCartridge().variants[variantIndex]
+    return unless variant = selectedCartridge.variants[variantIndex]
 
     AB.Router.changeParameter 'parameter3', variant.cartridge.options.projectId
     @audio.cartridgeSelect()
+    
+    @cartridgeVariationsAnimating true
+    
+    Meteor.clearTimeout @_stopCartridgeVariationsAnimatingTimeout
+    
+    @_stopCartridgeVariationsAnimatingTimeout = Meteor.setTimeout =>
+      @cartridgeVariationsAnimating false
+    ,
+      500
 
   onClickSelectedCartridgeMemoryCard: (event) ->
     if @pannedLeft()

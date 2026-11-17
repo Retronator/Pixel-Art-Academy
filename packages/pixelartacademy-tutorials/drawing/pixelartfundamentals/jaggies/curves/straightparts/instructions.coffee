@@ -68,7 +68,7 @@ class StraightParts.Instructions
       return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
 
   class @DrawFirstLine extends @StepInstruction
     @id: -> "#{StraightParts.id()}.DrawFirstLine"
@@ -266,7 +266,7 @@ class StraightParts.Instructions
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      InstructionsSystem.DisplayState.Hidden
+      InstructionsSystem.DisplayStates.Hidden
     
     @initialize()
     
@@ -295,4 +295,4 @@ class StraightParts.Instructions
       return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom

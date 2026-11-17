@@ -29,7 +29,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CombiningBasicShapes extends PAA
 
     @activeDisplayState: ->
       # We only have markup without a message.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
       
     @priority: -> -1
    

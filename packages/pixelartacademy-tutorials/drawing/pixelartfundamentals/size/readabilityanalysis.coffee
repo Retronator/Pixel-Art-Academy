@@ -283,7 +283,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
     
     @initialize()
 
@@ -291,7 +291,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     @passes: -> throw new AE.NotImplementedException "Readability analysis description must say whether it should be displayed when passed or not."
     @assetClass: -> Asset
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> 3
 
     activeConditions: ->

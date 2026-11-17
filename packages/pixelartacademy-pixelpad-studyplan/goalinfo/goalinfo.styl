@@ -16,13 +16,15 @@
     visibility visible
     opacity 1
 
-  &:not(.goal-completed)
-    .marked-complete
-      color atariGray(4)
-      cursor default
+  .archived:has(input:disabled)
+    color atariGray(4)
+    cursor default
 
-      .checkmark
-        border-color atariGray(4)
+    .checkmark
+      border-color atariGray(4)
+
+    input:checked + .checkmark::before
+      color atariGray(4)
 
   .close-button
     position absolute
@@ -42,7 +44,7 @@
     margin-bottom 5rem
     margin-right 10rem
 
-  .marked-complete
+  .archived
     display block
     cursor pointer
     color atariGray(6)
@@ -52,7 +54,7 @@
 
       &:checked + .checkmark::before
         content '✓'
-        color atariGreen(5)
+        color atariGray(6)
 
     .checkmark
       position relative

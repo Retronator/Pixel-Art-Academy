@@ -123,7 +123,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       You can choose too, so to complete this lesson, turn off Even diagonals evaluation by removing the required checkmark.
     """
     
-    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
+    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySides.Top
     
     @activeConditions: ->
       return unless asset = @getActiveAsset()

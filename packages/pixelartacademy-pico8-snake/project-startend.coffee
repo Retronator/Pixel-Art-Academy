@@ -83,13 +83,13 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Proj
           type: Snake.Project.id()
           profileId: profileId
           assets: [
-            id: Snake.Body.id()
-            type: Snake.Body.type()
-            bitmapId: bodyBitmapId
-          ,
             id: Snake.Food.id()
             type: Snake.Food.type()
             bitmapId: foodBitmapId
+          ,
+            id: Snake.Body.id()
+            type: Snake.Body.type()
+            bitmapId: bodyBitmapId
           ]
 
         # Write the project ID into profile's game state.

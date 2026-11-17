@@ -36,13 +36,13 @@ class PAA.Tutorials.Drawing.Instructions.Desktop extends PAA.PixelPad.Systems.In
     
   instructionsStyle: ->
     switch @displayState()
-      when @constructor.DisplayState.Open
+      when @constructor.DisplayStates.Open
         value = "calc(-#{@contentHeight()}px - #{@headerHeight}rem)"
       
-      when @constructor.DisplayState.Closed
+      when @constructor.DisplayStates.Closed
         value = "-#{@headerHeight}rem"
       
       else
         value = "#{@hideTop}rem"
     
-    "#{if @displaySide() is @constructor.DisplaySide.Top then 'bottom' else 'top'}": value
+    "#{if @displaySide() is @constructor.DisplaySides.Top then 'bottom' else 'top'}": value

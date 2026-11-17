@@ -22,7 +22,7 @@ class LineArtCleanup.Instructions
     displaySide: ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
       
   class @DrawLine extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.DrawLine"

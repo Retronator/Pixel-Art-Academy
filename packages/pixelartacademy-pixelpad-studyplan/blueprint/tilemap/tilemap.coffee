@@ -333,14 +333,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     
   events: ->
     super(arguments...).concat
-      'click .flag .image': @onClickFlagImage
       'click .expansion-point': @onClickExpansionPoint
-  
-  onClickFlagImage: (event) ->
-    tile = @currentData()
-    goal = @ancestorComponentOfType StudyPlan.Blueprint.Goal
-
-    goal.markComplete not tile.flagRaised()
   
   onClickExpansionPoint: (event) ->
     tile = @currentData()

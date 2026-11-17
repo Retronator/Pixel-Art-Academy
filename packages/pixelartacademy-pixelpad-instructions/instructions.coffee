@@ -4,12 +4,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
-  @DisplayState =
+  @DisplayStates =
     Open: 'Open'
     Closed: 'Closed'
     Hidden: 'Hidden'
     
-  @DisplaySide =
+  @DisplaySides =
     Top: 'Top'
     Bottom: 'Bottom'
   
@@ -41,10 +41,10 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
       new instructionClass @
   
     @activeInstructions = new ComputedField =>
-      activeInstructions = _.filter @instructions, (instruction) -> instruction.activeConditions() and not instruction.completed()
+      activeInstructions = _.filter @instructions, (instruction) => instruction.active() and not instruction.completed()
       
       # Sort by priority
-      _.sortBy activeInstructions, (instruction) -> -instruction.priority()
+      _.sortBy activeInstructions, (instruction) => -instruction.priority()
       
     @targetDisplayedInstruction = new ComputedField =>
       # Show the first active instruction that isn't delayed.
@@ -58,7 +58,7 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     @targetDisplaySide = new ComputedField =>
       @targetDisplayedInstruction()?.displaySide()
       
-    @displaySide = new ReactiveField @constructor.DisplaySide.Bottom
+    @displaySide = new ReactiveField @constructor.DisplaySides.Bottom
     
     @displayedInstruction = new ReactiveField null
 
@@ -116,7 +116,7 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
           return
         
         # If another instruction is open we have to first close it.
-        if @displayState() is @constructor.DisplayState.Open
+        if @displayState() is @constructor.DisplayStates.Open
           await @animateClose()
           
           @displayedInstruction null
@@ -133,7 +133,7 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
       
       else
         # We shouldn't be showing any instructions.
-        await @animateHide() unless @displayState() is @constructor.DisplayState.Hidden
+        await @animateHide() unless @displayState() is @constructor.DisplayStates.Hidden
         
         @displayedInstruction null
         
@@ -151,9 +151,9 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     
     _.find @instructions, (instruction) -> instruction.id() is id
     
-  animateOpen: -> @animateDisplayState @constructor.DisplayState.Open
-  animateClose: -> @animateDisplayState @constructor.DisplayState.Closed
-  animateHide: -> @animateDisplayState @constructor.DisplayState.Hidden
+  animateOpen: -> @animateDisplayState @constructor.DisplayStates.Open
+  animateClose: -> @animateDisplayState @constructor.DisplayStates.Closed
+  animateHide: -> @animateDisplayState @constructor.DisplayStates.Hidden
   
   animateDisplayState: (state) ->
     @animating true
@@ -203,5 +203,5 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
   onClickHeader: (event) ->
     defaultDisplayState = @defaultDisplayState()
     
-    targetDisplayState = if @displayState() is @constructor.DisplayState.Open then @constructor.DisplayState.Closed else @constructor.DisplayState.Open
+    targetDisplayState = if @displayState() is @constructor.DisplayStates.Open then @constructor.DisplayStates.Closed else @constructor.DisplayStates.Open
     @manualDisplayState if targetDisplayState is defaultDisplayState then null else targetDisplayState

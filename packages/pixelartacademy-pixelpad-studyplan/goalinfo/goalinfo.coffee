@@ -33,9 +33,9 @@ class StudyPlan.GoalInfo extends AM.Component
   goalCompletedClass: ->
     'goal-completed' if @goal()?.completed()
     
-  markedComplete: ->
+  manuallyArchived: ->
     return unless goalId = @goalId()
-    StudyPlan.isGoalMarkedComplete goalId
+    StudyPlan.isGoalManuallyArchived goalId
     
   goalComponent: ->
     return unless goalId = @goalId()
@@ -61,8 +61,8 @@ class StudyPlan.GoalInfo extends AM.Component
     @studyPlan.removeGoal @goalId()
     @studyPlan.deselectGoal()
     
-  class @MarkedComplete extends AM.DataInputComponent
-    @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo.MarkedComplete'
+  class @Archived extends AM.DataInputComponent
+    @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo.Archived'
     
     constructor: ->
       super arguments...
@@ -75,11 +75,14 @@ class StudyPlan.GoalInfo extends AM.Component
       @goalInfo = @ancestorComponentOfType StudyPlan.GoalInfo
       
     customAttributes: ->
-      disabled: true unless @goalInfo.goal()?.completed()
+      goal = @goalInfo.goal()
+      
+      # You can only change the archived status when the goal has optional tasks left (completed, but not fully).
+      disabled: true unless goal?.completed() and not goal.allCompleted()
     
     load: ->
       return unless goalNode = @goalInfo.goalNode()
-      goalNode.markedComplete()
+      goalNode.goal.archived()
     
     save: (value) ->
-      @goalInfo.goalComponent().markComplete value
+      @goalInfo.goalComponent().manuallyArchive value

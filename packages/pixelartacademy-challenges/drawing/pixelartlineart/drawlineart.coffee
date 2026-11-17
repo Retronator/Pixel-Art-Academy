@@ -140,7 +140,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
       Place the required checkmark on the criteria you want to be graded on.
     """
     
-    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
+    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySides.Top
     
     @delayDuration: -> 3
     
@@ -212,7 +212,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
 
     @activeDisplayState: ->
       # We only want a pop-up without a normal instruction message.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
     
     @activeConditions: ->
       return unless asset = @getActiveAsset()

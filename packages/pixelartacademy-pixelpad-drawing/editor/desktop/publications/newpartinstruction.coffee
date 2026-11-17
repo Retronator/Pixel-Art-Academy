@@ -30,7 +30,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.NewPartInstruction e
   
   @activeDisplayState: ->
     # We only have markup without a message.
-    PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+    PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
   
   @initialize()
   

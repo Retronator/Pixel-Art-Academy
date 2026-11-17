@@ -154,7 +154,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
     
     @priority: -> 1
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
 
     @initialize()
     
@@ -183,7 +183,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
       Do that now by removing the checkmark next to the Corners criterion.
     """
     
-    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
+    @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySides.Top
     
     @initialize()
     
@@ -240,4 +240,4 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
       return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom

@@ -14,7 +14,7 @@ class Basics.BackButtonShortcutInstruction extends PAA.PixelPad.Systems.Instruct
   
   @activeDisplayState: ->
     # We only have markup without a message.
-    InstructionsSystem.DisplayState.Hidden
+    InstructionsSystem.DisplayStates.Hidden
   
   @initialize()
 

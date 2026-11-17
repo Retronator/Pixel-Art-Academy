@@ -67,14 +67,6 @@ class StudyPlan.Blueprint extends AM.Component
       
       Tracker.nonreactive => new StudyPlan.GoalHierarchy @, goalsData
     
-    @previewConnection = new ReactiveField null
-
-    @previewGoalHierarchy = new AE.LiveComputedField =>
-      return unless goalHierarchy = @goalHierarchy()
-      return unless previewConnection = @previewConnection()
-      
-      Tracker.nonreactive => goalHierarchy.getPreviewGoalHierarchy previewConnection
-    
     @roadTileMapComponent = new @constructor.TileMap noBlueprint: true
     
     # Create goal components and connections.
@@ -93,9 +85,6 @@ class StudyPlan.Blueprint extends AM.Component
       return unless newGoalIds = @goalIds()
       previousGoalComponents = _.values @_goalComponentsById
       
-      if previewConnection = @previewConnection()
-        newGoalIds = _.union newGoalIds, [previewConnection.startGoalId, previewConnection.endGoalId]
-
       for goalId in newGoalIds
         goalComponent = @_goalComponentsById[goalId]
 
@@ -126,6 +115,7 @@ class StudyPlan.Blueprint extends AM.Component
     @revealAnimating = new ReactiveField false
     
     @readyToAnimate = new ComputedField =>
+      return if @studyPlan.handlingProgression() or @studyPlan.showProgression()
       return unless @roadTileMapComponent.isRendered()
       
       goalComponentsById = @goalComponentsById()
@@ -139,7 +129,7 @@ class StudyPlan.Blueprint extends AM.Component
     
     @autorun (computation) =>
       return unless @readyToAnimate()
-      return unless goalHierarchy = @displayedGoalHierarchy()
+      return unless goalHierarchy = @goalHierarchy()
       goalHierarchy.roadTileMap()
       return if @_animationRestarting
       
@@ -161,27 +151,30 @@ class StudyPlan.Blueprint extends AM.Component
           # Wait for the tilemap to be reset.
           Tracker.afterFlush =>
             # Reveal the starting point.
-            for rootGoalNode in goalHierarchy.rootGoalNodes
-              @revealPoint rootGoalNode.entryPoint
-          
-            # Animate unrevealed tasks and goals.
             @_animateTimeouts.push Meteor.setTimeout =>
-              @$blueprint().addClass 'animating'
-              camera = @camera()
-              
-              for point in @_pointsWaitingToBeRevealed
-                # Center camera slightly to the right of the point if we're not close enough.
-                mapPosition = @constructor.TileMap.mapPosition point.globalPosition
-                mapPosition.x += 50
-                origin = camera.origin()
-                camera.setOrigin mapPosition if Math.abs(mapPosition.x - origin.x) > 100 or Math.abs(mapPosition.y - origin.y) > 100
+              for rootGoalNode in goalHierarchy.rootGoalNodes
+                @revealPoint rootGoalNode.entryPoint
+            
+              # Animate unrevealed tasks and goals.
+              @_animateTimeouts.push Meteor.setTimeout =>
+                @$blueprint().addClass 'animating'
+                camera = @camera()
                 
-                await @revealPoint point, true
-                
-              @initialRevealCompleted true
-              @revealAnimating false
+                for point in @_pointsWaitingToBeRevealed
+                  # Center camera slightly to the right of the point if we're not close enough.
+                  mapPosition = @constructor.TileMap.mapPosition point.globalPosition
+                  mapPosition.x += 50
+                  origin = camera.origin()
+                  camera.setOrigin mapPosition if Math.abs(mapPosition.x - origin.x) > 100 or Math.abs(mapPosition.y - origin.y) > 100
+                  
+                  await @revealPoint point, true
+                  
+                @initialRevealCompleted true
+                @revealAnimating false
+              ,
+                if @initialRevealCompleted() or not StudyPlan.isAnythingRevealed() then 30 else 1000
             ,
-              if @initialRevealCompleted() then 30 else 1000
+              if StudyPlan.isAnythingRevealed() then 0 else 1000
 
     # Calculate total bounding rectangle of the map.
     @autorun (computation) =>
@@ -228,9 +221,6 @@ class StudyPlan.Blueprint extends AM.Component
     
     @goalHierarchy()?.destroy()
     @goalHierarchy.stop()
-    
-    @previewGoalHierarchy()?.destroy()
-    @previewGoalHierarchy.stop()
   
   getGoalNameTileHeight: (goalId) ->
     return 1 unless @isRendered()
@@ -309,15 +299,8 @@ class StudyPlan.Blueprint extends AM.Component
           return if @_animationRestarting
   
           # See if we need to raise a flag.
-          if taskPoint.goalNode.markedComplete()
-            raiseFlag = true
-
-          # When revealing a goal that has all its tasks completed, automatically mark it as complete.
-          else if animate and taskPoint.goalNode.goal.allCompleted()
-            taskPoint.goalNode.markComplete true
-            raiseFlag = true
-            
-          goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true if raiseFlag
+          if taskPoint.goalNode.goal.completed()
+            goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true
         
         return unless taskPoint.goalNode.goal.completed()
         
@@ -368,8 +351,6 @@ class StudyPlan.Blueprint extends AM.Component
   renderRoadTileMapComponent: ->
     @roadTileMapComponent.renderComponent @currentComponent()
     
-  displayedGoalHierarchy: -> @previewGoalHierarchy() or @goalHierarchy()
-
   goalComponents: ->
     _.values @goalComponentsById()
   
@@ -380,7 +361,7 @@ class StudyPlan.Blueprint extends AM.Component
   goalNodeForGoalComponent: ->
     goalComponent = @currentData()
     
-    return unless goalHierarchy = @displayedGoalHierarchy()
+    return unless goalHierarchy = @goalHierarchy()
     
     goalHierarchy.goalNodesById[goalComponent.goalId]
 
@@ -415,7 +396,7 @@ class StudyPlan.Blueprint extends AM.Component
     'task-selected' if @studyPlan.selectedTaskId()
     
   focusGoal: (goalId) ->
-    goalHierarchy = @displayedGoalHierarchy()
+    goalHierarchy = @goalHierarchy()
     goalNode = goalHierarchy.goalNodesById[goalId]
     goalPosition = goalNode.globalPosition()
     centerX = goalPosition.x + (goalNode.tileMap.minX + goalNode.tileMap.maxX) / 2
@@ -443,7 +424,6 @@ class StudyPlan.Blueprint extends AM.Component
 
   onMouseDown: (event) ->
     $target = $(event.target)
-    return if $target.closest('.flag.tile').length
     return if $target.closest('.building.tile').length
     return if $target.closest('.gate.tile').length
     return if $target.closest('.goal-ui').length

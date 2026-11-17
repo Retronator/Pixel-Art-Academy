@@ -2,11 +2,10 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-StudyPlan = PAA.PixelPad.Apps.StudyPlan
 Markup = PAA.Practice.Helpers.Drawing.Markup
 Atari2600 = LOI.Assets.Palette.Atari2600
 
-class StudyPlan.InterfaceMarking
+class PAA.Tutorials.Planning.StudyPlan.InterfaceMarking
   @defaultStyle: ->
     palette = LOI.palette()
     markupColor = palette.color Atari2600.hues.aqua, 5

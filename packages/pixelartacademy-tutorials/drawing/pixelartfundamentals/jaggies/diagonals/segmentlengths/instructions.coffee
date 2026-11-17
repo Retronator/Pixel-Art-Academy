@@ -51,7 +51,7 @@ class SegmentLengths.Instructions
     displaySide: ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
     
   class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> SegmentLengths
@@ -72,16 +72,16 @@ class SegmentLengths.Instructions
       drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
     
     @activeDisplayState: ->
-      return PAA.PixelPad.Systems.Instructions.DisplayState.Open unless @closeOutsideEvaluationPaper()
+      return PAA.PixelPad.Systems.Instructions.DisplayStates.Open unless @closeOutsideEvaluationPaper()
       
       pixelArtEvaluation = @getPixelArtEvaluation()
       
-      if pixelArtEvaluation.active() then PAA.PixelPad.Systems.Instructions.DisplayState.Open else PAA.PixelPad.Systems.Instructions.DisplayState.Closed
+      if pixelArtEvaluation.active() then PAA.PixelPad.Systems.Instructions.DisplayStates.Open else PAA.PixelPad.Systems.Instructions.DisplayStates.Closed
     
     displaySide: ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
 
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
       
     openEvaluationPaper: (focusPoint, scale) ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
@@ -508,7 +508,7 @@ class SegmentLengths.Instructions
     @activeDisplayState: ->
       pixelArtEvaluation = @getPixelArtEvaluation()
       
-      if pixelArtEvaluation.active() then PAA.PixelPad.Systems.Instructions.DisplayState.Hidden else PAA.PixelPad.Systems.Instructions.DisplayState.Open
+      if pixelArtEvaluation.active() then PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden else PAA.PixelPad.Systems.Instructions.DisplayStates.Open
       
     @activeConditions: ->
       return unless asset = @getActiveAsset()

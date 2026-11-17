@@ -21,7 +21,7 @@ class EndSegments.Instructions
     displaySide: ->
       return unless pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
 
     openEvaluationPaper: (focusPoint, scale, criterion) ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
@@ -142,7 +142,7 @@ class EndSegments.Instructions
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      InstructionsSystem.DisplayState.Hidden
+      InstructionsSystem.DisplayStates.Hidden
     
     @initialize()
     

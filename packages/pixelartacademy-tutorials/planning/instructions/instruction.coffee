@@ -9,7 +9,9 @@ class PAA.Tutorials.Planning.Instructions.Instruction extends PAA.PixelPad.Syste
   @defaultDelayDuration = 3
   
   @getStudyPlan: ->
-    PAA.PixelPad.Apps.StudyPlan.getApp()
+    return unless studyPlan = PAA.PixelPad.Apps.StudyPlan.getApp()
+    return unless studyPlan.isCreated()
+    studyPlan
   
   @getBlueprint: ->
     return unless blueprint = @getStudyPlan()?.blueprint()

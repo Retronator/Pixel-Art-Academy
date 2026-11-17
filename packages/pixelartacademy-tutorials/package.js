@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-pixelpad-drawing');
+  api.use('retronator:pixelartacademy-pixelpad-studyplan');
   api.use('retronator:pixelartacademy-pixelpad-instructions');
   api.use('retronator:pixelartdatabase');
 
@@ -224,5 +225,16 @@ Package.onUse(function(api) {
   api.addFile('planning/instructions..');
   api.addFile('planning/instructions/instruction')
   api.addComponent('planning/instructions/studyplan..');
+
+  // Study plan
+
+  api.addFile('planning/studyplan..');
+  api.addFile('planning/studyplan/interfacemarking');
+
+  api.addFile('planning/studyplan/expansionpoints');
+  api.addFile('planning/studyplan/progression');
+  api.addFile('planning/studyplan/intro');
+  api.addFile('planning/studyplan/elementsofart');
+  api.addFile('planning/studyplan/pixelartfundamentals');
 
 });

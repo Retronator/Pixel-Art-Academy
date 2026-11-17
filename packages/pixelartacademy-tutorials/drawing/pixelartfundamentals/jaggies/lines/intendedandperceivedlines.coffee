@@ -78,7 +78,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
     
     @activeDisplayState: ->
       # We only have markup without a message.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Hidden
     
     @initialize()
     

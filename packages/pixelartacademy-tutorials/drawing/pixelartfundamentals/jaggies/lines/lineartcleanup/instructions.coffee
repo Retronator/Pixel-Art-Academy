@@ -93,7 +93,7 @@ class LineArtCleanup.Instructions
       Click on the Pixel-perfect lines criterion below to see individual problems.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @initialize()
@@ -131,7 +131,7 @@ class LineArtCleanup.Instructions
       In this detailed view, you can hover over the numbers in the count column to show just those pixels in the analysis.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @initialize()
@@ -185,7 +185,7 @@ class LineArtCleanup.Instructions
       Close the evaluation paper and eliminate all doubles and corners.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
 
     @initialize()
@@ -201,7 +201,7 @@ class LineArtCleanup.Instructions
       Close the evaluation paper and eliminate all doubles.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @activeConditions: ->
@@ -228,7 +228,7 @@ class LineArtCleanup.Instructions
       Close the evaluation paper to complete the lesson.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @displaySide: -> InstructionsSystem.DisplaySides.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @activeConditions: ->
@@ -263,9 +263,9 @@ class LineArtCleanup.Instructions
       # Note: In case the user undoes the steps to where the pixel art evaluation property is not present anymore, the
       # view will not display anymore, so we just show this instruction at the bottom even without the view being
       # present.
-      return InstructionsSystem.DisplaySide.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return InstructionsSystem.DisplaySides.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom
     
   class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{LineArtCleanup.id()}.Complete"
@@ -279,6 +279,6 @@ class LineArtCleanup.Instructions
     
     displaySide: ->
       return unless drawingEditor = @getEditor()
-      return InstructionsSystem.DisplaySide.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return InstructionsSystem.DisplaySides.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySides.Top else InstructionsSystem.DisplaySides.Bottom

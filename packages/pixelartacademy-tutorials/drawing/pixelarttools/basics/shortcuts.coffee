@@ -69,7 +69,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
   
     @activeDisplayState: ->
       # Show this tip closed.
-      PAA.PixelPad.Systems.Instructions.DisplayState.Closed
+      PAA.PixelPad.Systems.Instructions.DisplayStates.Closed
       
     @delayDuration: -> 3
   

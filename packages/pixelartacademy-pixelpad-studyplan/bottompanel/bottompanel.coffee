@@ -12,14 +12,14 @@ class StudyPlan.BottomPanel extends AM.Component
     super arguments...
 
     @headerHeight = 15
+    
+    @opened = new ReactiveField false
 
   onCreated: ->
     super arguments...
 
     @contentHeight = new ReactiveField 0
     @previousContentHeight = new ReactiveField 0
-
-    @opened = new ReactiveField false
 
   onRendered: ->
     super arguments...

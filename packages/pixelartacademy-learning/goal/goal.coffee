@@ -211,6 +211,7 @@ class PAA.Learning.Goal
   
   @completed: -> @getAdventureInstance().completed()
   @allCompleted: -> @getAdventureInstance().allCompleted()
+  @archived: -> @getAdventureInstance().archived()
   @added: -> @getAdventureInstance().added()
   @active: -> @getAdventureInstance().active()
   @available: -> @getAdventureInstance().available()
@@ -260,20 +261,20 @@ class PAA.Learning.Goal
   finalGroupNumber: -> @constructor.finalGroupNumber()
 
   # The goal is completed when at least one of the final tasks has been reached.
-  completed: ->
-    _.some (task.completed() for task in @finalTasks())
+  completed: -> _.some (task.completed() for task in @finalTasks())
     
   # The goal is fully completed when all of the tasks are completed.
-  allCompleted: ->
-    _.every (task.completed() for task in @tasks())
+  allCompleted: -> _.every (task.completed() for task in @tasks())
+    
+  # A goal is archived if it's completed and manually archived or automatically when all tasks are completed.
+  # Note: We check all completed first to minimize checking the state for fully completed goals.
+  archived: -> @allCompleted() or @completed() and PAA.PixelPad.Apps.StudyPlan.isGoalManuallyArchived(@)
 
   # A goal is added when it has been added to the study plan.
   added: -> PAA.PixelPad.Apps.StudyPlan.hasGoal @
   
-  # A goal is active when it has been added to the study plan and not marked complete.
-  active: ->
-    # Note: We want to make sure the goal is completed, since it might not be anymore after an update, or to debug.
-    PAA.PixelPad.Apps.StudyPlan.hasActiveGoal(@) or PAA.PixelPad.Apps.StudyPlan.hasGoal(@) and not @completed()
+  # A goal is active when it has been added to the study plan and not manually archived or fully completed.
+  active: -> PAA.PixelPad.Apps.StudyPlan.hasGoal(@) and not @archived()
   
   # A goal is available when one of its initial tasks is available or completed.
   available: -> _.some (task.availableOrCompleted() for task in @initialTasks())
