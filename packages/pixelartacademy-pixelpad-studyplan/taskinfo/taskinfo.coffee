@@ -17,7 +17,6 @@ class StudyPlan.TaskInfo extends AM.Component
   
   @taskPadding =
     left: 15
-    top: 10
     bottom: 15
     right: 30
   
@@ -80,6 +79,9 @@ class StudyPlan.TaskInfo extends AM.Component
     return unless taskPosition = @taskPosition()
     return unless blueprint = @blueprint()
     displayCoordinates = blueprint.camera().transformCanvasToDisplay taskPosition
+    
+    return unless task = @task()
+    buildingHeight = StudyPlan.Blueprint.TileMap.buildings.heights[task.studyPlanBuilding()] or 10
 
     infoWidth = @bounds.width()
     infoHeight = @bounds.height()
@@ -105,7 +107,7 @@ class StudyPlan.TaskInfo extends AM.Component
       centerY = screenHeight / 2
       
       spaceBelow = maxScreenY - displayCoordinates.y - @constructor.taskPadding.bottom
-      spaceAbove = displayCoordinates.y - @constructor.taskPadding.top - @constructor.edgePadding
+      spaceAbove = displayCoordinates.y - buildingHeight - @constructor.edgePadding
       spaceToLeft = displayCoordinates.x - @constructor.taskPadding.left - @constructor.edgePadding
       spaceToRight = maxScreenX - displayCoordinates.x - @constructor.taskPadding.right
   
@@ -114,7 +116,7 @@ class StudyPlan.TaskInfo extends AM.Component
           top = displayCoordinates.y + @constructor.taskPadding.bottom
       
         else
-          bottom = screenHeight - displayCoordinates.y + @constructor.taskPadding.top
+          bottom = screenHeight - displayCoordinates.y + buildingHeight
           
         left = _.clamp displayCoordinates.x - infoWidth / 2, minScreenX, maxScreenX - infoWidth
         left = @constructor.backButtonPadding if left < @constructor.backButtonPadding and (top? and top < @constructor.backButtonPadding or screenHeight - bottom - infoHeight < @constructor.backButtonPadding)

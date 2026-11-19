@@ -53,31 +53,31 @@
             transition bottom 0.2s ease-out, filter 0.1s
             bottom -10rem
 
-      &.task-highlighted
-        .building
-        .gate
-          .image
-            filter drop-shadow(0 0 2rem white)
+    &.task-highlighted
+      .building
+      .gate
+        .image
+          filter drop-shadow(0 0 2rem white)
 
-        .building
+      .building
+        &.active
+          .blueprint
+            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
+
+        &.height-8
           &.active
             .blueprint
-              border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
-
-          &.height-8
-            &.active
-              .blueprint
-                background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
-
-            .blueprint
-              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
+              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
 
           .blueprint
-            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
 
-        .gate
-          .blueprint
-            background-position-x -69rem
+        .blueprint
+          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+
+      .gate
+        .blueprint
+          background-position-x -69rem
 
     .pathway
     .gate

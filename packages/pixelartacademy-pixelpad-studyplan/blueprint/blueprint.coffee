@@ -215,6 +215,7 @@ class StudyPlan.Blueprint extends AM.Component
   onDestroyed: ->
     super arguments...
 
+    @camera().stopAnimating()
     @goalsData.stop()
     @goalIds.stop()
     @goalComponentsById.stop()
@@ -372,6 +373,8 @@ class StudyPlan.Blueprint extends AM.Component
     transform: "translate3d(#{originInWindow.x}px, #{originInWindow.y}px, 0)"
 
   startDragBlueprint: ->
+    @camera().stopAnimating()
+
     # Dragging of blueprint needs to be handled in display coordinates since the canvas ones should technically stay
     # the same (the whole point is for the same canvas coordinate to stay under the mouse as we move it around).
     @dragStartDisplayCoordinate = @mouse().displayCoordinate()
@@ -413,8 +416,22 @@ class StudyPlan.Blueprint extends AM.Component
     goalComponent = goalComponentsById[task.goal.id()]
     mapPosition = goalComponent.getMapPositionForTask taskId
     
+    # Choose the focus center based on whether active goals or interests panels are open.
     camera = @camera()
-    camera.setOrigin mapPosition
+    activeGoalsOpened = @studyPlan.activeGoals().opened()
+    interestsOpened = @studyPlan.interests().opened()
+
+    # Offset the camera opposite the desired task placement, using viewport dimensions in map coordinates.
+    if activeGoalsOpened and interestsOpened
+      mapPosition.y += camera.viewportBounds.height() * 0.4
+
+    else if activeGoalsOpened
+      mapPosition.x -= camera.viewportBounds.width() * 0.25
+
+    else if interestsOpened
+      mapPosition.x += camera.viewportBounds.width() * 0.25
+
+    camera.animateToOrigin mapPosition
 
   events: ->
     super(arguments...).concat

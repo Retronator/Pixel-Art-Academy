@@ -3,6 +3,7 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   # goals: object of goals placed in the study plan
@@ -169,6 +170,18 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
       @_goals = (new goalClass for goalClass in PAA.Learning.Goal.getClasses())
       @_goals
     
+    # Subscribe to interests that can be displayed in the Study Plan app.
+    @autorun (computation) =>
+      # All current (gained) interests are shown in the interests list.
+      interests = LOI.adventure.currentInterests()
+
+      # All goals added to the plan can show their required interests (in goals) and provided (in interests).
+      for goal in @goals() when goal.added()
+        interests = _.union interests, goal.requiredInterests(), goal.optionalInterests(), goal.interests()
+
+      IL.Interest.forReferenceNames.subscribe @, interests
+      IL.Interest.forReferenceNames.subscribeContent @, interests
+
     @_goalNodeTemplates = {}
 
     @blueprint new @constructor.Blueprint @

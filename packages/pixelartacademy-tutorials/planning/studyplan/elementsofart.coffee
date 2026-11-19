@@ -13,6 +13,7 @@ class PAA.Tutorials.Planning.StudyPlan.ElementsOfArt
     
     @message: -> """
       Your learning journey revolves around the seven elements of art.
+
       Completing each one leads to specialized side quests that apply that element to pixel art.
     """
     

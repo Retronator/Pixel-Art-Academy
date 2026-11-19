@@ -31,11 +31,10 @@ class StudyPlan.Blueprint.Camera
 
     @_preciseOrigin = @origin()
 
+    @viewportBounds = new AE.Rectangle()
     @boundOrigin = new ComputedField => @_bindPosition @origin()
     
     # Calculate viewport in canvas coordinates.
-    @viewportBounds = new AE.Rectangle()
-
     @blueprint.autorun =>
       effectiveScale = @effectiveScale()
       origin = @boundOrigin()
@@ -72,11 +71,56 @@ class StudyPlan.Blueprint.Camera
 
         @offsetOrigin canvasDelta
 
+    # Use a detached element to animate camera coordinates with Velocity.
+    @_$animate = $('<div>')
+    
   _bindPosition: (position) ->
-    x: _.clamp position.x, @blueprint.mapBoundingRectangle.left(), @blueprint.mapBoundingRectangle.right()
-    y: _.clamp position.y, @blueprint.mapBoundingRectangle.top(), @blueprint.mapBoundingRectangle.bottom()
+    xOffset = @viewportBounds.width() * 0.25
+    yOffset = @viewportBounds.height() * 0.25
+    x: _.clamp position.x, @blueprint.mapBoundingRectangle.left() - xOffset, @blueprint.mapBoundingRectangle.right() + xOffset
+    y: _.clamp position.y, @blueprint.mapBoundingRectangle.top() - yOffset, @blueprint.mapBoundingRectangle.bottom() + yOffset
   
   setOrigin: (origin) ->
+    # Direct camera movement takes over from any pending animated focus.
+    @stopAnimating()
+    @_setOrigin origin
+
+  animateToOrigin: (origin, duration = 300) ->
+    @stopAnimating()
+
+    startOrigin = @_bindPosition @_preciseOrigin
+    endOrigin = @_bindPosition origin
+
+    # Return a promise so we can await for the animation to finish.
+    new Promise (resolve) =>
+      # Store the resolve function so we can cancel the animation if needed.
+      @_resolveOriginAnimation = resolve
+
+      @_$animate.velocity
+        tween: [1, 0]
+      ,
+        duration: duration
+        easing: 'ease'
+        progress: (elements, complete, remaining, current, tweenValue) =>
+          return unless tweenValue?
+
+          @_setOrigin
+            x: startOrigin.x + (endOrigin.x - startOrigin.x) * tweenValue
+            y: startOrigin.y + (endOrigin.y - startOrigin.y) * tweenValue
+
+        complete: =>
+          @_setOrigin endOrigin
+          @_resolveOriginAnimation = null
+          resolve true
+
+  stopAnimating: ->
+    @_$animate.velocity 'stop', true
+    
+    # Resolve with false when interrupted so callers never wait indefinitely or highlight a cancelled target.
+    @_resolveOriginAnimation? false
+    @_resolveOriginAnimation = null
+
+  _setOrigin: (origin) ->
     @_preciseOrigin = @_bindPosition origin
 
     @origin

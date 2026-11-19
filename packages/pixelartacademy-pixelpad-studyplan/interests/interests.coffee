@@ -14,50 +14,18 @@ class StudyPlan.Interests extends StudyPlan.BottomPanel
   onCreated: ->
     super arguments...
     
-    @autorun (computation) =>
-      interests = LOI.adventure.currentInterests()
-      IL.Interest.forReferenceNames.subscribe @, interests
-      IL.Interest.forReferenceNames.subscribeContent @, interests
-    
-    @currentInterests = new ComputedField =>
-      interests = (IL.Interest.find interest for interest in LOI.adventure.currentInterests())
-      _.pull interests, undefined
-      _.sortBy interests, (interest) => _.lowerCase interest.name.translate().text
+    @currentInterests = new ComputedField => @_prepareInterestsForOutput LOI.adventure.currentInterests()
       
-    @addedTaskClasses = new ComputedField =>
-      return unless goals = StudyPlan.state 'goals'
+    @plannedInterests = new ComputedField =>
+      # Collect unique interests provided by added goals, excluding interests already gained.
+      providedInterests = []
       
-      _.flatten (for goalId of goals
-        continue unless goalClass = PAA.Learning.Goal.getClassForId goalId
-        goalClass.tasks()
-      )
-
-  events: ->
-    super(arguments...).concat
-      'click .interest': @onClickInterest
-      'pointerleave .interest': @onPointerLeaveInterest
-
-  onClickInterest: (event) ->
-    interest = @currentData()
-    
-    possibleTaskClasses = _.filter @addedTaskClasses(), (taskClass) => interest.referenceName in taskClass.interests() and taskClass.completed()
-    return unless possibleTaskClasses.length
-    
-    if @_lastFocusedTask in possibleTaskClasses
-      # Cycle through possible task classes.
-      index = possibleTaskClasses.indexOf @_lastFocusedTask
-      taskClass = possibleTaskClasses[(index + 1) % possibleTaskClasses.length]
+      for goal in @studyPlan.goals() when goal.added()
+        providedInterests = _.union providedInterests, goal.interests()
       
-    else
-      taskClass = possibleTaskClasses[0]
+      @_prepareInterestsForOutput _.difference providedInterests, LOI.adventure.currentInterests()
       
-    @_lastFocusedTask = taskClass
-    taskId = @_lastFocusedTask.id()
-    
-    @studyPlan.deselectGoal()
-    @studyPlan.deselectTask()
-    @studyPlan.highlightTask taskId
-    Tracker.afterFlush => @studyPlan.blueprint().focusTask taskId
-    
-  onPointerLeaveInterest: (event) ->
-    @studyPlan.stopHighlightingTask()
+  _prepareInterestsForOutput: (referenceNames) ->
+    interests = (IL.Interest.find referenceName for referenceName in referenceNames)
+    _.pull interests, undefined
+    _.sortBy interests, (interest) => _.lowerCase interest.name.translate().text

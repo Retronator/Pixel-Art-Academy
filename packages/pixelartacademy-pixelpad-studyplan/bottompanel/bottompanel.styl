@@ -8,7 +8,12 @@
   &.opened
     transition-timing-function cubic-bezier(.41,1.25,.84,1)
 
-  .title
+  &:hover
+    .title
+      .close-hint
+        visibility visible
+
+  > .title
     position absolute
     left 0
     right 0
@@ -19,6 +24,20 @@
     background-color atariCyan(2)
     color atariCyan(6)
     cursor pointer
+
+    &:hover
+      .close-hint
+        color atariCyan(5)
+
+    .close-hint
+      position absolute
+      top 3rem
+      right 5rem
+      visibility hidden
+      text-transform none
+      daily()
+      pointer-events none
+      color atariCyan(4)
 
   .container
     position absolute
@@ -35,3 +54,39 @@
         small-print()
         color atariCyan(5)
         text-wrap balance
+
+      .interest
+        color atariGray(5)
+        cursor pointer
+        small-print()
+        text-transform uppercase
+
+        &:hover
+          color atariGray(6)
+
+        &.required
+          color atariRed(6)
+
+          &:hover
+            color atariRed(7)
+
+        &.acquired
+          color atariGreen(6)
+
+          &:hover
+            color atariGreen(7)
+
+      .sections
+        list-style none
+        margin 0
+        padding 0
+
+        .section
+          &:not(:first-child)
+            margin-top 7rem
+
+          .title
+            margin-bottom 3rem
+            color atariCyan(7)
+            text-transform uppercase
+            uni()

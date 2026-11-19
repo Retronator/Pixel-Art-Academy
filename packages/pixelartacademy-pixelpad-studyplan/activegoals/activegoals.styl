@@ -7,17 +7,25 @@
 
   .container
     .content
-      .active-goals
-        list-style none
-        margin 5rem 0 0
-        padding 0
+      .sections
+        .section
+          .explanation
+            margin-left 5rem
 
-        .goal
-          text-transform uppercase
-          color atariGray(5)
+          .goals
+            list-style none
+            margin 5rem 0 0 5rem
+            padding 0
 
-          .name
-            cursor pointer
+            .goal
+              color atariGray(5)
 
-            &:hover
-              color atariGray(6)
+              .name
+                text-transform uppercase
+                cursor pointer
+
+                &:hover
+                  color atariGray(6)
+
+              .required-interests
+                small-print()
