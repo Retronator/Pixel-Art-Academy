@@ -7,16 +7,19 @@ class StudyPlan.Progression extends AM.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Progression'
   @register @id()
 
+  constructor: ->
+    super arguments...
+    
+    @timelapsePlaying = new ReactiveField false
+    @timelapsePlayed = new ReactiveField false
+    @timelapseReplayed = new ReactiveField false
+    
   onCreated: ->
     super arguments...
 
     @studyPlan = @ancestorComponentOfType StudyPlan
     @panelDisplayed = new ReactiveField false
     @controlsReady = new ReactiveField false
-    @playTimelapse = new ReactiveField false
-    @timelapsePlayed = new ReactiveField false
-    @timelapseReplayed = new ReactiveField false
-    @timelapseUrl = new ReactiveField null
     
     @levelsInfo = [
       level: StudyPlan.ProgressionLevels.ShortTermGoals
@@ -55,29 +58,21 @@ class StudyPlan.Progression extends AM.Component
 
     Meteor.clearTimeout @_timelapseTimeout
 
+    @timelapsePlaying false
+    @timelapsePlayed false
+    @timelapseReplayed false
+    
   startTimelapse: ->
     Meteor.clearTimeout @_timelapseTimeout
+    
     @controlsReady false
-
-    # A fresh image URL makes the browser restart the GIF on every replay.
-    @timelapseUrl "/pixelartacademy/pixelpad/apps/studyplan/intro.gif?playback=#{Date.now()}"
-    @playTimelapse true
-
-    @_timelapseTimeout = Meteor.setTimeout =>
-      controlsReadyDelay = if @timelapseReplayed() then 1000 else 5000
-      @timelapsePlayed true
-      
-      @_timelapseTimeout = Meteor.setTimeout =>
-        @finishTimelapse()
-      ,
-        controlsReadyDelay
-    ,
-      25000
+    @timelapsePlaying true
 
   finishTimelapse: ->
     # Cancel the pending completion when playback is skipped before replaying.
     Meteor.clearTimeout @_timelapseTimeout
-    @playTimelapse false
+    
+    @timelapsePlaying false
     @timelapsePlayed true
     @controlsReady true
 
@@ -89,6 +84,17 @@ class StudyPlan.Progression extends AM.Component
   
   timelapsePlayedClass: ->
     'timelapse-played' if @timelapsePlayed()
+    
+  timelapseData: ->
+    src: '/pixelartacademy/pixelpad/apps/studyplan/intro.webm'
+    onEnded: =>
+      controlsReadyDelay = if @timelapseReplayed() then 1000 else 5000
+      @timelapsePlayed true
+      
+      @_timelapseTimeout = Meteor.setTimeout =>
+        @finishTimelapse()
+      ,
+        controlsReadyDelay
     
   levelRevealed: ->
     levelInfo = @currentData()
@@ -130,7 +136,7 @@ class StudyPlan.Progression extends AM.Component
       'click .replay-button': @onClickReplayButton
   
   onClick: (event) ->
-    @finishTimelapse() if @playTimelapse()
+    @finishTimelapse() if @timelapsePlaying()
   
   onClickUnlockButton: (event) ->
     levelInfo = @currentData()

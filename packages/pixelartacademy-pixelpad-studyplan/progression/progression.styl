@@ -8,8 +8,8 @@
     position absolute
     left calc(50% - 160rem)
     top calc(50% - 90rem)
-    width 320rem
-    height 180rem
+    width 322rem
+    height 182rem
 
     .panel
       position absolute
@@ -40,9 +40,21 @@
           absolute-cover()
 
         .timelapse
-          background-position center center
-          background-size 320rem 180rem
           cursor pointer
+
+          .landsofillusions-components-video
+            .video
+              display block
+              width 100%
+              height 100%
+              object-fit cover
+
+            .progress-bar
+              position absolute
+              left 0
+              bottom 0
+              height 1rem
+              background rgba(atariBrown(4), 0.5)
 
         .controls
          position absolute

@@ -43,13 +43,11 @@ class PAA.Tutorials.Planning.StudyPlan.Progression
       return unless super arguments...
       
       return unless progression = @getStudyPlan()?.progression()
-      return unless progression.isCreated()
       
       progression.timelapsePlayed()
       
     activeDisplayState: ->
       return PAA.PixelPad.Systems.Instructions.DisplayStates.Open unless progression = @getStudyPlan()?.progression()
-      return PAA.PixelPad.Systems.Instructions.DisplayStates.Open unless progression.isCreated()
       
       if progression.timelapseReplayed() then PAA.PixelPad.Systems.Instructions.DisplayStates.Closed else PAA.PixelPad.Systems.Instructions.DisplayStates.Open
 

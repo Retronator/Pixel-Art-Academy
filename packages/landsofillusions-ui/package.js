@@ -67,6 +67,7 @@ Package.onUse(function(api) {
   api.addComponent('components/dialogs/dialog');
 
   api.addUnstyledComponent('components/sprite..');
+  api.addUnstyledComponent('components/video..');
   api.addUnstyledComponent('components/computer..');
 
   api.addUnstyledComponent('components/embeddedwebpage..');

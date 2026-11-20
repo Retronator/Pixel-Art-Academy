@@ -99,25 +99,42 @@ class LM.Interface extends LM.Interface
       
       @audio.inGameMusicInLocation inGameMusicMode is @constructor.InGameMusicMode.InLocation unless inGameMusicMode is @constructor.InGameMusicMode.Off
       
-    # Pause music when apps require it to be off.
-    @inGameMusicModeOff = new ComputedField =>
+    # Determine if apps require the music to be off.
+    @inGameMusicMode = new ComputedField =>
       pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      pixelPad?.os.currentApp()?.inGameMusicMode?() is @constructor.InGameMusicMode.Off
+      currentApp = pixelPad?.os.currentApp()
       
-    @autorun (computation) =>
-      if @inGameMusicModeOff()
-        LOI.adventure.music.pause PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
+      off: currentApp?.inGameMusicMode?() is @constructor.InGameMusicMode.Off
+      
+      fadeInDuration: switch currentApp?.inGameMusicModeOffFadeIn?()
+        when @constructor.InGameMusicModeOffFade.None then 0
+        else PAA.Music.FadeDurations.InGameMusicModeOffFadeIn
         
-      else
-        LOI.adventure.music.resume PAA.Music.FadeDurations.InGameMusicModeOffFadeIn
-        
-    # Pause music in the menus, except on the audio screen.
+      fadeOutDuration: switch currentApp?.inGameMusicModeOffFadeOut?()
+        when @constructor.InGameMusicModeOffFade.None then 0
+        else PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
+      
+    # Pause music for apps or menus (except the audio screen), and only resume when both allow it.
+    musicResumeFadeDuration = 0
+    
     @autorun (computation) =>
-      if @audioOffInMenus()
-        LOI.adventure.music.pause PAA.Music.FadeDurations.MenuFadeOut
+      inGameMusicMode = @inGameMusicMode()
+      audioOffInMenus = @audioOffInMenus()
+
+      if inGameMusicMode.off or audioOffInMenus
+        # Give menus their faster fade out and remember the matching fade in for resuming.
+        if audioOffInMenus
+          musicPauseFadeDuration = PAA.Music.FadeDurations.MenuFadeOut
+          musicResumeFadeDuration = PAA.Music.FadeDurations.MenuFadeIn
+        
+        else
+          musicPauseFadeDuration = inGameMusicMode.fadeOutDuration
+          musicResumeFadeDuration = inGameMusicMode.fadeInDuration
+        
+        LOI.adventure.music.pause musicPauseFadeDuration
       
       else
-        LOI.adventure.music.resume PAA.Music.FadeDurations.MenuFadeIn
+        LOI.adventure.music.resume musicResumeFadeDuration
         
     # Start the correct dynamic soundtrack composition.
     @drawingAppDeterminedCompositionClass = new ComputedField (computation) =>

@@ -52,8 +52,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   @currentProgressionLevel: ->
     # TODO: Add level 4 when long-term goals are available.
     return @ProgressionLevels.MidTermGoals if @midTermGoalsAvailable()
-    return @ProgressionLevels.ShortTermGoals if @shortTermGoalsAvailable()
-    @ProgressionLevels.Intro
+    @ProgressionLevels.ShortTermGoals
 
   @GoalConnectionDirections =
     Forward: 'Forward'
@@ -134,8 +133,6 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return unless currentApp instanceof PAA.PixelPad.Apps.StudyPlan
     currentApp
     
-  @shortTermGoalsAvailable: -> LM.Intro.Tutorial.Goals.PixelArtSoftware.completed()
-  
   @midTermGoalsAvailable: -> LM.Intro.Tutorial.Goals.Snake.completed()
     
   constructor: ->
@@ -248,6 +245,15 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     # Inform that we've handled the back button.
     true
   
+  inGameMusicMode: ->
+    # Turn off music when the progression intro timelapse is playing.
+    return unless progression = @progression()
+    LM.Interface.InGameMusicMode.Off if progression.timelapsePlaying()
+    
+  inGameMusicModeOffFadeOut: ->
+    # Immediately fade out existing music when the progression intro timelapse starts playing.
+    LM.Interface.InGameMusicModeOffFade.None
+    
   finishProgression: ->
     @handlingProgression false
     @showProgression false

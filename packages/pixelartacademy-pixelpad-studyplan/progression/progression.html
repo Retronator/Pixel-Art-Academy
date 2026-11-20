@@ -4,8 +4,10 @@
       <div class="panel {{panelDisplayedClass}}">
         {{#if showIntro}}
           <div class="intro {{timelapsePlayedClass}}">
-            {{#if playTimelapse}}
-              <div class="timelapse" style="background-image: url('{{timelapseUrl}}');"></div>
+            {{#if timelapsePlaying}}
+              <div class="timelapse">
+                {{> LandsOfIllusions.Components.Video timelapseData}}
+              </div>
             {{/if}}
             {{#if controlsReady}}
               <div class="controls">

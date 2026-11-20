@@ -24,6 +24,10 @@ class LM.Interface extends LOI.Interface
     Direct: 'Direct'
     InLocation: 'InLocation'
     Off: 'Off'
+    
+  @InGameMusicModeOffFade:
+    None: 'None'
+    Default: 'Default'
   
   onCreated: ->
     super arguments...
