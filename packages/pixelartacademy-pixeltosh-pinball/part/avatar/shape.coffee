@@ -27,43 +27,24 @@ class Pinball.Part.Avatar.Shape
   @_detectCircle: (pixelArtEvaluation) ->
     layer = pixelArtEvaluation.layers[0]
 
-    # If we have no cores, try to detect if points themselves form a circle.
-    if layer.cores.length is 0
-      points = layer.points
-      return unless points.length
-
-      allowInsidePoints = true
-      
-    else
-      # Otherwise, we must have only one core and line.
-      return unless layer.cores.length is 1 and layer.lines.length is 1
-      
-      # Some parts of the line must be curves.
-      line = layer.lines[0]
-      return unless _.some line.pointPartIsCurve
-      
-      points = line.points
+    return unless layer.lines.length is 1
+    
+    # Some parts of the line must be curves.
+    line = layer.lines[0]
+    return unless _.some line.pointPartIsCurve
     
     # See if points form a circle.
     center = new THREE.Vector2
-    center.add point for point in points
-    center.multiplyScalar 1 / points.length
+    center.add point for point in line.points
+    center.multiplyScalar 1 / line.points.length
     
-    distancesFromCenter = for point in points
+    distancesFromCenter = for point in line.points
       center.distanceTo point
 
-    if allowInsidePoints
-      radius = _.max distancesFromCenter
-
-    else
-      radius = _.sum(distancesFromCenter) / distancesFromCenter.length
+    radius = _.sum(distancesFromCenter) / distancesFromCenter.length
 
     deviationsFromRadius = for distanceFromCenter in distancesFromCenter
-      if allowInsidePoints
-        Math.max 0, distanceFromCenter - radius
-        
-      else
-        Math.abs distanceFromCenter - radius
+      Math.abs distanceFromCenter - radius
       
     # We allow for a half a pixel deviation from the radius (this makes a 5x5 square fall outside the range).
     return if _.max(deviationsFromRadius) > 0.5

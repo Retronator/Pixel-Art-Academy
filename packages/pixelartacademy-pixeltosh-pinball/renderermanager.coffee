@@ -39,6 +39,7 @@ class Pinball.RendererManager
   destroy: ->
     @_sizeAutorun.stop()
     @renderer.dispose()
+    @renderer.forceContextLoss()
 
   draw: (appTime) ->
     if LOI.settings.graphics.slowCPUEmulation.value()

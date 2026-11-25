@@ -101,11 +101,11 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
         for componentImageData in componentImageDatas
           rawSplines = AS.PixelArt.Upscaling.Depixelizer.getBSplines componentImageData
           
-          # Subtract the transparent padding.
+          # Subtract the transparent padding and half a pixel to align to center.
           for rawSpline in rawSplines
             for point in rawSpline.points
-              point.x--
-              point.y--
+              point.x -= 1.5
+              point.y -= 1.5
 
           componentSplines.push AP.BSpline.joinSplines rawSplines
           
