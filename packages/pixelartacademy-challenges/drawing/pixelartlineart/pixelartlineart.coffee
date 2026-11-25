@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Thing
+class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.AssetsProviderThing
   # assets: array of assets that the player has chosen to complete for the line art challenges
   #   id: unique asset identifier
   #   type: what kind of asset this is

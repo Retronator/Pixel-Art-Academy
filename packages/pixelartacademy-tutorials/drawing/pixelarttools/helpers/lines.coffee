@@ -1,3 +1,4 @@
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -115,6 +116,19 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     
     @initialize()
   
+    markup: ->
+      keyboardState = AC.Keyboard.getState()
+      return if keyboardState.isKeyDown AC.Keys.shift
+      
+      textBase = Markup.textBase()
+      
+      [
+        text: _.extend {}, textBase,
+          position:
+            x: 13.5, y: 16, origin: TextOriginPosition.BottomCenter
+          value: "hold\nshift"
+      ]
+
   class @LineSequence extends @StepInstruction
     @id: -> "#{Asset.id()}.LineSequence"
     @stepNumber: -> 3

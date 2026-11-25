@@ -134,6 +134,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
       @audio.drawerOpen()
     ,
       500
+    
+    $(document).on "keydown.pixelartacademy-pixelpad-apps-pico-8-drawer", (event) => @onKeyDown event
 
   onDestroyed: ->
     super arguments...
@@ -142,6 +144,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
     cartridge.destroy() for gameSlug, cartridge of @_cartridges
 
+    $(document).off ".pixelartacademy-pixelpad-apps-pico-8-drawer"
+    
   deselectCartridge: ->
     AB.Router.changeParameter 'parameter3', null
     @pannedLeft false
@@ -282,3 +286,13 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
   onClickSelectedCartridgeCaseBottom: (event) ->
     @pannedLeft false
+
+  onKeyDown: (event) ->
+    return if @pico8.cartridge()
+    
+    switch event.which
+      when AC.Keys.up, AC.Keys.left
+        @changeCartridgeVariant 1
+      
+      when AC.Keys.down, AC.Keys.right
+        @changeCartridgeVariant -1
