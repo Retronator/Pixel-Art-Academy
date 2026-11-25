@@ -30,6 +30,9 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
       playing: AEc.ValueTypes.Boolean
       seeking: AEc.ValueTypes.Boolean
     
+  # Note: When setting currentTime, we must do so through this field to ensure the change is happening against the
+  # latest value. If we try to set it through a non-lazy field, its stale value might match the value we're trying to
+  # set and since there is no difference, the update will not be pushed to the state, letting the lazy value in place.
   @currentTime = @state.field 'currentTime', lazyUpdates: true
   
   onCreated: ->
@@ -118,10 +121,11 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
 
     Tracker.nonreactive =>
       if tape
+        # Note: We set current time first so it gets propagated when other state changes trigger reactivity.
+        @constructor.currentTime 0
         @state 'tapeId', tape._id
         @state 'sideIndex', 0
         @state 'trackIndex', 0
-        @state 'currentTime', 0
         @tapeProgress 0
         
       else
@@ -130,7 +134,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     
   setTrack: (sideIndex, trackIndex) ->
     Tracker.nonreactive =>
-      @state 'currentTime', 0
+      @constructor.currentTime 0
 
       # If the track is already set, just reset the time.
       if sideIndex is @state('sideIndex') and trackIndex is @state('trackIndex')
@@ -180,8 +184,8 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
   rewindOrPreviousTrack: ->
     Tracker.nonreactive =>
       # Rewind if possible.
-      currentTime = @state 'currentTime'
-      @state 'currentTime', 0
+      currentTime = @constructor.currentTime()
+      @constructor.currentTime 0
       @_currentTrack.setCurrentTime 0
       return if currentTime > 1
       
