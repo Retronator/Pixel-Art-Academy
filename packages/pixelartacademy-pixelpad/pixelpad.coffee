@@ -75,6 +75,9 @@ class PAA.PixelPad extends LOI.Adventure.Item
     @endResizeY = new ReactiveField null
 
     @positioningClass = new ReactiveField null
+    
+    @navigationLeftButtonHovered = new ReactiveField false
+    @navigationRightButtonHovered = new ReactiveField false
 
   onRendered: ->
     super arguments...
@@ -188,6 +191,15 @@ class PAA.PixelPad extends LOI.Adventure.Item
 
       # Detect if size is covering the whole viewport width.
       @fullscreen size.width * scale >= clientWidth
+      
+    # Remove hovered class when navigation buttons are not there.
+    @autorun (computation) =>
+      return if @canGoLeft()
+      @navigationLeftButtonHovered false
+      
+    @autorun (computation) =>
+      return if @canGoRight()
+      @navigationRightButtonHovered false
 
   onDestroyed: ->
     super arguments...
@@ -278,6 +290,10 @@ class PAA.PixelPad extends LOI.Adventure.Item
     super(arguments...).concat
       'mousedown .glass': @onMouseDownGlass
       'scroll .os': @onScrollOS
+      'pointerenter .left-button': @onPointerEnterLeftButton
+      'pointerleave .left-button': @onPointerLeaveLeftButton
+      'pointerenter .right-button': @onPointerEnterRightButton
+      'pointerleave .right-button': @onPointerLeaveRightButton
       'click .left-button': @onClickLeftButton
       'click .right-button': @onClickRightButton
 
@@ -329,6 +345,18 @@ class PAA.PixelPad extends LOI.Adventure.Item
     # overflow: hidden if the browser tries to focus on input elements.
     event.currentTarget.scrollLeft = 0
     event.currentTarget.scrollTop = 0
+    
+  onPointerEnterLeftButton: (event) ->
+    @navigationLeftButtonHovered true
+    
+  onPointerLeaveLeftButton: (event) ->
+    @navigationLeftButtonHovered false
+    
+  onPointerEnterRightButton: (event) ->
+    @navigationRightButtonHovered true
+    
+  onPointerLeaveRightButton: (event) ->
+    @navigationRightButtonHovered false
 
   onClickLeftButton: (event) ->
     @os.goLeft()

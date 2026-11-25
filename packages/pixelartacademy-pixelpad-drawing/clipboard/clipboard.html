@@ -1,15 +1,16 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Clipboard">
   <div class="pixelartacademy-pixelpad-apps-drawing-clipboard {{activeClass}} {{editorActiveClass}}">
-    <div class="board">
-      <div class="navigation-indicators">
-        {{#if drawing.canGoLeft}}
-          <div class="left indicator">←</div>
-        {{/if}}
-        {{#if drawing.canGoRight}}
-          <div class="right indicator">→</div>
-        {{/if}}
-      </div>
-    </div>
+    <div class="board"></div>
     {{> Render asset.clipboardComponent}}
+    <div class="navigation">
+      {{#if drawing.canGoLeft}}
+        <div class="left indicator">←</div>
+        <button class="left button {{leftNavigationButtonHoveredClass}}"></button>
+      {{/if}}
+      {{#if drawing.canGoRight}}
+        <div class="right indicator">→</div>
+        <button class="right button {{rightNavigationButtonHoveredClass}}"></button>
+      {{/if}}
+    </div>
   </div>
 </template>

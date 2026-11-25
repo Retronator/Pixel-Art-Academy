@@ -42,3 +42,5 @@ class PAA.Challenges.Drawing.ReferenceSelection extends PAA.PixelPad.Apps.Drawin
   descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
 
   ready: -> true
+  
+  canDirectionallyNavigateTo: -> false

@@ -113,8 +113,9 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     return unless portfolio.isCreated()
     return unless portfolio.activeAsset()
     
-    # We must not be in the editor to still be on the clipboard.
-    not @editor()?.visible()
+    # The clipboard must not be moved away into the corner.
+    return unless clipboard = @clipboard()
+    not clipboard.inCorner()
   
   navigationButtonOverlap: -> 10
   
@@ -139,6 +140,8 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     ,
       100
   
+    @clipboard().audio.secondPageOpen()
+    
   onBackButton: ->
     # Relay to palette selection.
     result = @paletteSelection()?.onBackButton()

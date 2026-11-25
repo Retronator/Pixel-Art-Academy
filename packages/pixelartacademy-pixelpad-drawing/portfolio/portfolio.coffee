@@ -77,7 +77,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     activeAssetIndex = activeGroupAssets.indexOf activeAsset
     return if activeAssetIndex < 0
     
-    activeGroupAssets[activeAssetIndex + assetIndexOffset]
+    return unless asset = activeGroupAssets[activeAssetIndex + assetIndexOffset]
+    return if asset.asset.canDirectionallyNavigateTo?() is false
+    
+    asset
     
   selectAssetsProviderById: (assetsProviderId) ->
     group = _.last @activeGroups()

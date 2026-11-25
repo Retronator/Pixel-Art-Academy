@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
 AEc = Artificial.Echo
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -71,6 +72,8 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
   
   constructor: (@drawing) ->
     super arguments...
+    
+    @inCorner = new ReactiveField false
 
   onCreated: ->
     super arguments...
@@ -88,6 +91,30 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
       
       @_wasDisplayingAsset = displayingAsset
       
+    # Update whether the clipboard is moved out of the way to the top-left corner. 
+    # This happens with a delay when transitioning from the editor.
+    @autorun (computation) =>
+      Meteor.clearTimeout @_inCornerTimeout
+ 
+      if @drawing.editor().active()
+        @inCorner true
+        
+      else
+        @_inCornerTimeout = Meteor.setTimeout =>
+          @inCorner false
+        ,
+          400
+      
+  onRendered: ->
+    super arguments...
+
+    $(document).on "keydown.pixelartacademy-pixelpad-apps-drawing-clipboard", (event) => @onKeyDown event
+
+  onDestroyed: ->
+    super arguments...
+
+    $(document).off ".pixelartacademy-pixelpad-apps-drawing-clipboard"
+    
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
     
@@ -99,3 +126,28 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     clipboardComponent = @drawing.portfolio().displayedAsset()?.asset.clipboardComponent
     result = clipboardComponent?.onBackButton?()
     return result if result?
+  
+  leftNavigationButtonHoveredClass: ->
+    'hovered' if @drawing.os.pixelPad.navigationLeftButtonHovered()
+    
+  rightNavigationButtonHoveredClass: ->
+    'hovered' if @drawing.os.pixelPad.navigationRightButtonHovered()
+
+  events: ->
+    super(arguments...).concat
+      'click .navigation .button.left': @onClickNavigationButtonLeft
+      'click .navigation .button.right': @onClickNavigationButtonRight
+  
+  onClickNavigationButtonLeft: (event) ->
+    @drawing.goLeft()
+    
+  onClickNavigationButtonRight: (event) ->
+    @drawing.goRight()
+
+  onKeyDown: (event) ->
+    switch event.which
+      when AC.Keys.left
+        @drawing.goLeft() if @drawing.canGoLeft()
+        
+      when AC.Keys.right
+        @drawing.goRight() if @drawing.canGoRight()
