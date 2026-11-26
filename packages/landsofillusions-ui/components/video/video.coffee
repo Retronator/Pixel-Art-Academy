@@ -25,7 +25,7 @@ class LOI.Components.Video extends AM.Component
     @autorun (computation) =>
       audioEnabled = LOI.adventure?.audioManager?.enabled()
       @_video.muted = if @data().muted then true else not audioEnabled
-      @_video.volume = LOI.settings?.audio.mainVolume.value()
+      @_video.volume = LOI.settings?.audio.mainVolume.value() * (@data().volume ? 1)
 
     # Play and pause the video.
     @autorun (computation) =>

@@ -87,6 +87,7 @@ class StudyPlan.Progression extends AM.Component
     
   timelapseData: ->
     src: '/pixelartacademy/pixelpad/apps/studyplan/intro.webm'
+    volume: 0.4
     onEnded: =>
       controlsReadyDelay = if @timelapseReplayed() then 1000 else 5000
       @timelapsePlayed true
