@@ -105,6 +105,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.GroupsProvider
     @_providerAutorun.stop()
     @groups.stop()
     
-    @_groupFolderInformationProviderByGroupFolderId = null
+    assetsProviderData.stop() for thingId, assetsProviderData of @_assetsProvidersDataByThingId
+    activeAssetsProviderData.stop() for thingId, activeAssetsProviderData of @_activeAssetsProviderDataByThingId
 
     groupsProvider.destroy() for folderId, groupsProvider of @_groupsProvidersByGroupFolderId

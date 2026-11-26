@@ -8,7 +8,7 @@ class Chess.Interface.PiecesMenuDropdown extends FM.Menu.Dropdown
 
   @createItems: ->
     items = [
-      actionId: Chess.Interface.Actions.OpenChessSetChoice.id()
+      Chess.Interface.Actions.OpenChessSetChoice.id()
     ]
 
     # Add a divider and items for each board style view if there are any projects available.
@@ -37,7 +37,7 @@ class Chess.Interface.PiecesMenuDropdown extends FM.Menu.Dropdown
   action: ->
     itemData = @currentData()
     
-    if itemData.actionId
+    if _.isString itemData
       return super arguments...
       
     projectId = itemData.projectId

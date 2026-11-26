@@ -11,9 +11,9 @@ class Migration extends Document.MajorMigration
       type: /^(?!.*\.Project$)/
     ,
       (document) =>
+        # Add .Project to the type.
         type = "#{document.type}.Project"
         
-        # Remove deprecated character reference field name.
         count += collection.update _id: document._id,
           $set:
             type: type
